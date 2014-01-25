@@ -35,7 +35,7 @@
 #include "config.h"
 #endif // HAVE_CONFIG_H
 
-#include "dlvhex2/DLPlugin.h"
+#include "DLLitePlugin.h"
 #include "dlvhex2/PlatformDefinitions.h"
 #include "dlvhex2/ProgramCtx.h"
 #include "dlvhex2/Registry.h"
@@ -64,10 +64,15 @@
 
 DLVHEX_NAMESPACE_BEGIN
 
+namespace dllite{
+#if 0
 // ============================== Class CachedOntology ==============================
 
-DLLitePlugin::CachedOntology::CachedOntology() : loaded(false){
+DLLitePlugin::CachedOntology::CachedOntology(){
+#ifdef HAVE_OWLCPP
+	loaded = false;
 	kernel = ReasoningKernelPtr(new ReasoningKernel());
+#endif
 }
 
 DLLitePlugin::CachedOntology::~CachedOntology(){
@@ -75,6 +80,7 @@ DLLitePlugin::CachedOntology::~CachedOntology(){
 
 void DLLitePlugin::CachedOntology::load(RegistryPtr reg, ID ontologyName){
 
+#ifdef HAVE_OWLCPP
 	DBGLOG(DBG, "Assigning ontology name");
 	this->ontologyName = ontologyName;
 
@@ -100,8 +106,10 @@ void DLLitePlugin::CachedOntology::load(RegistryPtr reg, ID ontologyName){
 	}
 
 	loaded = true;
+#endif
 }
 
+#ifdef HAVE_OWLCPP
 bool DLLitePlugin::CachedOntology::checkConceptAssertion(RegistryPtr reg, ID guardAtomID) const{
 	return conceptAssertions->getFact(guardAtomID.address);
 }
@@ -114,6 +122,7 @@ bool DLLitePlugin::CachedOntology::checkRoleAssertion(RegistryPtr reg, ID guardA
 	}
 	return false;
 }
+#endif
 
 // ============================== Class DLPluginAtom::Actor_collector ==============================
 
@@ -148,22 +157,29 @@ DLLitePlugin::DLPluginAtom::DLPluginAtom(std::string predName, ProgramCtx& ctx) 
 }
 
 ID DLLitePlugin::DLPluginAtom::dlNeg(ID id){
+#ifdef HAVE_OWLCPP
 	RegistryPtr reg = getRegistry();
 	return reg->storeConstantTerm("\"-" + reg->terms.getByID(id).getUnquotedString() + "\"");
+#endif
 }
 
 ID DLLitePlugin::DLPluginAtom::dlEx(ID id){
+#ifdef HAVE_OWLCPP
 	RegistryPtr reg = getRegistry();
 	return reg->storeConstantTerm("\"Ex" + reg->terms.getByID(id).getUnquotedString() + "\"");
+#endif
 }
 
 std::string DLLitePlugin::DLPluginAtom::afterSymbol(std::string str, char c){
+#ifdef HAVE_OWLCPP
 	if (str.find_last_of(c) == std::string::npos) return str;
 	else return str.substr(str.find_last_of(c) + 1);
+#endif
 }
 
 void DLLitePlugin::DLPluginAtom::constructClassificationProgram(){
 
+#ifdef HAVE_OWLCPP
 	if (classificationIDB.size() > 0){
 		DBGLOG(DBG, "Classification program was already constructed");
 		return;
@@ -256,10 +272,12 @@ void DLLitePlugin::DLPluginAtom::constructClassificationProgram(){
 	classificationIDB.push_back(transID);
 	classificationIDB.push_back(contraID);
 	classificationIDB.push_back(conflictID);
+#endif
 }
 
 void DLLitePlugin::DLPluginAtom::constructAbox(ProgramCtx& ctx, CachedOntology& ontology){
 
+#ifdef HAVE_OWLCPP
 	if (!!ontology.conceptAssertions){
 		DBGLOG(DBG, "Skipping constructAbox (already done)");
 	}
@@ -299,12 +317,13 @@ void DLLitePlugin::DLPluginAtom::constructAbox(ProgramCtx& ctx, CachedOntology& 
 		//				reg->storeConstantTerm("\"" + to_string(INDIVIDUAL2_NAME, ontology.store) + "\"") )));
 	}
 	DBGLOG(DBG, "Concept assertions: " << *ontology.conceptAssertions);
-
+#endif
 }
 
 // computes the classification for a given ontology
 InterpretationPtr DLLitePlugin::DLPluginAtom::computeClassification(ProgramCtx& ctx, CachedOntology& ontology){
 
+#ifdef HAVE_OWLCPP
 	assert(!ontology.classification && "Classification for this ontology was already computed");
 	RegistryPtr reg = getRegistry();
 
@@ -449,11 +468,13 @@ InterpretationPtr DLLitePlugin::DLPluginAtom::computeClassification(ProgramCtx& 
 
 	ontology.classification = answersets[0];
 	assert(!!ontology.classification && "Could not compute classification");
+#endif
 }
 
 DLLitePlugin::CachedOntology& DLLitePlugin::DLPluginAtom::prepareOntology(ProgramCtx& ctx, ID ontologyNameID){
 
-	std::vector<CachedOntologyPtr>& ontologies = ctx.getPluginData<DLPlugin>().ontologies;
+#ifdef HAVE_OWLCPP
+	std::vector<CachedOntologyPtr>& ontologies = ctx.getPluginData<DLLitePlugin>().ontologies;
 
 	DBGLOG(DBG, "prepareOntology");
 	RegistryPtr reg = getRegistry();
@@ -473,10 +494,12 @@ DLLitePlugin::CachedOntology& DLLitePlugin::DLPluginAtom::prepareOntology(Progra
 	constructAbox(ctx, *co);
 	ontologies.push_back(co);
 	return *co;
+#endif
 }
 
 void DLLitePlugin::DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const ID eaReplacement)
 {
+#if defined(HAVE_OWLCPP)
 	DBGLOG(DBG, "guardSupportSet");
 	assert(ng.isGround());
 
@@ -507,7 +530,6 @@ void DLLitePlugin::DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const I
 				holds = ontology.checkRoleAssertion(reg, litID);
 			}
 
-#if defined(HAVE_OWLCPP)
 			if (holds){
 				// remove the guard atom
 				Nogood restricted;
@@ -523,11 +545,11 @@ void DLLitePlugin::DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const I
 				DBGLOG(DBG, "Removing support set " << ng.getStringRepresentation(reg) << " because guard atom is unsatisfied");
 				keep = false;
 			}
-#endif
 		}
 	}
 	DBGLOG(DBG, "Keeping support set " << ng.getStringRepresentation(reg) << " without guard atom");
 	keep = true;
+#endif
 }
 
 void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoods){
@@ -858,6 +880,7 @@ void DLLitePlugin::DLPluginAtom::retrieve(const Query& query, Answer& answer)
 
 void DLLitePlugin::DLPluginAtom::retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods){
 
+#ifdef HAVE_OWLCPP
 	DBGLOG(DBG, "DLPluginAtom::retrieve");
 
 	// check if we want to learn support sets (but do this only once)
@@ -865,6 +888,7 @@ void DLLitePlugin::DLPluginAtom::retrieve(const Query& query, Answer& answer, No
 		learnSupportSets(query, nogoods);
 		learnedSupportSets = true;
 	}
+#endif
 }
 
 // ============================== Class CDLAtom ==============================
@@ -947,7 +971,7 @@ void DLLitePlugin::CDLAtom::retrieve(const Query& query, Answer& answer, NogoodC
 
 DLLitePlugin::RDLAtom::RDLAtom(ProgramCtx& ctx) : DLPluginAtom("rDL", ctx)
 {
-	DBGLOG(DBG,"Constructor of cDL plugin is started");
+	DBGLOG(DBG,"Constructor of rDL plugin is started");
 	addInputConstant(); // the ontology
 	addInputPredicate(); // the positive concept
 	addInputPredicate(); // the negative concept
@@ -1038,33 +1062,137 @@ void DLLitePlugin::RDLAtom::retrieve(const Query& query, Answer& answer, NogoodC
 // ============================== Class DLPlugin ==============================
 
 // Collect all types of external atoms 
-DLLitePlugin::DLPlugin():
+DLLitePlugin::DLLitePlugin():
 	PluginInterface()
 {
-	setNameVersion("dlvhex-DLplugin[internal]", 2, 0, 0);
+	setNameVersion(PACKAGE_TARNAME,DLLITEPLUGIN_VERSION_MAJOR,DLLITEPLUGIN_VERSION_MINOR,DLLITEPLUGIN_VERSION_MICRO);
 }
 
-DLLitePlugin::~DLPlugin()
+DLLitePlugin::~DLLitePlugin()
 {
 }
 
 // Define two external atoms: for the roles and for the concept queries
 std::vector<PluginAtomPtr> DLLitePlugin::createAtoms(ProgramCtx& ctx) const{
 	std::vector<PluginAtomPtr> ret;
-	ret.push_back(PluginAtomPtr(new CDLAtom(ctx)));
-	ret.push_back(PluginAtomPtr(new RDLAtom(ctx)));
+	ret.push_back(PluginAtomPtr(new CDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
+	ret.push_back(PluginAtomPtr(new RDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
 	return ret;
+}
+
+void DLLitePlugin::processOptions(std::list<const char*>& pluginOptions, ProgramCtx& ctx){
+
+}
+
+dlvhex::dllite::DLLitePlugin theDLLitePlugin;
+
+
+
+
+
+
+
+
+
+
+#endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	class strstrAtom : public PluginAtom
+    {
+		public:
+      
+			strstrAtom() : PluginAtom("strstr", 1)
+			{
+				//
+				// haystack
+				// 
+				addInputConstant();
+	
+				//
+				// needle
+				//
+				addInputConstant();
+	
+				setOutputArity(0);
+			}
+      
+			virtual void
+			retrieve(const Query& query, Answer& answer) throw (PluginError)
+			{
+
+			}
+	};
+
+      
+			StringPlugin::StringPlugin() 
+			{
+				setNameVersion("stringplugin",2,0,0);
+			}
+		
+			std::vector<PluginAtomPtr> StringPlugin::createAtoms(ProgramCtx&) const
+			{
+				std::vector<PluginAtomPtr> ret;
+			
+				// return smart pointer with deleter (i.e., delete code compiled into this plugin)
+				ret.push_back(PluginAtomPtr(new strstrAtom, PluginPtrDeleter<PluginAtom>()));
+			
+				return ret;
+			}
+      
+			void 
+			StringPlugin::processOptions(std::list<const char*>& pluginOptions, ProgramCtx& ctx)
+			{
+			
+			}
+
+    
+    //
+    // now instantiate the plugin
+    //
+    StringPlugin theStringPlugin;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 DLVHEX_NAMESPACE_END
 
-DLLitePlugin theDLLitePlugin;
+IMPLEMENT_PLUGINABIVERSIONFUNCTION
 
 // return plain C type s.t. all compilers and linkers will like this code
 extern "C"
 void * PLUGINIMPORTFUNCTION()
 {
-	return reinterpret_cast<void*>(& DLVHEX_NAMESPACE theDLLitePlugin);
+std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
+	return reinterpret_cast<void*>(& dlvhex::dllite::theStringPlugin);
 }
 
 /* vim: set noet sw=2 ts=2 tw=80: */

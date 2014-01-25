@@ -1,8 +1,8 @@
 DLLITEHEADERS = \
 		 DLLitePlugin.h
 
-pkginclude_HEADERS = $(MCSIEHEADERS)
+pkginclude_HEADERS = $(DLLITEHEADERS)
 
 noinst_HEADERS = \
-		 DLLitePlugin.h
-
+		 DLLitePlugin.h #\
+		 RepairModelGenerator.h

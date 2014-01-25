@@ -48,6 +48,9 @@
 
 DLVHEX_NAMESPACE_BEGIN
 
+namespace dllite{
+
+#if 0
 class DLLitePlugin:
   public PluginInterface
 {
@@ -55,9 +58,9 @@ public:
 	// this class caches an ontology
 	// add member variables here if additional information about the ontology must be stored
 	struct CachedOntology{
+#ifdef HAVE_OWLCPP
 		typedef boost::shared_ptr<ReasoningKernel> ReasoningKernelPtr;
 
-#ifdef HAVE_OWLCPP
 		ID ontologyName;
 		bool loaded;
 		owlcpp::Triple_store store;
@@ -82,7 +85,7 @@ public:
 	class CtxData : public PluginData
 	{
 	public:
-		std::vector<DLPlugin::CachedOntologyPtr> ontologies;
+		std::vector<DLLitePlugin::CachedOntologyPtr> ontologies;
 		CtxData() {};
 		virtual ~CtxData() {};
 	};
@@ -176,12 +179,23 @@ private:
 	};
 
 public:
-	DLPlugin();
-	virtual ~DLPlugin();
+	DLLitePlugin();
+	virtual ~DLLitePlugin();
+
+	virtual void processOptions(std::list<const char*>& pluginOptions, ProgramCtx& ctx);
 
 	// plugin atoms
 	virtual std::vector<PluginAtomPtr> createAtoms(ProgramCtx& ctx) const;
 };
+#endif
+
+class StringPlugin : public PluginInterface{
+public:
+StringPlugin();
+virtual std::vector<PluginAtomPtr> createAtoms(ProgramCtx&) const;
+virtual void processOptions(std::list<const char*>& pluginOptions, ProgramCtx& ctx);
+};
+}
 
 DLVHEX_NAMESPACE_END
 
