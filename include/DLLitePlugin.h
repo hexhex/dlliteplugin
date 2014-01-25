@@ -50,7 +50,6 @@ DLVHEX_NAMESPACE_BEGIN
 
 namespace dllite{
 
-#if 0
 class DLLitePlugin:
   public PluginInterface
 {
@@ -58,7 +57,6 @@ public:
 	// this class caches an ontology
 	// add member variables here if additional information about the ontology must be stored
 	struct CachedOntology{
-#ifdef HAVE_OWLCPP
 		typedef boost::shared_ptr<ReasoningKernel> ReasoningKernelPtr;
 
 		ID ontologyName;
@@ -74,7 +72,7 @@ public:
 		std::vector<RoleAssertion> roleAssertions;
 		inline bool checkConceptAssertion(RegistryPtr reg, ID guardAtomID) const;
 		inline bool checkRoleAssertion(RegistryPtr reg, ID guardAtomID) const;
-#endif
+
 		CachedOntology();
 		virtual ~CachedOntology();
 
@@ -117,13 +115,13 @@ private:
 		void constructClassificationProgram();
 
 		// computes the classification for a given ontology
-		InterpretationPtr computeClassification(ProgramCtx& ctx, CachedOntology& ontology);
+		InterpretationPtr computeClassification(ProgramCtx& ctx, CachedOntologyPtr ontology);
 
 		// constructs the concept and role assertions
-		void constructAbox(ProgramCtx& ctx, CachedOntology& ontology);
+		void constructAbox(ProgramCtx& ctx, CachedOntologyPtr ontology);
 
 		// loads an ontology and computes its classification or returns a reference to it if already present
-		CachedOntology& prepareOntology(ProgramCtx& ctx, ID ontologyNameID);
+		CachedOntologyPtr prepareOntology(ProgramCtx& ctx, ID ontologyNameID);
 
 		// checks the guard atoms wrt. the Abox, removes them from ng and sets keep to true in this case, and sets keep to false otherwise
 		virtual void guardSupportSet(bool& keep, Nogood& ng, const ID eaReplacement);
@@ -131,7 +129,6 @@ private:
 		// learns a complete set of support sets for the ontology specified in query.input[0] and adds them to nogoods
 		void learnSupportSets(const Query& query, NogoodContainerPtr nogoods);
 
-#ifdef HAVE_OWLCPP
 		// expands the Abox with the facts given in the interpretation
 		std::vector<TDLAxiom*> expandAbox(const Query& query);
 
@@ -147,14 +144,14 @@ private:
 			Type type;
 			Tuple currentTuple;
 			Answer& answer;
-			CachedOntology& ontology;
+			CachedOntologyPtr ontology;
 		public:
-			Actor_collector(RegistryPtr reg, Answer& answer, CachedOntology& ontology, Type t);
+			Actor_collector(RegistryPtr reg, Answer& answer, CachedOntologyPtr ontology, Type t);
 			virtual ~Actor_collector();
 			bool apply(const TaxonomyVertex& node);
 			void processTuple(Tuple tup);
 		};
-#endif
+
 	public:
 		DLPluginAtom(std::string predName, ProgramCtx& ctx);
 
@@ -187,14 +184,7 @@ public:
 	// plugin atoms
 	virtual std::vector<PluginAtomPtr> createAtoms(ProgramCtx& ctx) const;
 };
-#endif
 
-class StringPlugin : public PluginInterface{
-public:
-StringPlugin();
-virtual std::vector<PluginAtomPtr> createAtoms(ProgramCtx&) const;
-virtual void processOptions(std::list<const char*>& pluginOptions, ProgramCtx& ctx);
-};
 }
 
 DLVHEX_NAMESPACE_END

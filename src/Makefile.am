@@ -18,9 +18,9 @@ AM_CPPFLAGS = \
 	$(DLVHEX_CFLAGS) \
 	$(EXTSOLVER_CPPFLAGS)
 
-libdlvhexplugin_dllite_la_LDFLAGS = -avoid-version -module #$(EXTSOLVER_LDFLAGS)
+libdlvhexplugin_dllite_la_LDFLAGS = -avoid-version -module $(EXTSOLVER_LDFLAGS)
 
-libdlvhexplugin_dllite_la_LIBADD = #$(EXTSOLVER_LIBADD)
+libdlvhexplugin_dllite_la_LIBADD = $(EXTSOLVER_LIBADD)
 
 
 libdlvhexplugin-dllite-static.la: $(libdlvhexplugin_dllite_la_OBJECTS)

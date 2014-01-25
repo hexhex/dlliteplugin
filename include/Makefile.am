@@ -4,5 +4,7 @@ DLLITEHEADERS = \
 pkginclude_HEADERS = $(DLLITEHEADERS)
 
 noinst_HEADERS = \
-		 DLLitePlugin.h #\
-		 RepairModelGenerator.h
+		 DLLitePlugin.h
+
+#\
+#		 RepairModelGenerator.h
