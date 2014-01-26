@@ -58,7 +58,10 @@ public:
 	struct CachedOntology{
 		typedef boost::shared_ptr<ReasoningKernel> ReasoningKernelPtr;
 
+		RegistryPtr reg;
+
 		ID ontologyName;
+		std::string ontologyPath, ontologyNamespace, ontologyVersion;
 		bool loaded;
 		owlcpp::Triple_store store;
 		InterpretationPtr classification;
@@ -72,7 +75,12 @@ public:
 		inline bool checkConceptAssertion(RegistryPtr reg, ID guardAtomID) const;
 		inline bool checkRoleAssertion(RegistryPtr reg, ID guardAtomID) const;
 
-		CachedOntology();
+		std::string addNamespaceToString(std::string str) const;
+		std::string removeNamespaceFromString(std::string str) const;
+		ID addNamespaceToTerm(ID term);
+		ID removeNamespaceFromTerm(ID term);
+
+		CachedOntology(RegistryPtr reg);
 		virtual ~CachedOntology();
 
 		void load(RegistryPtr reg, ID ontologyName);

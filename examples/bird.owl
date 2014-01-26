@@ -8,7 +8,7 @@
   xmlns="http://www.kr.tuwien.ac.at/staff/roman/tweety_bird#"
   xml:base="http://www.kr.tuwien.ac.at/staff/roman/tweety_bird">
 
-  <owl:Ontology rdf:ID="tweety_bird"/>
+  <owl:Ontology rdf:about=""/>
 
   <owl:Class rdf:ID="Bird" />
   <owl:Class rdf:ID="Flier" />

@@ -1,0 +1,2 @@
+driver(X) :- &cDL["taxi.owl", cp, cm, rp, rm, "Driver"](X).
+works(X, Y) :- &rDL["taxi.owl", cp, cm, rp, rm, "worksIn"](X, Y).

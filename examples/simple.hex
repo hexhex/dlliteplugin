@@ -1,5 +1,0 @@
-cp("http://www.kr.tuwien.ac.at/staff/roman/tweety_bird#Penguin", "bla") v cp("http://www.kr.tuwien.ac.at/staff/roman/tweety_bird#Bird", "xyz").
-cm("http://www.kr.tuwien.ac.at/staff/roman/tweety_bird#Penguin", "bla").
-birds(X) :- &cDL["bird.owl", cp, cm, rp, rm, "http://www.kr.tuwien.ac.at/staff/roman/tweety_bird#Bird"](X).
-penguins(X) :- &cDL["bird.owl", cp, cm, rp, rm, "http://www.kr.tuwien.ac.at/staff/roman/tweety_bird#Penguin"](X).
-
