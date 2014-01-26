@@ -74,7 +74,6 @@
     </owl:Class>
     
 
-
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
@@ -110,6 +109,8 @@
     <!-- http://www.semanticweb.org/ontologies/2014/0/taxi.owl#r3 -->
 
     <owl:Thing rdf:about="#r3"/>
+
+    <owl:Thing rdf:about="#d1"><worksIn rdf:resource="#r1"/></owl:Thing>
 </rdf:RDF>
 
 

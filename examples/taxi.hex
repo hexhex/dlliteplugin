@@ -1,8 +1,11 @@
 cp("Driver", "driver1").
 %cm("Driver", "d2").
 
+rm("worksIn", "x", "y").
+
 consistent :- &consDL["taxi.owl", cp, cm, rp, rm]().
 
 driver(X) :- &cDL["taxi.owl", cp, cm, rp, rm, "Driver"](X).
 nodriver(X) :- &cDL["taxi.owl", cp, cm, rp, rm, "-Driver"](X).
+
 works(X, Y) :- &rDL["taxi.owl", cp, cm, rp, rm, "worksIn"](X, Y).

@@ -80,10 +80,15 @@ public:
 
 		inline bool containsNamespace(std::string str) const;
 		inline bool containsNamespace(ID term) const;
+		inline bool isOwlType(std::string str) const;
 		inline std::string addNamespaceToString(std::string str) const;
 		inline std::string removeNamespaceFromString(std::string str) const;
 		inline ID addNamespaceToTerm(ID term);
 		inline ID removeNamespaceFromTerm(ID term);
+		inline ID addNamespaceToAtom(ID atom);
+		inline ID removeNamespaceFromAtom(ID atom);
+		inline InterpretationPtr addNamespaceToInterpretation(InterpretationPtr intr);
+		inline InterpretationPtr removeNamespaceFromInterpretation(InterpretationPtr intr);
 
 		CachedOntology(RegistryPtr reg);
 		virtual ~CachedOntology();
