@@ -355,6 +355,12 @@ void DLLitePlugin::DLPluginAtom::constructClassificationProgram(){
 	opxy.tuple.push_back(yID);
 	ID opxyID = reg->storeOrdinaryAtom(opxy);
 
+	OrdinaryAtom opyx(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+	opyx.tuple.push_back(opID);
+	opyx.tuple.push_back(yID);
+	opyx.tuple.push_back(xID);
+	ID opyxID = reg->storeOrdinaryAtom(opyx);
+
 	// Transitivity rule: sub(X,Z) :- sub(X,Y), sub(Y,Z)
 	Rule trans(ID::MAINKIND_RULE);
 	trans.body.push_back(ID::posLiteralFromAtom(subxyID));
@@ -377,10 +383,17 @@ void DLLitePlugin::DLPluginAtom::constructClassificationProgram(){
 	conflict.head.push_back(confxyID);
 	ID conflictID = reg->storeRule(conflict);
 
+	// Rule for reflexivity of opposite predicate: op(Y,X) :- op(X,Y)
+	Rule refop(ID::MAINKIND_RULE);
+	refop.body.push_back(ID::posLiteralFromAtom(opxyID));
+	refop.head.push_back(opyxID);
+	ID refopID = reg->storeRule(refop);
+
 	// assemble program
 	classificationIDB.push_back(transID);
 	classificationIDB.push_back(contraID);
 	classificationIDB.push_back(conflictID);
+	classificationIDB.push_back(refopID);
 }
 
 void DLLitePlugin::DLPluginAtom::constructAbox(ProgramCtx& ctx, CachedOntologyPtr ontology){
@@ -536,6 +549,18 @@ InterpretationPtr DLLitePlugin::DLPluginAtom::computeClassification(ProgramCtx& 
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
+
+		if (afterSymbol(to_string(t.pred_, ontology->store), ':') == "complementOf")
+				{
+					DBGLOG(DBG,"Construct facts of the form op(Subj,Obj)");
+					{
+						OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+						fact.tuple.push_back(opID);
+						fact.tuple.push_back(reg->storeConstantTerm("\"" + to_string(t.subj_, ontology->store) + "\""));
+						fact.tuple.push_back(reg->storeConstantTerm("\"" + to_string(t.obj_, ontology->store) + "\""));
+						edb->setFact(reg->storeOrdinaryAtom(fact).address);
+					}
+				}
 		if (afterSymbol(to_string(t.pred_, ontology->store), ':') == "propertyDisjointWith")
 		{
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
