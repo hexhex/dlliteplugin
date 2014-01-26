@@ -113,6 +113,7 @@ void DLLitePlugin::CachedOntology::load(RegistryPtr reg, ID ontologyName){
 
 InterpretationPtr DLLitePlugin::CachedOntology::getAllIndividuals(const PluginAtom::Query& query){
 
+	DBGLOG(DBG, "Retrieving all individuals");
 	InterpretationPtr allIndividuals(new Interpretation(reg));
 
 	// add individuals from the Abox
@@ -643,12 +644,14 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 		RegistryPtr reg = getRegistry();
 
 		// prepare output variable, tuple and negative output atom
+		DBGLOG(DBG, "Storing output atom");
 		ID outvarID = reg->storeVariableTerm("O");
 		Tuple outlist;
 		outlist.push_back(outvarID);
 		ID outlit = NogoodContainer::createLiteral(ExternalLearningHelper::getOutputAtom(query, outlist, true).address, false);
 
 		// iterate over the maximum input
+		DBGLOG(DBG, "Analyzing maximum input");
 		bm::bvector<>::enumerator en = query.interpretation->getStorage().first();
 		bm::bvector<>::enumerator en_end = query.interpretation->getStorage().end();
 
@@ -656,10 +659,12 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 		while (en < en_end){
 			// check if it is c+, c-, r+ or r-
 
+			DBGLOG(DBG, "Current input atom: " << RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en)));
 			const OrdinaryAtom& oatom = reg->ogatoms.getByAddress(*en);
 
 			if (oatom.tuple[0] == query.input[1]){
 				// c+
+				DBGLOG(DBG, "Atom for C+");
 				assert(oatom.tuple.size() == 3 && "Second parameter must be a binary predicate");
 
 				ID cID = oatom.tuple[1];
@@ -762,6 +767,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 				}
 			}else if (oatom.tuple[0] == query.input[2]){
 				// c-
+				DBGLOG(DBG, "Atom for C-");
 				assert(oatom.tuple.size() == 3 && "Third parameter must be a binary predicate");
 
 				ID cID = oatom.tuple[1];
@@ -787,6 +793,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 				}
 			}else if (oatom.tuple[0] == query.input[3]){
 				// r+
+				DBGLOG(DBG, "Atom for R+");
 				assert(oatom.tuple.size() == 4 && "Fourth parameter must be a ternary predicate");
 
 				ID rID = oatom.tuple[1];
@@ -814,6 +821,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 				}
 			}else if (oatom.tuple[0] == query.input[4]){
 				// r-
+				DBGLOG(DBG, "Atom for R-");
 				assert(oatom.tuple.size() == 4 && "Fifth parameter must be a ternary predicate");
 
 				ID rID = oatom.tuple[1];
@@ -1153,7 +1161,7 @@ void DLLitePlugin::ConsDLAtom::retrieve(const Query& query, Answer& answer, Nogo
 	RegistryPtr reg = getRegistry();
 
 	// learn support sets (if enabled)
-	DLPluginAtom::retrieve(query, answer, nogoods);
+	//DLPluginAtom::retrieve(query, answer, nogoods);
 
 	CachedOntologyPtr ontology = prepareOntology(ctx, query.input[0]);
 	std::vector<TDLAxiom*> addedAxioms = expandAbox(query);
