@@ -489,8 +489,7 @@ InterpretationPtr DLLitePlugin::DLPluginAtom::computeClassification(ProgramCtx& 
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(subID);
-				fact.tuple.push_back(dlEx(reg->storeConstantTerm("\"" + to_string(t.subj_, ontology->store) + "\"")));
-				fact.tuple.push_back(dlEx(dlEx(reg->storeConstantTerm("\"" + to_string(t.subj_, ontology->store) + "\""))));
+				fact.tuple.push_back(dlEx(reg->storeConstantTerm("\"" + to_string(t.subj_, ontology->store) + "\"")));				//fact.tuple.push_back(dlEx(dlEx(reg->storeConstantTerm("\"" + to_string(t.subj_, ontology->store) + "\""))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 			{
@@ -548,7 +547,7 @@ InterpretationPtr DLLitePlugin::DLPluginAtom::computeClassification(ProgramCtx& 
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
-		if (afterSymbol(to_string(t.pred_, ontology->store), ':') == "Domain")
+		if (afterSymbol(to_string(t.pred_, ontology->store), ':') == "domain")
 		{
 			DBGLOG(DBG,"Construct facts of the form sub(exSubj,Obj)");
 			{
