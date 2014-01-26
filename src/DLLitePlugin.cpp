@@ -183,7 +183,7 @@ std::string DLLitePlugin::CachedOntology::addNamespaceToString(std::string str) 
 std::string DLLitePlugin::CachedOntology::removeNamespaceFromString(std::string str) const{
 	DBGLOG(DBG, "Removing namespace from " + str);
 	assert((str.substr(0, ontologyNamespace.length()) == ontologyNamespace || str[0] == '-' && str.substr(1, ontologyNamespace.length()) == ontologyNamespace) && "given string does not start with ontology namespace");
-	if (str[0] == '-') return '-' + str.substr(ontologyNamespace.length() + 1 + 1); // +1 because of '#'
+	if (str[0] == '-') return '-' + str.substr(ontologyNamespace.length() + 1 + 1); // +1 because of '-', +1 because of '#'
 	return str.substr(ontologyNamespace.length() + 1); // +1 because of '#'
 }
 
@@ -867,10 +867,10 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 				Nogood supportset;
 				supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cmcx)));
 				supportset.insert(outlit);
-				DBGLOG(DBG, "LSS: Learned support set: " << supportset.getStringRepresentation(reg));
+				DBGLOG(DBG, "LSS:                     Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
 				nogoods->addNogood(supportset);
 			}else{
-				DBGLOG(DBG, "LSS: Does not hold");
+				DBGLOG(DBG, "LSS:                     Does not hold");
 			}
 		}else if (oatom.tuple[0] == query.input[3]){
 			// r+
@@ -896,10 +896,10 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 				Nogood supportset;
 				supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
 				supportset.insert(outlit);
-				DBGLOG(DBG, "LSS: Learned support set: " << supportset.getStringRepresentation(reg));
+				DBGLOG(DBG, "LSS:                     Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
 				nogoods->addNogood(supportset);
 			}else{
-				DBGLOG(DBG, "LSS: Does not hold");
+				DBGLOG(DBG, "LSS:                     Does not hold");
 			}
 		}else if (oatom.tuple[0] == query.input[4]){
 			// r-
@@ -925,10 +925,10 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 				Nogood supportset;
 				supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
 				supportset.insert(outlit);
-				DBGLOG(DBG, "LSS: Learned support set: " << supportset.getStringRepresentation(reg));
+				DBGLOG(DBG, "LSS:                     Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
 				nogoods->addNogood(supportset);
 			}else{
-				DBGLOG(DBG, "LSS: Does not hold");
+				DBGLOG(DBG, "LSS:                     Does not hold");
 			}
 		}
 		en++;

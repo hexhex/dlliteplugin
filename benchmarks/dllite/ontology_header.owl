@@ -21,6 +21,3 @@
     <rdfs:subClassOf rdf:resource="#NonFlier" />
   </owl:Class>
 
-  <Bird rdf:ID="Individuum1"/>
-  <Penguin rdf:ID="Individuum2"/>
-</rdf:RDF>

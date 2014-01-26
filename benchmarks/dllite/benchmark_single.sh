@@ -7,7 +7,7 @@ export LD_LIBRARY_PATH=$2
 instance=$3
 to=$4
 
-confstr="dllite.hex;dllite.hex --supportsets;dllite.hex -n=1;dllite.hex --supportsets -n=1"
+confstr=";--supportsets;-n=1;--supportsets -n=1"
 confstr2=$(cat conf)
 if [ $? == 0 ]; then
         confstr=$confstr2
@@ -32,8 +32,7 @@ i=0
 for c in "${confs[@]}"
 do
 	echo -ne -e " "
-	pushd .. > /dev/null 2>&1
-	output=$(timeout $to time -o $instance.$i.time.dat -f %e dlvhex2 $c --heuristics=monolithic --plugindir=../../testsuite/ instances/$instance --verbose=8 2>$instance.$i.verbose.dat > /dev/null)
+	output=$(timeout $to time -o $instance.$i.time.dat -f %e dlvhex2 $c --heuristics=monolithic --plugindir=../../../src/ $instance --verbose=8 2>$instance.$i.verbose.dat > /dev/null)
 	ret=$?
 	if [[ $ret == 0 ]]; then
 	        output=$(cat $instance.$i.time.dat)
@@ -47,9 +46,8 @@ do
 	echo -ne "$output $groundertime $solvertime"
 
 	rm $instance.$i.time.dat
-	rm $instance.$i.verbose.dat
+#	rm $instance.$i.verbose.dat
 
-	popd > /dev/null 2>&1
 	let i=i+1
 done
 echo -e -ne "\n"

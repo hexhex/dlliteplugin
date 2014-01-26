@@ -1,0 +1,47 @@
+README
+======
+
+To create a new benchmark for the DLLite-Plugin proceed as follows:
+
+1. Create a copy of the folder "dllite"
+2. Provide your problem encoding as HEX-program "program.hex";
+   in this program, use the constant OWLONTOLOGY (without quotes)
+   to refer to the owl-file containing the ontology. The scripts will
+   automatically replace this constant by the name of a
+   concrete instance.
+3. Provide your ontology IN TWO PARTS:
+   - ontology_header.owl must contain the part of the owl file
+     which should come before the Abox assertions;
+   - ontology_footer.owl must contain the part of the owl file
+     which should come after the Abox assertions.
+4. Edit the script "generate.sh" and list the concepts and roles from
+   your ontology at the top.
+5. Make sure that the folder "instances" exists and run
+
+     ./generateset.sh i1 i2 i3 p1 p2 p3 c
+
+   where i1 is the minimal instance size (number of individuals)
+         i2 is the maximal instance size (number of individuals)
+         i3 is the step size between instance sizes
+
+         p1 is the minimal role assertion probability*
+         p2 is the minimal role assertion probability
+         p3 is the step size between role assertion probabilities
+
+         c is the number of instances for every combination of size
+           and role assertion probability
+
+   For instance,
+
+     ./generateset.sh 10 100 10 2 10 2 100
+
+   creates 100 instances for each number of individuals
+   from {10, 20, ..., 100} and each role assertion probability
+   from {2, 4, ..., 10}.
+
+
+* The role assertion probability p specifies for a given
+  pair (ci, cj) of individuals and role R the probability, that
+  (exactly) one of the assertions R(ci, cj) or -R(ci, cj) is added
+  to the Abox.
+  Thus, with higher p the "connectivity" of the Abox increases.

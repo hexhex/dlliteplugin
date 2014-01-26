@@ -20,5 +20,5 @@
 		    <rdfs:subClassOf rdf:resource="#Bird" />
 		    <rdfs:subClassOf rdf:resource="#NonFlier" />
 		  </owl:Class>
-<Penguin rdf:ID="Individum1"/> <Bird rdf:ID="Individum2"/> <Penguin rdf:ID="Individum3"/> <Bird rdf:ID="Individum4"/> <Penguin rdf:ID="Individum5"/> <Bird rdf:ID="Individum6"/> <Penguin rdf:ID="Individum7"/> <Bird rdf:ID="Individum8"/> <Penguin rdf:ID="Individum9"/> <Bird rdf:ID="Individum10"/>
+<Penguin rdf:ID="Individuum1"/> <Bird rdf:ID="Individuum2"/> <Penguin rdf:ID="Individuum3"/> <Bird rdf:ID="Individuum4"/> <Penguin rdf:ID="Individuum5"/> <Bird rdf:ID="Individuum6"/> <Penguin rdf:ID="Individuum7"/> <Bird rdf:ID="Individuum8"/> <Penguin rdf:ID="Individuum9"/> <Bird rdf:ID="Individuum10"/>
 </rdf:RDF>

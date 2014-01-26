@@ -71,9 +71,9 @@ do
 	do
 		rem=$(( $i % 2 ))
 		if [ $rem -eq 0 ]; then
-			domain="$domain <Bird rdf:ID=\"Individum$i\"/>"
+			domain="$domain <Bird rdf:ID=\"Individuum$i\"/>"
 		else
-			domain="$domain <Penguin rdf:ID=\"Individum$i\"/>"
+			domain="$domain <Penguin rdf:ID=\"Individuum$i\"/>"
 		fi
 	done
 	echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>
