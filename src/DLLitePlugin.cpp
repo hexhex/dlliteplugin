@@ -791,13 +791,17 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 			}
 
 			// check if sub(C, C') is true in the classification assignment (for some C')
-			DBGLOG(DBG, "LSS:                Checking if sub(C, C') is true in the classification assignment (for some C, C')");
+#ifndef NDEBUG
+			std::string cstr = RawPrinter::toString(reg, cID);
+
+			DBGLOG(DBG, "LSS:                Checking if sub(" << cstr << ", C') is true in the classification assignment (for some C')");
+#endif
 			bm::bvector<>::enumerator en2 = classification->getStorage().first();
 			bm::bvector<>::enumerator en2_end = classification->getStorage().end();
 			while (en2 < en2_end){
-				DBGLOG(DBG, "Current classification atom: " << RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en2)));
+//				DBGLOG(DBG, "LSS:                Current classification atom: " << RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en2)));
 				const OrdinaryAtom& cl = reg->ogatoms.getByAddress(*en2);
-				if (cl.tuple[1] == cID){
+				if (cl.tuple[0] ==subID == cl.tuple[1] == cID){
 					ID cWithoutNamespace = ontology->removeNamespaceFromTerm(cID);
 #ifndef NDEBUG
 					ID cpWithoutNamespace = ontology->removeNamespaceFromTerm(cl.tuple[2]);
