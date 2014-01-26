@@ -563,6 +563,10 @@ InterpretationPtr DLLitePlugin::DLPluginAtom::computeClassification(ProgramCtx& 
 	DBGLOG(DBG, "EDB of classification program: " << *edb);
 
 	// evaluate the subprogram and return its unique answer set
+#ifndef NDEBUG
+	InterpretationPtr intrWithoutNamespace = ontology->removeNamespaceFromInterpretation(pc.edb);
+	DBGLOG(DBG, "LSS: Using the following facts as input to the classification program: " << *intrWithoutNamespace);
+#endif
 	std::vector<InterpretationPtr> answersets = ctx.evaluateSubprogram(pc, true);
 	assert(answersets.size() == 1 && "Subprogram must have exactly one answer set");
 	DBGLOG(DBG, "Classification: " << *answersets[0]);
