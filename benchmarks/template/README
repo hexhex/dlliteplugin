@@ -13,7 +13,8 @@ To create a new benchmark for the DLLite-Plugin proceed as follows:
    - ontology_header.owl must contain the part of the owl file
      which should come before the Abox assertions;
    - ontology_footer.owl must contain the part of the owl file
-     which should come after the Abox assertions.
+     which should come after the Abox assertions
+     (e.g. closing XML tags, etc).
 4. Edit the script "generate.sh" and list the concepts and roles from
    your ontology at the top.
 5. Make sure that the folder "instances" exists and run
@@ -25,7 +26,7 @@ To create a new benchmark for the DLLite-Plugin proceed as follows:
          i3 is the step size between instance sizes
 
          p1 is the minimal role assertion probability*
-         p2 is the minimal role assertion probability
+         p2 is the maximal role assertion probability
          p3 is the step size between role assertion probabilities
 
          c is the number of instances for every combination of size
