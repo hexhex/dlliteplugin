@@ -1,3 +1,8 @@
+if [[ $# -lt 7 ]]; then
+	echo "Error: Script expects 7 parameters"
+	exit 1;
+fi
+
 for (( nodecount=$1; nodecount <= $2; nodecount+=$3 ))
 do
 	for (( roleprop=$4; roleprop <= $5; roleprop+=$6 ))
