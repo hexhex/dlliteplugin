@@ -36,15 +36,14 @@
 
 #include "dlvhex2/PlatformDefinitions.h"
 #include "dlvhex2/PluginInterface.h"
+#include "dlvhex2/ComponentGraph.h"
 #include <set>
 
-#if defined(HAVE_OWLCPP)
 #include "owlcpp/rdf/triple_store.hpp"
 #include "owlcpp/io/input.hpp"
 #include "owlcpp/io/catalog.hpp"
 #include "owlcpp/terms/node_tags_owl.hpp"
 #include "factpp/Kernel.hpp"
-#endif //HAVE_OWLCPP
 
 DLVHEX_NAMESPACE_BEGIN
 
@@ -84,7 +83,8 @@ public:
 	{
 	public:
 		std::vector<DLLitePlugin::CachedOntologyPtr> ontologies;
-		CtxData() {};
+		bool repair;	// enable RepairModelGenerator?
+		CtxData() : repair(false) {};
 		virtual ~CtxData() {};
 	};
 
@@ -181,8 +181,14 @@ public:
 
 	virtual void processOptions(std::list<const char*>& pluginOptions, ProgramCtx& ctx);
 
+	virtual void printUsage(std::ostream& o) const;
+
 	// plugin atoms
 	virtual std::vector<PluginAtomPtr> createAtoms(ProgramCtx& ctx) const;
+
+	// RepairModelGenerator
+	virtual bool providesCustomModelGeneratorFactory(ProgramCtx& ctx) const;
+	virtual BaseModelGeneratorFactoryPtr getCustomModelGeneratorFactory(ProgramCtx& ctx, const ComponentGraph::ComponentInfo& ci) const;
 };
 
 }

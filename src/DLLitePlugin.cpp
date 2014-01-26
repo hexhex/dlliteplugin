@@ -36,6 +36,7 @@
 #endif // HAVE_CONFIG_H
 
 #include "DLLitePlugin.h"
+#include "RepairModelGenerator.h"
 #include "dlvhex2/PlatformDefinitions.h"
 #include "dlvhex2/ProgramCtx.h"
 #include "dlvhex2/Registry.h"
@@ -50,14 +51,12 @@
 #include "boost/foreach.hpp"
 #include "boost/filesystem.hpp"
 
-#if defined(HAVE_OWLCPP)
 #include "owlcpp/rdf/triple_store.hpp"
 #include "owlcpp/rdf/query_triples.hpp"
 #include "owlcpp/io/input.hpp"
 #include "owlcpp/io/catalog.hpp"
 #include "owlcpp/logic/triple_to_fact.hpp"
 #include "owlcpp/terms/node_tags_owl.hpp"
-#endif //HAVE_OWLCPP
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/lexical_cast.hpp>
@@ -1076,7 +1075,23 @@ std::vector<PluginAtomPtr> DLLitePlugin::createAtoms(ProgramCtx& ctx) const{
 }
 
 void DLLitePlugin::processOptions(std::list<const char*>& pluginOptions, ProgramCtx& ctx){
+	BOOST_FOREACH (const char* c, pluginOptions){
+		if (std::string(c).substr(0, 6) == "repair"){
+			ctx.getPluginData<DLLitePlugin>().repair = true;
+		}
+	}
+}
 
+void DLLitePlugin::printUsage(std::ostream& o) const{
+	o << "     --repair=[ontology name]" << std::endl;
+}
+
+bool DLLitePlugin::providesCustomModelGeneratorFactory(ProgramCtx& ctx) const{
+	return ctx.getPluginData<DLLitePlugin>().repair;
+}
+
+BaseModelGeneratorFactoryPtr DLLitePlugin::getCustomModelGeneratorFactory(ProgramCtx& ctx, const ComponentGraph::ComponentInfo& ci) const{
+	return BaseModelGeneratorFactoryPtr(new RepairModelGeneratorFactory(ctx, ci));
 }
 
 dlvhex::dllite::DLLitePlugin theDLLitePlugin;

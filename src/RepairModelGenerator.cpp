@@ -36,7 +36,7 @@
 #endif
 
 
-#include "dlvhex2/RepairModelGenerator.h"
+#include "RepairModelGenerator.h"
 #include "dlvhex2/Logger.h"
 #include "dlvhex2/Registry.h"
 #include "dlvhex2/Printer.h"
@@ -58,10 +58,8 @@ namespace dllite{
 
 RepairModelGeneratorFactory::RepairModelGeneratorFactory(
     ProgramCtx& ctx,
-    const ComponentInfo& ci,
-    ASPSolverManager::SoftwareConfigurationPtr externalEvalConfig):
+    const ComponentInfo& ci):
   FLPModelGeneratorFactoryBase(ctx),
-  externalEvalConfig(externalEvalConfig),
   ctx(ctx),
   ci(ci),
   outerEatoms(ci.outerEatoms)

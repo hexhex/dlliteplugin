@@ -65,9 +65,6 @@ public:
 
   // storage
 protected:
-  // which solver shall be used for external evaluation?
-  ASPSolverManager::SoftwareConfigurationPtr externalEvalConfig;
-
   ProgramCtx& ctx;
 
   ComponentInfo ci;  // should be a reference, but there is currently a bug in the copy constructor of ComponentGraph: it seems that the component info is shared between different copies of a component graph, hence it is deallocated when one of the copies dies.
@@ -82,8 +79,7 @@ protected:
 
 public:
   RepairModelGeneratorFactory(
-      ProgramCtx& ctx, const ComponentInfo& ci,
-      ASPSolverManager::SoftwareConfigurationPtr externalEvalConfig);
+      ProgramCtx& ctx, const ComponentInfo& ci);
   virtual ~RepairModelGeneratorFactory() { }
 
   virtual ModelGeneratorPtr createModelGenerator(InterpretationConstPtr input);

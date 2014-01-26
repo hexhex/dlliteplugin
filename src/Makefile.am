@@ -7,7 +7,7 @@ plugin_LTLIBRARIES = libdlvhexplugin-dllite.la
 # replace 'plugin' on the left side as above and
 # add all sources of your plugin
 #
-libdlvhexplugin_dllite_la_SOURCES = DLLitePlugin.cpp #RepairModelGenerator.cpp
+libdlvhexplugin_dllite_la_SOURCES = DLLitePlugin.cpp RepairModelGenerator.cpp
 
 #
 # extend compiler flags by CFLAGS of other needed libraries
