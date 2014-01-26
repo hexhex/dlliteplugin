@@ -40,6 +40,40 @@ To create a new benchmark for the DLLite-Plugin proceed as follows:
    from {10, 20, ..., 100} and each role assertion probability
    from {2, 4, ..., 10}.
 
+6a. The set of all instances can be evaluated by calling
+
+     ./benchmark_all.sh
+
+     IMPORTANT: This works only if the Condor load balancing system
+                is installed!
+
+6b. To run a single instance, cd to the "instances" folder and call
+
+     ../benchmark_single.sh "$PATH" "$LD_LIBRARY_PATH" INSTANCE TO > INSTANCE.out
+
+    where INSTANCE is to be replaced by the name of a HEX-program in the
+    instances folder, and TO is the desired timeout in seconds.)
+
+7. To create a table with all results, cd back to the root directory of
+   the benchmark and call
+
+     cat instances/*.out | ./doaggregation.sh > table.dat
+
+     IMPORTANT: This works only if the statistics system R is installed!
+
+8. To create a LaTeX representation, use the script
+
+	https://github.com/hexhex/benchmarks/scripts/tolatextable.sh
+        (git clone https://github.com/hexhex/benchmarks --recursive)
+
+   by calling
+
+     cat table.dat | ./doaggregation.sh > table.dat
+
+   This creates the "body" of the tables, i.e., header, etc need
+   to be created manually.
+
+
 
 * The role assertion probability p specifies for a given
   pair (ci, cj) of individuals and role R the probability, that

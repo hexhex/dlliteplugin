@@ -6,4 +6,4 @@ fi
 if [ $# -ge 2 ]; then
 	l=$2
 fi
-./aggregateresults.sh $to 22 3 $1
+./aggregateresults.sh $to 10 3 $1
