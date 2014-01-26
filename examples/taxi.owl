@@ -96,6 +96,7 @@
 
     <owl:Thing rdf:about="#d2">
         <rdf:type rdf:resource="#Electromob"/>
+	<owl:ObjectProperty rdf:resource="#worksIn"/>
     </owl:Thing>
     
 

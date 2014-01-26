@@ -81,12 +81,6 @@ void DLLitePlugin::CachedOntology::load(RegistryPtr reg, ID ontologyName){
 	this->ontologyName = ontologyName;
 
 	// load and prepare the ontology here
-	owlcpp::Triple_store::result_b<0,0,0,0>::type r = store.find_triple(
-			   	   owlcpp::any(),
-				   owlcpp::any(),
-				   owlcpp::any(),
-		       owlcpp::any());
-
 	try{
 		DBGLOG(DBG, "Reading file " << reg->terms.getByID(ontologyName).getUnquotedString());
 		load_file(reg->terms.getByID(ontologyName).getUnquotedString(), store);
@@ -111,10 +105,47 @@ void DLLitePlugin::CachedOntology::load(RegistryPtr reg, ID ontologyName){
 
 		DBGLOG(DBG, "Done");
 	}catch(std::exception e){
-		throw PluginError("Error while loading ontology " + reg->terms.getByID(ontologyName).getUnquotedString() + ": " + e.what());
+		throw PluginError("DLLite reasoner failed while loading file \"" + reg->terms.getByID(ontologyName).getUnquotedString() + "\", ensure that it is a valid ontology");
 	}
 
 	loaded = true;
+}
+
+InterpretationPtr DLLitePlugin::CachedOntology::getAllIndividuals(const PluginAtom::Query& query){
+
+	InterpretationPtr allIndividuals(new Interpretation(reg));
+
+	// add individuals from the Abox
+	allIndividuals->add(*individuals);
+
+	// add individuals from the query
+	{
+		bm::bvector<>::enumerator en = query.interpretation->getStorage().first();
+		bm::bvector<>::enumerator en_end = query.interpretation->getStorage().end();
+		while (en < en_end){
+			const OrdinaryAtom& ogatom = reg->ogatoms.getByAddress(*en);
+			assert((ogatom.tuple.size() == 3 || ogatom.tuple.size() == 4) && "invalid input atom");
+			for (int i = 2; i < ogatom.tuple.size(); ++i){
+				allIndividuals->setFact(addNamespaceToTerm(ogatom.tuple[i]).address);
+			}
+			en++;
+		}
+	}
+#ifndef NDEBUG
+	{
+		std::stringstream ss;
+		RawPrinter printer(ss, reg);
+		bm::bvector<>::enumerator en = allIndividuals->getStorage().first();
+		bm::bvector<>::enumerator en_end = allIndividuals->getStorage().end();
+		while (en < en_end){
+			printer.print(ID(ID::MAINKIND_TERM | ID::SUBKIND_TERM_CONSTANT, *en));
+			ss << " ";
+			en++;
+		}
+		DBGLOG(DBG, "All individuals: " << ss.str());
+	}
+#endif
+	return allIndividuals;
 }
 
 bool DLLitePlugin::CachedOntology::checkConceptAssertion(RegistryPtr reg, ID guardAtomID) const{
@@ -128,6 +159,14 @@ bool DLLitePlugin::CachedOntology::checkRoleAssertion(RegistryPtr reg, ID guardA
 		if (ra.first == ogatom.tuple[0] && ra.second.first == ogatom.tuple[1] && ra.second.second == ogatom.tuple[2]) return true;
 	}
 	return false;
+}
+
+bool DLLitePlugin::CachedOntology::containsNamespace(std::string str) const{
+	return str.substr(0, ontologyNamespace.length()) == ontologyNamespace;
+}
+
+bool DLLitePlugin::CachedOntology::containsNamespace(ID term) const{
+	return containsNamespace(reg->terms.getByID(term).getUnquotedString());
 }
 
 std::string DLLitePlugin::CachedOntology::addNamespaceToString(std::string str) const{
@@ -162,12 +201,16 @@ bool DLLitePlugin::DLPluginAtom::Actor_collector::apply(const TaxonomyVertex& no
 	ID tid = reg->storeConstantTerm("\"" + std::string(node.getPrimer()->getName()) + "\"");
 
 	if (node.getPrimer()->getId() != -1 && !ontology->concepts->getFact(tid.address) && !ontology->roles->getFact(tid.address)){
-		ID tidWithoutNamespace = reg->storeConstantTerm("\"" + ontology->removeNamespaceFromString(std::string(node.getPrimer()->getName())) + "\"");
+		if (!ontology->containsNamespace(tid)){
+			LOG(WARNING, "DLLite resoner returned constant " << RawPrinter::toString(reg, tid) << ", which seems to be not a valid individual name");
+		}else{
+			ID tidWithoutNamespace = reg->storeConstantTerm("\"" + ontology->removeNamespaceFromString(std::string(node.getPrimer()->getName())) + "\"");
 
-		DBGLOG(DBG, "Adding element to tuple (ID=" << tidWithoutNamespace << ")");
-		Tuple tup;
-		tup.push_back(tidWithoutNamespace);
-		answer.get().push_back(tup);
+			DBGLOG(DBG, "Adding element to tuple (ID=" << tidWithoutNamespace << ")");
+			Tuple tup;
+			tup.push_back(tidWithoutNamespace);
+			answer.get().push_back(tup);
+		}
 	}
 
 	return true;
@@ -512,20 +555,26 @@ DLLitePlugin::CachedOntologyPtr DLLitePlugin::DLPluginAtom::prepareOntology(Prog
 
 	// ontology is not in the cache --> load it
 	DBGLOG(DBG, "Loading ontology" << reg->terms.getByID(ontologyNameID).getUnquotedString());
+
 	CachedOntologyPtr co = CachedOntologyPtr(new CachedOntology(reg));
-	co->load(reg, ontologyNameID);
-	computeClassification(ctx, co);
-	constructAbox(ctx, co);
-	ontologies.push_back(co);
+	try{
+		co->load(reg, ontologyNameID);
+		computeClassification(ctx, co);
+		constructAbox(ctx, co);
+		ontologies.push_back(co);
+	}catch(...){
+		// restore stderr
+		if(origcerr != NULL){
+			std::cerr.rdbuf(origcerr);
+			if(errstr.str().size() > 0) LOG(INFO, errstr.str());
+		}
+		throw;
+	}
 
 	// restore stderr
-	if( origcerr != NULL )
-	{
+	if(origcerr != NULL){
 		std::cerr.rdbuf(origcerr);
-		if( errstr.str().size() > 0 )
-		{
-			LOG(INFO, "Gringo Output was {" << errstr.str() << "}");
-		}
+		if(errstr.str().size() > 0) LOG(INFO, errstr.str());
 	}
 
 	return co;
@@ -925,24 +974,13 @@ void DLLitePlugin::CDLAtom::retrieve(const Query& query, Answer& answer, NogoodC
 		// for these individuals the query evaluates to true.
 
 		DBGLOG(DBG, "KB is inconsistent: returning all tuples");
-		InterpretationPtr intr = InterpretationPtr(new Interpretation(reg));
-		intr->add(*query.interpretation);
-		intr->add(*ontology->individuals);
+		InterpretationPtr intr = ontology->getAllIndividuals(query);
 		bm::bvector<>::enumerator en = intr->getStorage().first();
 		bm::bvector<>::enumerator en_end = intr->getStorage().end();
 		while (en < en_end){
-			const OrdinaryAtom& ogatom = reg->ogatoms.getByAddress(*en);
-
-			ID concept = ogatom.tuple[1];
-			if (ontology->individuals->getFact(*en)) concept = ontology->removeNamespaceFromTerm(ogatom.tuple[1]);
-			if (ogatom.tuple.size() == 3 && concept == query.input[5]){
-				ID individual = ogatom.tuple[2];
-				if (ontology->individuals->getFact(*en)) individual = ontology->removeNamespaceFromTerm(ogatom.tuple[2]);
-
-				Tuple tup;
-				tup.push_back(individual);
-				answer.get().push_back(tup);
-			}
+			Tuple tup;
+			tup.push_back(ontology->removeNamespaceFromTerm(ID(ID::MAINKIND_TERM | ID::SUBKIND_TERM_CONSTANT, *en)));
+			answer.get().push_back(tup);
 			en++;
 		}
 		DBGLOG(DBG, "Query answering complete, recovering Abox");
@@ -953,14 +991,27 @@ void DLLitePlugin::CDLAtom::retrieve(const Query& query, Answer& answer, NogoodC
 	// find the query concept
 	DBGLOG(DBG, "Looking up query concept");
 	bool found = false;
+	std::string queryConcept = reg->terms.getByID(query.input[5]).getUnquotedString();
+	bool negated = false;
+	if (queryConcept[0] == '-'){
+		negated = true;
+		queryConcept = queryConcept.substr(1);
+	}
+	queryConcept = ontology->addNamespaceToString(queryConcept);
 	BOOST_FOREACH(owlcpp::Triple const& t, ontology->store.map_triple()) {
 		DBGLOG(DBG, "Current triple: " << to_string(t.subj_, ontology->store) << " / " << to_string(t.pred_, ontology->store) << " / " << to_string(t.obj_, ontology->store));
-		if (to_string(t.subj_, ontology->store) == ontology->addNamespaceToString(reg->terms.getByID(query.input[5]).getUnquotedString())){
+		if (to_string(t.subj_, ontology->store) == queryConcept){
 			// found concept
 			DBGLOG(DBG, "Preparing Actor_collector for " << to_string(t.subj_, ontology->store));
 			Actor_collector ret(reg, answer, ontology, Actor_collector::Concept);
 			DBGLOG(DBG, "Sending concept query");
-			ontology->kernel->getInstances(ontology->kernel->getExpressionManager()->Concept(to_string(t.subj_, ontology->store)), ret);
+			TDLConceptExpression* factppConcept = ontology->kernel->getExpressionManager()->Concept(to_string(t.subj_, ontology->store));
+			if (negated) factppConcept = ontology->kernel->getExpressionManager()->Not(factppConcept);
+			try{
+				ontology->kernel->getInstances(factppConcept, ret);
+			}catch(...){
+				throw PluginError("DLLite reasoner failed during concept query");
+			}
 			found = true;
 			break;
 		}
@@ -1009,26 +1060,18 @@ void DLLitePlugin::RDLAtom::retrieve(const Query& query, Answer& answer, NogoodC
 		// TODO: Same question as for concept queries.
 
 		DBGLOG(DBG, "KB is inconsistent: returning all tuples");
-		InterpretationPtr intr = InterpretationPtr(new Interpretation(reg));
-		intr->add(*query.interpretation);
-		intr->add(*ontology->individuals);
+		InterpretationPtr intr = ontology->getAllIndividuals(query);
 		bm::bvector<>::enumerator en = intr->getStorage().first();
 		bm::bvector<>::enumerator en_end = intr->getStorage().end();
 		while (en < en_end){
-			const OrdinaryAtom& ogatom = reg->ogatoms.getByAddress(*en);
-
-			ID role = ogatom.tuple[1];
-			if (ontology->individuals->getFact(*en)) role = reg->storeConstantTerm("\"" + ontology->removeNamespaceFromString(reg->terms.getByID(ogatom.tuple[1]).getUnquotedString()) + "\"");
-			if (ogatom.tuple.size() == 4 && role == query.input[5]){
-				ID individual1 = ogatom.tuple[2];
-				ID individual2 = ogatom.tuple[3];
-				if (ontology->individuals->getFact(*en)) individual1 = ontology->removeNamespaceFromTerm(ogatom.tuple[2]);
-				if (ontology->individuals->getFact(*en)) individual2 = ontology->removeNamespaceFromTerm(ogatom.tuple[3]);
-
+			bm::bvector<>::enumerator en2 = intr->getStorage().first();
+			bm::bvector<>::enumerator en2_end = intr->getStorage().end();
+			while (en2 < en2_end){
 				Tuple tup;
-				tup.push_back(individual1);
-				tup.push_back(individual2);
+				tup.push_back(ontology->removeNamespaceFromTerm(ID(ID::MAINKIND_TERM | ID::SUBKIND_TERM_CONSTANT, *en)));
+				tup.push_back(ontology->removeNamespaceFromTerm(ID(ID::MAINKIND_TERM | ID::SUBKIND_TERM_CONSTANT, *en2)));
 				answer.get().push_back(tup);
+				en2++;
 			}
 			en++;
 		}
@@ -1037,46 +1080,90 @@ void DLLitePlugin::RDLAtom::retrieve(const Query& query, Answer& answer, NogoodC
 		return;
 	}
 
-	// find the query role
+	// get the query role
+	std::string role = reg->terms.getByID(query.input[5]).getUnquotedString();
+	bool negated = false;
+	if (role[0] == '-'){
+		role = role.substr(1);
+		negated = true;
+	}
+	role = ontology->addNamespaceToString(role);
+	TDLObjectRoleExpression* factppRole = ontology->kernel->getExpressionManager()->ObjectRole(role);
+
 	DBGLOG(DBG, "Answering role query");
-	InterpretationPtr intr = InterpretationPtr(new Interpretation(reg));
-	intr->add(*query.interpretation);
-	intr->add(*ontology->individuals);
+	InterpretationPtr intr = ontology->getAllIndividuals(query);
 
 	// for all individuals
 	bm::bvector<>::enumerator en = intr->getStorage().first();
 	bm::bvector<>::enumerator en_end = intr->getStorage().end();
 	while (en < en_end){
-		const OrdinaryAtom& ogatom = reg->ogatoms.getByAddress(*en);
-		ID role = ogatom.tuple[1];
-		if (query.interpretation->getFact(*en)) role = ontology->addNamespaceToTerm(ogatom.tuple[1]);
+		ID individual1 = ID(ID::MAINKIND_TERM | ID::SUBKIND_TERM_CONSTANT, *en);
+		ID individual1WithoutNamespace = ontology->removeNamespaceFromTerm(ID(ID::MAINKIND_TERM | ID::SUBKIND_TERM_CONSTANT, *en));
 
-		if (ogatom.tuple.size() == 4 && role == query.input[5]){
-			for (int i = 2; i <= 3; i++){
-				ID individual = ogatom.tuple[i];
-				if (query.interpretation->getFact(*en)) individual = ontology->addNamespaceToTerm(ogatom.tuple[i]);
+		// query related individuals
+		DBGLOG(DBG, "Querying individuals related to " << RawPrinter::toString(reg, individual1WithoutNamespace));
+		std::vector<const TNamedEntry*> relatedIndividuals;
+		try{
+			ontology->kernel->getRoleFillers(
+				ontology->kernel->getExpressionManager()->Individual(reg->terms.getByID(individual1).getUnquotedString()),
+				factppRole,
+				relatedIndividuals);
+		}catch(...){
+			throw PluginError("DLLite reasoner failed during role query");
+		}
 
-				// query related individuals
-				std::vector<const TNamedEntry*> relatedIndividuals;
-				ontology->kernel->getRoleFillers(
-					ontology->kernel->getExpressionManager()->Individual(reg->terms.getByID(individual).getUnquotedString()),
-					ontology->kernel->getExpressionManager()->ObjectRole(reg->terms.getByID(role).getUnquotedString()),
-					relatedIndividuals);
-
-				// translate the result to HEX
-				BOOST_FOREACH (const TNamedEntry* related, relatedIndividuals){
-					DBGLOG(DBG, "Adding role membership: (" << "\"" + ontology->removeNamespaceFromString(reg->terms.getByID(individual).getUnquotedString()) + "\"" << ", " << "\"" + ontology->removeNamespaceFromString(related->getName()) + "\"" << ")");
-					Tuple tup;
-					tup.push_back(ontology->removeNamespaceFromTerm(ogatom.tuple[i]));
-					tup.push_back(reg->storeConstantTerm("\"" + ontology->removeNamespaceFromString(related->getName()) + "\""));
-					answer.get().push_back(tup);
-				}
-			}
+		// translate the result to HEX
+		BOOST_FOREACH (const TNamedEntry* related, relatedIndividuals){
+			DBGLOG(DBG, "Adding role membership: (" << "\"" + reg->terms.getByID(individual1WithoutNamespace).getUnquotedString() + "\"" << ", " << "\"" + ontology->removeNamespaceFromString(related->getName()) + "\"" << ")");
+			Tuple tup;
+			tup.push_back(individual1WithoutNamespace);
+			tup.push_back(reg->storeConstantTerm("\"" + ontology->removeNamespaceFromString(related->getName()) + "\""));
+			answer.get().push_back(tup);
 		}
 		en++;
 	}
 
 	DBGLOG(DBG, "Query answering complete, recovering Abox");
+	restoreAbox(query, addedAxioms);
+}
+
+// ============================== Class RDLAtom ==============================
+
+DLLitePlugin::ConsDLAtom::ConsDLAtom(ProgramCtx& ctx) : DLPluginAtom("consDL", ctx)
+{
+	DBGLOG(DBG,"Constructor of consDL plugin is started");
+	addInputConstant(); // the ontology
+	addInputPredicate(); // the positive concept
+	addInputPredicate(); // the negative concept
+	addInputPredicate(); // the positive role
+	addInputPredicate(); // the negative role
+	setOutputArity(0); // arity of the output list
+}
+
+void DLLitePlugin::ConsDLAtom::retrieve(const Query& query, Answer& answer)
+{
+	assert(false);
+}
+
+void DLLitePlugin::ConsDLAtom::retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods)
+{
+
+	DBGLOG(DBG, "ConsDLAtom::retrieve");
+
+	RegistryPtr reg = getRegistry();
+
+	// learn support sets (if enabled)
+	DLPluginAtom::retrieve(query, answer, nogoods);
+
+	CachedOntologyPtr ontology = prepareOntology(ctx, query.input[0]);
+	std::vector<TDLAxiom*> addedAxioms = expandAbox(query);
+
+	// handle inconsistency
+	if (ontology->kernel->isKBConsistent()){
+		answer.get().push_back(Tuple());
+	}
+
+	DBGLOG(DBG, "Consistency check complete, recovering Abox");
 	restoreAbox(query, addedAxioms);
 }
 
@@ -1098,6 +1185,7 @@ std::vector<PluginAtomPtr> DLLitePlugin::createAtoms(ProgramCtx& ctx) const{
 	std::vector<PluginAtomPtr> ret;
 	ret.push_back(PluginAtomPtr(new CDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
 	ret.push_back(PluginAtomPtr(new RDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
+	ret.push_back(PluginAtomPtr(new ConsDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
 	return ret;
 }
 

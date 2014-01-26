@@ -75,10 +75,15 @@ public:
 		inline bool checkConceptAssertion(RegistryPtr reg, ID guardAtomID) const;
 		inline bool checkRoleAssertion(RegistryPtr reg, ID guardAtomID) const;
 
-		std::string addNamespaceToString(std::string str) const;
-		std::string removeNamespaceFromString(std::string str) const;
-		ID addNamespaceToTerm(ID term);
-		ID removeNamespaceFromTerm(ID term);
+		// returns the set of all individuals which which occur either in the Abox or in the query (including the DL-namespace)
+		InterpretationPtr getAllIndividuals(const PluginAtom::Query& query);
+
+		inline bool containsNamespace(std::string str) const;
+		inline bool containsNamespace(ID term) const;
+		inline std::string addNamespaceToString(std::string str) const;
+		inline std::string removeNamespaceFromString(std::string str) const;
+		inline ID addNamespaceToTerm(ID term);
+		inline ID removeNamespaceFromTerm(ID term);
 
 		CachedOntology(RegistryPtr reg);
 		virtual ~CachedOntology();
@@ -180,6 +185,14 @@ private:
 	class RDLAtom : public DLPluginAtom{
 	public:
 		RDLAtom(ProgramCtx& ctx);
+		virtual void retrieve(const Query& query, Answer& answer);
+		virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
+	};
+
+	// consistency check
+	class ConsDLAtom : public DLPluginAtom{
+	public:
+		ConsDLAtom(ProgramCtx& ctx);
 		virtual void retrieve(const Query& query, Answer& answer);
 		virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
 	};
