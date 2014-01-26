@@ -84,6 +84,7 @@ public:
 	public:
 		std::vector<DLLitePlugin::CachedOntologyPtr> ontologies;
 		bool repair;	// enable RepairModelGenerator?
+		std::string repairOntology;	// name of the ontology to repair (if repair=true)
 		CtxData() : repair(false) {};
 		virtual ~CtxData() {};
 	};

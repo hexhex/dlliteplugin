@@ -829,7 +829,7 @@ std::vector<TDLAxiom*> DLLitePlugin::DLPluginAtom::expandAbox(const Query& query
 					ontology->kernel->getExpressionManager()->Individual(reg->terms.getByID(individual).getUnquotedString()),
 					factppConcept));
 		}else if (ogatom.tuple[0] == query.input[3] || ogatom.tuple[0] == query.input[4]){
-			// c+ or c-
+			// r+ or r-
 			assert(ogatom.tuple.size() == 4 && "Second parameter must be a ternery predicate");
 			ID role = ogatom.tuple[1];
 			if (!ontology->concepts->getFact(role.address)){
@@ -843,12 +843,17 @@ std::vector<TDLAxiom*> DLLitePlugin::DLPluginAtom::expandAbox(const Query& query
 			DBGLOG(DBG, "Adding role assertion: " << (ogatom.tuple[0] == query.input[4] ? "-" : "") << reg->terms.getByID(role).getUnquotedString() << "(" << reg->terms.getByID(individual1).getUnquotedString() << ", " << reg->terms.getByID(individual1).getUnquotedString() << ")");
 			TDLObjectRoleExpression* factppRole = ontology->kernel->getExpressionManager()->ObjectRole(reg->terms.getByID(role).getUnquotedString());
 
-			// TODO: This probably does not what it should because we actually need a negative role assertion rather than the inverse role, but I did not find a suitable method
-			if (ogatom.tuple[0] == query.input[4]) factppRole = ontology->kernel->getExpressionManager()->Inverse(factppRole);
-			addedAxioms.push_back(ontology->kernel->relatedTo(
-				ontology->kernel->getExpressionManager()->Individual(reg->terms.getByID(individual1).getUnquotedString()),
-				factppRole,
-				ontology->kernel->getExpressionManager()->Individual(reg->terms.getByID(individual2).getUnquotedString())));
+			if (ogatom.tuple[0] == query.input[4]){
+				addedAxioms.push_back(ontology->kernel->relatedToNot(
+					ontology->kernel->getExpressionManager()->Individual(reg->terms.getByID(individual1).getUnquotedString()),
+					factppRole,
+					ontology->kernel->getExpressionManager()->Individual(reg->terms.getByID(individual2).getUnquotedString())));
+			}else{
+				addedAxioms.push_back(ontology->kernel->relatedTo(
+					ontology->kernel->getExpressionManager()->Individual(reg->terms.getByID(individual1).getUnquotedString()),
+					factppRole,
+					ontology->kernel->getExpressionManager()->Individual(reg->terms.getByID(individual2).getUnquotedString())));
+			}
 		}else{
 			assert(false && "Invalid input atom");
 		}
@@ -1075,10 +1080,19 @@ std::vector<PluginAtomPtr> DLLitePlugin::createAtoms(ProgramCtx& ctx) const{
 }
 
 void DLLitePlugin::processOptions(std::list<const char*>& pluginOptions, ProgramCtx& ctx){
-	BOOST_FOREACH (const char* c, pluginOptions){
-		if (std::string(c).substr(0, 6) == "repair"){
+
+	std::vector<std::list<const char*>::iterator> found;
+	for(std::list<const char*>::iterator it = pluginOptions.begin(); it != pluginOptions.end(); it++){
+		std::string option(*it);
+		if (option.find("--repair=") != std::string::npos){
 			ctx.getPluginData<DLLitePlugin>().repair = true;
+			ctx.getPluginData<DLLitePlugin>().repairOntology = option.substr(9);
+			found.push_back(it);
 		}
+	}
+
+	for(std::vector<std::list<const char*>::iterator>::const_iterator it = found.begin(); it != found.end(); ++it){
+		pluginOptions.erase(*it);
 	}
 }
 
