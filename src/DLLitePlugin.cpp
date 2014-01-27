@@ -446,9 +446,10 @@ InterpretationPtr DLLitePlugin::DLPluginAtom::computeClassification(ProgramCtx& 
 	DBGLOG(DBG, "Computing classification");
 
 	// prepare data structures for the subprogram P
+	InterpretationPtr edb = InterpretationPtr(new Interpretation(reg));
+/*
 	ProgramCtx pc = ctx;
 	pc.idb = classificationIDB;
-	InterpretationPtr edb = InterpretationPtr(new Interpretation(reg));
 	pc.edb = edb;
 	pc.currentOptimum.clear();
 	InputProviderPtr ip(new InputProvider());
@@ -456,6 +457,7 @@ InterpretationPtr DLLitePlugin::DLPluginAtom::computeClassification(ProgramCtx& 
 	ip->addStringInput("", "empty");
 	pc.inputProvider = ip;
 	ip.reset();
+*/
 
 	// use the ontology to construct the EDB
 	ontology->concepts = InterpretationPtr(new Interpretation(reg));
@@ -588,10 +590,10 @@ InterpretationPtr DLLitePlugin::DLPluginAtom::computeClassification(ProgramCtx& 
 
 	// evaluate the subprogram and return its unique answer set
 #ifndef NDEBUG
-	InterpretationPtr intrWithoutNamespace = ontology->removeNamespaceFromInterpretation(pc.edb);
+	InterpretationPtr intrWithoutNamespace = ontology->removeNamespaceFromInterpretation(edb);
 	DBGLOG(DBG, "LSS: Using the following facts as input to the classification program: " << *intrWithoutNamespace);
 #endif
-	std::vector<InterpretationPtr> answersets = ctx.evaluateSubprogram(pc, true);
+	std::vector<InterpretationPtr> answersets = ctx.evaluateSubprogram(edb, classificationIDB);
 	assert(answersets.size() == 1 && "Subprogram must have exactly one answer set");
 	DBGLOG(DBG, "Classification: " << *answersets[0]);
 
@@ -654,14 +656,14 @@ DLLitePlugin::CachedOntologyPtr DLLitePlugin::DLPluginAtom::prepareOntology(Prog
 
 void DLLitePlugin::DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const ID eaReplacement)
 {
-	DBGLOG(DBG, "guardSupportSet");
-	assert(ng.isGround());
-
 	RegistryPtr reg = getRegistry();
+	assert(ng.isGround());
 
 	// get the ontology name
 	ID ontologyNameID = reg->ogatoms.getByID(eaReplacement).tuple[1];
 	CachedOntologyPtr ontology = prepareOntology(ctx, ontologyNameID);
+
+	DBGLOG(DBG, "Filtering SupportSet " << ng.getStringRepresentation(reg) << " wrt. " << *ontology->conceptAssertions);
 
 	// find guard atom in the nogood
 	BOOST_FOREACH (ID lit, ng){
@@ -669,20 +671,30 @@ void DLLitePlugin::DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const I
 		ID litID = reg->ogatoms.getIDByAddress(lit.address);
 
 		// check if it is a guard atom
-		if (litID.isAuxiliary() && reg->getTypeByAuxiliaryConstantSymbol(litID) == 'o'){
-			const OrdinaryAtom& guardAtom = reg->ogatoms.getByID(litID);
+		if (litID.isAuxiliary()){
+			const OrdinaryAtom& possibleGuardAtom = reg->ogatoms.getByID(litID);
+			if (reg->getTypeByAuxiliaryConstantSymbol(possibleGuardAtom.tuple[0]) != 'o') continue;
+
+			OrdinaryAtom guardAtom = possibleGuardAtom;
+			guardAtom.tuple[0] = reg->getIDByAuxiliaryConstantSymbol(guardAtom.tuple[0]);
+			ID gatom = reg->storeOrdinaryAtom(guardAtom);
+#ifndef NDEBUG
+			std::string astr = RawPrinter::toString(reg, gatom);
+			DBGLOG(DBG, "GUARD: Checking " << (guardAtom.tuple.size() == 2 ? "concept" : "role") << " guard atom " << astr << " (HEX-ID: " << gatom << ")");
+#endif
 
 			// concept or role guard?
 			bool holds;
 			if (guardAtom.tuple.size() == 2){
 				// concept guard
-				holds = ontology->checkConceptAssertion(reg, litID);
+				holds = ontology->checkConceptAssertion(reg, gatom);
 			}else{
 				assert(guardAtom.tuple.size() == 3 && "invalid guard atom");
 
 				// role guard
-				holds = ontology->checkRoleAssertion(reg, litID);
+				holds = ontology->checkRoleAssertion(reg, gatom);
 			}
+			DBGLOG(DBG, "GUARD: Guard atom " << astr << " " << (holds ? " holds" : "does not hold"));
 
 			if (holds){
 				// remove the guard atom
@@ -692,16 +704,18 @@ void DLLitePlugin::DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const I
 						restricted.insert(lit2);
 					}
 				}
-				DBGLOG(DBG, "Keeping support set " << ng.getStringRepresentation(reg) << " with satisfied guard atom in form " << restricted.getStringRepresentation(reg));
+				DBGLOG(DBG, "GUARD: Keeping support set " << ng.getStringRepresentation(reg) << " with satisfied guard atom " << astr << " in form " << restricted.getStringRepresentation(reg));
 				ng = restricted;
 				keep = true;
+				return;
 			}else{
-				DBGLOG(DBG, "Removing support set " << ng.getStringRepresentation(reg) << " because guard atom is unsatisfied");
+				DBGLOG(DBG, "GUARD: Removing support set " << ng.getStringRepresentation(reg) << " because guard atom " << astr << " is unsatisfied");
 				keep = false;
+				return;
 			}
 		}
 	}
-	DBGLOG(DBG, "Keeping support set " << ng.getStringRepresentation(reg) << " without guard atom");
+	DBGLOG(DBG, "GUARD: Keeping support set " << ng.getStringRepresentation(reg) << " without guard atom");
 	keep = true;
 }
 
@@ -792,16 +806,17 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 
 			// check if sub(C, C') is true in the classification assignment (for some C')
 #ifndef NDEBUG
-			std::string cstr = RawPrinter::toString(reg, cID);
+			DBGLOG(DBG, "LSS:                Removing Namespace from cID");
+			std::string cstr = RawPrinter::toString(reg, ontology->removeNamespaceFromTerm(cID));
 
 			DBGLOG(DBG, "LSS:                Checking if sub(" << cstr << ", C') is true in the classification assignment (for some C')");
 #endif
 			bm::bvector<>::enumerator en2 = classification->getStorage().first();
 			bm::bvector<>::enumerator en2_end = classification->getStorage().end();
 			while (en2 < en2_end){
-//				DBGLOG(DBG, "LSS:                Current classification atom: " << RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en2)));
+				DBGLOG(DBG, "LSS:                Current classification atom: " << RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en2)));
 				const OrdinaryAtom& cl = reg->ogatoms.getByAddress(*en2);
-				if (cl.tuple[0] ==subID == cl.tuple[1] == cID){
+				if (cl.tuple[0] ==subID && cl.tuple[1] == cID){
 					ID cWithoutNamespace = ontology->removeNamespaceFromTerm(cID);
 #ifndef NDEBUG
 					ID cpWithoutNamespace = ontology->removeNamespaceFromTerm(cl.tuple[2]);
@@ -872,7 +887,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 				}
 				en2++;
 			}
-			DBGLOG(DBG, "LSS:                Finished checking if sub(C, C') is true in the classification assignment (for some C, C')");
+			DBGLOG(DBG, "LSS:                Finished checking if sub(" << cstr << ", C') is true in the classification assignment (for some C')");
 		}else if (oatom.tuple[0] == query.input[2]){
 			// c-
 			DBGLOG(DBG, "LSS:           Atom belongs to c-");
