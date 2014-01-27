@@ -127,7 +127,7 @@ struct sem<DLParserModuleSemantics::dlAtom>
 
 	ExternalAtom ext(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_EXTERNAL);
 	switch (out.size()){
-		case 0:	ext.predicate = reg->terms.getIDByString("cDL"); break; // consistency check
+		case 0:	ext.predicate = reg->terms.getIDByString("consDL"); break; // consistency check
 		case 1: ext.predicate = reg->terms.getIDByString("cDL"); break; // concept query
 		case 2: ext.predicate = reg->terms.getIDByString("rDL"); break; // role query
 		default: throw PluginError("Invalid DL-atom");
@@ -155,23 +155,46 @@ struct sem<DLParserModuleSemantics::dlExpression>
   void operator()(
     DLParserModuleSemantics& mgr,
 		const boost::fusion::vector3<
-			dlvhex::ID,
-			dlvhex::ID,
+			std::string,
+			std::string,
 		  	dlvhex::ID
 		>& source,
     ID& target)
   {
 	RegistryPtr reg = mgr.ctx.registry();
 
-	std::string op = reg->terms.getByID(boost::fusion::at_c<1>(source)).getUnquotedString();
+	std::string conceptOrRole = boost::fusion::at_c<0>(source);
+	std::string op = boost::fusion::at_c<1>(source);
+	ID pred = boost::fusion::at_c<2>(source);
 
-	ID pred;
+	ID auxpred;
 	if (op == "+="){
-		pred = reg->getAuxiliaryConstantSymbol('o', ID(0, 1));
+		auxpred = reg->getAuxiliaryConstantSymbol('o', ID(0, 1));
 	}
-	if (op == "+="){
-		pred = reg->getAuxiliaryConstantSymbol('o', ID(0, 1));
+	if (op == "-="){
+		auxpred = reg->getAuxiliaryConstantSymbol('o', ID(0, 1));
 	}
+
+	ID varX = reg->storeVariableTerm("X");
+	ID varY = reg->storeVariableTerm("Y");
+
+	// For concepts add a rule:	aux("C", X) :- pred(X)
+	// For roles add a rule:	aux("R", X, Y) :- pred(X, Y)
+	Rule rule(ID::MAINKIND_RULE);
+
+	OrdinaryAtom auxhead(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+	auxhead.tuple.push_back(auxpred);
+	auxhead.tuple.push_back(reg->storeConstantTerm("\"" + conceptOrRole + "\""));
+	auxhead.tuple.push_back(varX);
+	rule.head.push_back(reg->storeOrdinaryAtom(auxhead));
+
+	OrdinaryAtom bodyatom(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+	bodyatom.tuple.push_back(pred);
+	bodyatom.tuple.push_back(varX);
+	rule.body.push_back(reg->storeOrdinaryAtom(bodyatom));
+
+	// return ID of the aux predicate
+	target = reg->storeRule(rule);
 
 #if 0
 	const std::vector<ID>& in = boost::fusion::at_c<0>(source);
@@ -602,17 +625,6 @@ InterpretationPtr DLLitePlugin::DLPluginAtom::computeClassification(ProgramCtx& 
 
 	// prepare data structures for the subprogram P
 	InterpretationPtr edb = InterpretationPtr(new Interpretation(reg));
-/*
-	ProgramCtx pc = ctx;
-	pc.idb = classificationIDB;
-	pc.edb = edb;
-	pc.currentOptimum.clear();
-	InputProviderPtr ip(new InputProvider());
-	pc.config.setOption("NumberOfModels",0);
-	ip->addStringInput("", "empty");
-	pc.inputProvider = ip;
-	ip.reset();
-*/
 
 	// use the ontology to construct the EDB
 	ontology->concepts = InterpretationPtr(new Interpretation(reg));
@@ -968,8 +980,8 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 				DBGLOG(DBG, "LSS:                Current classification atom: " << RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en2)));
 				const OrdinaryAtom& cl = reg->ogatoms.getByAddress(*en2);
 				if (cl.tuple[0] ==subID && cl.tuple[1] == cID){
-#ifndef NDEBUG
 					ID cpWithoutNamespace = ontology->removeNamespaceFromTerm(cl.tuple[2]);
+#ifndef NDEBUG
 					DBGLOG(DBG, "LSS:                     Found a match with C=" << RawPrinter::toString(reg, cWithoutNamespace) << " and C'=" << RawPrinter::toString(reg, cpWithoutNamespace));
 #endif
 
@@ -1533,7 +1545,10 @@ struct DLParserModuleGrammarBase:
 				) [ Sem::dlAtom(sem) ];
 		dlExpression
 			= (
-					Base::term >> Base::term >> Base::term > qi::eps
+					Base::string >> qi::string("+=") >> Base::pred > qi::eps
+				)
+			| (
+					Base::string >> qi::string("-=") >> Base::pred > qi::eps
 				) [ Sem::dlExpression(sem) ];
 
 
@@ -1648,8 +1663,10 @@ DLLitePlugin::createParserModules(ProgramCtx& ctx)
 	std::vector<HexParserModulePtr> ret;
 
 	DLLitePlugin::CtxData& ctxdata = ctx.getPluginData<DLLitePlugin>();
-	ret.push_back(HexParserModulePtr(
-				new DLParserModule<HexParserModule::BODYATOM>(ctx)));
+	if (ctxdata.rewrite){
+		ret.push_back(HexParserModulePtr(
+			new DLParserModule<HexParserModule::BODYATOM>(ctx)));
+	}
 
 	return ret;
 }
