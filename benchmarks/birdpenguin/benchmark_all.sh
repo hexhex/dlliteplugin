@@ -11,8 +11,7 @@ cd instances
 for instance in *.hex
 do
 	echo "
-		Executable = ../benchmark_single.sh
-		Universe = vanilla
+		Executable = ./benchmark_single.sh
 		output = $instance.out
 		error = $instance.error
 		Log = $instance.log
