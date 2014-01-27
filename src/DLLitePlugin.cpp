@@ -652,7 +652,7 @@ InterpretationPtr DLLitePlugin::DLPluginAtom::computeClassification(ProgramCtx& 
 			}
 		}	
 		if (afterSymbol(to_string(t.obj_, ontology->store), ':') == "ObjectProperty" && afterSymbol(to_string(t.pred_, ontology->store), ':') == "type") {
-			DBGLOG(DBG,"Construct facts of the form op(Subj,negSubj), sub(Subj,Subj), sub(exSubj,negexSubj), sub(exSubj,exSubj)");
+			DBGLOG(DBG,"Construct facts of the form op(Subj,negSubj), sub(Subj,Subj), op(exSubj,negexSubj), sub(exSubj,exSubj)");
 			ontology->roles->setFact(reg->storeConstantTerm("\"" + to_string(t.subj_, ontology->store) + "\"").address);
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -670,8 +670,8 @@ InterpretationPtr DLLitePlugin::DLPluginAtom::computeClassification(ProgramCtx& 
 			}
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
-				fact.tuple.push_back(subID);
-				fact.tuple.push_back(dlEx(reg->storeConstantTerm("\"" + to_string(t.subj_, ontology->store) + "\"")));				//fact.tuple.push_back(dlEx(dlEx(reg->storeConstantTerm("\"" + to_string(t.subj_, ontology->store) + "\""))));
+				fact.tuple.push_back(opID);
+				fact.tuple.push_back(dlEx(reg->storeConstantTerm("\"" + to_string(t.subj_, ontology->store) + "\"")));				fact.tuple.push_back(dlNeg(dlEx(reg->storeConstantTerm("\"" + to_string(t.subj_, ontology->store) + "\""))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 			{
