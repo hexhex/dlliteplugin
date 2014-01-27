@@ -97,6 +97,14 @@ public:
 	};
 	typedef boost::shared_ptr<CachedOntology> CachedOntologyPtr;
 
+	// storage for DL-expressions in DL-syntax
+	struct DLExpression{
+		enum Type{ cp, cm, rp, rm };
+		std::string conceptOrRole;
+		Type type;
+		ID pred;
+	};
+
 	class CtxData : public PluginData
 	{
 	public:
@@ -105,6 +113,7 @@ public:
 		bool rewrite;	// automatically rewrite DL-atoms?
 		std::string repairOntology;	// name of the ontology to repair (if repair=true)
 		std::string ontology;		// name of the ontology for rewriting
+		std::vector<DLExpression> dlexpressions;	// cache for DL-expressions
 		CtxData() : repair(false), rewrite(false) {};
 		virtual ~CtxData() {};
 	};

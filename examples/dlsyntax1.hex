@@ -1,0 +1,3 @@
+pm("tweety").
+res(X) :- DL[Penguin -= pm ; "-Penguin"](X).
+

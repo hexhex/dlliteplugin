@@ -67,6 +67,7 @@ DLVHEX_NAMESPACE_BEGIN
 
 namespace spirit = boost::spirit;
 namespace qi = boost::spirit::qi;
+namespace ascii = boost::spirit::ascii;
 
 // ============================== Class DLParserModuleSemantics ==============================
 // (needs to be in dlvhex namespace)
@@ -114,16 +115,21 @@ struct sem<DLParserModuleSemantics::dlAtom>
 {
   void operator()(
     DLParserModuleSemantics& mgr,
-		const boost::fusion::vector2<
-			std::vector<dlvhex::ID>,
+		const boost::fusion::vector3<
+			std::vector<ID>,
+			ID,
 		  	std::vector<dlvhex::ID>
 		>& source,
     ID& target)
   {
+	static int nextPred = 1;
+
+	DBGLOG(DBG, "Parsing DL-atom");
 	RegistryPtr reg = mgr.ctx.registry();
 
 	const std::vector<ID>& in = boost::fusion::at_c<0>(source);
-	const std::vector<ID>& out = boost::fusion::at_c<1>(source);
+	ID query = boost::fusion::at_c<1>(source);
+	const std::vector<ID>& out = boost::fusion::at_c<2>(source);
 
 	ExternalAtom ext(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_EXTERNAL);
 	switch (out.size()){
@@ -133,7 +139,61 @@ struct sem<DLParserModuleSemantics::dlAtom>
 		default: throw PluginError("Invalid DL-atom");
 	}
 
+	// create predicates for c+, c-, r+ and r-
+	ID cp = reg->getAuxiliaryConstantSymbol('o', ID(0, nextPred++));
+	ID cm = reg->getAuxiliaryConstantSymbol('o', ID(0, nextPred++));
+	ID rp = reg->getAuxiliaryConstantSymbol('o', ID(0, nextPred++));
+	ID rm = reg->getAuxiliaryConstantSymbol('o', ID(0, nextPred++));
+
+	// add rules for all DL-expressions related to this DL-atom
+	ID varX = reg->storeVariableTerm("X");
+	ID varY = reg->storeVariableTerm("Y");
+	dllite::DLLitePlugin::CtxData& ctxdata = mgr.ctx.getPluginData<dllite::DLLitePlugin>();
+	BOOST_FOREACH (ID exprID, in){
+		DBGLOG(DBG, "Retrieving DL-expression from index " << exprID.address);
+		const dllite::DLLitePlugin::DLExpression& dlexpression = ctxdata.dlexpressions[exprID.address];
+
+		// For concepts add a rule:	aux("C", X) :- pred(X)
+		// For roles add a rule:	aux("R", X, Y) :- pred(X, Y)
+		Rule rule(ID::MAINKIND_RULE);
+
+		OrdinaryAtom auxhead(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+		switch (dlexpression.type){
+			case dllite::DLLitePlugin::DLExpression::cp: auxhead.tuple.push_back(cp); break;
+			case dllite::DLLitePlugin::DLExpression::cm: auxhead.tuple.push_back(cm); break;
+			case dllite::DLLitePlugin::DLExpression::rp: auxhead.tuple.push_back(rp); break;
+			case dllite::DLLitePlugin::DLExpression::rm: auxhead.tuple.push_back(rm); break;
+			default: assert(false);
+		}
+		auxhead.tuple.push_back(reg->storeConstantTerm("\"" + dlexpression.conceptOrRole + "\""));
+		auxhead.tuple.push_back(varX);
+		// TODO
+		// if (role) auxhead.tuple.push_back(varY);
+		rule.head.push_back(reg->storeOrdinaryAtom(auxhead));
+
+		OrdinaryAtom bodyatom(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+		bodyatom.tuple.push_back(dlexpression.pred);
+		bodyatom.tuple.push_back(varX);
+		// TODO
+		// if (role) auxhead.tuple.push_back(varY);
+		rule.body.push_back(ID::posLiteralFromAtom(reg->storeOrdinaryAtom(bodyatom)));
+
+		// return ID of the aux predicate
+		ID ruleID = reg->storeRule(rule);
+		mgr.ctx.idb.push_back(ruleID);
+#ifndef NDEBUG
+		std::string rulestr = RawPrinter::toString(reg, ruleID);
+		DBGLOG(DBG, "Added DL-input rule: " << rulestr);
+#endif
+	}
+
 	// take output terms 1:1
+	ext.inputs.push_back(reg->storeConstantTerm("\"" + mgr.ctx.getPluginData<dllite::DLLitePlugin>().ontology + "\""));
+	ext.inputs.push_back(cp);
+	ext.inputs.push_back(cm);
+	ext.inputs.push_back(rp);
+	ext.inputs.push_back(rm);
+	ext.inputs.push_back(query);
 	ext.tuple = out;
 	ID extID = reg->eatoms.storeAndGetID(ext);
 
@@ -155,70 +215,32 @@ struct sem<DLParserModuleSemantics::dlExpression>
   void operator()(
     DLParserModuleSemantics& mgr,
 		const boost::fusion::vector3<
-			std::string,
-			std::string,
+			const std::string,
+			const std::string,
 		  	dlvhex::ID
 		>& source,
     ID& target)
   {
 	RegistryPtr reg = mgr.ctx.registry();
 
-	std::string conceptOrRole = boost::fusion::at_c<0>(source);
+	DBGLOG(DBG, "Parsing DL-expression");
+	dllite::DLLitePlugin::DLExpression expr;
+	expr.conceptOrRole = boost::fusion::at_c<0>(source);
 	std::string op = boost::fusion::at_c<1>(source);
-	ID pred = boost::fusion::at_c<2>(source);
+	expr.pred = boost::fusion::at_c<2>(source);
 
-	ID auxpred;
 	if (op == "+="){
-		auxpred = reg->getAuxiliaryConstantSymbol('o', ID(0, 1));
-	}
-	if (op == "-="){
-		auxpred = reg->getAuxiliaryConstantSymbol('o', ID(0, 1));
-	}
-
-	ID varX = reg->storeVariableTerm("X");
-	ID varY = reg->storeVariableTerm("Y");
-
-	// For concepts add a rule:	aux("C", X) :- pred(X)
-	// For roles add a rule:	aux("R", X, Y) :- pred(X, Y)
-	Rule rule(ID::MAINKIND_RULE);
-
-	OrdinaryAtom auxhead(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
-	auxhead.tuple.push_back(auxpred);
-	auxhead.tuple.push_back(reg->storeConstantTerm("\"" + conceptOrRole + "\""));
-	auxhead.tuple.push_back(varX);
-	rule.head.push_back(reg->storeOrdinaryAtom(auxhead));
-
-	OrdinaryAtom bodyatom(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
-	bodyatom.tuple.push_back(pred);
-	bodyatom.tuple.push_back(varX);
-	rule.body.push_back(reg->storeOrdinaryAtom(bodyatom));
-
-	// return ID of the aux predicate
-	target = reg->storeRule(rule);
-
-#if 0
-	const std::vector<ID>& in = boost::fusion::at_c<0>(source);
-	const std::vector<ID>& out = boost::fusion::at_c<1>(source);
-
-	ExternalAtom ext(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_EXTERNAL);
-	switch (out.size()){
-		case 0:	ext.predicate = reg->terms.getIDByString("cDL"); break; // consistency check
-		case 1: ext.predicate = reg->terms.getIDByString("cDL"); break; // concept query
-		case 2: ext.predicate = reg->terms.getIDByString("rDL"); break; // role query
-		default: throw PluginError("Invalid DL-atom");
+		expr.type = dllite::DLLitePlugin::DLExpression::cp;
+	}else if (op == "-="){
+		expr.type = dllite::DLLitePlugin::DLExpression::cm;
+	}else{
+		throw PluginError("Unknown DL-atom expression: \"" + op + "\"");
 	}
 
-	// take output terms 1:1
-	ext.tuple = out;
-	ID extID = reg->eatoms.storeAndGetID(ext);
-
-#ifndef NDEBUG
-	std::string eatomstr = RawPrinter::toString(reg, extID);
-	DBGLOG(DBG, "Created external atom " << eatomstr);
-#endif
-
-	target = extID;
-#endif
+	dllite::DLLitePlugin::CtxData& ctxdata = mgr.ctx.getPluginData<dllite::DLLitePlugin>();
+	ctxdata.dlexpressions.push_back(expr);
+	DBGLOG(DBG, "Adding DL-expression to index " << ctxdata.dlexpressions.size() - 1);
+	target.address = ctxdata.dlexpressions.size() - 1;
   }
 };
 
@@ -1541,14 +1563,14 @@ struct DLParserModuleGrammarBase:
 		typedef DLParserModuleSemantics Sem;
 		dlAtom
 			= (
-					qi::lit("DL") >> qi::lit('[') >> (dlExpression % qi::lit(',')) >> qi::lit(']') >> qi::lit('(') >> Base::terms >> qi::lit(')') > qi::eps
+					qi::lit("DL") >> qi::lit('[') >> (dlExpression % qi::lit(',')) >> qi::lit(';') >> Base::term >> qi::lit(']') >> qi::lit('(') >> Base::terms >> qi::lit(')') > qi::eps
 				) [ Sem::dlAtom(sem) ];
 		dlExpression
 			= (
-					Base::string >> qi::string("+=") >> Base::pred > qi::eps
+					Base::variable >> qi::string("+=") >> Base::pred > qi::eps
 				)
 			| (
-					Base::string >> qi::string("-=") >> Base::pred > qi::eps
+					Base::variable >> qi::string("-=") >> Base::pred > qi::eps
 				) [ Sem::dlExpression(sem) ];
 
 
