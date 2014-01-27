@@ -457,8 +457,8 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store)));
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.obj_, store)));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
@@ -469,8 +469,8 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store)));
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.obj_, store)));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
@@ -481,8 +481,8 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store)));
-				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.obj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store)))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
@@ -493,8 +493,8 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.opID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store)));
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.obj_, store)));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
@@ -504,8 +504,8 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store)));
-				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.obj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store)))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
@@ -515,8 +515,8 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store))));
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.obj_, store)));
+				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
