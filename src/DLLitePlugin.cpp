@@ -514,6 +514,7 @@ void DLLitePlugin::DLPluginAtom::constructClassificationProgram(){
 	zID = reg->storeVariableTerm("Z");
 	ID x2ID = reg->storeVariableTerm("X2");
 	ID y2ID = reg->storeVariableTerm("Y2");
+	ID y1ID = reg->storeVariableTerm("Y1");
 	guardPredicate = getRegistry()->getAuxiliaryConstantSymbol('o', ID(0, 0));
 
 	OrdinaryAtom subxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
@@ -558,6 +559,14 @@ void DLLitePlugin::DLPluginAtom::constructClassificationProgram(){
 	confxy.tuple.push_back(yID);
 	ID confxyID = reg->storeOrdinaryAtom(confxy);
 
+
+	OrdinaryAtom confxy1(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+	confxy1.tuple.push_back(confID);
+	confxy1.tuple.push_back(xID);
+	confxy1.tuple.push_back(y1ID);
+	ID confxy1ID = reg->storeOrdinaryAtom(confxy1);
+
+
 	OrdinaryAtom opxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
 	opxy.tuple.push_back(opID);
 	opxy.tuple.push_back(xID);
@@ -569,6 +578,12 @@ void DLLitePlugin::DLPluginAtom::constructClassificationProgram(){
 	opyx.tuple.push_back(yID);
 	opyx.tuple.push_back(xID);
 	ID opyxID = reg->storeOrdinaryAtom(opyx);
+
+	OrdinaryAtom opyy1(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+	opyy1.tuple.push_back(opID);
+	opyy1.tuple.push_back(yID);
+	opyy1.tuple.push_back(y1ID);
+	ID opyy1ID = reg->storeOrdinaryAtom(opyy1);
 
 	// Transitivity rule: sub(X,Z) :- sub(X,Y), sub(Y,Z)
 	Rule trans(ID::MAINKIND_RULE);
@@ -585,12 +600,19 @@ void DLLitePlugin::DLPluginAtom::constructClassificationProgram(){
 	contra.head.push_back(suby2x2ID);
 	ID contraID = reg->storeRule(contra);
 
-	// Conflict rule: conf(X,Y) :- op(X,Y), sub(X,Y)
+	// Conflict rule1: conf(X,Y1) :-  sub(X,Y), op(Y,Y1).
 	Rule conflict(ID::MAINKIND_RULE);
-	conflict.body.push_back(ID::posLiteralFromAtom(opxyID));
-	conflict.body.push_back(ID::posLiteralFromAtom(subxyID));
-	conflict.head.push_back(confxyID);
+	conflict.body.push_back(ID::posLiteralFromAtom(subxyID));	
+	conflict.body.push_back(ID::posLiteralFromAtom(opyy1ID));
+	conflict.head.push_back(confxy1ID);
 	ID conflictID = reg->storeRule(conflict);
+
+	/* Conflict rule2: conf(X,Y2) :- conf(X,Y1), sub(Y2,Y1).
+	Rule conflict2(ID::MAINKIND_RULE);
+	conflict.body.push_back(ID::posLiteralFromAtom(confxy1ID));	
+	conflict.body.push_back(ID::posLiteralFromAtom(suby2y1ID));
+	conflict.head.push_back(confxy2ID);
+	ID conflictID2 = reg->storeRule(conflict2);*/
 
 	// Rule for reflexivity of opposite predicate: op(Y,X) :- op(X,Y)
 	Rule refop(ID::MAINKIND_RULE);
