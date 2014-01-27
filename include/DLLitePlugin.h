@@ -99,7 +99,7 @@ public:
 
 	// storage for DL-expressions in DL-syntax
 	struct DLExpression{
-		enum Type{ cp, cm, rp, rm };
+		enum Type{ plus, minus };
 		std::string conceptOrRole;
 		Type type;
 		ID pred;
@@ -118,7 +118,6 @@ public:
 		virtual ~CtxData() {};
 	};
 
-private:
 	// base class for all DL atoms
 	class DLPluginAtom : public PluginAtom{
 	private:
@@ -141,7 +140,7 @@ private:
 		inline bool isDlEx(ID id);
 
 		// extracts from a string the postfix after the given symbol
-		inline std::string afterSymbol(std::string str, char c = '#');
+		static inline std::string afterSymbol(std::string str, char c = '#');
 
 		// transforms a guard atom into a human-readable string
 		inline std::string printGuardAtom(ID atom);
@@ -156,7 +155,7 @@ private:
 		InterpretationPtr computeClassification(ProgramCtx& ctx, CachedOntologyPtr ontology);
 
 		// constructs the concept and role assertions
-		void constructAbox(ProgramCtx& ctx, CachedOntologyPtr ontology);
+		static void constructAbox(ProgramCtx& ctx, CachedOntologyPtr ontology);
 
 		// loads an ontology and computes its classification or returns a reference to it if already present
 		CachedOntologyPtr prepareOntology(ProgramCtx& ctx, ID ontologyNameID);
@@ -191,6 +190,9 @@ private:
 		};
 
 	public:
+		// loads an ontology and retrives concepts and roles, but does not compute its classification
+		static CachedOntologyPtr initializeOntology(ProgramCtx& ctx, ID ontologyNameID);
+
 		DLPluginAtom(std::string predName, ProgramCtx& ctx);
 
 		virtual void retrieve(const Query& query, Answer& answer);
@@ -221,7 +223,6 @@ private:
 		virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
 	};
 
-public:
 	DLLitePlugin();
 	virtual ~DLLitePlugin();
 

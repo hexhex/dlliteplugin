@@ -127,15 +127,22 @@ struct sem<DLParserModuleSemantics::dlAtom>
 	DBGLOG(DBG, "Parsing DL-atom");
 	RegistryPtr reg = mgr.ctx.registry();
 
+	ID consDLID = reg->terms.getIDByString("consDL");
+	ID cDLID = reg->terms.getIDByString("cDL");
+	ID rDLID = reg->terms.getIDByString("rDL");
+
+	ID ontologyNameID = reg->storeConstantTerm("\"" + mgr.ctx.getPluginData<dllite::DLLitePlugin>().ontology + "\"");
+	dllite::DLLitePlugin::CachedOntologyPtr ontology = dllite::DLLitePlugin::DLPluginAtom::initializeOntology(mgr.ctx, ontologyNameID);
+
 	const std::vector<ID>& in = boost::fusion::at_c<0>(source);
 	ID query = boost::fusion::at_c<1>(source);
 	const std::vector<ID>& out = boost::fusion::at_c<2>(source);
 
 	ExternalAtom ext(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_EXTERNAL);
 	switch (out.size()){
-		case 0:	ext.predicate = reg->terms.getIDByString("consDL"); break; // consistency check
-		case 1: ext.predicate = reg->terms.getIDByString("cDL"); break; // concept query
-		case 2: ext.predicate = reg->terms.getIDByString("rDL"); break; // role query
+		case 0:	ext.predicate = consDLID; break; // consistency check
+		case 1: ext.predicate = cDLID; break; // concept query
+		case 2: ext.predicate = rDLID; break; // role query
 		default: throw PluginError("Invalid DL-atom");
 	}
 
@@ -153,29 +160,29 @@ struct sem<DLParserModuleSemantics::dlAtom>
 		DBGLOG(DBG, "Retrieving DL-expression from index " << exprID.address);
 		const dllite::DLLitePlugin::DLExpression& dlexpression = ctxdata.dlexpressions[exprID.address];
 
-		// For concepts add a rule:	aux("C", X) :- pred(X)
-		// For roles add a rule:	aux("R", X, Y) :- pred(X, Y)
 		Rule rule(ID::MAINKIND_RULE);
 
+		ID conceptOrRoleID = reg->storeConstantTerm("\"" + dlexpression.conceptOrRole + "\"");
+
+		// select appropriate auxiliary predicate
 		OrdinaryAtom auxhead(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
 		switch (dlexpression.type){
-			case dllite::DLLitePlugin::DLExpression::cp: auxhead.tuple.push_back(cp); break;
-			case dllite::DLLitePlugin::DLExpression::cm: auxhead.tuple.push_back(cm); break;
-			case dllite::DLLitePlugin::DLExpression::rp: auxhead.tuple.push_back(rp); break;
-			case dllite::DLLitePlugin::DLExpression::rm: auxhead.tuple.push_back(rm); break;
+			case dllite::DLLitePlugin::DLExpression::plus: auxhead.tuple.push_back(ontology->concepts->getFact(conceptOrRoleID.address) ? cp : rp); break;
+			case dllite::DLLitePlugin::DLExpression::minus: auxhead.tuple.push_back(ontology->concepts->getFact(conceptOrRoleID.address) ? cm : rm); break;
 			default: assert(false);
 		}
-		auxhead.tuple.push_back(reg->storeConstantTerm("\"" + dlexpression.conceptOrRole + "\""));
+
+		// For concepts add a rule:	aux("C", X) :- pred(X)
+		// For roles add a rule:	aux("R", X, Y) :- pred(X, Y)
+		auxhead.tuple.push_back(conceptOrRoleID);
 		auxhead.tuple.push_back(varX);
-		// TODO
-		// if (role) auxhead.tuple.push_back(varY);
+		if (!ontology->concepts->getFact(conceptOrRoleID.address)) auxhead.tuple.push_back(varY);
 		rule.head.push_back(reg->storeOrdinaryAtom(auxhead));
 
 		OrdinaryAtom bodyatom(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
 		bodyatom.tuple.push_back(dlexpression.pred);
 		bodyatom.tuple.push_back(varX);
-		// TODO
-		// if (role) auxhead.tuple.push_back(varY);
+		if (!ontology->concepts->getFact(conceptOrRoleID.address)) bodyatom.tuple.push_back(varY);
 		rule.body.push_back(ID::posLiteralFromAtom(reg->storeOrdinaryAtom(bodyatom)));
 
 		// return ID of the aux predicate
@@ -188,7 +195,7 @@ struct sem<DLParserModuleSemantics::dlAtom>
 	}
 
 	// take output terms 1:1
-	ext.inputs.push_back(reg->storeConstantTerm("\"" + mgr.ctx.getPluginData<dllite::DLLitePlugin>().ontology + "\""));
+	ext.inputs.push_back(ontologyNameID);
 	ext.inputs.push_back(cp);
 	ext.inputs.push_back(cm);
 	ext.inputs.push_back(rp);
@@ -230,9 +237,9 @@ struct sem<DLParserModuleSemantics::dlExpression>
 	expr.pred = boost::fusion::at_c<2>(source);
 
 	if (op == "+="){
-		expr.type = dllite::DLLitePlugin::DLExpression::cp;
+		expr.type = dllite::DLLitePlugin::DLExpression::plus;
 	}else if (op == "-="){
-		expr.type = dllite::DLLitePlugin::DLExpression::cm;
+		expr.type = dllite::DLLitePlugin::DLExpression::minus;
 	}else{
 		throw PluginError("Unknown DL-atom expression: \"" + op + "\"");
 	}
@@ -607,23 +614,38 @@ void DLLitePlugin::DLPluginAtom::constructClassificationProgram(){
 
 void DLLitePlugin::DLPluginAtom::constructAbox(ProgramCtx& ctx, CachedOntologyPtr ontology){
 
-	if (!!ontology->conceptAssertions){
+	ID guardPredicate = ctx.registry()->getAuxiliaryConstantSymbol('o', ID(0, 0));
+
+	if (!!ontology->concepts){
 		DBGLOG(DBG, "Skipping constructAbox (already done)");
 	}
 
 	DBGLOG(DBG, "Constructing Abox");
-	RegistryPtr reg = getRegistry();
+	RegistryPtr reg = ctx.registry();
+	ontology->concepts = InterpretationPtr(new Interpretation(reg));
+	ontology->roles = InterpretationPtr(new Interpretation(reg));
+	ontology->individuals = InterpretationPtr(new Interpretation(reg));
 	ontology->conceptAssertions = InterpretationPtr(new Interpretation(reg));
-
 	BOOST_FOREACH(owlcpp::Triple const& t, ontology->store.map_triple()) {
 		DBGLOG(DBG, "Current triple: " << to_string(t.subj_, ontology->store) << " / " << to_string(t.pred_, ontology->store) << " / " << to_string(t.obj_, ontology->store));
+
+		// concept definition
+		if (afterSymbol(to_string(t.obj_, ontology->store), ':') == "Class" && afterSymbol(to_string(t.pred_, ontology->store), ':') == "type") {
+			ontology->concepts->setFact(reg->storeConstantTerm("\"" + to_string(t.subj_, ontology->store) + "\"").address);
+		}
+
+		// role definition
+		if (afterSymbol(to_string(t.obj_, ontology->store), ':') == "ObjectProperty" && afterSymbol(to_string(t.pred_, ontology->store), ':') == "type") {
+			ontology->roles->setFact(reg->storeConstantTerm("\"" + to_string(t.subj_, ontology->store) + "\"").address);
+		}
+
 		// concept assertion
-		if (to_string(t.obj_, ontology->store) != "owl:Class" && !ontology->isOwlType(to_string(t.obj_, ontology->store)) && to_string(t.pred_, ontology->store) == "rdf:type") {
+		if (afterSymbol(to_string(t.obj_, ontology->store), ':') != "Class" && !ontology->isOwlType(to_string(t.obj_, ontology->store)) && afterSymbol(to_string(t.pred_, ontology->store), ':') == "type") {
 			OrdinaryAtom guard(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
 			guard.tuple.push_back(guardPredicate);
-			ID predicate = reg->storeConstantTerm("\"" + ontology->removeNamespaceFromString(to_string(t.obj_, ontology->store)) + "\"");
+			ID concept = reg->storeConstantTerm("\"" + ontology->removeNamespaceFromString(to_string(t.obj_, ontology->store)) + "\"");
 			ID individual = reg->storeConstantTerm("\"" + ontology->removeNamespaceFromString(to_string(t.subj_, ontology->store)) + "\"");
-			guard.tuple.push_back(predicate);
+			guard.tuple.push_back(concept);
 			guard.tuple.push_back(individual);
 			ontology->conceptAssertions->setFact(reg->storeOrdinaryAtom(guard).address);
 			ontology->individuals->setFact(ontology->addNamespaceToTerm(individual).address);
@@ -640,7 +662,7 @@ void DLLitePlugin::DLPluginAtom::constructAbox(ProgramCtx& ctx, CachedOntologyPt
 		}
 
 		// individual definition
-		if (to_string(t.subj_, ontology->store) != "owl:Class" && to_string(t.obj_, ontology->store) == "owl:Thing" && to_string(t.pred_, ontology->store) == "rdf:type") {
+		if (afterSymbol(to_string(t.subj_, ontology->store), ':') != "Class" && afterSymbol(to_string(t.obj_, ontology->store), ':') == "Thing" && afterSymbol(to_string(t.pred_, ontology->store), ':') == "type") {
 			ontology->individuals->setFact(reg->storeConstantTerm("\"" + to_string(t.subj_, ontology->store) + "\"").address);
 		}
 	}
@@ -661,15 +683,11 @@ InterpretationPtr DLLitePlugin::DLPluginAtom::computeClassification(ProgramCtx& 
 	InterpretationPtr edb = InterpretationPtr(new Interpretation(reg));
 
 	// use the ontology to construct the EDB
-	ontology->concepts = InterpretationPtr(new Interpretation(reg));
-	ontology->roles = InterpretationPtr(new Interpretation(reg));
-	ontology->individuals = InterpretationPtr(new Interpretation(reg));
 	DBGLOG(DBG,"Ontology file was loaded");
 	BOOST_FOREACH(owlcpp::Triple const& t, ontology->store.map_triple()) {
 		DBGLOG(DBG, "Current triple: " << to_string(t.subj_, ontology->store) << " / " << to_string(t.pred_, ontology->store) << " / " << to_string(t.obj_, ontology->store));
 		if (afterSymbol(to_string(t.obj_, ontology->store), ':') == "Class" && afterSymbol(to_string(t.pred_, ontology->store), ':') == "type") {
 			DBGLOG(DBG,"Construct facts of the form op(C,negC), sub(C,C) for this class.");
-			ontology->concepts->setFact(reg->storeConstantTerm("\"" + to_string(t.subj_, ontology->store) + "\"").address);
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(opID);
@@ -687,7 +705,6 @@ InterpretationPtr DLLitePlugin::DLPluginAtom::computeClassification(ProgramCtx& 
 		}	
 		if (afterSymbol(to_string(t.obj_, ontology->store), ':') == "ObjectProperty" && afterSymbol(to_string(t.pred_, ontology->store), ':') == "type") {
 			DBGLOG(DBG,"Construct facts of the form op(Subj,negSubj), sub(Subj,Subj), op(exSubj,negexSubj), sub(exSubj,exSubj)");
-			ontology->roles->setFact(reg->storeConstantTerm("\"" + to_string(t.subj_, ontology->store) + "\"").address);
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(opID);
@@ -805,10 +822,18 @@ InterpretationPtr DLLitePlugin::DLPluginAtom::computeClassification(ProgramCtx& 
 
 DLLitePlugin::CachedOntologyPtr DLLitePlugin::DLPluginAtom::prepareOntology(ProgramCtx& ctx, ID ontologyNameID){
 
+	DBGLOG(DBG, "prepareOntology");
+	CachedOntologyPtr ontology = initializeOntology(ctx, ontologyNameID);
+	if (!ontology->classification) computeClassification(ctx, ontology);
+	return ontology;
+}
+
+DLLitePlugin::CachedOntologyPtr DLLitePlugin::DLPluginAtom::initializeOntology(ProgramCtx& ctx, ID ontologyNameID){
+
 	std::vector<CachedOntologyPtr>& ontologies = ctx.getPluginData<DLLitePlugin>().ontologies;
 
-	DBGLOG(DBG, "prepareOntology");
-	RegistryPtr reg = getRegistry();
+	DBGLOG(DBG, "initializeOntology");
+	RegistryPtr reg = ctx.registry();
 
 	BOOST_FOREACH (CachedOntologyPtr o, ontologies){
 		if (o->ontologyName == ontologyNameID){
@@ -834,9 +859,9 @@ DLLitePlugin::CachedOntologyPtr DLLitePlugin::DLPluginAtom::prepareOntology(Prog
 	CachedOntologyPtr co = CachedOntologyPtr(new CachedOntology(reg));
 	try{
 		co->load(reg, ontologyNameID);
-		computeClassification(ctx, co);
 		constructAbox(ctx, co);
 		ontologies.push_back(co);
+		//computeClassification(ctx, co);
 	}catch(...){
 		// restore stderr
 		if(origcerr != NULL){
