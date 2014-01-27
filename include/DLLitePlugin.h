@@ -132,11 +132,13 @@ private:
 		// special predicate for guard atoms
 		ID guardPredicate;
 
-		// computed the DL-negation of a concept, i.e., "C" --> "-C"
+		// computed the DL-negation of a concept, i.e., "C" --> "-C" resp. checks if the concept is of such a form
 		inline ID dlNeg(ID id);
+		inline bool isDlNeg(ID id);
 
-		// creates for concept "C" the concept "exC" (the same for roles)
+		// creates for concept "C" the concept "exC" (the same for roles) resp. checks if the concept is of such a form
 		inline ID dlEx(ID id);
+		inline bool isDlEx(ID id);
 
 		// extracts from a string the postfix after the given symbol
 		inline std::string afterSymbol(std::string str, char c = '#');

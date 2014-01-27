@@ -457,10 +457,22 @@ ID DLLitePlugin::DLPluginAtom::dlNeg(ID id){
 	else return reg->storeConstantTerm("\"-" + reg->terms.getByID(id).getUnquotedString() + "\"");
 }
 
+bool DLLitePlugin::DLPluginAtom::isDlNeg(ID id){
+
+	RegistryPtr reg = getRegistry();
+	return (reg->terms.getByID(id).getUnquotedString()[0] == '-');
+}
+
 ID DLLitePlugin::DLPluginAtom::dlEx(ID id){
 
 	RegistryPtr reg = getRegistry();
 	return reg->storeConstantTerm("\"Ex" + reg->terms.getByID(id).getUnquotedString() + "\"");
+}
+
+bool DLLitePlugin::DLPluginAtom::isDlEx(ID id){
+
+	RegistryPtr reg = getRegistry();
+	return (reg->terms.getByID(id).getUnquotedString().substr(0, 2) == "Ex");
 }
 
 std::string DLLitePlugin::DLPluginAtom::afterSymbol(std::string str, char c){
@@ -1107,6 +1119,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 
 			ID rWithoutNamespace = oatom.tuple[1];
 			ID rID = ontology->addNamespaceToTerm(rID);
+			ID exrID = dlEx(rID);
 
 			// check if sub(negC, Q) is true in the classification assignment
 			OrdinaryAtom subexrq(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -1129,6 +1142,71 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 				nogoods->addNogood(supportset);
 			}else{
 				DBGLOG(DBG, "LSS:                     Does not hold");
+			}
+#ifndef NDEBUG
+			std::string exrWithoutNamespace = RawPrinter::toString(reg, rWithoutNamespace);
+
+			DBGLOG(DBG, "LSS:                Checking if sub(" << exrWithoutNamespace << ", C) is true in the classification assignment (for some C)");
+			DBGLOG(DBG, "LSS:                 or if if sub(" << rWithoutNamespace << ", R') is true in the classification assignment (for some R')");
+#endif
+			bm::bvector<>::enumerator en2 = classification->getStorage().first();
+			bm::bvector<>::enumerator en2_end = classification->getStorage().end();
+			while (en2 < en2_end){
+				const OrdinaryAtom& at = reg->ogatoms.getByAddress(*en2);
+				if (at.tuple[0] == query.input[3] && at.tuple[1] == exrID){
+					DBGLOG(DBG, "LSS:                          --> Found a match with C=" << RawPrinter::toString(reg, at.tuple[2]));
+					Nogood supportset;
+
+					// add { T r+(R,O,Y), -C(O) }
+					OrdinaryAtom rprxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+					rprxy.tuple.push_back(query.input[3]);
+					rprxy.tuple.push_back(rWithoutNamespace);
+					rprxy.tuple.push_back(outvarID);
+					rprxy.tuple.push_back(yID);
+					supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
+
+					// guard atom
+					OrdinaryAtom negc(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+					ID negctID = dlNeg(ontology->removeNamespaceFromTerm(at.tuple[2]));
+					negc.tuple.push_back(guardPredicate);
+					negc.tuple.push_back(negctID);
+					negc.tuple.push_back(outvarID);
+					ID negcID = reg->storeOrdinaryAtom(negc);
+					supportset.insert(NogoodContainer::createLiteral(negcID));
+
+					supportset.insert(outlit);
+
+					DBGLOG(DBG, "LSS:                          --> Learned support set: " << supportset.getStringRepresentation(reg));
+					nogoods->addNogood(supportset);
+				}
+				if (at.tuple[0] == query.input[3] && at.tuple[1] == rID){
+					DBGLOG(DBG, "LSS:                          --> Found a match with R'=" << RawPrinter::toString(reg, at.tuple[2]));
+					Nogood supportset;
+
+					// add { T r+(R,O,Y), -R'(O,Y) }
+					OrdinaryAtom rprxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+					rprxy.tuple.push_back(query.input[3]);
+					rprxy.tuple.push_back(rWithoutNamespace);
+					rprxy.tuple.push_back(outvarID);
+					rprxy.tuple.push_back(yID);
+					supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
+
+					// guard atom
+					OrdinaryAtom negrp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+					ID negrptID = dlNeg(ontology->removeNamespaceFromTerm(at.tuple[2]));
+					negrp.tuple.push_back(guardPredicate);
+					negrp.tuple.push_back(outvarID);
+					negrp.tuple.push_back(yID);
+					ID negrpID = reg->storeOrdinaryAtom(negrp);
+					supportset.insert(NogoodContainer::createLiteral(negrpID));
+
+					supportset.insert(outlit);
+
+					DBGLOG(DBG, "LSS:                          --> Learned support set: " << supportset.getStringRepresentation(reg));
+					nogoods->addNogood(supportset);
+				}
+
+				en2++;
 			}
 		}else if (oatom.tuple[0] == query.input[4]){
 			// r-
@@ -1196,17 +1274,32 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 #ifndef NDEBUG
 				DBGLOG(DBG, "LSS:                     Found a match with C=" << RawPrinter::toString(reg, cWithoutNamespace));
 #endif
-
-				// guard atom for C(Y)
-				OrdinaryAtom cy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
-				cy.tuple.push_back(guardPredicate);
-				cy.tuple.push_back(cWithoutNamespace);
-				cy.tuple.push_back(outvarID);
-				Nogood supportset;
-				supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cy)));
-				supportset.insert(outlit);
-				DBGLOG(DBG, "LSS:                          --> Learned support set: " << supportset.getStringRepresentation(reg));
-				nogoods->addNogood(supportset);
+				if (isDlEx(cl.tuple[1])){
+					DBGLOG(DBG, "LSS:                     (this is form exR)");
+					// guard atom for C(O,Y)
+					OrdinaryAtom roy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+					roy.tuple.push_back(guardPredicate);
+					roy.tuple.push_back(cWithoutNamespace);
+					roy.tuple.push_back(outvarID);
+					roy.tuple.push_back(yID);
+					Nogood supportset;
+					supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(roy)));
+					supportset.insert(outlit);
+					DBGLOG(DBG, "LSS:                          --> Learned support set: " << supportset.getStringRepresentation(reg));
+					nogoods->addNogood(supportset);
+				}else{
+					DBGLOG(DBG, "LSS:                     (this is not form exR)");
+					// guard atom for C(O)
+					OrdinaryAtom co(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+					co.tuple.push_back(guardPredicate);
+					co.tuple.push_back(cWithoutNamespace);
+					co.tuple.push_back(outvarID);
+					Nogood supportset;
+					supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(co)));
+					supportset.insert(outlit);
+					DBGLOG(DBG, "LSS:                          --> Learned support set: " << supportset.getStringRepresentation(reg));
+					nogoods->addNogood(supportset);
+				}
 			}
 			en++;
 		}
