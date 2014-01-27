@@ -44,6 +44,8 @@
 #include "dlvhex2/Printhelpers.h"
 #include "dlvhex2/Logger.h"
 #include "dlvhex2/ExternalLearningHelper.h"
+#include "dlvhex2/HexGrammar.h"
+#include "dlvhex2/HexParserModule.h"
 #include <iostream>
 #include <string>
 #include "boost/program_options.hpp"
@@ -62,6 +64,140 @@
 #include <boost/lexical_cast.hpp>
 
 DLVHEX_NAMESPACE_BEGIN
+
+namespace spirit = boost::spirit;
+namespace qi = boost::spirit::qi;
+
+// ============================== Class DLParserModuleSemantics ==============================
+// (needs to be in dlvhex namespace)
+
+class DLParserModuleSemantics:
+	public HexGrammarSemantics
+{
+public:
+	dllite::DLLitePlugin::CtxData& ctxdata;
+
+public:
+	DLParserModuleSemantics(ProgramCtx& ctx):
+		HexGrammarSemantics(ctx),
+		ctxdata(ctx.getPluginData<dllite::DLLitePlugin>())
+	{
+	}
+
+	// use SemanticActionBase to redirect semantic action call into globally
+	// specializable sem<T> struct space
+	struct dlAtom:
+		SemanticActionBase<DLParserModuleSemantics, ID, dlAtom>
+	{
+		dlAtom(DLParserModuleSemantics& mgr):
+			dlAtom::base_type(mgr)
+		{
+		}
+	};
+
+	// use SemanticActionBase to redirect semantic action call into globally
+	// specializable sem<T> struct space
+	struct dlExpression:
+		SemanticActionBase<DLParserModuleSemantics, ID, dlExpression>
+	{
+		dlExpression(DLParserModuleSemantics& mgr):
+			dlExpression::base_type(mgr)
+		{
+		}
+	};
+};
+
+// create semantic handler for above semantic action
+// (needs to be in globally specializable struct space)
+template<>
+struct sem<DLParserModuleSemantics::dlAtom>
+{
+  void operator()(
+    DLParserModuleSemantics& mgr,
+		const boost::fusion::vector2<
+			std::vector<dlvhex::ID>,
+		  	std::vector<dlvhex::ID>
+		>& source,
+    ID& target)
+  {
+	RegistryPtr reg = mgr.ctx.registry();
+
+	const std::vector<ID>& in = boost::fusion::at_c<0>(source);
+	const std::vector<ID>& out = boost::fusion::at_c<1>(source);
+
+	ExternalAtom ext(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_EXTERNAL);
+	switch (out.size()){
+		case 0:	ext.predicate = reg->terms.getIDByString("cDL"); break; // consistency check
+		case 1: ext.predicate = reg->terms.getIDByString("cDL"); break; // concept query
+		case 2: ext.predicate = reg->terms.getIDByString("rDL"); break; // role query
+		default: throw PluginError("Invalid DL-atom");
+	}
+
+	// take output terms 1:1
+	ext.tuple = out;
+	ID extID = reg->eatoms.storeAndGetID(ext);
+
+#ifndef NDEBUG
+	std::string eatomstr = RawPrinter::toString(reg, extID);
+	DBGLOG(DBG, "Created external atom " << eatomstr);
+#endif
+
+	target = extID;
+  }
+};
+
+
+// create semantic handler for above semantic action
+// (needs to be in globally specializable struct space)
+template<>
+struct sem<DLParserModuleSemantics::dlExpression>
+{
+  void operator()(
+    DLParserModuleSemantics& mgr,
+		const boost::fusion::vector3<
+			dlvhex::ID,
+			dlvhex::ID,
+		  	dlvhex::ID
+		>& source,
+    ID& target)
+  {
+	RegistryPtr reg = mgr.ctx.registry();
+
+	std::string op = reg->terms.getByID(boost::fusion::at_c<1>(source)).getUnquotedString();
+
+	ID pred;
+	if (op == "+="){
+		pred = reg->getAuxiliaryConstantSymbol('o', ID(0, 1));
+	}
+	if (op == "+="){
+		pred = reg->getAuxiliaryConstantSymbol('o', ID(0, 1));
+	}
+
+#if 0
+	const std::vector<ID>& in = boost::fusion::at_c<0>(source);
+	const std::vector<ID>& out = boost::fusion::at_c<1>(source);
+
+	ExternalAtom ext(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_EXTERNAL);
+	switch (out.size()){
+		case 0:	ext.predicate = reg->terms.getIDByString("cDL"); break; // consistency check
+		case 1: ext.predicate = reg->terms.getIDByString("cDL"); break; // concept query
+		case 2: ext.predicate = reg->terms.getIDByString("rDL"); break; // role query
+		default: throw PluginError("Invalid DL-atom");
+	}
+
+	// take output terms 1:1
+	ext.tuple = out;
+	ID extID = reg->eatoms.storeAndGetID(ext);
+
+#ifndef NDEBUG
+	std::string eatomstr = RawPrinter::toString(reg, extID);
+	DBGLOG(DBG, "Created external atom " << eatomstr);
+#endif
+
+	target = extID;
+#endif
+  }
+};
 
 namespace dllite{
 
@@ -150,14 +286,15 @@ InterpretationPtr DLLitePlugin::CachedOntology::getAllIndividuals(const PluginAt
 }
 
 bool DLLitePlugin::CachedOntology::checkConceptAssertion(RegistryPtr reg, ID guardAtomID) const{
+	assert(reg->ogatoms.getByAddress(guardAtomID.address).tuple.size() == 3 && "Concept guard atoms must be of arity 2");
 	return conceptAssertions->getFact(guardAtomID.address);
 }
 
 bool DLLitePlugin::CachedOntology::checkRoleAssertion(RegistryPtr reg, ID guardAtomID) const{
 	const OrdinaryAtom& ogatom = reg->ogatoms.getByAddress(guardAtomID.address);
-	assert(ogatom.tuple.size() == 3 && "Role guard atoms must be of arity 2");
+	assert(ogatom.tuple.size() == 4 && "Role guard atoms must be of arity 2");
 	BOOST_FOREACH (RoleAssertion ra, roleAssertions){
-		if (ra.first == ogatom.tuple[0] && ra.second.first == ogatom.tuple[1] && ra.second.second == ogatom.tuple[2]) return true;
+		if (ra.first == ogatom.tuple[1] && ra.second.first == ogatom.tuple[2] && ra.second.second == ogatom.tuple[3]) return true;
 	}
 	return false;
 }
@@ -271,7 +408,7 @@ DLLitePlugin::DLPluginAtom::DLPluginAtom(std::string predName, ProgramCtx& ctx) 
 ID DLLitePlugin::DLPluginAtom::dlNeg(ID id){
 
 	RegistryPtr reg = getRegistry();
-	if (reg->terms.getByID(id).getUnquotedString()[0] == '-') return reg->storeConstantTerm(reg->terms.getByID(id).getUnquotedString().substr(1));
+	if (reg->terms.getByID(id).getUnquotedString()[0] == '-') return reg->storeConstantTerm("\"" + reg->terms.getByID(id).getUnquotedString().substr(1) + "\"");
 	else return reg->storeConstantTerm("\"-" + reg->terms.getByID(id).getUnquotedString() + "\"");
 }
 
@@ -285,6 +422,20 @@ std::string DLLitePlugin::DLPluginAtom::afterSymbol(std::string str, char c){
 
 	if (str.find_last_of(c) == std::string::npos) return str;
 	else return str.substr(str.find_last_of(c) + 1);
+}
+
+std::string DLLitePlugin::DLPluginAtom::printGuardAtom(ID atom){
+
+	RegistryPtr reg = getRegistry();
+	const OrdinaryAtom& oatom = reg->lookupOrdinaryAtom(atom);
+	assert(oatom.tuple[0] == guardPredicate && "tried to print non-guard atom as guard atom");
+	std::stringstream ss;
+	ss << reg->terms.getByID(oatom.tuple[1]).getUnquotedString();
+	ss << "(";
+	ss << RawPrinter::toString(reg, oatom.tuple[2]);
+	if (oatom.tuple.size() > 3) ss << ", " << RawPrinter::toString(reg, oatom.tuple[3]);
+	ss << ")";
+	return ss.str();
 }
 
 void DLLitePlugin::DLPluginAtom::constructClassificationProgram(){
@@ -306,6 +457,7 @@ void DLLitePlugin::DLPluginAtom::constructClassificationProgram(){
 	zID = reg->storeVariableTerm("Z");
 	ID x2ID = reg->storeVariableTerm("X2");
 	ID y2ID = reg->storeVariableTerm("Y2");
+	guardPredicate = getRegistry()->getAuxiliaryConstantSymbol('o', ID(0, 0));
 
 	OrdinaryAtom subxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
 	subxy.tuple.push_back(subID);
@@ -410,11 +562,14 @@ void DLLitePlugin::DLPluginAtom::constructAbox(ProgramCtx& ctx, CachedOntologyPt
 		DBGLOG(DBG, "Current triple: " << to_string(t.subj_, ontology->store) << " / " << to_string(t.pred_, ontology->store) << " / " << to_string(t.obj_, ontology->store));
 		// concept assertion
 		if (to_string(t.obj_, ontology->store) != "owl:Class" && !ontology->isOwlType(to_string(t.obj_, ontology->store)) && to_string(t.pred_, ontology->store) == "rdf:type") {
-			ID conceptPredicate = reg->getAuxiliaryConstantSymbol('o', reg->storeConstantTerm("\"" + ontology->removeNamespaceFromString(to_string(t.obj_, ontology->store)) + "\""));
 			OrdinaryAtom guard(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
-			guard.tuple.push_back(conceptPredicate);
-			guard.tuple.push_back(reg->storeConstantTerm("\"" + ontology->removeNamespaceFromString(to_string(t.subj_, ontology->store)) + "\""));
+			guard.tuple.push_back(guardPredicate);
+			ID predicate = reg->storeConstantTerm("\"" + ontology->removeNamespaceFromString(to_string(t.obj_, ontology->store)) + "\"");
+			ID individual = reg->storeConstantTerm("\"" + ontology->removeNamespaceFromString(to_string(t.subj_, ontology->store)) + "\"");
+			guard.tuple.push_back(predicate);
+			guard.tuple.push_back(individual);
 			ontology->conceptAssertions->setFact(reg->storeOrdinaryAtom(guard).address);
+			ontology->individuals->setFact(ontology->addNamespaceToTerm(individual).address);
 		}
 
 		// role assertion
@@ -673,28 +828,23 @@ void DLLitePlugin::DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const I
 		// check if it is a guard atom
 		if (litID.isAuxiliary()){
 			const OrdinaryAtom& possibleGuardAtom = reg->ogatoms.getByID(litID);
-			if (reg->getTypeByAuxiliaryConstantSymbol(possibleGuardAtom.tuple[0]) != 'o') continue;
+			if (possibleGuardAtom.tuple[0] != guardPredicate) continue;
 
-			OrdinaryAtom guardAtom = possibleGuardAtom;
-			guardAtom.tuple[0] = reg->getIDByAuxiliaryConstantSymbol(guardAtom.tuple[0]);
-			ID gatom = reg->storeOrdinaryAtom(guardAtom);
 #ifndef NDEBUG
-			std::string astr = RawPrinter::toString(reg, gatom);
-			DBGLOG(DBG, "GUARD: Checking " << (guardAtom.tuple.size() == 2 ? "concept" : "role") << " guard atom " << astr << " (HEX-ID: " << gatom << ")");
+			std::string astr = RawPrinter::toString(reg, litID);
+			DBGLOG(DBG, "GUARD: Checking " << (possibleGuardAtom.tuple.size() == 2 ? "concept" : "role") << " guard atom " << printGuardAtom(litID) << " (HEX-ID: " << litID << ")");
 #endif
 
 			// concept or role guard?
 			bool holds;
-			if (guardAtom.tuple.size() == 2){
+			if (possibleGuardAtom.tuple.size() == 3){
 				// concept guard
-				holds = ontology->checkConceptAssertion(reg, gatom);
+				holds = ontology->checkConceptAssertion(reg, litID);
 			}else{
-				assert(guardAtom.tuple.size() == 3 && "invalid guard atom");
-
 				// role guard
-				holds = ontology->checkRoleAssertion(reg, gatom);
+				holds = ontology->checkRoleAssertion(reg, litID);
 			}
-			DBGLOG(DBG, "GUARD: Guard atom " << astr << " " << (holds ? " holds" : "does not hold"));
+			DBGLOG(DBG, "GUARD: Guard atom " << printGuardAtom(litID) << " " << (holds ? " holds" : "does not hold"));
 
 			if (holds){
 				// remove the guard atom
@@ -704,12 +854,12 @@ void DLLitePlugin::DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const I
 						restricted.insert(lit2);
 					}
 				}
-				DBGLOG(DBG, "GUARD: Keeping support set " << ng.getStringRepresentation(reg) << " with satisfied guard atom " << astr << " in form " << restricted.getStringRepresentation(reg));
+				DBGLOG(DBG, "GUARD: Keeping support set " << ng.getStringRepresentation(reg) << " with satisfied guard atom " << printGuardAtom(litID) << " in form " << restricted.getStringRepresentation(reg));
 				ng = restricted;
 				keep = true;
 				return;
 			}else{
-				DBGLOG(DBG, "GUARD: Removing support set " << ng.getStringRepresentation(reg) << " because guard atom " << astr << " is unsatisfied");
+				DBGLOG(DBG, "GUARD: Removing support set " << ng.getStringRepresentation(reg) << " because guard atom " << printGuardAtom(litID) << " is unsatisfied");
 				keep = false;
 				return;
 			}
@@ -759,6 +909,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 			assert(oatom.tuple.size() == 3 && "Second parameter must be a binary predicate");
 
 			ID cID = ontology->addNamespaceToTerm(oatom.tuple[1]);
+			ID cWithoutNamespace = ontology->removeNamespaceFromTerm(cID);
 
 			// check if sub(C, Q) is true in the classification assignment
 			OrdinaryAtom subcq(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -769,9 +920,9 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 
 			DBGCHECKATOM(subcqID)
 			if (classification->getFact(subcqID.address)){
-				OrdinaryAtom cpcx(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+				OrdinaryAtom cpcx(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
 				cpcx.tuple.push_back(query.input[1]);
-				cpcx.tuple.push_back(cID);
+				cpcx.tuple.push_back(ontology->removeNamespaceFromTerm(cID));
 				cpcx.tuple.push_back(outvarID);
 				Nogood supportset;
 				supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcx)));
@@ -791,9 +942,9 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 
 			DBGCHECKATOM(confccID)
 			if (classification->getFact(confccID.address)){
-				OrdinaryAtom cpcx(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+				OrdinaryAtom cpcx(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
 				cpcx.tuple.push_back(query.input[1]);
-				cpcx.tuple.push_back(cID);
+				cpcx.tuple.push_back(cWithoutNamespace);
 				cpcx.tuple.push_back(outvarID);
 				Nogood supportset;
 				supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcx)));
@@ -807,7 +958,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 			// check if sub(C, C') is true in the classification assignment (for some C')
 #ifndef NDEBUG
 			DBGLOG(DBG, "LSS:                Removing Namespace from cID");
-			std::string cstr = RawPrinter::toString(reg, ontology->removeNamespaceFromTerm(cID));
+			std::string cstr = RawPrinter::toString(reg, cWithoutNamespace);
 
 			DBGLOG(DBG, "LSS:                Checking if sub(" << cstr << ", C') is true in the classification assignment (for some C')");
 #endif
@@ -817,7 +968,6 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 				DBGLOG(DBG, "LSS:                Current classification atom: " << RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en2)));
 				const OrdinaryAtom& cl = reg->ogatoms.getByAddress(*en2);
 				if (cl.tuple[0] ==subID && cl.tuple[1] == cID){
-					ID cWithoutNamespace = ontology->removeNamespaceFromTerm(cID);
 #ifndef NDEBUG
 					ID cpWithoutNamespace = ontology->removeNamespaceFromTerm(cl.tuple[2]);
 					DBGLOG(DBG, "LSS:                     Found a match with C=" << RawPrinter::toString(reg, cWithoutNamespace) << " and C'=" << RawPrinter::toString(reg, cpWithoutNamespace));
@@ -834,9 +984,9 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 
 					// guard atom
 					OrdinaryAtom negcp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
-					ID negcptID = dlNeg(cl.tuple[2]);
-					ID aux = reg->getAuxiliaryConstantSymbol('o', negcptID);
-					negcp.tuple.push_back(aux);
+					ID negcptID = dlNeg(ontology->removeNamespaceFromTerm(cl.tuple[2]));
+					negcp.tuple.push_back(guardPredicate);
+					negcp.tuple.push_back(negcptID);
 					negcp.tuple.push_back(yID);
 					ID negcpID = reg->storeOrdinaryAtom(negcp);
 					supportset.insert(NogoodContainer::createLiteral(negcpID));
@@ -844,8 +994,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 					supportset.insert(outlit);
 
 #ifndef NDEBUG
-					std::string guardAtomStr = ontology->removeNamespaceFromString(reg->terms.getByID(negcptID).getUnquotedString());
-					DBGLOG(DBG, "LSS:                     --> Learned support set: " << supportset.getStringRepresentation(reg) << " where " << RawPrinter::toString(reg, negcpID) << " is the guard atom " << guardAtomStr << "(" << RawPrinter::toString(reg, yID) << ")");
+					DBGLOG(DBG, "LSS:                     --> Learned support set: " << supportset.getStringRepresentation(reg) << " where " << RawPrinter::toString(reg, negcpID) << " is the guard atom " << printGuardAtom(negcpID));
 #endif
 
 					nogoods->addNogood(supportset);
@@ -866,13 +1015,13 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 							// add { T c+(C,Y), T c-(C,Y) }
 							OrdinaryAtom cpcy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 							cpcy.tuple.push_back(query.input[1]);
-							cpcy.tuple.push_back(cID);
+							cpcy.tuple.push_back(cWithoutNamespace);
 							cpcy.tuple.push_back(at.tuple[2]);
 							supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcy)));
 
 							OrdinaryAtom cmcy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 							cpcy.tuple.push_back(query.input[2]);
-							cpcy.tuple.push_back(cID);
+							cpcy.tuple.push_back(cWithoutNamespace);
 							cpcy.tuple.push_back(at.tuple[2]);
 							supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcy)));
 
@@ -893,7 +1042,8 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 			DBGLOG(DBG, "LSS:           Atom belongs to c-");
 			assert(oatom.tuple.size() == 3 && "Third parameter must be a binary predicate");
 
-			ID cID = oatom.tuple[1];
+			ID cWithoutNamespace = oatom.tuple[1];
+			ID cID = ontology->addNamespaceToTerm(cWithoutNamespace);
 
 			// check if sub(negC, Q) is true in the classification assignment
 			OrdinaryAtom subncq(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -904,9 +1054,9 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 
 			DBGCHECKATOM(subncqID)
 			if (classification->getFact(subncqID.address)){
-				OrdinaryAtom cmcx(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+				OrdinaryAtom cmcx(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
 				cmcx.tuple.push_back(query.input[2]);
-				cmcx.tuple.push_back(cID);
+				cmcx.tuple.push_back(cWithoutNamespace);
 				cmcx.tuple.push_back(outvarID);
 				Nogood supportset;
 				supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cmcx)));
@@ -921,7 +1071,8 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 			DBGLOG(DBG, "LSS:           Atom belongs to r+");
 			assert(oatom.tuple.size() == 4 && "Fourth parameter must be a ternary predicate");
 
-			ID rID = oatom.tuple[1];
+			ID rWithoutNamespace = oatom.tuple[1];
+			ID rID = ontology->addNamespaceToTerm(rID);
 
 			// check if sub(negC, Q) is true in the classification assignment
 			OrdinaryAtom subexrq(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -932,9 +1083,9 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 
 			DBGCHECKATOM(subexrqID)
 			if (classification->getFact(subexrqID.address)){
-				OrdinaryAtom rprxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+				OrdinaryAtom rprxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
 				rprxy.tuple.push_back(query.input[3]);
-				rprxy.tuple.push_back(rID);
+				rprxy.tuple.push_back(rWithoutNamespace);
 				rprxy.tuple.push_back(outvarID);
 				rprxy.tuple.push_back(yID);
 				Nogood supportset;
@@ -950,7 +1101,8 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 			DBGLOG(DBG, "LSS:           Atom belongs to r-");
 			assert(oatom.tuple.size() == 4 && "Fifth parameter must be a ternary predicate");
 
-			ID rID = oatom.tuple[1];
+			ID rWithoutNamespace = oatom.tuple[1];
+			ID rID = ontology->addNamespaceToTerm(rID);
 
 			// check if sub(negC, Q) is true in the classification assignment
 			OrdinaryAtom subnexrq(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -961,9 +1113,9 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 
 			DBGCHECKATOM(subnexrqID)
 			if (classification->getFact(subnexrqID.address)){
-				OrdinaryAtom rprxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+				OrdinaryAtom rprxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
 				rprxy.tuple.push_back(query.input[4]);
-				rprxy.tuple.push_back(rID);
+				rprxy.tuple.push_back(rWithoutNamespace);
 				rprxy.tuple.push_back(outvarID);
 				rprxy.tuple.push_back(yID);
 				Nogood supportset;
@@ -977,6 +1129,55 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 		}
 		en++;
 	}
+
+	DBGLOG(DBG, "LSS: Analyzing query and Abox");
+	{
+		ID qWithNamespace = ontology->addNamespaceToTerm(query.input[5]);
+
+		// guard atom for Q(Y)
+		OrdinaryAtom qy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+		qy.tuple.push_back(guardPredicate);
+		qy.tuple.push_back(query.input[5]);
+		qy.tuple.push_back(outvarID);
+		Nogood supportset;
+		supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(qy)));
+		supportset.insert(outlit);
+		DBGLOG(DBG, "LSS:      --> Learned support set: " << supportset.getStringRepresentation(reg));
+		nogoods->addNogood(supportset);
+
+		// check if sub(C, Q) is true in the classification assignment (for some C)
+#ifndef NDEBUG
+		DBGLOG(DBG, "Removing Namespace from qID");
+		std::string qstr = RawPrinter::toString(reg, query.input[5]);
+
+		DBGLOG(DBG, "LSS:           Checking if sub(C, " << qstr << ") is true in the classification assignment (for some C')");
+#endif
+		bm::bvector<>::enumerator en = classification->getStorage().first();
+		bm::bvector<>::enumerator en_end = classification->getStorage().end();
+		while (en < en_end){
+			DBGLOG(DBG, "LSS:                Current classification atom: " << RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en)));
+			const OrdinaryAtom& cl = reg->ogatoms.getByAddress(*en);
+			if (cl.tuple[0] ==subID && cl.tuple[2] == qWithNamespace){
+#ifndef NDEBUG
+				ID cWithoutNamespace = ontology->removeNamespaceFromTerm(cl.tuple[1]);
+				DBGLOG(DBG, "LSS:                     Found a match with C=" << RawPrinter::toString(reg, cWithoutNamespace));
+#endif
+
+				// guard atom for C(Y)
+				OrdinaryAtom cy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+				cy.tuple.push_back(guardPredicate);
+				cy.tuple.push_back(cWithoutNamespace);
+				cy.tuple.push_back(outvarID);
+				Nogood supportset;
+				supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cy)));
+				supportset.insert(outlit);
+				DBGLOG(DBG, "LSS:                          --> Learned support set: " << supportset.getStringRepresentation(reg));
+				nogoods->addNogood(supportset);
+			}
+			en++;
+		}
+	}
+
 	DBGLOG(DBG, "LSS: Finished support set learning");
 }
 
@@ -1064,7 +1265,7 @@ void DLLitePlugin::DLPluginAtom::retrieve(const Query& query, Answer& answer, No
 	DBGLOG(DBG, "DLPluginAtom::retrieve (" << !learnedSupportSets << ", " << !!nogoods << ", " << query.ctx->config.getOption("SupportSets") << ")");
 
 	// check if we want to learn support sets (but do this only once)
-	if (!learnedSupportSets && !!nogoods && query.ctx->config.getOption("SupportSets")){
+	if (!!nogoods && query.ctx->config.getOption("SupportSets")){
 		learnSupportSets(query, nogoods);
 		learnedSupportSets = true;
 	}
@@ -1308,6 +1509,94 @@ void DLLitePlugin::ConsDLAtom::retrieve(const Query& query, Answer& answer, Nogo
 
 // ============================== Class DLPlugin ==============================
 
+namespace
+{
+
+template<typename Iterator, typename Skipper>
+struct DLParserModuleGrammarBase:
+	// we derive from the original hex grammar
+	// -> we can reuse its rules
+	public HexGrammarBase<Iterator, Skipper>
+{
+	typedef HexGrammarBase<Iterator, Skipper> Base;
+
+	DLParserModuleSemantics& sem;
+
+	DLParserModuleGrammarBase(DLParserModuleSemantics& sem):
+		Base(sem),
+		sem(sem)
+	{
+		typedef DLParserModuleSemantics Sem;
+		dlAtom
+			= (
+					qi::lit("DL") >> qi::lit('[') >> (dlExpression % qi::lit(',')) >> qi::lit(']') >> qi::lit('(') >> Base::terms >> qi::lit(')') > qi::eps
+				) [ Sem::dlAtom(sem) ];
+		dlExpression
+			= (
+					Base::term >> Base::term >> Base::term > qi::eps
+				) [ Sem::dlExpression(sem) ];
+
+
+		#ifdef BOOST_SPIRIT_DEBUG
+		BOOST_SPIRIT_DEBUG_NODE(dlAtom);
+		#endif
+	}
+
+	qi::rule<Iterator, ID(), Skipper> dlAtom;
+	qi::rule<Iterator, ID(), Skipper> dlExpression;
+};
+
+struct DLParserModuleGrammar:
+  DLParserModuleGrammarBase<HexParserIterator, HexParserSkipper>,
+	// required for interface
+  // note: HexParserModuleGrammar =
+	//       boost::spirit::qi::grammar<HexParserIterator, HexParserSkipper>
+	HexParserModuleGrammar
+{
+	typedef DLParserModuleGrammarBase<HexParserIterator, HexParserSkipper> GrammarBase;
+  typedef HexParserModuleGrammar QiBase;
+
+  DLParserModuleGrammar(DLParserModuleSemantics& sem):
+    GrammarBase(sem),
+    QiBase(GrammarBase::dlAtom)
+  {
+  }
+};
+typedef boost::shared_ptr<DLParserModuleGrammar>
+	DLParserModuleGrammarPtr;
+
+// moduletype = HexParserModule::HEADATOM
+template<enum HexParserModule::Type moduletype>
+class DLParserModule:
+	public HexParserModule
+{
+public:
+	// the semantics manager is stored/owned by this module!
+	DLParserModuleSemantics sem;
+	// we also keep a shared ptr to the grammar module here
+	DLParserModuleGrammarPtr grammarModule;
+
+	DLParserModule(ProgramCtx& ctx):
+		HexParserModule(moduletype),
+		sem(ctx)
+	{
+		LOG(INFO,"constructed DLParserModule");
+	}
+
+	virtual HexParserModuleGrammarPtr createGrammarModule()
+	{
+		assert(!grammarModule && "for simplicity (storing only one grammarModule pointer) we currently assume this will be called only once .. should be no problem to extend");
+		grammarModule.reset(new DLParserModuleGrammar(sem));
+		LOG(INFO,"created DLParserModuleGrammar");
+		return grammarModule;
+	}
+};
+
+} // anonymous namespace
+
+
+// ============================== Class DLPlugin ==============================
+
 // Collect all types of external atoms 
 DLLitePlugin::DLLitePlugin():
 	PluginInterface()
@@ -1338,6 +1627,11 @@ void DLLitePlugin::processOptions(std::list<const char*>& pluginOptions, Program
 			ctx.getPluginData<DLLitePlugin>().repairOntology = option.substr(9);
 			found.push_back(it);
 		}
+		if (option.find("--ontology=") != std::string::npos){
+			ctx.getPluginData<DLLitePlugin>().rewrite = true;
+			ctx.getPluginData<DLLitePlugin>().ontology = option.substr(11);
+			found.push_back(it);
+		}
 	}
 
 	for(std::vector<std::list<const char*>::iterator>::const_iterator it = found.begin(); it != found.end(); ++it){
@@ -1345,8 +1639,24 @@ void DLLitePlugin::processOptions(std::list<const char*>& pluginOptions, Program
 	}
 }
 
+// create parser modules that extend and the basic hex grammar
+// this parser also stores the query information into the plugin
+std::vector<HexParserModulePtr>
+DLLitePlugin::createParserModules(ProgramCtx& ctx)
+{
+	DBGLOG(DBG,"DLLitePlugin::createParserModules()");
+	std::vector<HexParserModulePtr> ret;
+
+	DLLitePlugin::CtxData& ctxdata = ctx.getPluginData<DLLitePlugin>();
+	ret.push_back(HexParserModulePtr(
+				new DLParserModule<HexParserModule::BODYATOM>(ctx)));
+
+	return ret;
+}
+
 void DLLitePlugin::printUsage(std::ostream& o) const{
 	o << "     --repair=[ontology name]" << std::endl;
+	o << "     --ontology=[ontology name]" << std::endl;
 }
 
 bool DLLitePlugin::providesCustomModelGeneratorFactory(ProgramCtx& ctx) const{

@@ -102,8 +102,10 @@ public:
 	public:
 		std::vector<DLLitePlugin::CachedOntologyPtr> ontologies;
 		bool repair;	// enable RepairModelGenerator?
+		bool rewrite;	// automatically rewrite DL-atoms?
 		std::string repairOntology;	// name of the ontology to repair (if repair=true)
-		CtxData() : repair(false) {};
+		std::string ontology;		// name of the ontology for rewriting
+		CtxData() : repair(false), rewrite(false) {};
 		virtual ~CtxData() {};
 	};
 
@@ -118,6 +120,9 @@ private:
 		// IDB of the classification program
 		std::vector<ID> classificationIDB;
 
+		// special predicate for guard atoms
+		ID guardPredicate;
+
 		// computed the DL-negation of a concept, i.e., "C" --> "-C"
 		inline ID dlNeg(ID id);
 
@@ -126,6 +131,9 @@ private:
 
 		// extracts from a string the postfix after the given symbol
 		inline std::string afterSymbol(std::string str, char c = '#');
+
+		// transforms a guard atom into a human-readable string
+		inline std::string printGuardAtom(ID atom);
 
 		// frequently used IDs
 		ID subID, opID, confID, xID, yID, zID;
@@ -207,6 +215,9 @@ public:
 	virtual ~DLLitePlugin();
 
 	virtual void processOptions(std::list<const char*>& pluginOptions, ProgramCtx& ctx);
+
+	// create parser modules that extend and the basic hex grammar
+	virtual std::vector<HexParserModulePtr> createParserModules(ProgramCtx&);
 
 	virtual void printUsage(std::ostream& o) const;
 

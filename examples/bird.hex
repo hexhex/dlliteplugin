@@ -1,5 +1,6 @@
 cp("Penguin", "bla") v cp("Bird", "xyz").
-cm("Penguin", "bla").
+%cm("Penguin", "bla").
 birds(X) :- &cDL["bird.owl", cp, cm, rp, rm, "Bird"](X).
 penguins(X) :- &cDL["bird.owl", cp, cm, rp, rm, "Penguin"](X).
+cons :- &consDL["bird.owl", cp, cm, rp, rm]().
 
