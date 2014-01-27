@@ -1170,8 +1170,8 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 			DBGLOG(DBG, "LSS:                Current classification atom: " << RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en)));
 			const OrdinaryAtom& cl = reg->ogatoms.getByAddress(*en);
 			if (cl.tuple[0] ==subID && cl.tuple[2] == qWithNamespace){
-#ifndef NDEBUG
 				ID cWithoutNamespace = ontology->removeNamespaceFromTerm(cl.tuple[1]);
+#ifndef NDEBUG
 				DBGLOG(DBG, "LSS:                     Found a match with C=" << RawPrinter::toString(reg, cWithoutNamespace));
 #endif
 
