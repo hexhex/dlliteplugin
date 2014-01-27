@@ -53,6 +53,8 @@ class DLLitePlugin:
   public PluginInterface
 {
 public:
+	const ID GuardPredicateID;
+
 	// this class caches an ontology
 	// add member variables here if additional information about the ontology must be stored
 	struct CachedOntology{
@@ -60,40 +62,58 @@ public:
 
 		RegistryPtr reg;
 
-		ID ontologyName;
+		// meta-information from owl-file
 		std::string ontologyPath, ontologyNamespace, ontologyVersion;
-		bool loaded;
+
+		ID ontologyName;			// ID of constant with filename (as given in the program or on command-line)
+		bool loaded;				// true if the ontology is ready to use
+
+		// interface to internal reasoner
 		owlcpp::Triple_store store;
-		InterpretationPtr classification;
 		ReasoningKernelPtr kernel;
 
+		InterpretationPtr classification;	// unique model of the classification program
+
+		// vocabulary of Tbox and Abox
 		InterpretationPtr concepts, roles, individuals;
 
-		typedef std::pair<ID, std::pair<ID, ID> > RoleAssertion;
-		InterpretationPtr conceptAssertions;
+		typedef std::pair<ID, std::pair<ID, ID> > RoleAssertion;	// stores a role assertion (i1,i2) in R as <R, <i1, i2> >
 		std::vector<RoleAssertion> roleAssertions;
-		inline bool checkConceptAssertion(RegistryPtr reg, ID guardAtomID) const;
-		inline bool checkRoleAssertion(RegistryPtr reg, ID guardAtomID) const;
+		InterpretationPtr conceptAssertions;				// stores addresses of all true concept guard atoms
+
+		// checks if a concept guard atom of form GuardPredID(C, I) holds
+		bool checkConceptAssertion(RegistryPtr reg, ID guardAtomID) const;
+
+		// checks if a role guard atom of form GuardPredID(R, I1, I2) holds
+		bool checkRoleAssertion(RegistryPtr reg, ID guardAtomID) const;
 
 		// returns the set of all individuals which which occur either in the Abox or in the query (including the DL-namespace)
 		InterpretationPtr getAllIndividuals(const PluginAtom::Query& query);
 
 		inline bool containsNamespace(std::string str) const;
-		inline bool containsNamespace(ID term) const;
-		inline bool isOwlType(std::string str) const;
+//		inline bool containsNamespace(ID term) const;
 		inline std::string addNamespaceToString(std::string str) const;
 		inline std::string removeNamespaceFromString(std::string str) const;
+/*
 		inline ID addNamespaceToTerm(ID term);
 		inline ID removeNamespaceFromTerm(ID term);
 		inline ID addNamespaceToAtom(ID atom);
 		inline ID removeNamespaceFromAtom(ID atom);
 		inline InterpretationPtr addNamespaceToInterpretation(InterpretationPtr intr);
 		inline InterpretationPtr removeNamespaceFromInterpretation(InterpretationPtr intr);
+*/
 
 		CachedOntology(RegistryPtr reg);
 		virtual ~CachedOntology();
 
-		void load(RegistryPtr reg, ID ontologyName);
+		// loads the ontology
+		void load(ID ontologyName);
+	private:
+		// reads the set of concepts, roles and individuals, adds concept and role assertions
+		void analyzeTboxAndAbox();
+
+		// computes the classification for a given ontology
+		void computeClassification(ProgramCtx& ctx);
 	};
 	typedef boost::shared_ptr<CachedOntology> CachedOntologyPtr;
 
@@ -118,47 +138,14 @@ public:
 		virtual ~CtxData() {};
 	};
 
+private:
 	// base class for all DL atoms
 	class DLPluginAtom : public PluginAtom{
 	private:
 		bool learnedSupportSets;
 	protected:
 		ProgramCtx& ctx;
-
-		// IDB of the classification program
-		std::vector<ID> classificationIDB;
-
-		// special predicate for guard atoms
-		ID guardPredicate;
-
-		// computed the DL-negation of a concept, i.e., "C" --> "-C" resp. checks if the concept is of such a form
-		inline ID dlNeg(ID id);
-		inline bool isDlNeg(ID id);
-
-		// creates for concept "C" the concept "exC" (the same for roles) resp. checks if the concept is of such a form
-		inline ID dlEx(ID id);
-		inline bool isDlEx(ID id);
-
-		// extracts from a string the postfix after the given symbol
-		static inline std::string afterSymbol(std::string str, char c = '#');
-
-		// transforms a guard atom into a human-readable string
-		inline std::string printGuardAtom(ID atom);
-
-		// frequently used IDs
-		ID subID, opID, confID, xID, yID, zID;
-
-		// constructs the classification program and initialized the above frequent IDs (should be called only once)
-		void constructClassificationProgram();
-
-		// computes the classification for a given ontology
-		InterpretationPtr computeClassification(ProgramCtx& ctx, CachedOntologyPtr ontology);
-
-		// constructs the concept and role assertions
-		static void constructAbox(ProgramCtx& ctx, CachedOntologyPtr ontology);
-
-		// loads an ontology and computes its classification or returns a reference to it if already present
-		CachedOntologyPtr prepareOntology(ProgramCtx& ctx, ID ontologyNameID);
+		RegistryPtr reg;
 
 		// checks the guard atoms wrt. the Abox, removes them from ng and sets keep to true in this case, and sets keep to false otherwise
 		virtual void guardSupportSet(bool& keep, Nogood& ng, const ID eaReplacement);
@@ -190,9 +177,6 @@ public:
 		};
 
 	public:
-		// loads an ontology and retrives concepts and roles, but does not compute its classification
-		static CachedOntologyPtr initializeOntology(ProgramCtx& ctx, ID ontologyNameID);
-
 		DLPluginAtom(std::string predName, ProgramCtx& ctx);
 
 		virtual void retrieve(const Query& query, Answer& answer);
@@ -223,6 +207,44 @@ public:
 		virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
 	};
 
+	RegistryPtr reg;
+
+protected:
+	// computed the DL-negation of a concept, i.e., "C" --> "-C" resp. checks if the concept is of such a form
+	inline ID dlNeg(ID id);
+	inline bool isDlNeg(ID id);
+
+	// creates for concept "C" the concept "exC" (the same for roles) resp. checks if the concept is of such a form
+	inline ID dlEx(ID id);
+	inline bool isDlEx(ID id);
+
+	inline ID storeQuotedConstantTerm(std::string str);
+
+	// check if a string starts with owl:
+	inline bool isOwlType(std::string str) const;
+
+	// get the part of the string after owl:
+	inline std::string getOwlType(std::string str) const;
+
+	// checks an owl type of form owl:str against a pattern
+	bool cmpOwlType(std::string str, std::string pattern) const;
+
+	// transforms a guard atom into a human-readable string
+	inline std::string printGuardAtom(ID atom);
+
+	// frequently used IDs
+	ID guardPredicate, subID, opID, confID, xID, yID, zID;
+
+	// IDB of the classification program
+	std::vector<ID> classificationIDB;
+
+	// constructs the classification program and initialized the above frequent IDs (should be called only once)
+	void constructClassificationProgram(ProgramCtx& ctx);
+
+	// loads an ontology and computes its classification or returns a reference to it if already present
+	CachedOntologyPtr prepareOntology(ProgramCtx& ctx, ID ontologyNameID);
+
+public:
 	DLLitePlugin();
 	virtual ~DLLitePlugin();
 
@@ -235,6 +257,8 @@ public:
 
 	// plugin atoms
 	virtual std::vector<PluginAtomPtr> createAtoms(ProgramCtx& ctx) const;
+
+	virtual void setupProgramCtx(ProgramCtx& ctx);
 
 	// RepairModelGenerator
 	virtual bool providesCustomModelGeneratorFactory(ProgramCtx& ctx) const;
