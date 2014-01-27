@@ -307,10 +307,6 @@ void DLLitePlugin::CachedOntology::load(ID ontologyName){
 	// now compute some meta-information
 	analyzeTboxAndAbox();
 
-	// classify the Tbox
-// TODO
-//	computeClassification(ctx);
-
 	loaded = true;
 }
 
@@ -330,39 +326,63 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 
 		// concept definition
 		if (theDLLitePlugin.cmpOwlType(to_string(t.obj_, store), "Class") && theDLLitePlugin.cmpOwlType(to_string(t.pred_, store), "type")) {
-			concepts->setFact(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store)).address);
+			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
+#ifndef NDEBUG
+			std::string conceptStr = RawPrinter::toString(reg, conceptID);
+			DBGLOG(DBG, "Found role: " << conceptStr);
+#endif
+			concepts->setFact(conceptID.address);
 		}
 
 		// role definition
 		if (theDLLitePlugin.cmpOwlType(to_string(t.obj_, store), "ObjectProperty") && theDLLitePlugin.cmpOwlType(to_string(t.pred_, store), "type")) {
-			roles->setFact(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store)).address);
+			ID roleID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
+#ifndef NDEBUG
+			std::string roleStr = RawPrinter::toString(reg, roleID);
+			DBGLOG(DBG, "Found role: " << roleStr);
+#endif
+			roles->setFact(roleID.address);
 		}
 
 		// concept assertion
 		if (!theDLLitePlugin.cmpOwlType(to_string(t.obj_, store), "Class") && !theDLLitePlugin.isOwlType(to_string(t.obj_, store)) && theDLLitePlugin.cmpOwlType(to_string(t.pred_, store), "type")) {
 			OrdinaryAtom guard(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
 			guard.tuple.push_back(guardPredicate);
-			ID concept = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store)));
-			ID individual = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
-			guard.tuple.push_back(concept);
-			guard.tuple.push_back(individual);
-			conceptAssertions->setFact(reg->storeOrdinaryAtom(guard).address);
-			individuals->setFact(individual.address);
+			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store)));
+			ID individualID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
+			guard.tuple.push_back(conceptID);
+			guard.tuple.push_back(individualID);
+			ID guardAtomID = reg->storeOrdinaryAtom(guard);
+			conceptAssertions->setFact(guardAtomID.address);
+#ifndef NDEBUG
+			std::string individualStr = RawPrinter::toString(reg, individualID);
+			std::string conceptAssertionStr = theDLLitePlugin.printGuardAtom(guardAtomID);
+			DBGLOG(DBG, "Found individual: " << individualStr);
+			DBGLOG(DBG, "Found concept assertion: " << conceptAssertionStr);
+#endif
+			individuals->setFact(individualID.address);
 		}
 
 		// role assertion
 		if (containsNamespace(to_string(t.pred_, store))) {
+			ID roleID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.pred_, store)));
+			ID individual1ID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
+			ID individual2ID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store)));
+#ifndef NDEBUG
+			std::string roleAssertionStr = RawPrinter::toString(reg, roleID) + "(" + RawPrinter::toString(reg, individual1ID) + "," + RawPrinter::toString(reg, individual2ID) + ")";
+			DBGLOG(DBG, "Found role assertion: " << roleAssertionStr);
+#endif
 			roleAssertions.push_back(
 				RoleAssertion(
-		 			theDLLitePlugin.storeQuotedConstantTerm(to_string(t.pred_, store)),
+		 			roleID,
 					std::pair<ID, ID>(
-						theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store)),
-						theDLLitePlugin.storeQuotedConstantTerm(to_string(t.obj_, store)) )));
+						individual1ID,
+						individual2ID )));
 		}
 
 		// individual definition
 		if (!theDLLitePlugin.cmpOwlType(to_string(t.subj_, store), "Class") && theDLLitePlugin.cmpOwlType(to_string(t.obj_, store), "Thing") && theDLLitePlugin.cmpOwlType(to_string(t.pred_, store), "type")) {
-			individuals->setFact(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store)).address);
+			individuals->setFact(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))).address);
 		}
 	}
 	DBGLOG(DBG, "Concept assertions: " << *conceptAssertions);
@@ -387,15 +407,15 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.opID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store)));
-				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);;
 				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store)));
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store)));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}	
@@ -404,29 +424,29 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.opID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store)));
-				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store)));
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store)));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.opID);
-				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store))));
-				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store)))));
+				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)))));
+				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store))));
-				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(to_string(t.subj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)))));
+				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
@@ -572,13 +592,11 @@ bool DLLitePlugin::CachedOntology::containsNamespace(std::string str) const{
 }
 
 std::string DLLitePlugin::CachedOntology::addNamespaceToString(std::string str) const{
-	DBGLOG(DBG, "Adding namespace to " + str);
 	if (str[0] == '-') return "-" + ontologyNamespace + "#" + str.substr(1);
 	else return ontologyNamespace + "#" + str;
 }
 
 std::string DLLitePlugin::CachedOntology::removeNamespaceFromString(std::string str) const{
-	DBGLOG(DBG, "Removing namespace from " + str);
 	assert((str.substr(0, ontologyNamespace.length()) == ontologyNamespace || str[0] == '-' && str.substr(1, ontologyNamespace.length()) == ontologyNamespace) && "given string does not start with ontology namespace");
 	if (str[0] == '-') return '-' + str.substr(ontologyNamespace.length() + 1 + 1); // +1 because of '-', +1 because of '#'
 	return str.substr(ontologyNamespace.length() + 1); // +1 because of '#'
@@ -598,12 +616,12 @@ bool DLLitePlugin::DLPluginAtom::Actor_collector::apply(const TaxonomyVertex& no
 	DBGLOG(DBG, "Actor collector called with " << node.getPrimer()->getName());
 	std::string returnValue(node.getPrimer()->getName());
 
-	if (!ontology->containsNamespace(returnValue)){
+	if (node.getPrimer()->getId() == -1 || !ontology->containsNamespace(returnValue)){
 		LOG(WARNING, "DLLite resoner returned constant " << returnValue << ", which seems to be not a valid individual name");
 	}else{
-		ID tid = theDLLitePlugin.storeQuotedConstantTerm(ontology->removeNamespaceFromString(returnValue) + "\"");
+		ID tid = theDLLitePlugin.storeQuotedConstantTerm(ontology->removeNamespaceFromString(returnValue));
 
-		if (node.getPrimer()->getId() != -1 && !ontology->concepts->getFact(tid.address) && !ontology->roles->getFact(tid.address)){
+		if (!ontology->concepts->getFact(tid.address) && !ontology->roles->getFact(tid.address)){
 			DBGLOG(DBG, "Adding element to tuple (ID=" << tid << ")");
 			Tuple tup;
 			tup.push_back(tid);
@@ -641,8 +659,8 @@ void DLLitePlugin::DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const I
 			if (possibleGuardAtom.tuple[0] != theDLLitePlugin.guardPredicate) continue;
 
 #ifndef NDEBUG
-			std::string astr = RawPrinter::toString(reg, litID);
-			DBGLOG(DBG, "GUARD: Checking " << (possibleGuardAtom.tuple.size() == 2 ? "concept" : "role") << " guard atom " << theDLLitePlugin.printGuardAtom(litID) << " (HEX-ID: " << litID << ")");
+			std::string guardStr = theDLLitePlugin.printGuardAtom(litID);
+			DBGLOG(DBG, "GUARD: Checking " << (possibleGuardAtom.tuple.size() == 2 ? "concept" : "role") << " guard atom " << guardStr);
 #endif
 
 			// concept or role guard?
@@ -654,7 +672,7 @@ void DLLitePlugin::DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const I
 				// role guard
 				holds = ontology->checkRoleAssertion(reg, litID);
 			}
-			DBGLOG(DBG, "GUARD: Guard atom " << theDLLitePlugin.printGuardAtom(litID) << " " << (holds ? " holds" : "does not hold"));
+			DBGLOG(DBG, "GUARD: Guard atom " << guardStr << " " << (holds ? " holds" : "does not hold"));
 
 			if (holds){
 				// remove the guard atom
@@ -664,12 +682,12 @@ void DLLitePlugin::DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const I
 						restricted.insert(lit2);
 					}
 				}
-				DBGLOG(DBG, "GUARD: Keeping support set " << ng.getStringRepresentation(reg) << " with satisfied guard atom " << theDLLitePlugin.printGuardAtom(litID) << " in form " << restricted.getStringRepresentation(reg));
+				DBGLOG(DBG, "GUARD: Keeping support set " << ng.getStringRepresentation(reg) << " with satisfied guard atom " << guardStr << " in form " << restricted.getStringRepresentation(reg));
 				ng = restricted;
 				keep = true;
 				return;
 			}else{
-				DBGLOG(DBG, "GUARD: Removing support set " << ng.getStringRepresentation(reg) << " because guard atom " << theDLLitePlugin.printGuardAtom(litID) << " is unsatisfied");
+				DBGLOG(DBG, "GUARD: Removing support set " << ng.getStringRepresentation(reg) << " because guard atom " << guardStr << " is unsatisfied");
 				keep = false;
 				return;
 			}
@@ -685,7 +703,11 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 
 	// make sure that the ontology is in the cache and retrieve its classification
 	CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0]);
+
+	// classify the Tbox if not already done
+	if (!ontology->classification) ontology->computeClassification(ctx);
 	InterpretationPtr classification = ontology->classification;
+
 #ifndef NDEBUG
 	DBGLOG(DBG, "LSS: Using the following model CM of the classification program: CM = " << *classification);
 #endif
@@ -697,7 +719,10 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 	Tuple outlist;
 	outlist.push_back(outvarID);
 	ID outlit = NogoodContainer::createLiteral(ExternalLearningHelper::getOutputAtom(query, outlist, true)) | ID(ID::NAF_MASK, 0);
-	DBGLOG(DBG, "LSS: Output atom is " << RawPrinter::toString(reg, outlit));
+#ifndef NDEBUG
+	std::string outlitStr = RawPrinter::toString(reg, outlit);
+	DBGLOG(DBG, "LSS: Output atom is " << outlitStr);
+#endif
 
 	// iterate over the maximum input
 	DBGLOG(DBG, "LSS: Analyzing input to the external atom");
@@ -709,7 +734,10 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 	#define DBGCHECKATOM(id) { std::stringstream ss; RawPrinter printer(ss, reg); printer.print(id); DBGLOG(DBG, "LSS:                Checking if " << ss.str() << " holds in CM:"); }
 	while (en < en_end){
 		// check if it is c+, c-, r+ or r-
-		DBGLOG(DBG, "LSS:      Current input atom: " << RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en)));
+#ifndef NDEBUG
+		std::string enStr = RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en));
+		DBGLOG(DBG, "LSS:      Current input atom: " << enStr);
+#endif
 		const OrdinaryAtom& oatom = reg->ogatoms.getByAddress(*en);
 
 		if (oatom.tuple[0] == query.input[1]){
@@ -765,19 +793,23 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 
 			// check if sub(C, C') is true in the classification assignment (for some C')
 #ifndef NDEBUG
-			std::string cstr = RawPrinter::toString(reg, cID);
+			std::string cStr = RawPrinter::toString(reg, cID);
 
-			DBGLOG(DBG, "LSS:                Checking if sub(" << cstr << ", C') is true in the classification assignment (for some C')");
+			DBGLOG(DBG, "LSS:                Checking if sub(" << cStr << ", C') is true in the classification assignment (for some C')");
 #endif
 			bm::bvector<>::enumerator en2 = classification->getStorage().first();
 			bm::bvector<>::enumerator en2_end = classification->getStorage().end();
 			while (en2 < en2_end){
-				DBGLOG(DBG, "LSS:                Current classification atom: " << RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en2)));
+#ifndef NDEBUG
+				std::string en2Str = RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en2));
+				DBGLOG(DBG, "LSS:                Current classification atom: " << en2Str);
+#endif
 				const OrdinaryAtom& clAtom = reg->ogatoms.getByAddress(*en2);
 				if (clAtom.tuple[0] == theDLLitePlugin.subID && clAtom.tuple[1] == cID){
 					ID cpID = clAtom.tuple[2];
 #ifndef NDEBUG
-					DBGLOG(DBG, "LSS:                     Found a match with C=" << RawPrinter::toString(reg, cpID) << " and C'=" << RawPrinter::toString(reg, cpID));
+					std::string cpStr = RawPrinter::toString(reg, cpID);
+					DBGLOG(DBG, "LSS:                     Found a match with C=" << cStr << " and C'=" << cpStr);
 #endif
 
 					// add {c+(C, Y), negC'(Y)}
@@ -801,7 +833,9 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 					supportset.insert(outlit);
 
 #ifndef NDEBUG
-					DBGLOG(DBG, "LSS:                     --> Learned support set: " << supportset.getStringRepresentation(reg) << " where " << RawPrinter::toString(reg, negcpID) << " is the guard atom " << theDLLitePlugin.printGuardAtom(negcpID));
+					std::string negcpStr = RawPrinter::toString(reg, negcpID);
+					std::string guardStr = theDLLitePlugin.printGuardAtom(negcpID);
+					DBGLOG(DBG, "LSS:                     --> Learned support set: " << supportset.getStringRepresentation(reg) << " where " << negcpStr << " is the guard atom " << guardStr);
 #endif
 
 					nogoods->addNogood(supportset);
@@ -810,13 +844,15 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 					bm::bvector<>::enumerator en3 = query.interpretation->getStorage().first();
 					bm::bvector<>::enumerator en3_end = query.interpretation->getStorage().end();
 #ifndef NDEBUG
-					std::string cpstr = RawPrinter::toString(reg, clAtom.tuple[2]);
-					DBGLOG(DBG, "LSS:                     Checking if (C',Y) with C'=" << cpstr << " occurs in c- (for some Y)");
+					DBGLOG(DBG, "LSS:                     Checking if (C',Y) with C'=" << cpStr << " occurs in c- (for some Y)");
 #endif
 					while (en3 < en3_end){
 						const OrdinaryAtom& at = reg->ogatoms.getByAddress(*en3);
 						if (at.tuple[0] == query.input[2] && at.tuple[1] == clAtom.tuple[2]){
-							DBGLOG(DBG, "LSS:                          --> Found a match with Y=" << RawPrinter::toString(reg, at.tuple[2]));
+#ifndef NDEBUG
+							std::string yStr = RawPrinter::toString(reg, at.tuple[2]);
+							DBGLOG(DBG, "LSS:                          --> Found a match with Y=" << yStr);
+#endif
 							Nogood supportset;
 
 							// add { T c+(C,Y), T c-(C,Y) }
@@ -839,11 +875,11 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 						}
 						en3++;
 					}
-					DBGLOG(DBG, "LSS:                     Finished checking if (C',Y) with C'=" << cpstr << " occurs in c- (for some Y)");
+					DBGLOG(DBG, "LSS:                     Finished checking if (C',Y) with C'=" << cpStr << " occurs in c- (for some Y)");
 				}
 				en2++;
 			}
-			DBGLOG(DBG, "LSS:                Finished checking if sub(" << cstr << ", C') is true in the classification assignment (for some C')");
+			DBGLOG(DBG, "LSS:                Finished checking if sub(" << cStr << ", C') is true in the classification assignment (for some C')");
 		}else if (oatom.tuple[0] == query.input[2]){
 			// c-
 			DBGLOG(DBG, "LSS:           Atom belongs to c-");
@@ -1090,7 +1126,7 @@ std::vector<TDLAxiom*> DLLitePlugin::DLPluginAtom::expandAbox(const Query& query
 			assert(ogatom.tuple.size() == 3 && "Second parameter must be a binary predicate");
 			ID concept = ogatom.tuple[1];
 			if (!ontology->concepts->getFact(concept.address)){
-				throw PluginError("Tried to expand concept \"" + RawPrinter::toString(reg, concept) + "\", which does not appear in the ontology");
+				throw PluginError("Tried to expand concept " + RawPrinter::toString(reg, concept) + ", which does not appear in the ontology");
 			}
 			ID individual = ogatom.tuple[2];
 			DBGLOG(DBG, "Adding concept assertion: " << (ogatom.tuple[0] == query.input[2] ? "-" : "") << reg->terms.getByID(concept).getUnquotedString() << "(" << reg->terms.getByID(individual).getUnquotedString() << ")");
@@ -1104,7 +1140,7 @@ std::vector<TDLAxiom*> DLLitePlugin::DLPluginAtom::expandAbox(const Query& query
 			assert(ogatom.tuple.size() == 4 && "Second parameter must be a ternery predicate");
 			ID role = ogatom.tuple[1];
 			if (!ontology->roles->getFact(role.address)){
-				throw PluginError("Tried to expand role \"" + RawPrinter::toString(reg, role) + "\", which does not appear in the ontology");
+				throw PluginError("Tried to expand role " + RawPrinter::toString(reg, role) + ", which does not appear in the ontology");
 			}
 			ID individual1 = ogatom.tuple[2];
 			ID individual2 = ogatom.tuple[3];
@@ -1211,21 +1247,23 @@ void DLLitePlugin::CDLAtom::retrieve(const Query& query, Answer& answer, NogoodC
 	// find the query concept
 	DBGLOG(DBG, "Looking up query concept");
 	bool found = false;
-	std::string queryConcept = ontology->addNamespaceToString(reg->terms.getByID(query.input[5]).getUnquotedString());
+	ID queryConceptID = query.input[5];
 	bool negated = false;
-	if (queryConcept[0] == '-'){
+	if (theDLLitePlugin.isDlNeg(query.input[5])){
 		negated = true;
-		queryConcept = queryConcept.substr(1);
+		queryConceptID = theDLLitePlugin.dlNeg(queryConceptID);
 	}
-	queryConcept = ontology->addNamespaceToString(queryConcept);
+	std::string queryConcept = ontology->addNamespaceToString(reg->terms.getByID(queryConceptID).getUnquotedString());
 	BOOST_FOREACH(owlcpp::Triple const& t, ontology->store.map_triple()) {
 		DBGLOG(DBG, "Current triple: " << to_string(t.subj_, ontology->store) << " / " << to_string(t.pred_, ontology->store) << " / " << to_string(t.obj_, ontology->store));
+
 		if (to_string(t.subj_, ontology->store) == queryConcept){
 			// found concept
 			DBGLOG(DBG, "Preparing Actor_collector for " << to_string(t.subj_, ontology->store));
 			Actor_collector ret(reg, answer, ontology, Actor_collector::Concept);
 			DBGLOG(DBG, "Sending concept query");
 			TDLConceptExpression* factppConcept = ontology->kernel->getExpressionManager()->Concept(to_string(t.subj_, ontology->store));
+
 			if (negated) factppConcept = ontology->kernel->getExpressionManager()->Not(factppConcept);
 			try{
 				ontology->kernel->getInstances(factppConcept, ret);
@@ -1236,7 +1274,9 @@ void DLLitePlugin::CDLAtom::retrieve(const Query& query, Answer& answer, NogoodC
 			break;
 		}
 	}
-	if (!found) DBGLOG(WARNING, "Queried non-existing concept " << ontology->removeNamespaceFromString(queryConcept));
+	if (!found){
+		DBGLOG(WARNING, "Queried non-existing concept " << ontology->removeNamespaceFromString(queryConcept));
+	}
 
 	DBGLOG(DBG, "Query answering complete, recovering Abox");
 	restoreAbox(query, addedAxioms);
@@ -1302,15 +1342,16 @@ void DLLitePlugin::RDLAtom::retrieve(const Query& query, Answer& answer, NogoodC
 	}
 
 	// get the query role
-	std::string role = reg->terms.getByID(query.input[5]).getUnquotedString();
+	ID queryRoleID = query.input[5];
 	bool negated = false;
-	if (role[0] == '-'){
-		role = role.substr(1);
+	if (theDLLitePlugin.isDlNeg(queryRoleID)){
+		queryRoleID = theDLLitePlugin.dlNeg(queryRoleID);
 		negated = true;
 		// TODO: Are such queries possible in DLLite?
 		// I did not find a FaCT++ method for constructing negative role expressions
 		throw PluginError("Negative role queries are not supported");
 	}
+	std::string role = reg->terms.getByID(queryRoleID).getUnquotedString();
 	TDLObjectRoleExpression* factppRole = ontology->kernel->getExpressionManager()->ObjectRole(ontology->addNamespaceToString(role));
 
 	DBGLOG(DBG, "Answering role query");
@@ -1498,26 +1539,44 @@ ID DLLitePlugin::dlEx(ID id){
 }
 
 ID DLLitePlugin::storeQuotedConstantTerm(std::string str){
+#ifndef NDEBUG
+	if (str[0] == '\"'){
+		DBGLOG(WARNING, "Stored string " + str + ", which seems to contain duplicate quotation marks");
+	}
+	if (str.substr(0, 7) == "http://" || str.substr(0, 8) == "https://"){
+		DBGLOG(WARNING, "Stored string " + str + ", which seems to contain an absolute path including namespace; this should not happen");
+	}
+#endif
 	return reg->storeConstantTerm("\"" + str + "\"");
 }
 
 bool DLLitePlugin::isOwlType(std::string str) const{
-	std::transform(str.begin(), str.end(), str.begin(), ::tolower);
-	return str.length() > 4 && str.substr(0, 4) == "owl:";
+
+        return !(str.find_last_of(':') == std::string::npos);
+
+//	std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+//	return str.length() > 4 && str.substr(0, 4) == "owl:";
 }
 
 std::string DLLitePlugin::getOwlType(std::string str) const{
-	assert(isOwlType(str) && "tried to get the type of a string which does not start with owl:");
-	return str.substr(4);
+
+        if (str.find_last_of(':') == std::string::npos) return str;
+        else return str.substr(str.find_last_of(':') + 1);
+
+//	assert(isOwlType(str) && "tried to get the type of a string which does not start with owl:");
+//	return str.substr(4);
 }
 
 bool DLLitePlugin::cmpOwlType(std::string str, std::string pattern) const{
 
+	DBGLOG(DBG, "Comparing " << str << " to " << pattern);
 	if (!isOwlType(str)) return false;
 	std::string extracted = getOwlType(str);
 
 	std::transform(extracted.begin(), extracted.end(), extracted.begin(), ::tolower);
 	std::transform(pattern.begin(), pattern.end(), pattern.begin(), ::tolower);
+
+	DBGLOG(DBG, "Result: " << (extracted == pattern));
 
 	return extracted == pattern;
 }
@@ -1715,7 +1774,7 @@ DLLitePlugin::CachedOntologyPtr DLLitePlugin::prepareOntology(ProgramCtx& ctx, I
 
 // Collect all types of external atoms 
 DLLitePlugin::DLLitePlugin():
-	PluginInterface()
+	PluginInterface(), GuardPredicateID(0, 0)
 {
 	setNameVersion(PACKAGE_TARNAME,DLLITEPLUGIN_VERSION_MAJOR,DLLITEPLUGIN_VERSION_MINOR,DLLITEPLUGIN_VERSION_MICRO);
 }

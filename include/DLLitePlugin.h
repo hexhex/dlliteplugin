@@ -91,29 +91,21 @@ public:
 		InterpretationPtr getAllIndividuals(const PluginAtom::Query& query);
 
 		inline bool containsNamespace(std::string str) const;
-//		inline bool containsNamespace(ID term) const;
 		inline std::string addNamespaceToString(std::string str) const;
 		inline std::string removeNamespaceFromString(std::string str) const;
-/*
-		inline ID addNamespaceToTerm(ID term);
-		inline ID removeNamespaceFromTerm(ID term);
-		inline ID addNamespaceToAtom(ID atom);
-		inline ID removeNamespaceFromAtom(ID atom);
-		inline InterpretationPtr addNamespaceToInterpretation(InterpretationPtr intr);
-		inline InterpretationPtr removeNamespaceFromInterpretation(InterpretationPtr intr);
-*/
 
 		CachedOntology(RegistryPtr reg);
 		virtual ~CachedOntology();
 
 		// loads the ontology
 		void load(ID ontologyName);
-	private:
-		// reads the set of concepts, roles and individuals, adds concept and role assertions
-		void analyzeTboxAndAbox();
 
 		// computes the classification for a given ontology
 		void computeClassification(ProgramCtx& ctx);
+
+	private:
+		// reads the set of concepts, roles and individuals, adds concept and role assertions
+		void analyzeTboxAndAbox();
 	};
 	typedef boost::shared_ptr<CachedOntology> CachedOntologyPtr;
 
