@@ -1,5 +1,5 @@
 # default parameters
-confstr=" "
+confstr=";--supportsets;-n=1;--supportsets -n=1"
 confstr2=$(cat conf)
 if [ $? == 0 ]; then
         confstr=$confstr2
