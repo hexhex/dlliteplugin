@@ -11,7 +11,7 @@ needsTo("c2","r4").
 drivesTo("d3","r2").
 
 % collect all customers iinto customer predicate
-customer(X):- isIn(X,Z), not &cDL["taxi_cust_assign.owl",custcp,custcm,custrp,custrm,"-Customer"](X).
+customer(X):- isIn(X,Z), not &cDL["taxi_cust_assign.owl",custcp,custcm,custrp,custrm,"-Customer"](X), needsTo(X,Z2).
 
 % collect all drivers to the driver predicate
 driver(X):-isIn(X,Z), not customer(X).
