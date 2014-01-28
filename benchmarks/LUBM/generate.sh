@@ -1,5 +1,5 @@
 # ========== DEFINE CONCEPTS HERE ==========
-concepts=(ResearchAssistant,PostDoc,VisitPostDoc,Student,NonStudent)
+concepts=(ResearchAssistant VisitPostDoc Student Nonstudent)
 
 # ========== DEFINE ROLES HERE ==========
 roles=()
