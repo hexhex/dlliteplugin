@@ -123,10 +123,11 @@ public:
 		std::vector<DLLitePlugin::CachedOntologyPtr> ontologies;
 		bool repair;	// enable RepairModelGenerator?
 		bool rewrite;	// automatically rewrite DL-atoms?
+		bool optimize;	// automatically optimize rules with DL-atoms?
 		std::string repairOntology;	// name of the ontology to repair (if repair=true)
 		std::string ontology;		// name of the ontology for rewriting
 		std::vector<DLExpression> dlexpressions;	// cache for DL-expressions
-		CtxData() : repair(false), rewrite(false) {};
+		CtxData() : repair(false), rewrite(false), optimize(false) {};
 		virtual ~CtxData() {};
 	};
 
@@ -259,6 +260,10 @@ public:
 
 	// create parser modules that extend and the basic hex grammar
 	virtual std::vector<HexParserModulePtr> createParserModules(ProgramCtx&);
+
+	// rewrites default-negated consistency checks to inconsistency checks
+	// (this makes the external atoms monotonic and may improve efficiency)
+	virtual PluginRewriterPtr createRewriter(ProgramCtx&);
 
 	virtual void printUsage(std::ostream& o) const;
 

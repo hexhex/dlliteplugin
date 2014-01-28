@@ -266,9 +266,9 @@ struct sem<DLParserModuleSemantics::dlExpression>
   }
 };
 
-// ============================== Class CachedOntology ==============================
-
 namespace dllite{
+
+// ============================== Class CachedOntology ==============================
 
 DLLitePlugin::CachedOntology::CachedOntology(RegistryPtr reg) : reg(reg){
 	loaded = false;
@@ -342,7 +342,7 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
 #ifndef NDEBUG
 			std::string conceptStr = RawPrinter::toString(reg, conceptID);
-			DBGLOG(DBG, "Found role: " << conceptStr);
+			DBGLOG(DBG, "Found concept: " << conceptStr);
 #endif
 			concepts->setFact(conceptID.address);
 		}else{
@@ -435,7 +435,13 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 		std::string pred = to_string(t.pred_, store);
 
 		DBGLOG(DBG, "Current triple: " << subj << " / " << pred << " / " << obj);
+		DBGLOG(DBG, "Checking if this is a concept definition");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "Class")) {
+			DBGLOG(DBG, "Yes");
+
+			// concepts should already be discovered in CachedOntology::analyzeTboxAndAbox
+			assert(concepts->getFact(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)).address) && "found a concept which was previously missed");
+
 			DBGLOG(DBG,"Construct facts of the form op(C,negC), sub(C,C) for this class.");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -451,8 +457,16 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
-		}	
+		}else{
+			DBGLOG(DBG, "No");
+		}
+		DBGLOG(DBG, "Checking if this is a role definition");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "ObjectProperty")) {
+			DBGLOG(DBG, "Yes");
+
+			// roles should already be discovered in CachedOntology::analyzeTboxAndAbox
+			assert(roles->getFact(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)).address) && "found a role which was previously missed");
+
 			DBGLOG(DBG,"Construct facts of the form op(Subj,negSubj), sub(Subj,Subj), op(exSubj,negexSubj), sub(exSubj,exSubj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -482,10 +496,14 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
+		}else{
+			DBGLOG(DBG, "No");
 		}
 
+		DBGLOG(DBG, "Checking if this is a concept inclusion");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "subclassOf") && isOwlConstant(obj))
 		{
+			DBGLOG(DBG, "Yes");
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -494,10 +512,14 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj)));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
+		}else{
+			DBGLOG(DBG, "No");
 		}
 
+		DBGLOG(DBG, "Checking if this is role inclusion");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "subpropertyOf") && isOwlConstant(obj))
 		{
+			DBGLOG(DBG, "Yes");
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -506,10 +528,14 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj)));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
+		}else{
+			DBGLOG(DBG, "No");
 		}
 
+		DBGLOG(DBG, "Checking if this is a concept disjointness axiom");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "disjointWith") && isOwlConstant(obj))
 		{
+			DBGLOG(DBG, "Yes");
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,negObj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -518,10 +544,14 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
+		}else{
+			DBGLOG(DBG, "No");
 		}
 
+		DBGLOG(DBG, "Checking if this is a complement concept");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "complementOf") && isOwlConstant(obj))
 		{
+			DBGLOG(DBG, "Yes");
 			DBGLOG(DBG,"Construct facts of the form op(Subj,Obj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -530,9 +560,14 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj)));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
+		}else{
+			DBGLOG(DBG, "No");
 		}
+
+		DBGLOG(DBG, "Checking if this is a role disjointness axiom");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "propertyDisjointWith") && isOwlConstant(obj))
 		{
+			DBGLOG(DBG, "Yes");
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -541,9 +576,14 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
+		}else{
+			DBGLOG(DBG, "No");
 		}
+
+		DBGLOG(DBG, "Checking if this is a domain definition");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "domain") && isOwlConstant(obj))
 		{
+			DBGLOG(DBG, "Yes");
 			DBGLOG(DBG,"Construct facts of the form sub(exSubj,Obj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -552,6 +592,8 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj)));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
+		}else{
+			DBGLOG(DBG, "No");
 		}
 	}
 	DBGLOG(DBG, "EDB of classification program: " << *edb);
@@ -637,7 +679,7 @@ std::string DLLitePlugin::CachedOntology::addNamespaceToString(std::string str) 
 
 std::string DLLitePlugin::CachedOntology::removeNamespaceFromString(std::string str) const{
 	if (!(str.substr(0, ontologyNamespace.length()) == ontologyNamespace || (str[0] == '-' && str.substr(1, ontologyNamespace.length()) == ontologyNamespace))){
-		DBGLOG(DBG, "Constant \"" + str + "\" appears to be a constant of the ontology, but does not contain its namespace.");
+		DBGLOG(WARNING, "Constant \"" + str + "\" appears to be a constant of the ontology, but does not contain its namespace.");
 		return str;
 	}
 	if (str[0] == '-') return '-' + str.substr(ontologyNamespace.length() + 1 + 1); // +1 because of '-', +1 because of '#'
@@ -658,7 +700,7 @@ bool DLLitePlugin::DLPluginAtom::Actor_collector::apply(const TaxonomyVertex& no
 	std::string returnValue(node.getPrimer()->getName());
 
 	if (node.getPrimer()->getId() == -1 || !ontology->isOwlConstant(returnValue)){
-		LOG(DBG, "DLLite resoner returned constant " << returnValue << ", which seems to be not a valid individual name (will ignore it)");
+		DBGLOG(WARNING, "DLLite resoner returned constant " << returnValue << ", which seems to be not a valid individual name (will ignore it)");
 	}else{
 		ID tid = theDLLitePlugin.storeQuotedConstantTerm(ontology->removeNamespaceFromString(returnValue));
 
@@ -1621,6 +1663,111 @@ public:
 } // anonymous namespace
 
 
+class DLRewriter:
+	public PluginRewriter
+{
+private:
+	DLLitePlugin::CtxData& ctxdata;
+
+public:
+	DLRewriter(DLLitePlugin::CtxData& ctxdata) : ctxdata(ctxdata) {}
+	virtual ~DLRewriter() {}
+
+	virtual void rewrite(ProgramCtx& ctx){
+
+		if (!ctxdata.optimize){
+			DBGLOG(DBG, "Do not use DL-optimizer");
+			return;
+		}else{
+			DBGLOG(DBG, "Using DL-optimizer");
+		}
+
+		RegistryPtr reg = ctx.registry();
+
+		ID consDLID = reg->storeConstantTerm("consDL");
+		ID inconsDLID = reg->storeConstantTerm("inconsDL");
+
+		std::vector<ID> newIdb;
+		std::vector<ID> newBody;
+		bool ruleModified = false;
+		bool programModified = false;
+		BOOST_FOREACH (ID ruleID, ctx.idb){
+#ifndef NDEBUG
+			std::string rulestr;
+			rulestr = RawPrinter::toString(reg, ruleID);
+			DBGLOG(DBG, "Analyzing " << rulestr);
+#endif
+			const Rule& rule = reg->rules.getByID(ruleID);
+
+			BOOST_FOREACH (ID batomID, rule.body){
+#ifndef NDEBUG
+				std::string litstr;
+				litstr = RawPrinter::toString(reg, batomID);
+				DBGLOG(DBG, "Analyzing " << litstr);
+#endif
+				// check if it is a default-negated consistency check
+				if (batomID.isNaf() && batomID.isLiteral() && batomID.isExternalAtom()){
+					const ExternalAtom& eatom = reg->eatoms.getByID(batomID);
+					if (eatom.predicate == consDLID){
+						DBGLOG(DBG, "Rewriting");
+						// replace by inconsistency ID, store back and add _positively_ to the rule body
+						ExternalAtom newEatom = eatom;
+						newEatom.predicate = inconsDLID;
+						ID newEatomID = reg->eatoms.storeAndGetID(newEatom);
+						newBody.push_back(ID::posLiteralFromAtom(newEatomID));
+						ruleModified = true;
+#ifndef NDEBUG
+						std::string newlitstr;
+						newlitstr = RawPrinter::toString(reg, newEatomID);
+						DBGLOG(DBG, "Rewrite " + newlitstr);
+#endif
+					}else{
+						DBGLOG(DBG, "Do not rewrite");
+						newBody.push_back(batomID);
+					}
+				}else{
+					DBGLOG(DBG, "Do not rewrite");
+					newBody.push_back(batomID);
+				}
+			}
+
+			if (ruleModified){
+				Rule newRule = rule;
+				newRule.body = newBody;
+				ID newRuleID = reg->storeRule(newRule);
+				newIdb.push_back(newRuleID);
+#ifndef NDEBUG
+				std::string msg = "Optimized rule " + RawPrinter::toString(reg, ruleID) + " to " + RawPrinter::toString(reg, newRuleID);
+				DBGLOG(DBG, msg);
+#endif
+				ruleModified = false;
+				programModified = true;
+			}else{
+#ifndef NDEBUG
+				bool equal = (newBody.size() == rule.body.size());
+				for (int i = 0; i < newBody.size(); ++i){
+					if (newBody[i] != rule.body[i]) equal = false;
+				}
+				assert (equal && "rule was modified by accident");
+#endif
+				newIdb.push_back(ruleID);
+			}
+			newBody.clear();
+		}
+
+		assert(ctx.idb.size() == newIdb.size() && "new program has a different number of rules");
+#ifndef NDEBUG
+		if (!programModified){
+			for (int i = 0; i < newIdb.size(); ++i){
+				assert(newIdb[i] == ctx.idb[i] && "program was modified by accident");
+			}
+		}
+#endif
+		ctx.idb = newIdb;
+		DBGLOG(DBG, "Finished rewriting");
+	}
+};
+
 // ============================== Class DLPlugin ==============================
 
 ID DLLitePlugin::dlNeg(ID id){
@@ -1894,6 +2041,7 @@ std::vector<PluginAtomPtr> DLLitePlugin::createAtoms(ProgramCtx& ctx) const{
 	ret.push_back(PluginAtomPtr(new CDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
 	ret.push_back(PluginAtomPtr(new RDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
 	ret.push_back(PluginAtomPtr(new ConsDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
+	ret.push_back(PluginAtomPtr(new InconsDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
 	return ret;
 }
 
@@ -1910,6 +2058,10 @@ void DLLitePlugin::processOptions(std::list<const char*>& pluginOptions, Program
 		if (option.find("--ontology=") != std::string::npos){
 			ctx.getPluginData<DLLitePlugin>().rewrite = true;
 			ctx.getPluginData<DLLitePlugin>().ontology = option.substr(11);
+			found.push_back(it);
+		}
+		if (option == "--optimize"){
+			ctx.getPluginData<DLLitePlugin>().optimize = true;
 			found.push_back(it);
 		}
 	}
@@ -1945,9 +2097,18 @@ DLLitePlugin::createParserModules(ProgramCtx& ctx)
 	return ret;
 }
 
+PluginRewriterPtr DLLitePlugin::createRewriter(ProgramCtx& ctx){
+
+	DLLitePlugin::CtxData& ctxdata = ctx.getPluginData<DLLitePlugin>();
+	if (ctxdata.optimize) return PluginRewriterPtr(new DLRewriter(ctxdata));
+	else return PluginRewriterPtr();
+}
+
 void DLLitePlugin::printUsage(std::ostream& o) const{
-	o << "     --repair=[ontology name]" << std::endl;
-	o << "     --ontology=[ontology name]" << std::endl;
+	o << "     --repair=[ontology name]    Activates the repair model generator" << std::endl;
+	o << "     --ontology=[ontology name]  Specifies the ontology used by DL-atoms" << std::endl;
+	o << "     --optimize                  Rewrites default-negated consistency checking DL-atoms" << std::endl
+	  << "                                 to inconsistency checks (makes them monotonic)" << std::endl;
 }
 
 void DLLitePlugin::setRegistry(RegistryPtr reg){
