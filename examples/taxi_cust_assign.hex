@@ -21,7 +21,7 @@ drives(X,Y):-driver(X),customer(Y),isIn(X,Z),isIn(Y,Z), not omit(X,Y).
 
 % condition which omits assignments
 omit(X,Y):-needsTo(Y,Z1), customer(Y), driver(X),&cDL["taxi_cust_assign.owl",omitcp,omitcm,omitrp,omitrm,"Electromob"](X),
-not &cDL["taxi_cust_assign.owl",cp,cm,rp,rm,"worksIn"](X,Z1).
+not &rDL["taxi_cust_assign.owl",cp,cm,rp,rm,"worksIn"](X,Z1).
 
 
 % electromob("d3"):-&cDL["taxi_cust_assign.owl",omitcp,omitcm,omitrp,omitrm,"Electromob"]("d3").
