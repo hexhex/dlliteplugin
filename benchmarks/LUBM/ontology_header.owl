@@ -497,8 +497,6 @@
     </owl:Class>
     
 
-    
-
 
     <!-- http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#Nonstudent -->
 
@@ -520,6 +518,14 @@
 
     <owl:Class rdf:about="#Person">
         <rdfs:label>person</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#PostDoc -->
+
+    <owl:Class rdf:about="#PostDoc">
+        <rdfs:subClassOf rdf:resource="#Person"/>
     </owl:Class>
     
 
@@ -675,11 +681,9 @@
 
     <owl:Class rdf:about="#VisitPostDoc">
         <rdfs:subClassOf rdf:resource="#Nonstudent"/>
+        <rdfs:subClassOf rdf:resource="#PostDoc"/>
         <rdfs:subClassOf rdf:resource="#ResearchAssistant"/>
     </owl:Class>
-    
-
-
     
 
 
@@ -701,6 +705,12 @@
     
 
 
+    <!-- http://www.w3.org/2002/07/owl#Thing -->
+
+    <owl:Class rdf:about="&owl;Thing"/>
+    
+
+
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
@@ -710,4 +720,5 @@
      -->
 
     
+
 

@@ -497,12 +497,6 @@
     </owl:Class>
     
 
-
-    <!-- http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#NonStudent -->
-
-    <owl:Class rdf:about="#NonStudent">
-        <rdfs:subClassOf rdf:resource="#VisitingPostDoc"/>
-    </owl:Class>
     
 
 
@@ -686,9 +680,6 @@
     
 
 
-    <!-- http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#VisitingPostDoc -->
-
-    <owl:Class rdf:about="#VisitingPostDoc"/>
     
 
 
