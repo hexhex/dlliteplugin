@@ -167,7 +167,7 @@ private:
 		};
 
 	public:
-		DLPluginAtom(std::string predName, ProgramCtx& ctx);
+		DLPluginAtom(std::string predName, ProgramCtx& ctx, bool monotonic = true);
 
 		virtual void retrieve(const Query& query, Answer& answer);
 		virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
@@ -193,6 +193,14 @@ private:
 	class ConsDLAtom : public DLPluginAtom{
 	public:
 		ConsDLAtom(ProgramCtx& ctx);
+		virtual void retrieve(const Query& query, Answer& answer);
+		virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
+	};
+
+	// inconsistency check
+	class InconsDLAtom : public DLPluginAtom{
+	public:
+		InconsDLAtom(ProgramCtx& ctx);
 		virtual void retrieve(const Query& query, Answer& answer);
 		virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
 	};
@@ -234,6 +242,9 @@ protected:
 
 	// loads an ontology and computes its classification or returns a reference to it if already present
 	CachedOntologyPtr prepareOntology(ProgramCtx& ctx, ID ontologyNameID);
+
+	// creates a atom template and adds the AUX property if necessary (depending on the predicate)
+	OrdinaryAtom getNewAtom(ID pred, bool ground = false);
 
 	// creates a new guard atom template, containing only the guard predicate (further attributes must be added by the caller)
 	OrdinaryAtom getNewGuardAtom(bool ground = false);

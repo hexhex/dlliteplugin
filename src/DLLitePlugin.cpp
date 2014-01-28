@@ -367,10 +367,9 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 		DBGLOG(DBG, "Checking if this is a concept assertion");
 		if (containsNamespace(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && containsNamespace(obj)) {
 			DBGLOG(DBG, "Yes");
-			OrdinaryAtom guard(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
 			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj));
 			ID individualID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
-			guard.tuple.push_back(theDLLitePlugin.guardPredicateID);
+			OrdinaryAtom guard = theDLLitePlugin.getNewGuardAtom(true /* ground! */ );
 			guard.tuple.push_back(conceptID);
 			guard.tuple.push_back(individualID);
 			ID guardAtomID = reg->storeOrdinaryAtom(guard);
@@ -669,7 +668,7 @@ bool DLLitePlugin::DLPluginAtom::Actor_collector::apply(const TaxonomyVertex& no
 
 // ============================== Class DLPluginAtom ==============================
 
-DLLitePlugin::DLPluginAtom::DLPluginAtom(std::string predName, ProgramCtx& ctx) : PluginAtom(predName, true), ctx(ctx){
+DLLitePlugin::DLPluginAtom::DLPluginAtom(std::string predName, ProgramCtx& ctx, bool monotonic) : PluginAtom(predName, monotonic), ctx(ctx){
 }
 
 void DLLitePlugin::DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const ID eaReplacement)
@@ -791,8 +790,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 
 			DBGCHECKATOM(subcqID)
 			if (classification->getFact(subcqID.address)){
-				OrdinaryAtom cpcx(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
-				cpcx.tuple.push_back(query.input[1]);
+				OrdinaryAtom cpcx = theDLLitePlugin.getNewAtom(query.input[1]);
 				cpcx.tuple.push_back(cID);
 				cpcx.tuple.push_back(outvarID);
 				Nogood supportset;
@@ -813,8 +811,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 
 			DBGCHECKATOM(confccID)
 			if (classification->getFact(confccID.address)){
-				OrdinaryAtom cpcx(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
-				cpcx.tuple.push_back(query.input[1]);
+				OrdinaryAtom cpcx = theDLLitePlugin.getNewAtom(query.input[1]);
 				cpcx.tuple.push_back(cID);
 				cpcx.tuple.push_back(outvarID);
 				Nogood supportset;
@@ -850,8 +847,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 					// add {c+(C, Y), negC'(Y)}
 					Nogood supportset;
 
-					OrdinaryAtom cpcy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
-					cpcy.tuple.push_back(query.input[1]);
+					OrdinaryAtom cpcy = theDLLitePlugin.getNewAtom(query.input[1]);
 					cpcy.tuple.push_back(cID);
 					cpcy.tuple.push_back(theDLLitePlugin.yID);
 					supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcy)));
@@ -860,18 +856,16 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 					// since we cannot check guard atoms of form exR(Y), we rewrite them to R(Y,Z)
 					ID guardID;
 					if (theDLLitePlugin.isDlEx(cpID)){
-						OrdinaryAtom negnoexcp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
 						ID negnoexcpID = theDLLitePlugin.dlNeg(theDLLitePlugin.dlRemoveEx(clAtom.tuple[2]));
-						negnoexcp.tuple.push_back(theDLLitePlugin.guardPredicateID);
+						OrdinaryAtom negnoexcp = theDLLitePlugin.getNewGuardAtom();
 						negnoexcp.tuple.push_back(negnoexcpID);
 						negnoexcp.tuple.push_back(theDLLitePlugin.yID);
 						negnoexcp.tuple.push_back(theDLLitePlugin.zID);
 						guardID = reg->storeOrdinaryAtom(negnoexcp);
 						supportset.insert(NogoodContainer::createLiteral(guardID));
 					}else{
-						OrdinaryAtom negcp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
 						ID negcpID = theDLLitePlugin.dlNeg(clAtom.tuple[2]);
-						negcp.tuple.push_back(theDLLitePlugin.guardPredicateID);
+						OrdinaryAtom negcp = theDLLitePlugin.getNewGuardAtom();
 						negcp.tuple.push_back(negcpID);
 						negcp.tuple.push_back(theDLLitePlugin.yID);
 						guardID = reg->storeOrdinaryAtom(negcp);
@@ -904,14 +898,12 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 							Nogood supportset;
 
 							// add { T c+(C,Y), T c-(C,Y) }
-							OrdinaryAtom cpcy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
-							cpcy.tuple.push_back(query.input[1]);
+							OrdinaryAtom cpcy = theDLLitePlugin.getNewAtom(query.input[1], true);
 							cpcy.tuple.push_back(cID);
 							cpcy.tuple.push_back(at.tuple[2]);
 							supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcy)));
 
-							OrdinaryAtom cmcy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
-							cpcy.tuple.push_back(query.input[2]);
+							OrdinaryAtom cmcy = theDLLitePlugin.getNewAtom(query.input[2], true);
 							cpcy.tuple.push_back(cID);
 							cpcy.tuple.push_back(at.tuple[2]);
 							supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcy)));
@@ -944,8 +936,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 
 			DBGCHECKATOM(subncqID)
 			if (classification->getFact(subncqID.address)){
-				OrdinaryAtom cmcx(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
-				cmcx.tuple.push_back(query.input[2]);
+				OrdinaryAtom cmcx = theDLLitePlugin.getNewAtom(query.input[2]);
 				cmcx.tuple.push_back(cID);
 				cmcx.tuple.push_back(outvarID);
 				Nogood supportset;
@@ -973,8 +964,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 
 			DBGCHECKATOM(subexrqID)
 			if (classification->getFact(subexrqID.address)){
-				OrdinaryAtom rprxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
-				rprxy.tuple.push_back(query.input[3]);
+				OrdinaryAtom rprxy = theDLLitePlugin.getNewAtom(query.input[3]);
 				rprxy.tuple.push_back(rID);
 				rprxy.tuple.push_back(outvarID);
 				rprxy.tuple.push_back(theDLLitePlugin.yID);
@@ -1002,17 +992,15 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 					Nogood supportset;
 
 					// add { T r+(R,O,Y), -C(O) }
-					OrdinaryAtom rprxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
-					rprxy.tuple.push_back(query.input[3]);
+					OrdinaryAtom rprxy = theDLLitePlugin.getNewAtom(query.input[3]);
 					rprxy.tuple.push_back(rID);
 					rprxy.tuple.push_back(outvarID);
 					rprxy.tuple.push_back(theDLLitePlugin.yID);
 					supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
 
 					// guard atom
-					OrdinaryAtom negc(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
 					ID negctID = theDLLitePlugin.dlNeg(at.tuple[2]);
-					negc.tuple.push_back(theDLLitePlugin.guardPredicateID);
+					OrdinaryAtom negc = theDLLitePlugin.getNewGuardAtom();
 					negc.tuple.push_back(negctID);
 					negc.tuple.push_back(outvarID);
 					ID negcID = reg->storeOrdinaryAtom(negc);
@@ -1028,17 +1016,15 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 					Nogood supportset;
 
 					// add { T r+(R,O,Y), -R'(O,Y) }
-					OrdinaryAtom rprxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
-					rprxy.tuple.push_back(query.input[3]);
+					OrdinaryAtom rprxy = theDLLitePlugin.getNewAtom(query.input[3]);
 					rprxy.tuple.push_back(rID);
 					rprxy.tuple.push_back(outvarID);
 					rprxy.tuple.push_back(theDLLitePlugin.yID);
 					supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
 
 					// guard atom
-					OrdinaryAtom negrp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
 					ID negrptID = theDLLitePlugin.dlNeg(at.tuple[2]);
-					negrp.tuple.push_back(theDLLitePlugin.guardPredicateID);
+					OrdinaryAtom negrp = theDLLitePlugin.getNewGuardAtom();
 					negrp.tuple.push_back(negrptID);
 					negrp.tuple.push_back(outvarID);
 					negrp.tuple.push_back(theDLLitePlugin.yID);
@@ -1069,8 +1055,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 
 			DBGCHECKATOM(subnexrqID)
 			if (classification->getFact(subnexrqID.address)){
-				OrdinaryAtom rprxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
-				rprxy.tuple.push_back(query.input[4]);
+				OrdinaryAtom rprxy = theDLLitePlugin.getNewAtom(query.input[4]);
 				rprxy.tuple.push_back(rID);
 				rprxy.tuple.push_back(outvarID);
 				rprxy.tuple.push_back(theDLLitePlugin.yID);
@@ -1091,8 +1076,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 		ID qID = query.input[5];
 
 		// guard atom for Q(Y)
-		OrdinaryAtom qy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
-		qy.tuple.push_back(theDLLitePlugin.guardPredicateID);
+		OrdinaryAtom qy = theDLLitePlugin.getNewGuardAtom();
 		qy.tuple.push_back(query.input[5]);
 		qy.tuple.push_back(outvarID);
 		Nogood supportset;
@@ -1120,8 +1104,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 				if (theDLLitePlugin.isDlEx(clAtom.tuple[1])){
 					DBGLOG(DBG, "LSS:                     (this is form exR)");
 					// guard atom for C(O,Y)
-					OrdinaryAtom roy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
-					roy.tuple.push_back(theDLLitePlugin.guardPredicateID);
+					OrdinaryAtom roy = theDLLitePlugin.getNewGuardAtom();
 					roy.tuple.push_back(theDLLitePlugin.dlRemoveEx(cID));
 					roy.tuple.push_back(outvarID);
 					roy.tuple.push_back(theDLLitePlugin.yID);
@@ -1133,8 +1116,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 				}else{
 					DBGLOG(DBG, "LSS:                     (this is not form exR)");
 					// guard atom for C(O)
-					OrdinaryAtom co(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
-					co.tuple.push_back(theDLLitePlugin.guardPredicateID);
+					OrdinaryAtom co = theDLLitePlugin.getNewGuardAtom();
 					co.tuple.push_back(cID);
 					co.tuple.push_back(outvarID);
 					Nogood supportset;
@@ -1439,9 +1421,9 @@ void DLLitePlugin::RDLAtom::retrieve(const Query& query, Answer& answer, NogoodC
 	restoreAbox(query, addedAxioms);
 }
 
-// ============================== Class RDLAtom ==============================
+// ============================== Class ConsDLAtom ==============================
 
-DLLitePlugin::ConsDLAtom::ConsDLAtom(ProgramCtx& ctx) : DLPluginAtom("consDL", ctx)
+DLLitePlugin::ConsDLAtom::ConsDLAtom(ProgramCtx& ctx) : DLPluginAtom("consDL", ctx, false)	// consistency check is NOT monotonic!
 {
 	DBGLOG(DBG,"Constructor of consDL plugin is started");
 	addInputConstant(); // the ontology
@@ -1476,6 +1458,46 @@ void DLLitePlugin::ConsDLAtom::retrieve(const Query& query, Answer& answer, Nogo
 	}
 
 	DBGLOG(DBG, "Consistency check complete, recovering Abox");
+	restoreAbox(query, addedAxioms);
+}
+
+// ============================== Class InonsDLAtom ==============================
+
+DLLitePlugin::InconsDLAtom::InconsDLAtom(ProgramCtx& ctx) : DLPluginAtom("inconsDL", ctx)
+{
+	DBGLOG(DBG,"Constructor of inconsDL plugin is started");
+	addInputConstant(); // the ontology
+	addInputPredicate(); // the positive concept
+	addInputPredicate(); // the negative concept
+	addInputPredicate(); // the positive role
+	addInputPredicate(); // the negative role
+	setOutputArity(0); // arity of the output list
+}
+
+void DLLitePlugin::InconsDLAtom::retrieve(const Query& query, Answer& answer)
+{
+	assert(false);
+}
+
+void DLLitePlugin::InconsDLAtom::retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods)
+{
+
+	DBGLOG(DBG, "InconsDLAtom::retrieve");
+
+	RegistryPtr reg = getRegistry();
+
+	// learn support sets (if enabled)
+	//DLPluginAtom::retrieve(query, answer, nogoods);
+
+	CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0]);
+	std::vector<TDLAxiom*> addedAxioms = expandAbox(query);
+
+	// handle inconsistency
+	if (!ontology->kernel->isKBConsistent()){
+		answer.get().push_back(Tuple());
+	}
+
+	DBGLOG(DBG, "Inconsistency check complete, recovering Abox");
 	restoreAbox(query, addedAxioms);
 }
 
@@ -1942,6 +1964,14 @@ void DLLitePlugin::setupProgramCtx(ProgramCtx& ctx){
 	this->reg = ctx.registry();
 	prepareIDs();
 	constructClassificationProgram(ctx);
+}
+
+OrdinaryAtom DLLitePlugin::getNewAtom(ID pred, bool ground){
+	OrdinaryAtom atom(ID::MAINKIND_ATOM);
+	atom.kind |= (ground ? ID::SUBKIND_ATOM_ORDINARYG : ID::SUBKIND_ATOM_ORDINARYN);
+	atom.kind |= (pred.isAuxiliary() ? ID::PROPERTY_AUX : 0);
+	atom.tuple.push_back(pred);
+	return atom;
 }
 
 OrdinaryAtom DLLitePlugin::getNewGuardAtom(bool ground){

@@ -4,5 +4,5 @@ pm("tweety").
 res(X) :- DL[Penguin += pm; Bird](X).
 
 % consistency check
-inconsistent :- DL[Penguin += pm, Penguin -= pm; ]().
+consistent :- DL[Penguin += pm, Penguin -= pm; ]().
 
