@@ -101,7 +101,7 @@ public:
 	};
 
 	struct dlExpression:
-		SemanticActionBase<DLParserModuleSemantics, ID, dlExpression>
+		SemanticActionBase<DLParserModuleSemantics, dllite::DLLitePlugin::DLExpression, dlExpression>
 	{
 		dlExpression(DLParserModuleSemantics& mgr):
 			dlExpression::base_type(mgr)
@@ -117,23 +117,23 @@ struct sem<DLParserModuleSemantics::dlAtom>
 	void operator()(
 	DLParserModuleSemantics& mgr,
 		const boost::fusion::vector3<
-			std::vector<ID>,
-			ID,
-		  	std::vector<dlvhex::ID>
+			std::vector<dllite::DLLitePlugin::DLExpression>,
+			const std::string,
+		  	std::vector<ID>
 		>& source,
 	ID& target)
 	{
 		static int nextPred = 1;
 
-		DBGLOG(DBG, "Parsing DL-atom");
+		DBGLOG(DBG, "Parsing DL-atom with query " << boost::fusion::at_c<1>(source));
 		RegistryPtr reg = mgr.ctx.registry();
 
 		ID consDLID = reg->terms.getIDByString("consDL");
 		ID cDLID = reg->terms.getIDByString("cDL");
 		ID rDLID = reg->terms.getIDByString("rDL");
 
-		const std::vector<ID>& in = boost::fusion::at_c<0>(source);
-		ID query = boost::fusion::at_c<1>(source);
+		const std::vector<dllite::DLLitePlugin::DLExpression>& in = boost::fusion::at_c<0>(source);
+		ID query = reg->storeConstantTerm("\"" + boost::fusion::at_c<1>(source) + "\"");
 		const std::vector<ID>& out = boost::fusion::at_c<2>(source);
 
 		ExternalAtom ext(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_EXTERNAL);
@@ -154,9 +154,9 @@ struct sem<DLParserModuleSemantics::dlAtom>
 		ID varX = reg->storeVariableTerm("X");
 		ID varY = reg->storeVariableTerm("Y");
 		dllite::DLLitePlugin::CtxData& ctxdata = mgr.ctx.getPluginData<dllite::DLLitePlugin>();
-		BOOST_FOREACH (ID exprID, in){
-			DBGLOG(DBG, "Retrieving DL-expression from index " << exprID.address);
-			const dllite::DLLitePlugin::DLExpression& dlexpression = ctxdata.dlexpressions[exprID.address];
+		BOOST_FOREACH (dllite::DLLitePlugin::DLExpression dlexpression, in){
+//			DBGLOG(DBG, "Retrieving DL-expression from index " << exprID.address);
+//			const dllite::DLLitePlugin::DLExpression& dlexpression = ctxdata.dlexpressions[exprID.address];
 
 			Rule rule(ID::MAINKIND_RULE);
 
@@ -223,28 +223,31 @@ struct sem<DLParserModuleSemantics::dlExpression>
 			const std::string,
 		  	dlvhex::ID
 		>& source,
-    ID& target)
+    dllite::DLLitePlugin::DLExpression& target)
   {
 	RegistryPtr reg = mgr.ctx.registry();
 
-	DBGLOG(DBG, "Parsing DL-expression");
+	DBGLOG(DBG, "Parsing DL-expression with concept or role " << boost::fusion::at_c<0>(source));
 	dllite::DLLitePlugin::DLExpression expr;
 	expr.conceptOrRole = boost::fusion::at_c<0>(source);
 	std::string op = boost::fusion::at_c<1>(source);
 	expr.pred = boost::fusion::at_c<2>(source);
 
-	if (op == "+="){
+	if (op.compare("+=") == 0){
 		expr.type = dllite::DLLitePlugin::DLExpression::plus;
-	}else if (op == "-="){
+	}else if (op.compare("-=") == 0){
 		expr.type = dllite::DLLitePlugin::DLExpression::minus;
 	}else{
 		throw PluginError("Unknown DL-atom expression: \"" + op + "\"");
 	}
 
-	dllite::DLLitePlugin::CtxData& ctxdata = mgr.ctx.getPluginData<dllite::DLLitePlugin>();
-	ctxdata.dlexpressions.push_back(expr);
-	DBGLOG(DBG, "Adding DL-expression to index " << ctxdata.dlexpressions.size() - 1);
-	target.address = ctxdata.dlexpressions.size() - 1;
+
+	target = expr;
+
+//	dllite::DLLitePlugin::CtxData& ctxdata = mgr.ctx.getPluginData<dllite::DLLitePlugin>();
+//	ctxdata.dlexpressions.push_back(expr);
+//	DBGLOG(DBG, "Adding DL-expression to index " << ctxdata.dlexpressions.size() - 1);
+//	target.address = ctxdata.dlexpressions.size() - 1;
   }
 };
 
@@ -263,6 +266,7 @@ DLLitePlugin::CachedOntology::~CachedOntology(){
 void DLLitePlugin::CachedOntology::load(ID ontologyName){
 
 	assert(!loaded && "ontology was already loaded");
+	assert(!!reg && "registry must be set before load is called");
 	DBGLOG(DBG, "Assigning ontology name");
 	this->ontologyName = ontologyName;
 
@@ -288,8 +292,6 @@ void DLLitePlugin::CachedOntology::load(ID ontologyName){
 		}
 		DBGLOG(DBG, "Namespace is: " << ontologyNamespace << " (path: " << ontologyPath << ", version: " << ontologyVersion << ")");
 		assert(oCount == 1 && "The file should contain exactly one ontology");
-
-		DBGLOG(DBG, "Done");
 	}catch(std::exception e){
 		throw PluginError("DLLite reasoner failed while loading file \"" + reg->terms.getByID(ontologyName).getUnquotedString() + "\", ensure that it is a valid ontology");
 	}
@@ -303,6 +305,8 @@ void DLLitePlugin::CachedOntology::load(ID ontologyName){
 void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 
 	assert(!concepts && "analyzeTboxAndAbox must be called only once");
+	assert(!!reg && "registry must be set before analyzeTboxAndAbox is called");
+	assert(theDLLitePlugin.guardPredicateID != ID_FAIL && "IDs are not initialized");
 
 	DBGLOG(DBG, "Analyzing ontology (Tbox and Abox)");
 	concepts = InterpretationPtr(new Interpretation(reg));
@@ -310,32 +314,46 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 	individuals = InterpretationPtr(new Interpretation(reg));
 	conceptAssertions = InterpretationPtr(new Interpretation(reg));
 	BOOST_FOREACH(owlcpp::Triple const& t, store.map_triple()) {
-		DBGLOG(DBG, "Current triple: " << to_string(t.subj_, store) << " / " << to_string(t.pred_, store) << " / " << to_string(t.obj_, store));
+		std::string subj = to_string(t.subj_, store);
+		std::string obj = to_string(t.obj_, store);
+		std::string pred = to_string(t.pred_, store);
+
+		DBGLOG(DBG, "Current triple: " << to_string(t.subj_, store) << " / " << pred << " / " << obj);
 
 		// concept definition
-		if (theDLLitePlugin.cmpOwlType(to_string(t.obj_, store), "Class") && theDLLitePlugin.cmpOwlType(to_string(t.pred_, store), "type")) {
+		DBGLOG(DBG, "Checking if this is a concept definition");
+		if (containsNamespace(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "Class")) {
+			DBGLOG(DBG, "Yes");
 			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
 #ifndef NDEBUG
 			std::string conceptStr = RawPrinter::toString(reg, conceptID);
 			DBGLOG(DBG, "Found role: " << conceptStr);
 #endif
 			concepts->setFact(conceptID.address);
+		}else{
+			DBGLOG(DBG, "No");
 		}
 
 		// role definition
-		if (theDLLitePlugin.cmpOwlType(to_string(t.obj_, store), "ObjectProperty") && theDLLitePlugin.cmpOwlType(to_string(t.pred_, store), "type")) {
+		DBGLOG(DBG, "Checking if this is a role definition");
+		if (containsNamespace(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "ObjectProperty")) {
+			DBGLOG(DBG, "Yes");
 			ID roleID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
 #ifndef NDEBUG
 			std::string roleStr = RawPrinter::toString(reg, roleID);
 			DBGLOG(DBG, "Found role: " << roleStr);
 #endif
 			roles->setFact(roleID.address);
+		}else{
+			DBGLOG(DBG, "No");
 		}
 
 		// concept assertion
-		if (!theDLLitePlugin.cmpOwlType(to_string(t.subj_, store), "Class") && !theDLLitePlugin.isOwlType(to_string(t.obj_, store)) && theDLLitePlugin.cmpOwlType(to_string(t.pred_, store), "type")) {
+		DBGLOG(DBG, "Checking if this is a concept assertion");
+		if (containsNamespace(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && containsNamespace(obj)) {
+			DBGLOG(DBG, "Yes");
 			OrdinaryAtom guard(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
-			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store)));
+			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj));
 			ID individualID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
 			guard.tuple.push_back(theDLLitePlugin.guardPredicateID);
 			guard.tuple.push_back(conceptID);
@@ -349,13 +367,17 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 			DBGLOG(DBG, "Found concept assertion: " << conceptAssertionStr);
 #endif
 			individuals->setFact(individualID.address);
+		}else{
+			DBGLOG(DBG, "No");
 		}
 
 		// role assertion
-		if (containsNamespace(to_string(t.pred_, store))) {
-			ID roleID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.pred_, store)));
+		DBGLOG(DBG, "Checking if this is a role assertion");
+		if (containsNamespace(pred) && containsNamespace(pred) && containsNamespace(obj)) {
+			DBGLOG(DBG, "Yes");
+			ID roleID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(pred));
 			ID individual1ID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
-			ID individual2ID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store)));
+			ID individual2ID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj));
 #ifndef NDEBUG
 			std::string roleAssertionStr = RawPrinter::toString(reg, roleID) + "(" + RawPrinter::toString(reg, individual1ID) + "," + RawPrinter::toString(reg, individual2ID) + ")";
 			DBGLOG(DBG, "Found role assertion: " << roleAssertionStr);
@@ -366,11 +388,17 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 					std::pair<ID, ID>(
 						individual1ID,
 						individual2ID )));
+		}else{
+			DBGLOG(DBG, "No");
 		}
 
 		// individual definition
-		if (!theDLLitePlugin.cmpOwlType(to_string(t.subj_, store), "Class") && theDLLitePlugin.cmpOwlType(to_string(t.obj_, store), "Thing") && theDLLitePlugin.cmpOwlType(to_string(t.pred_, store), "type")) {
+		DBGLOG(DBG, "Checking if this is an individual definition");
+		if (containsNamespace(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(obj, "Thing") && theDLLitePlugin.cmpOwlType(pred, "type")) {
+			DBGLOG(DBG, "Yes");
 			individuals->setFact(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))).address);
+		}else{
+			DBGLOG(DBG, "No");
 		}
 	}
 	DBGLOG(DBG, "Concept assertions: " << *conceptAssertions);
@@ -387,124 +415,127 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 	InterpretationPtr edb = InterpretationPtr(new Interpretation(reg));
 
 	// use the ontology to construct the EDB
-	DBGLOG(DBG,"Ontology file was loaded");
 	BOOST_FOREACH(owlcpp::Triple const& t, store.map_triple()) {
-		DBGLOG(DBG, "Current triple: " << to_string(t.subj_, store) << " / " << to_string(t.pred_, store) << " / " << to_string(t.obj_, store));
-		if (theDLLitePlugin.cmpOwlType(to_string(t.obj_, store), "Class") && theDLLitePlugin.cmpOwlType(to_string(t.pred_, store), "type")) {
+		std::string subj = to_string(t.subj_, store);
+		std::string obj = to_string(t.obj_, store);
+		std::string pred = to_string(t.pred_, store);
+
+		DBGLOG(DBG, "Current triple: " << subj << " / " << pred << " / " << obj);
+		if (containsNamespace(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "Class")) {
 			DBGLOG(DBG,"Construct facts of the form op(C,negC), sub(C,C) for this class.");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.opID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
-				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
+				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);;
 				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}	
-		if (theDLLitePlugin.cmpOwlType(to_string(t.obj_, store), "ObjectProperty") && theDLLitePlugin.cmpOwlType(to_string(t.pred_, store), "type")) {
+		if (containsNamespace(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "ObjectProperty")) {
 			DBGLOG(DBG,"Construct facts of the form op(Subj,negSubj), sub(Subj,Subj), op(exSubj,negexSubj), sub(exSubj,exSubj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.opID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
-				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
+				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.opID);
-				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)))));
-				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))))));
+				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj))));
+				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)))));
-				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)))));
+				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj))));
+				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
 
-		if (theDLLitePlugin.cmpOwlType(to_string(t.pred_, store), "subclassOf"))
+		if (containsNamespace(subj) && theDLLitePlugin.cmpOwlType(pred, "subclassOf") && containsNamespace(obj))
 		{
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj)));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
 
-		if (theDLLitePlugin.cmpOwlType(to_string(t.pred_, store), "subpropertyOf"))
+		if (containsNamespace(subj) && theDLLitePlugin.cmpOwlType(pred, "subpropertyOf") && containsNamespace(obj))
 		{
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj)));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
 
-		if (theDLLitePlugin.cmpOwlType(to_string(t.pred_, store), "disjointWith"))
+		if (containsNamespace(subj) && theDLLitePlugin.cmpOwlType(pred, "disjointWith") && containsNamespace(obj))
 		{
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,negObj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
-				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store)))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
+				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
 
-		if (theDLLitePlugin.cmpOwlType(to_string(t.pred_, store), "complementOf"))
+		if (containsNamespace(subj) && theDLLitePlugin.cmpOwlType(pred, "complementOf") && containsNamespace(obj))
 		{
 			DBGLOG(DBG,"Construct facts of the form op(Subj,Obj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.opID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj)));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
-		if (theDLLitePlugin.cmpOwlType(to_string(t.pred_, store), "propertyDisjointWith"))
+		if (containsNamespace(subj) && theDLLitePlugin.cmpOwlType(pred, "propertyDisjointWith") && containsNamespace(obj))
 		{
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))));
-				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store)))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
+				fact.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj))));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
-		if (theDLLitePlugin.cmpOwlType(to_string(t.pred_, store), "domain"))
+		if (containsNamespace(subj) && theDLLitePlugin.cmpOwlType(pred, "domain") && containsNamespace(obj))
 		{
 			DBGLOG(DBG,"Construct facts of the form sub(exSubj,Obj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)))));
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.obj_, store))));
+				fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj))));
+				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj)));
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
@@ -1446,33 +1477,64 @@ struct DLParserModuleGrammarBase:
 {
 	typedef HexGrammarBase<Iterator, Skipper> Base;
 
+
+  template<typename Attrib=void, typename Dummy=void>
+  struct Rule
+  {
+    typedef boost::spirit::qi::rule<Iterator, Attrib(), Skipper> type;
+  };
+  template<typename Dummy>
+  struct Rule<void, Dummy>
+  {
+    typedef boost::spirit::qi::rule<Iterator, Skipper> type;
+    // BEWARE: this is _not_ the same (!) as
+    // typedef boost::spirit::qi::rule<Iterator, boost::spirit::unused_type, Skipper> type;
+  };
+
+//typename Base::Rule<std::string>::type dlConceptOrRole;
+typename Rule<std::string>::type dlConceptOrRole;
+typename Rule<std::string>::type dlNegatedConceptOrRole;
+
 	DLParserModuleSemantics& sem;
+
+//	qi::rule<Iterator, Skipper> dlConceptOrRole;
+//typename Base::Rule<std::string>::type dlConceptOrRole;
+
+
+//typename Rule<dllite::DLLitePlugin::DLExpression>::type dlExpression;
+	qi::rule<Iterator, dllite::DLLitePlugin::DLExpression(), Skipper> dlExpression;
+	qi::rule<Iterator, ID(), Skipper> dlAtom;
 
 	DLParserModuleGrammarBase(DLParserModuleSemantics& sem):
 		Base(sem),
 		sem(sem)
 	{
 		typedef DLParserModuleSemantics Sem;
-		dlAtom
-			= (
-					qi::lit("DL") >> qi::lit('[') >> (dlExpression % qi::lit(',')) >> qi::lit(';') >> Base::term >> qi::lit(']') >> qi::lit('(') >> Base::terms >> qi::lit(')') > qi::eps
-				) [ Sem::dlAtom(sem) ];
+
+		dlConceptOrRole
+		    = qi::lexeme[ ascii::alnum >> *(ascii::alnum) ];
+
+		dlNegatedConceptOrRole
+		    = qi::char_('-') >> dlConceptOrRole;
+
 		dlExpression
 			= (
-					Base::variable >> qi::string("+=") >> Base::pred > qi::eps
+					dlConceptOrRole >> qi::string("+=") >> Base::pred > qi::eps
 				)
 			| (
-					Base::variable >> qi::string("-=") >> Base::pred > qi::eps
+					dlConceptOrRole >> qi::string("-=") >> Base::pred > qi::eps
 				) [ Sem::dlExpression(sem) ];
 
+		dlAtom
+			= (
+					qi::lit("DL") >> qi::lit('[') >> (dlExpression % qi::lit(',')) >> qi::lit(';') >> (dlConceptOrRole | dlNegatedConceptOrRole) >> qi::lit(']') >> qi::lit('(') >> Base::terms >> qi::lit(')') > qi::eps
+				) [ Sem::dlAtom(sem) ];
 
 		#ifdef BOOST_SPIRIT_DEBUG
 		BOOST_SPIRIT_DEBUG_NODE(dlAtom);
+		BOOST_SPIRIT_DEBUG_NODE(dlExpression);
 		#endif
 	}
-
-	qi::rule<Iterator, ID(), Skipper> dlAtom;
-	qi::rule<Iterator, ID(), Skipper> dlExpression;
 };
 
 struct DLParserModuleGrammar:
@@ -1549,7 +1611,7 @@ ID DLLitePlugin::storeQuotedConstantTerm(std::string str){
 	if (str[0] == '\"'){
 		DBGLOG(WARNING, "Stored string " + str + ", which seems to contain duplicate quotation marks");
 	}
-	if (str.substr(0, 7) == "http://" || str.substr(0, 8) == "https://"){
+	if (str.substr(0, 7).compare("http://") == 0 || str.substr(0, 8).compare("https://") == 0){
 		DBGLOG(WARNING, "Stored string " + str + ", which seems to contain an absolute path including namespace; this should not happen");
 	}
 #endif
@@ -1561,9 +1623,9 @@ bool DLLitePlugin::isOwlType(std::string str) const{
 //        return !(str.find_last_of(':') == std::string::npos);
 
 	std::transform(str.begin(), str.end(), str.begin(), ::tolower);
-	if (str.length() > 4 && str.substr(0, 4) == "owl:") return true;
-	if (str.length() > 4 && str.substr(0, 4) == "rdf:") return true;
-	if (str.length() > 5 && str.substr(0, 5) == "rdfs:") return true;
+	if (str.length() > 4 && str.substr(0, 4).compare("owl:") == 0) return true;
+	if (str.length() > 4 && str.substr(0, 4).compare("rdf:") == 0) return true;
+	if (str.length() > 5 && str.substr(0, 5).compare("rdfs:") == 0) return true;
 	return false;
 }
 
@@ -1578,20 +1640,17 @@ std::string DLLitePlugin::getOwlType(std::string str) const{
 
 bool DLLitePlugin::cmpOwlType(std::string str, std::string pattern) const{
 
-	DBGLOG(DBG, "Comparing " << str << " to " << pattern);
 	if (!isOwlType(str)) return false;
 	std::string extracted = getOwlType(str);
 
 	std::transform(extracted.begin(), extracted.end(), extracted.begin(), ::tolower);
 	std::transform(pattern.begin(), pattern.end(), pattern.begin(), ::tolower);
 
-	DBGLOG(DBG, "Result: " << (extracted == pattern));
-
 	return extracted == pattern;
 }
 
 bool DLLitePlugin::isDlEx(ID id){
-	return (reg->terms.getByID(id).getUnquotedString().substr(0, 3) == "Ex:");
+	return (reg->terms.getByID(id).getUnquotedString().substr(0, 3).compare("Ex:") == 0);
 }
 
 std::string DLLitePlugin::printGuardAtom(ID atom){
@@ -1609,7 +1668,19 @@ std::string DLLitePlugin::printGuardAtom(ID atom){
 
 void DLLitePlugin::constructClassificationProgram(ProgramCtx& ctx){
 
-	RegistryPtr reg = ctx.registry();
+	assert(!!reg && "registry must be set before classification program can be constructed");
+
+	assert (!
+	   (subID == ID_FAIL
+	 || opID == ID_FAIL
+	 || confID == ID_FAIL
+	 || xID == ID_FAIL
+	 || yID == ID_FAIL
+	 || zID == ID_FAIL
+	 || guardPredicateID == ID_FAIL)
+		&& "IDs are not initialized");
+
+//	RegistryPtr reg = ctx.registry();
 
 	if (classificationIDB.size() > 0){
 		DBGLOG(DBG, "Classification program was already constructed");
@@ -1736,6 +1807,7 @@ DLLitePlugin::CachedOntologyPtr DLLitePlugin::prepareOntology(ProgramCtx& ctx, I
 
 	std::vector<CachedOntologyPtr>& ontologies = ctx.getPluginData<DLLitePlugin>().ontologies;
 
+	assert(!!reg && "Registry must be set for preparing ontologies");
 	DBGLOG(DBG, "prepareOntology");
 
 	BOOST_FOREACH (CachedOntologyPtr o, ontologies){
@@ -1828,15 +1900,22 @@ void DLLitePlugin::processOptions(std::list<const char*>& pluginOptions, Program
 std::vector<HexParserModulePtr>
 DLLitePlugin::createParserModules(ProgramCtx& ctx)
 {
-	assert(!reg && "registry must be set before parser module is created");
+	DBGLOG(DBG,"DLLitePlugin::createParserModules(ProgramCtx& ctx)");
+	if (!!this->reg){
+		DBGLOG(DBG, "Registry was already previously set");
+		assert(this->reg == ctx.registry() && "DLLitePlugin: registry pointer passed in ctx.registry() to createParserModules(ProgramCtx& ctx) is different from previously set one, do not know what to do");
+	}
+	this->reg = ctx.registry();
+	prepareIDs();
 
-	DBGLOG(DBG,"DLLitePlugin::createParserModules()");
 	std::vector<HexParserModulePtr> ret;
 
 	DLLitePlugin::CtxData& ctxdata = ctx.getPluginData<DLLitePlugin>();
 	if (ctxdata.rewrite){
 		// the parser needs the registry, so make sure that the pointer is set
-		ret.push_back(HexParserModulePtr(new DLParserModule<HexParserModule::BODYATOM>(ctx, prepareOntology(ctx, storeQuotedConstantTerm(ctxdata.ontology)))));
+		DBGLOG(DBG,"rewriting is enabled");
+		ID ontologyNameID = storeQuotedConstantTerm(ctxdata.ontology);
+		ret.push_back(HexParserModulePtr(new DLParserModule<HexParserModule::BODYATOM>(ctx, prepareOntology(ctx, ontologyNameID))));
 	}
 
 	return ret;
@@ -1849,12 +1928,40 @@ void DLLitePlugin::printUsage(std::ostream& o) const{
 
 void DLLitePlugin::setRegistry(RegistryPtr reg){
 
+	DBGLOG(DBG,"DLLitePlugin::setRegistry(RegistryPtr reg)");
+	if (!!this->reg){
+		DBGLOG(DBG, "Registry was already previously set");
+		assert(this->reg == reg && "DLLitePlugin: registry pointer passed to setRegistry(RegistryPtr) is different from previously set one, do not know what to do");
+	}
 	this->reg = reg;
+	prepareIDs();
 }
 
 void DLLitePlugin::setupProgramCtx(ProgramCtx& ctx){
 
-	reg = ctx.registry();
+	DBGLOG(DBG,"DLLitePlugin::setupProgramCtx(ProgramCtx& ctx)");
+	if (!!reg){
+		DBGLOG(DBG, "Registry was already previously set");
+		assert(this->reg == ctx.registry() && "DLLitePlugin: registry pointer passed in ctx.registry() to setupProgramCtx(ProgramCtx& ctx) is different from previously set one, do not know what to do");
+	}
+	this->reg = ctx.registry();
+	prepareIDs();
+	constructClassificationProgram(ctx);
+}
+
+void DLLitePlugin::prepareIDs(){
+
+	assert(!!reg && "registry must be set before IDs can be prepared");
+
+	if (subID == ID_FAIL
+	 || opID == ID_FAIL
+	 || confID == ID_FAIL
+	 || xID == ID_FAIL
+	 || yID == ID_FAIL
+	 || zID == ID_FAIL
+	 || guardPredicateID == ID_FAIL){
+		DBGLOG(DBG, "IDs have already been prepared");
+	}
 
 	// prepare some frequently used terms and atoms
 	subID = reg->storeConstantTerm("sub");
@@ -1864,8 +1971,6 @@ void DLLitePlugin::setupProgramCtx(ProgramCtx& ctx){
 	yID = reg->storeVariableTerm("Y");
 	zID = reg->storeVariableTerm("Z");
 	guardPredicateID = reg->getAuxiliaryConstantSymbol('o', ID(0, 0));
-
-	constructClassificationProgram(ctx);
 }
  
 bool DLLitePlugin::providesCustomModelGeneratorFactory(ProgramCtx& ctx) const{

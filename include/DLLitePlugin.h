@@ -235,6 +235,8 @@ protected:
 	// loads an ontology and computes its classification or returns a reference to it if already present
 	CachedOntologyPtr prepareOntology(ProgramCtx& ctx, ID ontologyNameID);
 
+	// initializes the frequently used IDs
+	void prepareIDs();
 public:
 	DLLitePlugin();
 	virtual ~DLLitePlugin();

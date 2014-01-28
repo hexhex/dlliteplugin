@@ -46,7 +46,7 @@ do
 	echo -ne "$output $groundertime $solvertime"
 
 	rm $instance.$i.time.dat
-#	rm $instance.$i.verbose.dat
+	rm $instance.$i.verbose.dat
 
 	let i=i+1
 done
