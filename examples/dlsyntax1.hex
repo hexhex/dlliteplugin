@@ -1,8 +1,10 @@
-pm("tweety").
+x.
+pm("tweety") :- x.
 
 % additions to concepts
 res(X) :- DL[Penguin += pm; Bird](X).
 
 % consistency check
 consistent :- DL[Penguin += pm, Penguin -= pm; ]().
+inconsistent :- not DL[Penguin += pm, Penguin -= pm; ]().
 

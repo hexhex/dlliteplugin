@@ -266,9 +266,9 @@ struct sem<DLParserModuleSemantics::dlExpression>
   }
 };
 
-// ============================== Class CachedOntology ==============================
-
 namespace dllite{
+
+// ============================== Class CachedOntology ==============================
 
 DLLitePlugin::CachedOntology::CachedOntology(RegistryPtr reg) : reg(reg){
 	loaded = false;
@@ -1663,6 +1663,111 @@ public:
 } // anonymous namespace
 
 
+class DLRewriter:
+	public PluginRewriter
+{
+private:
+	DLLitePlugin::CtxData& ctxdata;
+
+public:
+	DLRewriter(DLLitePlugin::CtxData& ctxdata) : ctxdata(ctxdata) {}
+	virtual ~DLRewriter() {}
+
+	virtual void rewrite(ProgramCtx& ctx){
+
+		if (!ctxdata.optimize){
+			DBGLOG(DBG, "Do not use DL-optimizer");
+			return;
+		}else{
+			DBGLOG(DBG, "Using DL-optimizer");
+		}
+
+		RegistryPtr reg = ctx.registry();
+
+		ID consDLID = reg->storeConstantTerm("consDL");
+		ID inconsDLID = reg->storeConstantTerm("inconsDL");
+
+		std::vector<ID> newIdb;
+		std::vector<ID> newBody;
+		bool ruleModified = false;
+		bool programModified = false;
+		BOOST_FOREACH (ID ruleID, ctx.idb){
+#ifndef NDEBUG
+			std::string rulestr;
+			rulestr = RawPrinter::toString(reg, ruleID);
+			DBGLOG(DBG, "Analyzing " << rulestr);
+#endif
+			const Rule& rule = reg->rules.getByID(ruleID);
+
+			BOOST_FOREACH (ID batomID, rule.body){
+#ifndef NDEBUG
+				std::string litstr;
+				litstr = RawPrinter::toString(reg, batomID);
+				DBGLOG(DBG, "Analyzing " << litstr);
+#endif
+				// check if it is a default-negated consistency check
+				if (batomID.isNaf() && batomID.isLiteral() && batomID.isExternalAtom()){
+					const ExternalAtom& eatom = reg->eatoms.getByID(batomID);
+					if (eatom.predicate == consDLID){
+						DBGLOG(DBG, "Rewriting");
+						// replace by inconsistency ID, store back and add _positively_ to the rule body
+						ExternalAtom newEatom = eatom;
+						newEatom.predicate = inconsDLID;
+						ID newEatomID = reg->eatoms.storeAndGetID(newEatom);
+						newBody.push_back(ID::posLiteralFromAtom(newEatomID));
+						ruleModified = true;
+#ifndef NDEBUG
+						std::string newlitstr;
+						newlitstr = RawPrinter::toString(reg, newEatomID);
+						DBGLOG(DBG, "Rewrite " + newlitstr);
+#endif
+					}else{
+						DBGLOG(DBG, "Do not rewrite");
+						newBody.push_back(batomID);
+					}
+				}else{
+					DBGLOG(DBG, "Do not rewrite");
+					newBody.push_back(batomID);
+				}
+			}
+
+			if (ruleModified){
+				Rule newRule = rule;
+				newRule.body = newBody;
+				ID newRuleID = reg->storeRule(newRule);
+				newIdb.push_back(newRuleID);
+#ifndef NDEBUG
+				std::string msg = "Optimized rule " + RawPrinter::toString(reg, ruleID) + " to " + RawPrinter::toString(reg, newRuleID);
+				DBGLOG(DBG, msg);
+#endif
+				ruleModified = false;
+				programModified = true;
+			}else{
+#ifndef NDEBUG
+				bool equal = (newBody.size() == rule.body.size());
+				for (int i = 0; i < newBody.size(); ++i){
+					if (newBody[i] != rule.body[i]) equal = false;
+				}
+				assert (equal && "rule was modified by accident");
+#endif
+				newIdb.push_back(ruleID);
+			}
+			newBody.clear();
+		}
+
+		assert(ctx.idb.size() == newIdb.size() && "new program has a different number of rules");
+#ifndef NDEBUG
+		if (!programModified){
+			for (int i = 0; i < newIdb.size(); ++i){
+				assert(newIdb[i] == ctx.idb[i] && "program was modified by accident");
+			}
+		}
+#endif
+		ctx.idb = newIdb;
+		DBGLOG(DBG, "Finished rewriting");
+	}
+};
+
 // ============================== Class DLPlugin ==============================
 
 ID DLLitePlugin::dlNeg(ID id){
@@ -1936,6 +2041,7 @@ std::vector<PluginAtomPtr> DLLitePlugin::createAtoms(ProgramCtx& ctx) const{
 	ret.push_back(PluginAtomPtr(new CDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
 	ret.push_back(PluginAtomPtr(new RDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
 	ret.push_back(PluginAtomPtr(new ConsDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
+	ret.push_back(PluginAtomPtr(new InconsDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
 	return ret;
 }
 
@@ -1952,6 +2058,10 @@ void DLLitePlugin::processOptions(std::list<const char*>& pluginOptions, Program
 		if (option.find("--ontology=") != std::string::npos){
 			ctx.getPluginData<DLLitePlugin>().rewrite = true;
 			ctx.getPluginData<DLLitePlugin>().ontology = option.substr(11);
+			found.push_back(it);
+		}
+		if (option == "--optimize"){
+			ctx.getPluginData<DLLitePlugin>().optimize = true;
 			found.push_back(it);
 		}
 	}
@@ -1987,9 +2097,18 @@ DLLitePlugin::createParserModules(ProgramCtx& ctx)
 	return ret;
 }
 
+PluginRewriterPtr DLLitePlugin::createRewriter(ProgramCtx& ctx){
+
+	DLLitePlugin::CtxData& ctxdata = ctx.getPluginData<DLLitePlugin>();
+	if (ctxdata.optimize) return PluginRewriterPtr(new DLRewriter(ctxdata));
+	else return PluginRewriterPtr();
+}
+
 void DLLitePlugin::printUsage(std::ostream& o) const{
-	o << "     --repair=[ontology name]" << std::endl;
-	o << "     --ontology=[ontology name]" << std::endl;
+	o << "     --repair=[ontology name]    Activates the repair model generator" << std::endl;
+	o << "     --ontology=[ontology name]  Specifies the ontology used by DL-atoms" << std::endl;
+	o << "     --optimize                  Rewrites default-negated consistency checking DL-atoms" << std::endl
+	  << "                                 to inconsistency checks (makes them monotonic)" << std::endl;
 }
 
 void DLLitePlugin::setRegistry(RegistryPtr reg){
