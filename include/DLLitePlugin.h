@@ -90,7 +90,7 @@ public:
 		// returns the set of all individuals which which occur either in the Abox or in the query (including the DL-namespace)
 		InterpretationPtr getAllIndividuals(const PluginAtom::Query& query);
 
-		inline bool containsNamespace(std::string str) const;
+		inline bool isOwlConstant(std::string str) const;
 		inline std::string addNamespaceToString(std::string str) const;
 		inline std::string removeNamespaceFromString(std::string str) const;
 

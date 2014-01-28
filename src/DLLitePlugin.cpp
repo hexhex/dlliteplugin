@@ -337,7 +337,7 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 
 		// concept definition
 		DBGLOG(DBG, "Checking if this is a concept definition");
-		if (containsNamespace(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "Class")) {
+		if (isOwlConstant(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "Class")) {
 			DBGLOG(DBG, "Yes");
 			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
 #ifndef NDEBUG
@@ -351,7 +351,7 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 
 		// role definition
 		DBGLOG(DBG, "Checking if this is a role definition");
-		if (containsNamespace(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "ObjectProperty")) {
+		if (isOwlConstant(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "ObjectProperty")) {
 			DBGLOG(DBG, "Yes");
 			ID roleID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
 #ifndef NDEBUG
@@ -365,7 +365,7 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 
 		// concept assertion
 		DBGLOG(DBG, "Checking if this is a concept assertion");
-		if (containsNamespace(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && containsNamespace(obj)) {
+		if (isOwlConstant(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && isOwlConstant(obj)) {
 			DBGLOG(DBG, "Yes");
 			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj));
 			ID individualID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
@@ -387,7 +387,7 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 
 		// role assertion
 		DBGLOG(DBG, "Checking if this is a role assertion");
-		if (containsNamespace(pred) && containsNamespace(pred) && containsNamespace(obj)) {
+		if (isOwlConstant(pred) && isOwlConstant(pred) && isOwlConstant(obj)) {
 			DBGLOG(DBG, "Yes");
 			ID roleID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(pred));
 			ID individual1ID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
@@ -408,7 +408,7 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 
 		// individual definition
 		DBGLOG(DBG, "Checking if this is an individual definition");
-		if (containsNamespace(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(obj, "Thing") && theDLLitePlugin.cmpOwlType(pred, "type")) {
+		if (isOwlConstant(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(obj, "Thing") && theDLLitePlugin.cmpOwlType(pred, "type")) {
 			DBGLOG(DBG, "Yes");
 			individuals->setFact(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))).address);
 		}else{
@@ -435,7 +435,7 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 		std::string pred = to_string(t.pred_, store);
 
 		DBGLOG(DBG, "Current triple: " << subj << " / " << pred << " / " << obj);
-		if (containsNamespace(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "Class")) {
+		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "Class")) {
 			DBGLOG(DBG,"Construct facts of the form op(C,negC), sub(C,C) for this class.");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -452,7 +452,7 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}	
-		if (containsNamespace(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "ObjectProperty")) {
+		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "ObjectProperty")) {
 			DBGLOG(DBG,"Construct facts of the form op(Subj,negSubj), sub(Subj,Subj), op(exSubj,negexSubj), sub(exSubj,exSubj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -484,7 +484,7 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			}
 		}
 
-		if (containsNamespace(subj) && theDLLitePlugin.cmpOwlType(pred, "subclassOf") && containsNamespace(obj))
+		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "subclassOf") && isOwlConstant(obj))
 		{
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
 			{
@@ -496,7 +496,7 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			}
 		}
 
-		if (containsNamespace(subj) && theDLLitePlugin.cmpOwlType(pred, "subpropertyOf") && containsNamespace(obj))
+		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "subpropertyOf") && isOwlConstant(obj))
 		{
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
 			{
@@ -508,7 +508,7 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			}
 		}
 
-		if (containsNamespace(subj) && theDLLitePlugin.cmpOwlType(pred, "disjointWith") && containsNamespace(obj))
+		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "disjointWith") && isOwlConstant(obj))
 		{
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,negObj)");
 			{
@@ -520,7 +520,7 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			}
 		}
 
-		if (containsNamespace(subj) && theDLLitePlugin.cmpOwlType(pred, "complementOf") && containsNamespace(obj))
+		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "complementOf") && isOwlConstant(obj))
 		{
 			DBGLOG(DBG,"Construct facts of the form op(Subj,Obj)");
 			{
@@ -531,7 +531,7 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
-		if (containsNamespace(subj) && theDLLitePlugin.cmpOwlType(pred, "propertyDisjointWith") && containsNamespace(obj))
+		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "propertyDisjointWith") && isOwlConstant(obj))
 		{
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
 			{
@@ -542,7 +542,7 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}
-		if (containsNamespace(subj) && theDLLitePlugin.cmpOwlType(pred, "domain") && containsNamespace(obj))
+		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "domain") && isOwlConstant(obj))
 		{
 			DBGLOG(DBG,"Construct facts of the form sub(exSubj,Obj)");
 			{
@@ -622,8 +622,12 @@ bool DLLitePlugin::CachedOntology::checkRoleAssertion(RegistryPtr reg, ID guardA
 	return false;
 }
 
-bool DLLitePlugin::CachedOntology::containsNamespace(std::string str) const{
-	return str.substr(0, ontologyNamespace.length()) == ontologyNamespace || str[0] == '-' && str.substr(1, ontologyNamespace.length()) == ontologyNamespace;
+bool DLLitePlugin::CachedOntology::isOwlConstant(std::string str) const{
+	// if it starts with the namespace, then it is definitely an owl constant
+	if (str.substr(0, ontologyNamespace.length()) == ontologyNamespace || str[0] == '-' && str.substr(1, ontologyNamespace.length()) == ontologyNamespace) return true;
+
+	// otherwise, if it is not a type, then it is a constant
+	return !theDLLitePlugin.isOwlType(str);
 }
 
 std::string DLLitePlugin::CachedOntology::addNamespaceToString(std::string str) const{
@@ -632,7 +636,10 @@ std::string DLLitePlugin::CachedOntology::addNamespaceToString(std::string str) 
 }
 
 std::string DLLitePlugin::CachedOntology::removeNamespaceFromString(std::string str) const{
-	assert((str.substr(0, ontologyNamespace.length()) == ontologyNamespace || str[0] == '-' && str.substr(1, ontologyNamespace.length()) == ontologyNamespace) && "given string does not start with ontology namespace");
+	if (!(str.substr(0, ontologyNamespace.length()) == ontologyNamespace || (str[0] == '-' && str.substr(1, ontologyNamespace.length()) == ontologyNamespace))){
+		DBGLOG(DBG, "Constant \"" + str + "\" appears to be a constant of the ontology, but does not contain its namespace.");
+		return str;
+	}
 	if (str[0] == '-') return '-' + str.substr(ontologyNamespace.length() + 1 + 1); // +1 because of '-', +1 because of '#'
 	return str.substr(ontologyNamespace.length() + 1); // +1 because of '#'
 }
@@ -650,8 +657,8 @@ bool DLLitePlugin::DLPluginAtom::Actor_collector::apply(const TaxonomyVertex& no
 	DBGLOG(DBG, "Actor collector called with " << node.getPrimer()->getName());
 	std::string returnValue(node.getPrimer()->getName());
 
-	if (node.getPrimer()->getId() == -1 || !ontology->containsNamespace(returnValue)){
-		LOG(WARNING, "DLLite resoner returned constant " << returnValue << ", which seems to be not a valid individual name (will ignore it)");
+	if (node.getPrimer()->getId() == -1 || !ontology->isOwlConstant(returnValue)){
+		LOG(DBG, "DLLite resoner returned constant " << returnValue << ", which seems to be not a valid individual name (will ignore it)");
 	}else{
 		ID tid = theDLLitePlugin.storeQuotedConstantTerm(ontology->removeNamespaceFromString(returnValue));
 
