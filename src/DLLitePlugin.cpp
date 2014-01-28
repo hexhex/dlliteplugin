@@ -73,6 +73,10 @@ namespace ascii = boost::spirit::ascii;
 // ============================== Class DLParserModuleSemantics ==============================
 // (needs to be in dlvhex namespace)
 
+#ifndef NDEBUG
+	#define CheckPredefinedIDs ((theDLLitePlugin.subID != ID_FAIL && theDLLitePlugin.opID != ID_FAIL && theDLLitePlugin.confID != ID_FAIL && theDLLitePlugin.xID != ID_FAIL && theDLLitePlugin.yID != ID_FAIL && theDLLitePlugin.zID != ID_FAIL && theDLLitePlugin.guardPredicateID != ID_FAIL))
+#endif
+
 namespace dllite{
 dlvhex::dllite::DLLitePlugin theDLLitePlugin;
 }
@@ -317,7 +321,7 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 
 	assert(!concepts && "analyzeTboxAndAbox must be called only once");
 	assert(!!reg && "registry must be set before analyzeTboxAndAbox is called");
-	assert(theDLLitePlugin.guardPredicateID != ID_FAIL && "IDs are not initialized");
+	assert(CheckPredefinedIDs && "IDs are not initialized");
 
 	DBGLOG(DBG, "Analyzing ontology (Tbox and Abox)");
 	concepts = InterpretationPtr(new Interpretation(reg));
@@ -363,7 +367,7 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 		DBGLOG(DBG, "Checking if this is a concept assertion");
 		if (containsNamespace(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && containsNamespace(obj)) {
 			DBGLOG(DBG, "Yes");
-			OrdinaryAtom guard(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
+			OrdinaryAtom guard(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
 			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj));
 			ID individualID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
 			guard.tuple.push_back(theDLLitePlugin.guardPredicateID);
@@ -1087,7 +1091,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 		ID qID = query.input[5];
 
 		// guard atom for Q(Y)
-		OrdinaryAtom qy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+		OrdinaryAtom qy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
 		qy.tuple.push_back(theDLLitePlugin.guardPredicateID);
 		qy.tuple.push_back(query.input[5]);
 		qy.tuple.push_back(outvarID);
@@ -1657,7 +1661,7 @@ bool DLLitePlugin::isDlEx(ID id){
 std::string DLLitePlugin::printGuardAtom(ID atom){
 
 	const OrdinaryAtom& oatom = reg->lookupOrdinaryAtom(atom);
-	assert(oatom.tuple[0] == guardPredicateID && "tried to print non-guard atom as guard atom");
+	assert(ID(oatom.kind, 0).isGuardAuxiliary() && oatom.tuple[0] == guardPredicateID && "tried to print non-guard atom as guard atom");
 	std::stringstream ss;
 	ss << reg->terms.getByID(oatom.tuple[1]).getUnquotedString();
 	ss << "(";
@@ -1671,17 +1675,7 @@ void DLLitePlugin::constructClassificationProgram(ProgramCtx& ctx){
 
 	assert(!!reg && "registry must be set before classification program can be constructed");
 
-	assert (!
-	   (subID == ID_FAIL
-	 || opID == ID_FAIL
-	 || confID == ID_FAIL
-	 || xID == ID_FAIL
-	 || yID == ID_FAIL
-	 || zID == ID_FAIL
-	 || guardPredicateID == ID_FAIL)
-		&& "IDs are not initialized");
-
-//	RegistryPtr reg = ctx.registry();
+	assert (CheckPredefinedIDs && "IDs are not initialized");
 
 	if (classificationIDB.size() > 0){
 		DBGLOG(DBG, "Classification program was already constructed");
@@ -1950,19 +1944,24 @@ void DLLitePlugin::setupProgramCtx(ProgramCtx& ctx){
 	constructClassificationProgram(ctx);
 }
 
+OrdinaryAtom DLLitePlugin::getNewGuardAtom(bool ground){
+	assert(CheckPredefinedIDs && "IDs are not initialized");
+	OrdinaryAtom gatom(ID::MAINKIND_ATOM | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
+	gatom.kind |= (ground ? ID::SUBKIND_ATOM_ORDINARYG : ID::SUBKIND_ATOM_ORDINARYN);
+	gatom.tuple.push_back(guardPredicateID);
+	return gatom;
+}
+
 void DLLitePlugin::prepareIDs(){
 
 	assert(!!reg && "registry must be set before IDs can be prepared");
 
-	if (subID == ID_FAIL
-	 || opID == ID_FAIL
-	 || confID == ID_FAIL
-	 || xID == ID_FAIL
-	 || yID == ID_FAIL
-	 || zID == ID_FAIL
-	 || guardPredicateID == ID_FAIL){
+#ifndef NDEBUG
+	if (CheckPredefinedIDs){
 		DBGLOG(DBG, "IDs have already been prepared");
+		return;
 	}
+#endif
 
 	// prepare some frequently used terms and atoms
 	subID = reg->storeConstantTerm("sub");

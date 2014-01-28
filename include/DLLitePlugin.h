@@ -235,6 +235,9 @@ protected:
 	// loads an ontology and computes its classification or returns a reference to it if already present
 	CachedOntologyPtr prepareOntology(ProgramCtx& ctx, ID ontologyNameID);
 
+	// creates a new guard atom template, containing only the guard predicate (further attributes must be added by the caller)
+	OrdinaryAtom getNewGuardAtom(bool ground = false);
+
 	// initializes the frequently used IDs
 	void prepareIDs();
 public:
