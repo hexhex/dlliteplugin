@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY taxi "http://www.semanticweb.org/ontologies/2014/0/taxi.owl#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/ontologies/2014/0/taxi.owl#"
+     xml:base="http://www.semanticweb.org/ontologies/2014/0/taxi.owl"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
+     xmlns:taxi="http://www.semanticweb.org/ontologies/2014/0/taxi.owl#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about=""/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/0/taxi.owl#worksIn -->
+
+    <owl:ObjectProperty rdf:about="#worksIn">
+        <rdfs:domain rdf:resource="#Driver"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/0/taxi.owl#Customer -->
+
+    <owl:Class rdf:about="#Customer"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/0/taxi.owl#Driver -->
+
+    <owl:Class rdf:about="#Driver">
+        <owl:disjointWith rdf:resource="#Customer"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/0/taxi.owl#Electromob -->
+
+    <owl:Class rdf:about="#Electromob">
+        <rdfs:subClassOf rdf:resource="#Driver"/>
+    </owl:Class>
+    
+
+
+    
+<owl:Thing rdf:about="#c1"><rdf:type><owl:Class><owl:complementOf rdf:resource="#Driver"/></owl:Class></rdf:type></owl:Thing>
+<owl:Thing rdf:about="#c2"><rdf:type><owl:Class><owl:complementOf rdf:resource="#Customer"/></owl:Class></rdf:type></owl:Thing>
+<owl:Thing rdf:about="#c3"><rdf:type rdf:resource="#Customer"/></owl:Thing>
+<owl:Thing rdf:about="#c4"><rdf:type><owl:Class><owl:complementOf rdf:resource="#Customer"/></owl:Class></rdf:type></owl:Thing>
+<owl:Thing rdf:about="#c5"><rdf:type><owl:Class><owl:complementOf rdf:resource="#Driver"/></owl:Class></rdf:type></owl:Thing>
+<owl:Thing rdf:about="#c6"><rdf:type rdf:resource="#Driver"/></owl:Thing>
+<owl:Thing rdf:about="#c7"><rdf:type><owl:Class><owl:complementOf rdf:resource="#Customer"/></owl:Class></rdf:type></owl:Thing>
+<owl:Thing rdf:about="#c8"><rdf:type rdf:resource="#Driver"/></owl:Thing>
+<owl:Thing rdf:about="#c9"><rdf:type><owl:Class><owl:complementOf rdf:resource="#Driver"/></owl:Class></rdf:type></owl:Thing>
+<owl:Thing rdf:about="#c10"><rdf:type rdf:resource="#Driver"/></owl:Thing>
+
+</rdf:RDF>
+
+
+
+
