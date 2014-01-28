@@ -814,7 +814,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 					// since we cannot check guard atoms of form exR(Y), we rewrite them to R(Y,Z)
 					ID guardID;
 					if (theDLLitePlugin.isDlEx(cpID)){
-						OrdinaryAtom negnoexcp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+						OrdinaryAtom negnoexcp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
 						ID negnoexcpID = theDLLitePlugin.dlNeg(theDLLitePlugin.dlRemoveEx(clAtom.tuple[2]));
 						negnoexcp.tuple.push_back(theDLLitePlugin.guardPredicateID);
 						negnoexcp.tuple.push_back(negnoexcpID);
@@ -823,7 +823,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 						guardID = reg->storeOrdinaryAtom(negnoexcp);
 						supportset.insert(NogoodContainer::createLiteral(guardID));
 					}else{
-						OrdinaryAtom negcp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+						OrdinaryAtom negcp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
 						ID negcpID = theDLLitePlugin.dlNeg(clAtom.tuple[2]);
 						negcp.tuple.push_back(theDLLitePlugin.guardPredicateID);
 						negcp.tuple.push_back(negcpID);
@@ -929,7 +929,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 			if (classification->getFact(subexrqID.address)){
 				OrdinaryAtom rprxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
 				rprxy.tuple.push_back(query.input[3]);
-				rprxy.tuple.push_back(theDLLitePlugin.dlRemoveEx(rID));
+				rprxy.tuple.push_back(rID);
 				rprxy.tuple.push_back(outvarID);
 				rprxy.tuple.push_back(theDLLitePlugin.yID);
 				Nogood supportset;
@@ -964,7 +964,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 					supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
 
 					// guard atom
-					OrdinaryAtom negc(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+					OrdinaryAtom negc(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
 					ID negctID = theDLLitePlugin.dlNeg(at.tuple[2]);
 					negc.tuple.push_back(theDLLitePlugin.guardPredicateID);
 					negc.tuple.push_back(negctID);
@@ -990,7 +990,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 					supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
 
 					// guard atom
-					OrdinaryAtom negrp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+					OrdinaryAtom negrp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
 					ID negrptID = theDLLitePlugin.dlNeg(at.tuple[2]);
 					negrp.tuple.push_back(theDLLitePlugin.guardPredicateID);
 					negrp.tuple.push_back(negrptID);
@@ -1074,7 +1074,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 				if (theDLLitePlugin.isDlEx(clAtom.tuple[1])){
 					DBGLOG(DBG, "LSS:                     (this is form exR)");
 					// guard atom for C(O,Y)
-					OrdinaryAtom roy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+					OrdinaryAtom roy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
 					roy.tuple.push_back(theDLLitePlugin.guardPredicateID);
 					roy.tuple.push_back(theDLLitePlugin.dlRemoveEx(cID));
 					roy.tuple.push_back(outvarID);
@@ -1087,7 +1087,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 				}else{
 					DBGLOG(DBG, "LSS:                     (this is not form exR)");
 					// guard atom for C(O)
-					OrdinaryAtom co(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+					OrdinaryAtom co(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_GUARDAUX | ID::PROPERTY_AUX);
 					co.tuple.push_back(theDLLitePlugin.guardPredicateID);
 					co.tuple.push_back(cID);
 					co.tuple.push_back(outvarID);
@@ -1528,7 +1528,7 @@ public:
 
 ID DLLitePlugin::dlNeg(ID id){
 	if (reg->terms.getByID(id).getUnquotedString()[0] == '-') return storeQuotedConstantTerm(reg->terms.getByID(id).getUnquotedString().substr(1));
-	else return storeQuotedConstantTerm(reg->terms.getByID(id).getUnquotedString());
+	else return storeQuotedConstantTerm("-" + reg->terms.getByID(id).getUnquotedString());
 }
 
 bool DLLitePlugin::isDlNeg(ID id){
