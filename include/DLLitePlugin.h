@@ -37,6 +37,8 @@
 #include "dlvhex2/PlatformDefinitions.h"
 #include "dlvhex2/PluginInterface.h"
 #include "dlvhex2/ComponentGraph.h"
+#include "dlvhex2/HexGrammar.h"
+#include "dlvhex2/HexParserModule.h"
 #include <set>
 
 #include "owlcpp/rdf/triple_store.hpp"
@@ -53,8 +55,6 @@ class DLLitePlugin:
   public PluginInterface
 {
 public:
-	const ID GuardPredicateID;
-
 	// this class caches an ontology
 	// add member variables here if additional information about the ontology must be stored
 	struct CachedOntology{
@@ -133,8 +133,6 @@ public:
 private:
 	// base class for all DL atoms
 	class DLPluginAtom : public PluginAtom{
-	private:
-		bool learnedSupportSets;
 	protected:
 		ProgramCtx& ctx;
 		RegistryPtr reg;
@@ -206,8 +204,9 @@ protected:
 	inline ID dlNeg(ID id);
 	inline bool isDlNeg(ID id);
 
-	// creates for concept "C" the concept "exC" (the same for roles) resp. checks if the concept is of such a form
+	// creates for concept "C" the concept "exC", removes the prefix "ex", (the same for roles) resp. checks if the concept is of such a form
 	inline ID dlEx(ID id);
+	inline ID dlRemoveEx(ID id);
 	inline bool isDlEx(ID id);
 
 	inline ID storeQuotedConstantTerm(std::string str);
@@ -225,7 +224,7 @@ protected:
 	inline std::string printGuardAtom(ID atom);
 
 	// frequently used IDs
-	ID guardPredicate, subID, opID, confID, xID, yID, zID;
+	ID guardPredicateID, subID, opID, confID, xID, yID, zID;
 
 	// IDB of the classification program
 	std::vector<ID> classificationIDB;
@@ -250,6 +249,7 @@ public:
 	// plugin atoms
 	virtual std::vector<PluginAtomPtr> createAtoms(ProgramCtx& ctx) const;
 
+	virtual void setRegistry(RegistryPtr reg);
 	virtual void setupProgramCtx(ProgramCtx& ctx);
 
 	// RepairModelGenerator
