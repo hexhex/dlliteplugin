@@ -118,8 +118,8 @@ struct sem<DLParserModuleSemantics::dlAtom>
 	DLParserModuleSemantics& mgr,
 		const boost::fusion::vector3<
 			std::vector<dllite::DLLitePlugin::DLExpression>,
-			const std::string,
-		  	std::vector<ID>
+			const boost::optional<std::string>,
+		  	const boost::optional<std::vector<ID> >
 		>& source,
 	ID& target)
 	{
@@ -133,8 +133,25 @@ struct sem<DLParserModuleSemantics::dlAtom>
 		ID rDLID = reg->terms.getIDByString("rDL");
 
 		const std::vector<dllite::DLLitePlugin::DLExpression>& in = boost::fusion::at_c<0>(source);
-		ID query = reg->storeConstantTerm("\"" + boost::fusion::at_c<1>(source) + "\"");
-		const std::vector<ID>& out = boost::fusion::at_c<2>(source);
+
+		// is there a query?
+		ID query = ID_FAIL;
+		if (!!boost::fusion::at_c<1>(source) ){
+			query = reg->storeConstantTerm("\"" + boost::fusion::at_c<1>(source).get() + "\"");
+		}
+
+		bool haveQuery = (query != ID_FAIL);
+		std::vector<ID> empty;
+		const std::vector<ID>& out = haveQuery ? boost::fusion::at_c<2>(source).get() : empty;
+
+		// check output arity for different types of queries
+		if (query != ID_FAIL){
+			if (mgr.ontology->concepts->getFact(query.address) && out.size() != 1) throw PluginError("Query for concept " + RawPrinter::toString(reg, query) + " must have one output variable");
+			if (mgr.ontology->roles->getFact(query.address) && out.size() != 2) throw PluginError("Query for role " + RawPrinter::toString(reg, query) + " must have two output variables");
+		}else{
+			// there must be a vector of output variables iff there is a query
+			if (out.size() != 0) throw PluginError("Consistency checks must not have output variables");
+		}
 
 		ExternalAtom ext(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_EXTERNAL);
 		switch (out.size()){
@@ -155,9 +172,6 @@ struct sem<DLParserModuleSemantics::dlAtom>
 		ID varY = reg->storeVariableTerm("Y");
 		dllite::DLLitePlugin::CtxData& ctxdata = mgr.ctx.getPluginData<dllite::DLLitePlugin>();
 		BOOST_FOREACH (dllite::DLLitePlugin::DLExpression dlexpression, in){
-//			DBGLOG(DBG, "Retrieving DL-expression from index " << exprID.address);
-//			const dllite::DLLitePlugin::DLExpression& dlexpression = ctxdata.dlexpressions[exprID.address];
-
 			Rule rule(ID::MAINKIND_RULE);
 
 			ID conceptOrRoleID = reg->storeConstantTerm("\"" + dlexpression.conceptOrRole + "\"");
@@ -198,7 +212,9 @@ struct sem<DLParserModuleSemantics::dlAtom>
 		ext.inputs.push_back(cm);
 		ext.inputs.push_back(rp);
 		ext.inputs.push_back(rm);
-		ext.inputs.push_back(query);
+		if (haveQuery){
+			ext.inputs.push_back(query);
+		}
 		ext.tuple = out;
 		ID extID = reg->eatoms.storeAndGetID(ext);
 
@@ -243,11 +259,6 @@ struct sem<DLParserModuleSemantics::dlExpression>
 
 
 	target = expr;
-
-//	dllite::DLLitePlugin::CtxData& ctxdata = mgr.ctx.getPluginData<dllite::DLLitePlugin>();
-//	ctxdata.dlexpressions.push_back(expr);
-//	DBGLOG(DBG, "Adding DL-expression to index " << ctxdata.dlexpressions.size() - 1);
-//	target.address = ctxdata.dlexpressions.size() - 1;
   }
 };
 
@@ -637,7 +648,7 @@ bool DLLitePlugin::DLPluginAtom::Actor_collector::apply(const TaxonomyVertex& no
 	std::string returnValue(node.getPrimer()->getName());
 
 	if (node.getPrimer()->getId() == -1 || !ontology->containsNamespace(returnValue)){
-		LOG(WARNING, "DLLite resoner returned constant " << returnValue << ", which seems to be not a valid individual name");
+		LOG(WARNING, "DLLite resoner returned constant " << returnValue << ", which seems to be not a valid individual name (will ignore it)");
 	}else{
 		ID tid = theDLLitePlugin.storeQuotedConstantTerm(ontology->removeNamespaceFromString(returnValue));
 
@@ -1477,31 +1488,22 @@ struct DLParserModuleGrammarBase:
 {
 	typedef HexGrammarBase<Iterator, Skipper> Base;
 
+	template<typename Attrib=void, typename Dummy=void>
+	struct Rule{
+		typedef boost::spirit::qi::rule<Iterator, Attrib(), Skipper> type;
+	};
+	template<typename Dummy>
+	struct Rule<void, Dummy>{
+		typedef boost::spirit::qi::rule<Iterator, Skipper> type;
+		// BEWARE: this is _not_ the same (!) as
+		// typedef boost::spirit::qi::rule<Iterator, boost::spirit::unused_type, Skipper> type;
+	};
 
-  template<typename Attrib=void, typename Dummy=void>
-  struct Rule
-  {
-    typedef boost::spirit::qi::rule<Iterator, Attrib(), Skipper> type;
-  };
-  template<typename Dummy>
-  struct Rule<void, Dummy>
-  {
-    typedef boost::spirit::qi::rule<Iterator, Skipper> type;
-    // BEWARE: this is _not_ the same (!) as
-    // typedef boost::spirit::qi::rule<Iterator, boost::spirit::unused_type, Skipper> type;
-  };
-
-//typename Base::Rule<std::string>::type dlConceptOrRole;
-typename Rule<std::string>::type dlConceptOrRole;
-typename Rule<std::string>::type dlNegatedConceptOrRole;
+	typename Rule<std::string>::type dlConceptOrRole;
+	typename Rule<std::string>::type dlNegatedConceptOrRole;
 
 	DLParserModuleSemantics& sem;
 
-//	qi::rule<Iterator, Skipper> dlConceptOrRole;
-//typename Base::Rule<std::string>::type dlConceptOrRole;
-
-
-//typename Rule<dllite::DLLitePlugin::DLExpression>::type dlExpression;
 	qi::rule<Iterator, dllite::DLLitePlugin::DLExpression(), Skipper> dlExpression;
 	qi::rule<Iterator, ID(), Skipper> dlAtom;
 
@@ -1520,14 +1522,14 @@ typename Rule<std::string>::type dlNegatedConceptOrRole;
 		dlExpression
 			= (
 					dlConceptOrRole >> qi::string("+=") >> Base::pred > qi::eps
-				)
+				) [ Sem::dlExpression(sem) ]
 			| (
 					dlConceptOrRole >> qi::string("-=") >> Base::pred > qi::eps
 				) [ Sem::dlExpression(sem) ];
 
 		dlAtom
 			= (
-					qi::lit("DL") >> qi::lit('[') >> (dlExpression % qi::lit(',')) >> qi::lit(';') >> (dlConceptOrRole | dlNegatedConceptOrRole) >> qi::lit(']') >> qi::lit('(') >> Base::terms >> qi::lit(')') > qi::eps
+					qi::lit("DL") >> qi::lit('[') >> (dlExpression % qi::lit(',')) >> qi::lit(';') >> -(dlConceptOrRole | dlNegatedConceptOrRole) >> qi::lit(']') >> qi::lit('(') >> -(Base::terms) >> qi::lit(')') > qi::eps
 				) [ Sem::dlAtom(sem) ];
 
 		#ifdef BOOST_SPIRIT_DEBUG
@@ -1620,8 +1622,7 @@ ID DLLitePlugin::storeQuotedConstantTerm(std::string str){
 
 bool DLLitePlugin::isOwlType(std::string str) const{
 
-//        return !(str.find_last_of(':') == std::string::npos);
-
+	// add prefixes to recognize here
 	std::transform(str.begin(), str.end(), str.begin(), ::tolower);
 	if (str.length() > 4 && str.substr(0, 4).compare("owl:") == 0) return true;
 	if (str.length() > 4 && str.substr(0, 4).compare("rdf:") == 0) return true;

@@ -1,3 +1,8 @@
 pm("tweety").
-res(X) :- DL[Penguin += pm ; -Penguin](X).
+
+% additions to concepts
+res(X) :- DL[Penguin += pm; Bird](X).
+
+% consistency check
+inconsistent :- not DL[Penguin += pm, Penguin -= pm; ]().
 

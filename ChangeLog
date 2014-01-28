@@ -1,3 +1,8 @@
+2014-01-28  Christoph Redl  <redl@kr.tuwien.ac.at>
+
+	DLLitePlugin.cpp: Implement DL-syntax.
+	include/DLLitePlugin.h: Likewise.
+
 2014-01-25  Christoph Redl  <redl@kr.tuwien.ac.at>
 
 	Initial version 2.0.0.
