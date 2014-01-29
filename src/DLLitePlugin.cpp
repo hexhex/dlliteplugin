@@ -307,7 +307,7 @@ void DLLitePlugin::CachedOntology::load(ID ontologyName){
 		}
 		DBGLOG(DBG, "Namespace is: " << ontologyNamespace << " (path: " << ontologyPath << ", version: " << ontologyVersion << ")");
 		assert(oCount == 1 && "The file should contain exactly one ontology");
-	}catch(std::exception e){
+	}catch(...){
 		throw PluginError("DLLite reasoner failed while loading file \"" + reg->terms.getByID(ontologyName).getUnquotedString() + "\", ensure that it is a valid ontology");
 	}
 
@@ -415,6 +415,7 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 			DBGLOG(DBG, "No");
 		}
 	}
+
 	DBGLOG(DBG, "Concept assertions: " << *conceptAssertions);
 }
 
@@ -778,6 +779,84 @@ void DLLitePlugin::DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const I
 	}
 	DBGLOG(DBG, "GUARD: Keeping support set " << ng.getStringRepresentation(reg) << " without guard atom");
 	keep = true;
+}
+
+std::vector<TDLAxiom*> DLLitePlugin::DLPluginAtom::expandAbox(const Query& query){
+
+	RegistryPtr reg = getRegistry();
+
+	CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0]);
+
+	// add the additional assertions
+	std::vector<TDLAxiom*> addedAxioms;
+
+	DBGLOG(DBG, "Expanding Abox");
+	bm::bvector<>::enumerator en = query.interpretation->getStorage().first();
+	bm::bvector<>::enumerator en_end = query.interpretation->getStorage().end();
+	while (en < en_end){
+		const OrdinaryAtom& ogatom = reg->ogatoms.getByAddress(*en);
+
+		DBGLOG(DBG, "Checking " << RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en)));
+
+		// determine type of additional assertion
+		if (ogatom.tuple[0] == query.input[1] || ogatom.tuple[0] == query.input[2]){
+			// c+ or c-
+			assert(ogatom.tuple.size() == 3 && "Second parameter must be a binary predicate");
+			ID concept = ogatom.tuple[1];
+			if (!ontology->concepts->getFact(concept.address)){
+				throw PluginError("Tried to expand concept " + RawPrinter::toString(reg, concept) + ", which does not appear in the ontology");
+			}
+			ID individual = ogatom.tuple[2];
+			DBGLOG(DBG, "Adding concept assertion: " << (ogatom.tuple[0] == query.input[2] ? "-" : "") << reg->terms.getByID(concept).getUnquotedString() << "(" << reg->terms.getByID(individual).getUnquotedString() << ")");
+			TDLConceptExpression* factppConcept = ontology->kernel->getExpressionManager()->Concept(ontology->addNamespaceToString(reg->terms.getByID(concept).getUnquotedString()));
+			if (ogatom.tuple[0] == query.input[2]) factppConcept = ontology->kernel->getExpressionManager()->Not(factppConcept);
+			addedAxioms.push_back(ontology->kernel->instanceOf(
+					ontology->kernel->getExpressionManager()->Individual(ontology->addNamespaceToString(reg->terms.getByID(individual).getUnquotedString())),
+					factppConcept));
+		}else if (ogatom.tuple[0] == query.input[3] || ogatom.tuple[0] == query.input[4]){
+			// r+ or r-
+			assert(ogatom.tuple.size() == 4 && "Second parameter must be a ternery predicate");
+			ID role = ogatom.tuple[1];
+			if (!ontology->roles->getFact(role.address)){
+				throw PluginError("Tried to expand role " + RawPrinter::toString(reg, role) + ", which does not appear in the ontology");
+			}
+			ID individual1 = ogatom.tuple[2];
+			ID individual2 = ogatom.tuple[3];
+			DBGLOG(DBG, "Adding role assertion: " << (ogatom.tuple[0] == query.input[4] ? "-" : "") << reg->terms.getByID(role).getUnquotedString() << "(" << reg->terms.getByID(individual1).getUnquotedString() << ", " << reg->terms.getByID(individual2).getUnquotedString() << ")");
+			TDLObjectRoleExpression* factppRole = ontology->kernel->getExpressionManager()->ObjectRole(ontology->addNamespaceToString(reg->terms.getByID(role).getUnquotedString()));
+
+			if (ogatom.tuple[0] == query.input[4]){
+				addedAxioms.push_back(ontology->kernel->relatedToNot(
+					ontology->kernel->getExpressionManager()->Individual(ontology->addNamespaceToString(reg->terms.getByID(individual1).getUnquotedString())),
+					factppRole,
+					ontology->kernel->getExpressionManager()->Individual(ontology->addNamespaceToString(reg->terms.getByID(individual2).getUnquotedString()))));
+			}else{
+				addedAxioms.push_back(ontology->kernel->relatedTo(
+					ontology->kernel->getExpressionManager()->Individual(ontology->addNamespaceToString(reg->terms.getByID(individual1).getUnquotedString())),
+					factppRole,
+					ontology->kernel->getExpressionManager()->Individual(ontology->addNamespaceToString(reg->terms.getByID(individual2).getUnquotedString()))));
+			}
+		}else{
+			assert(false && "Invalid input atom");
+		}
+
+		en++;
+	}
+	return addedAxioms;
+}
+
+void DLLitePlugin::DLPluginAtom::restoreAbox(const Query& query, std::vector<TDLAxiom*> addedAxioms){
+
+	CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0]);
+
+	// remove the axioms again
+	BOOST_FOREACH (TDLAxiom* ax, addedAxioms){
+		ontology->kernel->retract(ax);
+	}
+}
+
+void DLLitePlugin::DLPluginAtom::retrieve(const Query& query, Answer& answer){
+	assert(false && "this method should never be called since the learning-based method is present");
 }
 
 void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoods){
@@ -1182,94 +1261,6 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 	DBGLOG(DBG, "LSS: Finished support set learning");
 }
 
-std::vector<TDLAxiom*> DLLitePlugin::DLPluginAtom::expandAbox(const Query& query){
-
-	RegistryPtr reg = getRegistry();
-
-	CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0]);
-
-	// add the additional assertions
-	std::vector<TDLAxiom*> addedAxioms;
-
-	DBGLOG(DBG, "Expanding Abox");
-	bm::bvector<>::enumerator en = query.interpretation->getStorage().first();
-	bm::bvector<>::enumerator en_end = query.interpretation->getStorage().end();
-	while (en < en_end){
-		const OrdinaryAtom& ogatom = reg->ogatoms.getByAddress(*en);
-
-		DBGLOG(DBG, "Checking " << RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en)));
-
-		// determine type of additional assertion
-		if (ogatom.tuple[0] == query.input[1] || ogatom.tuple[0] == query.input[2]){
-			// c+ or c-
-			assert(ogatom.tuple.size() == 3 && "Second parameter must be a binary predicate");
-			ID concept = ogatom.tuple[1];
-			if (!ontology->concepts->getFact(concept.address)){
-				throw PluginError("Tried to expand concept " + RawPrinter::toString(reg, concept) + ", which does not appear in the ontology");
-			}
-			ID individual = ogatom.tuple[2];
-			DBGLOG(DBG, "Adding concept assertion: " << (ogatom.tuple[0] == query.input[2] ? "-" : "") << reg->terms.getByID(concept).getUnquotedString() << "(" << reg->terms.getByID(individual).getUnquotedString() << ")");
-			TDLConceptExpression* factppConcept = ontology->kernel->getExpressionManager()->Concept(ontology->addNamespaceToString(reg->terms.getByID(concept).getUnquotedString()));
-			if (ogatom.tuple[0] == query.input[2]) factppConcept = ontology->kernel->getExpressionManager()->Not(factppConcept);
-			addedAxioms.push_back(ontology->kernel->instanceOf(
-					ontology->kernel->getExpressionManager()->Individual(ontology->addNamespaceToString(reg->terms.getByID(individual).getUnquotedString())),
-					factppConcept));
-		}else if (ogatom.tuple[0] == query.input[3] || ogatom.tuple[0] == query.input[4]){
-			// r+ or r-
-			assert(ogatom.tuple.size() == 4 && "Second parameter must be a ternery predicate");
-			ID role = ogatom.tuple[1];
-			if (!ontology->roles->getFact(role.address)){
-				throw PluginError("Tried to expand role " + RawPrinter::toString(reg, role) + ", which does not appear in the ontology");
-			}
-			ID individual1 = ogatom.tuple[2];
-			ID individual2 = ogatom.tuple[3];
-			DBGLOG(DBG, "Adding role assertion: " << (ogatom.tuple[0] == query.input[4] ? "-" : "") << reg->terms.getByID(role).getUnquotedString() << "(" << reg->terms.getByID(individual1).getUnquotedString() << ", " << reg->terms.getByID(individual2).getUnquotedString() << ")");
-			TDLObjectRoleExpression* factppRole = ontology->kernel->getExpressionManager()->ObjectRole(ontology->addNamespaceToString(reg->terms.getByID(role).getUnquotedString()));
-
-			if (ogatom.tuple[0] == query.input[4]){
-				addedAxioms.push_back(ontology->kernel->relatedToNot(
-					ontology->kernel->getExpressionManager()->Individual(ontology->addNamespaceToString(reg->terms.getByID(individual1).getUnquotedString())),
-					factppRole,
-					ontology->kernel->getExpressionManager()->Individual(ontology->addNamespaceToString(reg->terms.getByID(individual2).getUnquotedString()))));
-			}else{
-				addedAxioms.push_back(ontology->kernel->relatedTo(
-					ontology->kernel->getExpressionManager()->Individual(ontology->addNamespaceToString(reg->terms.getByID(individual1).getUnquotedString())),
-					factppRole,
-					ontology->kernel->getExpressionManager()->Individual(ontology->addNamespaceToString(reg->terms.getByID(individual2).getUnquotedString()))));
-			}
-		}else{
-			assert(false && "Invalid input atom");
-		}
-
-		en++;
-	}
-	return addedAxioms;
-}
-
-void DLLitePlugin::DLPluginAtom::restoreAbox(const Query& query, std::vector<TDLAxiom*> addedAxioms){
-
-	CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0]);
-
-	// remove the axioms again
-	BOOST_FOREACH (TDLAxiom* ax, addedAxioms){
-		ontology->kernel->retract(ax);
-	}
-}
-
-void DLLitePlugin::DLPluginAtom::retrieve(const Query& query, Answer& answer){
-	assert(false && "this method should never be called since the learning-based method is present");
-}
-
-void DLLitePlugin::DLPluginAtom::retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods){
-
-	DBGLOG(DBG, "DLPluginAtom::retrieve (" << !!nogoods << ", " << query.ctx->config.getOption("SupportSets") << ")");
-
-	// check if we want to learn support sets (but do this only once)
-	if (!!nogoods && query.ctx->config.getOption("SupportSets")){
-		learnSupportSets(query, nogoods);
-	}
-}
-
 // ============================== Class CDLAtom ==============================
 
 DLLitePlugin::CDLAtom::CDLAtom(ProgramCtx& ctx) : DLPluginAtom("cDL", ctx)
@@ -1287,19 +1278,11 @@ DLLitePlugin::CDLAtom::CDLAtom(ProgramCtx& ctx) : DLPluginAtom("cDL", ctx)
 	prop.completePositiveSupportSets = true; // we even provide (positive) complete support sets
 }
 
-void DLLitePlugin::CDLAtom::retrieve(const Query& query, Answer& answer)
-{
-	assert(false);
-}
-
 void DLLitePlugin::CDLAtom::retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods)
 {
 	DBGLOG(DBG, "CDLAtom::retrieve");
 
 	RegistryPtr reg = getRegistry();
-
-	// learn support sets (if enabled)
-	DLPluginAtom::retrieve(query, answer, nogoods);
 
 	CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0]);
 	std::vector<TDLAxiom*> addedAxioms = expandAbox(query);
@@ -1377,20 +1360,12 @@ DLLitePlugin::RDLAtom::RDLAtom(ProgramCtx& ctx) : DLPluginAtom("rDL", ctx)
 	prop.completePositiveSupportSets = true; // we even provide (positive) complete support sets
 }
 
-void DLLitePlugin::RDLAtom::retrieve(const Query& query, Answer& answer)
-{
-	assert(false);
-}
-
 void DLLitePlugin::RDLAtom::retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods)
 {
 
 	DBGLOG(DBG, "RDLAtom::retrieve");
 
 	RegistryPtr reg = getRegistry();
-
-	// learn support sets (if enabled)
-	DLPluginAtom::retrieve(query, answer, nogoods);
 
 	CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0]);
 	std::vector<TDLAxiom*> addedAxioms = expandAbox(query);
@@ -1483,11 +1458,6 @@ DLLitePlugin::ConsDLAtom::ConsDLAtom(ProgramCtx& ctx) : DLPluginAtom("consDL", c
 	setOutputArity(0); // arity of the output list
 }
 
-void DLLitePlugin::ConsDLAtom::retrieve(const Query& query, Answer& answer)
-{
-	assert(false);
-}
-
 void DLLitePlugin::ConsDLAtom::retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods)
 {
 
@@ -1523,11 +1493,6 @@ DLLitePlugin::InconsDLAtom::InconsDLAtom(ProgramCtx& ctx) : DLPluginAtom("incons
 	setOutputArity(0); // arity of the output list
 }
 
-void DLLitePlugin::InconsDLAtom::retrieve(const Query& query, Answer& answer)
-{
-	assert(false);
-}
-
 void DLLitePlugin::InconsDLAtom::retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods)
 {
 
@@ -1549,8 +1514,6 @@ void DLLitePlugin::InconsDLAtom::retrieve(const Query& query, Answer& answer, No
 	DBGLOG(DBG, "Inconsistency check complete, recovering Abox");
 	restoreAbox(query, addedAxioms);
 }
-
-// ============================== Class DLPlugin ==============================
 
 namespace
 {
@@ -1768,7 +1731,7 @@ public:
 	}
 };
 
-// ============================== Class DLPlugin ==============================
+// ============================== Class DLLitePlugin ==============================
 
 ID DLLitePlugin::dlNeg(ID id){
 	if (reg->terms.getByID(id).getUnquotedString()[0] == '-') return storeQuotedConstantTerm(reg->terms.getByID(id).getUnquotedString().substr(1));

@@ -141,9 +141,6 @@ private:
 		// checks the guard atoms wrt. the Abox, removes them from ng and sets keep to true in this case, and sets keep to false otherwise
 		virtual void guardSupportSet(bool& keep, Nogood& ng, const ID eaReplacement);
 
-		// learns a complete set of support sets for the ontology specified in query.input[0] and adds them to nogoods
-		void learnSupportSets(const Query& query, NogoodContainerPtr nogoods);
-
 		// expands the Abox with the facts given in the interpretation
 		std::vector<TDLAxiom*> expandAbox(const Query& query);
 
@@ -171,14 +168,13 @@ private:
 		DLPluginAtom(std::string predName, ProgramCtx& ctx, bool monotonic = true);
 
 		virtual void retrieve(const Query& query, Answer& answer);
-		virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
+		virtual void learnSupportSets(const Query& query, NogoodContainerPtr nogoods);
 	};
 
 	// concept queries
 	class CDLAtom : public DLPluginAtom{
 	public:
 		CDLAtom(ProgramCtx& ctx);
-		virtual void retrieve(const Query& query, Answer& answer);
 		virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
 	};
 
@@ -186,7 +182,6 @@ private:
 	class RDLAtom : public DLPluginAtom{
 	public:
 		RDLAtom(ProgramCtx& ctx);
-		virtual void retrieve(const Query& query, Answer& answer);
 		virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
 	};
 
@@ -194,7 +189,6 @@ private:
 	class ConsDLAtom : public DLPluginAtom{
 	public:
 		ConsDLAtom(ProgramCtx& ctx);
-		virtual void retrieve(const Query& query, Answer& answer);
 		virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
 	};
 
@@ -202,7 +196,6 @@ private:
 	class InconsDLAtom : public DLPluginAtom{
 	public:
 		InconsDLAtom(ProgramCtx& ctx);
-		virtual void retrieve(const Query& query, Answer& answer);
 		virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
 	};
 
