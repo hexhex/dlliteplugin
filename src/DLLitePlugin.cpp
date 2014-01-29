@@ -1032,8 +1032,8 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 							supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcy)));
 
 							OrdinaryAtom cmcy = theDLLitePlugin.getNewAtom(query.input[2], true);
-							cpcy.tuple.push_back(cID);
-							cpcy.tuple.push_back(at.tuple[2]);
+							cmcy.tuple.push_back(cID);
+							cmcy.tuple.push_back(at.tuple[2]);
 							supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcy)));
 
 							supportset.insert(outlit);
