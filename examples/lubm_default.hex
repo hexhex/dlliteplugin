@@ -1,0 +1,11 @@
+% By default, a research assistant is a student:
+
+inStudent(X) :- &cDL["lubm_default.owl", pcInStudent, mcInStudent, c, d, "ResearchAssistant"](X), 
+				   not &cDL["lubm_default.owl", pcInStudent,mcInStudent, c, d,"-Student"](X).
+
+
+% By default, a student is not an employee:
+
+inNegEmployee(X):- &cDL["lubm_default.owl",pcInEmployee,mcInEmployee,c ,d, "Student"](X),
+				  not &cDL["lubm_default.owl",pcInEmployee,mcInEmployee, c,d,"Employee"](X).
+
