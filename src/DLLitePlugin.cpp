@@ -1034,7 +1034,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 							OrdinaryAtom cmcy = theDLLitePlugin.getNewAtom(query.input[2], true);
 							cmcy.tuple.push_back(cID);
 							cmcy.tuple.push_back(at.tuple[2]);
-							supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcy)));
+							supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cmcy)));
 
 							supportset.insert(outlit);
 
@@ -1863,6 +1863,12 @@ void DLLitePlugin::constructClassificationProgram(ProgramCtx& ctx){
 	suby2x2.tuple.push_back(x2ID);
 	ID suby2x2ID = reg->storeOrdinaryAtom(suby2x2);
 
+	OrdinaryAtom suby2y1(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+	suby2y1.tuple.push_back(subID);
+	suby2y1.tuple.push_back(y2ID);
+	suby2y1.tuple.push_back(y1ID);
+	ID suby2y1ID = reg->storeOrdinaryAtom(suby2y1);
+
 	OrdinaryAtom confxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
 	confxy.tuple.push_back(confID);
 	confxy.tuple.push_back(xID);
@@ -1874,6 +1880,12 @@ void DLLitePlugin::constructClassificationProgram(ProgramCtx& ctx){
 	confxy1.tuple.push_back(xID);
 	confxy1.tuple.push_back(y1ID);
 	ID confxy1ID = reg->storeOrdinaryAtom(confxy1);
+
+	OrdinaryAtom confxy2(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+	confxy2.tuple.push_back(confID);
+	confxy2.tuple.push_back(xID);
+	confxy2.tuple.push_back(y2ID);
+	ID confxy2ID = reg->storeOrdinaryAtom(confxy2);
 
 	OrdinaryAtom opxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
 	opxy.tuple.push_back(opID);
@@ -1915,12 +1927,12 @@ void DLLitePlugin::constructClassificationProgram(ProgramCtx& ctx){
 	conflict.head.push_back(confxy1ID);
 	ID conflictID = reg->storeRule(conflict);
 
-	/* Conflict rule2: conf(X,Y2) :- conf(X,Y1), sub(Y2,Y1).
+	// Conflict rule2: conf(X,Y2) :- conf(X,Y1), sub(Y2,Y1).
 	Rule conflict2(ID::MAINKIND_RULE);
-	conflict.body.push_back(ID::posLiteralFromAtom(confxy1ID));	
-	conflict.body.push_back(ID::posLiteralFromAtom(suby2y1ID));
-	conflict.head.push_back(confxy2ID);
-	ID conflictID2 = reg->storeRule(conflict2);*/
+	conflict2.body.push_back(ID::posLiteralFromAtom(confxy1ID));	
+	conflict2.body.push_back(ID::posLiteralFromAtom(suby2y1ID));
+	conflict2.head.push_back(confxy2ID);
+	ID conflict2ID = reg->storeRule(conflict2);
 
 	// Rule for reflexivity of opposite predicate: op(Y,X) :- op(X,Y)
 	Rule refop(ID::MAINKIND_RULE);
@@ -1932,6 +1944,7 @@ void DLLitePlugin::constructClassificationProgram(ProgramCtx& ctx){
 	classificationIDB.push_back(transID);
 	classificationIDB.push_back(contraID);
 	classificationIDB.push_back(conflictID);
+	classificationIDB.push_back(conflict2ID);
 	classificationIDB.push_back(refopID);
 
 	DBGLOG(DBG, "Constructed classification program");
