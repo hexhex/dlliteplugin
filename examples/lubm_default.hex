@@ -9,3 +9,10 @@ inStudent(X) :- &cDL["lubm_default.owl", pcInStudent, mcInStudent, c, d, "Resear
 inNegEmployee(X):- &cDL["lubm_default.owl",pcInEmployee,mcInEmployee,c ,d, "Student"](X),
 				  not &cDL["lubm_default.owl",pcInEmployee,mcInEmployee, c,d,"Employee"](X).
 
+
+pcInStudent("Student",X):-inStudent(X).
+mcInStudent("-Student",X):-inNegStudent(X).
+
+pcInEmployee("Employee",X):-inEmployee(X).
+mcInStudent("-Employee",X):-inNegEmployee(X).
+
