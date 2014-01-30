@@ -67,12 +67,12 @@
     
 
 
-    <!-- http://www.semanticweb.org/ontologies/2014/0/taxi.owl#Electromob -->
 
-    <owl:Class rdf:about="#Electromob">
+    <owl:Class rdf:about="#EDriver">
         <rdfs:subClassOf rdf:resource="#Driver"/>
     </owl:Class>
     
+
 
 
     
