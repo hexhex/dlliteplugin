@@ -5,7 +5,7 @@ student(X) :- resas(X), not neg_student(X).
 
 % Single out the non-students under default assumption.
 
-neg_student(X) :- DL[Student+=student; -Student](X), resas(X).
+neg_student(X) :- DL[Student+=student; NegStudent](X), resas(X).
 
 % Assign every research assistant to a postdoc, who is supposed to help the former in case research problems emerge
 % Collect the assignments into "helps" p% Assign every research assistant to a postdoc, who is supposed to help the former in case % research problems emerge

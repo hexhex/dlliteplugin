@@ -20,7 +20,7 @@ driver(X):-isIn(X,Z), not customer(X).
 drives(X,Y):-driver(X),customer(Y),isIn(X,Z),isIn(Y,Z), not omit(X,Y).
 
 % condition which omits assignments
-omit(X,Y):-needsTo(Y,Z1), customer(Y), driver(X),&cDL["inst_size_010_roleprop_002_inst_001.owl",omitcp,omitcm,omitrp,omitrm,"Electromob"](X),
+omit(X,Y):-needsTo(Y,Z1), customer(Y), driver(X),&cDL["inst_size_010_roleprop_002_inst_001.owl",omitcp,omitcm,omitrp,omitrm,"EDriver"](X),
 not &rDL["inst_size_010_roleprop_002_inst_001.owl",cp,cm,rp,rm,"worksIn"](X,Z1).
 
 

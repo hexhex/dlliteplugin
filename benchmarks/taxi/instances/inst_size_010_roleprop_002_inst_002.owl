@@ -67,25 +67,25 @@
     
 
 
-    <!-- http://www.semanticweb.org/ontologies/2014/0/taxi.owl#Electromob -->
 
-    <owl:Class rdf:about="#Electromob">
+    <owl:Class rdf:about="#EDriver">
         <rdfs:subClassOf rdf:resource="#Driver"/>
     </owl:Class>
     
 
 
+
     
 <owl:Thing rdf:about="#c1"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#c2"><rdf:type><owl:Class><owl:complementOf rdf:resource="#Driver"/></owl:Class></rdf:type></owl:Thing>
+<owl:Thing rdf:about="#c2"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
 <owl:Thing rdf:about="#c3"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#c4"><rdf:type><owl:Class><owl:complementOf rdf:resource="#Electromob"/></owl:Class></rdf:type></owl:Thing>
-<owl:Thing rdf:about="#c5"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#c6"><rdf:type><owl:Class><owl:complementOf rdf:resource="#Customer"/></owl:Class></rdf:type></owl:Thing>
-<owl:Thing rdf:about="#c7"><rdf:type rdf:resource="#Electromob"/></owl:Thing>
-<owl:Thing rdf:about="#c8"><rdf:type><owl:Class><owl:complementOf rdf:resource="#Driver"/></owl:Class></rdf:type></owl:Thing>
-<owl:Thing rdf:about="#c9"><rdf:type rdf:resource="#Electromob"/></owl:Thing>
-<owl:Thing rdf:about="#c10"><rdf:type rdf:resource="#Driver"/></owl:Thing>
+<owl:Thing rdf:about="#c4"><rdf:type rdf:resource="#Driver"/></owl:Thing>
+<owl:Thing rdf:about="#c$"><rdf:type><owl:Class><owl:complementOf rdf:resource="#Driver"/></owl:Class></rdf:type></owl:Thing>
+<owl:Thing rdf:about="#c6"><rdf:type rdf:resource="#Customer"/></owl:Thing>
+<owl:Thing rdf:about="#c7"><rdf:type rdf:resource="#Driver"/></owl:Thing>
+<owl:Thing rdf:about="#c$"><rdf:type><owl:Class><owl:complementOf rdf:resource="#Driver"/></owl:Class></rdf:type></owl:Thing>
+<owl:Thing rdf:about="#c$"><rdf:type><owl:Class><owl:complementOf rdf:resource="#EDriver"/></owl:Class></rdf:type></owl:Thing>
+<owl:Thing rdf:about="#c10"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
 
 </rdf:RDF>
 

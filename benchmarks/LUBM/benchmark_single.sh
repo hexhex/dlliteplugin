@@ -33,6 +33,7 @@ i=0
 for c in "${confs[@]}"
 do
 	echo -ne -e " "
+echo "Calling: $c"
 	output=$(timeout $to time -o $instance.$i.time.dat -f %e $c > /dev/null 2> $instance.$i.verbose.dat)
 	ret=$?
 
