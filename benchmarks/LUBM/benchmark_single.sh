@@ -7,7 +7,7 @@ export LD_LIBRARY_PATH=$2
 instance=$3
 to=$4
 
-owlfile="${instance%%.hex}.owl"
+owlfile="${instance%%.dlp}.owl"
 confstr="dlvhex2 --heuristics=monolithic --plugindir=../../../src/ --ontology=$owlfile $instance;dlvhex2 --heuristics=monolithic --plugindir=../../../src/ --ontology=$owlfile $instance --supportsets;../calldrew.sh $instance $owlfile;dlvhex2 --heuristics=monolithic --plugindir=../../../src/ --ontology=$owlfile $instance -n=1;dlvhex2 --heuristics=monolithic --plugindir=../../../src/ --ontology=$owlfile $instance --supportsets -n=1"
 confstr2=$(cat conf)
 if [ $? == 0 ]; then
