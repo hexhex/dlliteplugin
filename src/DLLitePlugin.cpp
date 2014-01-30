@@ -121,7 +121,7 @@ struct sem<DLParserModuleSemantics::dlAtom>
 	void operator()(
 	DLParserModuleSemantics& mgr,
 		const boost::fusion::vector3<
-			std::vector<dllite::DLLitePlugin::DLExpression>,
+			const boost::optional<std::vector<dllite::DLLitePlugin::DLExpression> >,
 			const boost::optional<std::string>,
 		  	const boost::optional<std::vector<ID> >
 		>& source,
@@ -136,7 +136,8 @@ struct sem<DLParserModuleSemantics::dlAtom>
 		ID cDLID = reg->terms.getIDByString("cDL");
 		ID rDLID = reg->terms.getIDByString("rDL");
 
-		const std::vector<dllite::DLLitePlugin::DLExpression>& in = boost::fusion::at_c<0>(source);
+		std::vector<dllite::DLLitePlugin::DLExpression> emptyExpr;
+		const std::vector<dllite::DLLitePlugin::DLExpression>& in = (!!boost::fusion::at_c<0>(source) ? boost::fusion::at_c<0>(source).get() : emptyExpr);
 
 		// is there a query?
 		ID query = ID_FAIL;
@@ -1604,7 +1605,7 @@ struct DLParserModuleGrammarBase:
 
 		dlAtom
 			= (
-					qi::lit("DL") >> qi::lit('[') >> (dlExpression % qi::lit(',')) >> qi::lit(';') >> -(dlConceptOrRole | dlNegatedConceptOrRole) >> qi::lit(']') >> qi::lit('(') >> -(Base::terms) >> qi::lit(')') > qi::eps
+					qi::lit("DL") >> qi::lit('[') >> -(dlExpression % qi::lit(',')) >> qi::lit(';') >> -(dlConceptOrRole | dlNegatedConceptOrRole) >> qi::lit(']') >> qi::lit('(') >> -(Base::terms) >> qi::lit(')') > qi::eps
 				) [ Sem::dlAtom(sem) ];
 
 		#ifdef BOOST_SPIRIT_DEBUG
