@@ -8,10 +8,10 @@ for (( i=1; i <= $3; i++ ))
 do
 	for (( j = 1; j <= $2; j++ ))
 	do
-		if [ $RANDOM -le $prop ]; then
+		if [[ $RANDOM -le $prop ]]; then
 			echo "isIn(\"c$i\",\"r$j\")."
 		fi
-		if [ $RANDOM -le $prop ]; then
+		if [[ $RANDOM -le $prop ]]; then
 			echo "needsTo(\"c$i\",\"r$j\")."
 		fi
 	done
@@ -21,10 +21,10 @@ for (( i=1; i <= $1; i++ ))
 do
 	for (( j = 1; j <= $2; j++ ))
 	do
-		if [ $RANDOM -le $prop ]; then
+		if [[ $RANDOM -le $prop ]]; then
 			echo "isIn(\"d$i\",\"r$j\")."
 		fi
-		if [ $RANDOM -le $prop ]; then
+		if [[ $RANDOM -le $prop ]]; then
 			echo "drivesTo(\"d$i\",\"r$j\")."
 		fi
 	done
