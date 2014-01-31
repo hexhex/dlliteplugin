@@ -1,10 +1,13 @@
 pcinemployee("Employee",X):-inemployee(X).
 mcinemployee("Employee",X):-innegemployee(X).
-domain("c1").
-domain(X):- &cDL[OWLONTOLOGY,a,b,c,d,"Person"](X).
+
+domain(X):- &cDL[OWLONTOLOGY,a,b,c,d,"ResearchAssistant"](X).
+domain(X):- &cDL[OWLONTOLOGY,a,b,c,d,"Student"](X).
+domain(X):- &cDL[OWLONTOLOGY,a,b,c,d,"Employee"](X).
+
+
 inemployee(X):-&cDL[OWLONTOLOGY,pcinemployee,mcinemployee,c,d,"ResearchAssistant"](X),
 		not &cDL[OWLONTOLOGY,pcinemployee,mcinemployee,c,d,"-Employee"](X), domain(X).
-
 
 innegemployee(X):-&cDL[OWLONTOLOGY,pcinemployee,mcinemployee,c,d,"Student"](X),
 		not &cDL[OWLONTOLOGY,pcinemployee,mcinemployee,c,d,"Employee"](X), domain(X).
