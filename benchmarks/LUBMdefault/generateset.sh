@@ -1,23 +1,21 @@
-if [[ $# -lt 7 ]]; then
-	echo "Error: Script expects 7 parameters"
+if [[ $# -lt 4 ]]; then
+	echo "Error: Script expects 4 parameters"
 	exit 1;
 fi
 
-for (( nodecount=$1; nodecount <= $2; nodecount+=$3 ))
-do
-	for (( roleprop=$4; roleprop <= $5; roleprop+=$6 ))
+	for (( concprop=$1; concprop <= $2; concprop+=$3 ))
 	do
-		for (( inst=0; inst < $7; inst++ ))
+		for (( inst=0; inst < $4; inst++ ))
 		do
-			ac=`printf "%03d" ${nodecount}`
-			rp=`printf "%03d" ${roleprop}`
+			rp=`printf "%03d" ${concprop}`
 			in=`printf "%03d" ${inst}`
 
 			# create ontology instances
-			./generate.sh $nodecount > "instances/inst_size_${ac}_roleprop_${rp}_inst_${in}.owl"
+			./generate.sh 50 ${concprop} > "instances/inst_concprop_${rp}_inst_${in}.hex"
+			cp ontology.owl instances/inst_concprop_${rp}_inst_${in}.owl
 
 			# instantiate the program
-			cat program.hex | sed "s/OWLONTOLOGY/\"inst_size_${ac}_roleprop_${rp}_inst_${in}.owl\"/g" > "instances/inst_size_${ac}_roleprop_${rp}_inst_${in}.hex"
+			cat program.hex | sed "s/OWLONTOLOGY/\"inst_concprop_${rp}_inst_${in}.owl\"/g" >> "instances/inst_concprop_${rp}_inst_${in}.hex"
 		done
+
 	done
-done
