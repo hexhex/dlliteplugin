@@ -1,24 +1,23 @@
-if [[ $# -lt 7 ]]; then
-	echo "Error: Script expects 7 parameters"
+if [[ $# -lt 4 ]]; then
+	echo "Error: Script expects 4 parameters"
 	exit 1;
 fi
 
-for (( nodecount=$1; nodecount <= $2; nodecount+=$3 ))
+for (( prop=$1; prop <= $2; prop+=$3 ))
 do
-	for (( roleprop=$4; roleprop <= $5; roleprop+=$6 ))
+	for (( inst=0; inst < $4; inst++ ))
 	do
-		for (( inst=0; inst < $7; inst++ ))
-		do
-			ac=`printf "%03d" ${nodecount}`
-			rp=`printf "%03d" ${roleprop}`
-			in=`printf "%03d" ${inst}`
+		propf=`printf "%03d" ${prop}`
+		in=`printf "%03d" ${inst}`
 
-			# create ontology instances
-			./generate.sh $nodecount > "instances/inst_size_${ac}_roleprop_${rp}_inst_${in}.owl"
+		# create ontology instances
+		cp ontology.owl instances/inst_size_${propf}_inst_${in}.owl
 
-			# instantiate the program
-			cat program.hex | sed "s/OWLONTOLOGY/\"inst_size_${ac}_roleprop_${rp}_inst_${in}.owl\"/g" > "instances/inst_size_${ac}_roleprop_${rp}_inst_${in}.hex"
-			cat program.dlp > "instances/inst_size_${ac}_roleprop_${rp}_inst_${in}.dlp"
-		done
+		# instantiate the program
+		./generate1.sh 20 5 50 $propf > "instances/inst_size_${propf}_inst_${in}.dlp"
+		cp instances/inst_size_${propf}_inst_${in}.dlp instances/inst_size_${propf}_inst_${in}.hex
+
+		cat program.hex | sed "s/OWLONTOLOGY/\"inst_size_${propf}_inst_${in}.owl\"/g" >> "instances/inst_size_${propf}_inst_${in}.hex"
+		cat program.dlp >> "instances/inst_size_${propf}_inst_${in}.dlp"
 	done
 done

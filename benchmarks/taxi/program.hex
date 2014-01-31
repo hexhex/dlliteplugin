@@ -1,14 +1,4 @@
 
-% Positions of the customers and drivers 
-isIn("c2","r3").
-isIn("d3","r3").
-isIn("d2","r3").
-
-% customers target destination
-needsTo("c2","r4").
-
-% driving agent's target destination
-drivesTo("d3","r2").
 
 % collect all customers into customer predicate
 customer(X):- isIn(X,Z), not &cDL[OWLONTOLOGY,custcp,custcm,custrp,custrm,"-Customer"](X).
