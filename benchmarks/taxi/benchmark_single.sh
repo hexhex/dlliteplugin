@@ -32,7 +32,7 @@ i=0
 for c in "${confs[@]}"
 do
 	echo -ne -e " "
-	output=$(timeout $to time -o $instance.$i.time.dat -f %e dlvhex2 $c --heuristics=monolithic --plugindir=../../../src/ $instance > /dev/null)
+	output=$(timeout $to time -o $instance.$i.time.dat -f %e dlvhex2 $c --heuristics=monolithic --liberalsafety --plugindir=../../../src/ $instance > /dev/null)
 	ret=$?
 	if [[ $ret == 0 ]]; then
 	        output=$(cat $instance.$i.time.dat)
