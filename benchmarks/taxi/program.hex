@@ -10,7 +10,7 @@ driver(X):-isIn(X,Z), not customer(X).
 drives(X,Y):-driver(X),customer(Y),isIn(X,Z),isIn(Y,Z), not omit(X,Y).
 
 % condition which omits assignments
-omit(X,Y):-needsTo(Y,Z1), customer(Y), driver(X),&cDL[OWLONTOLOGY,omitcp,omitcm,omitrp,omitrm,"EDriver"](X),
+omit(X,Y):-needsTo(Y,Z1), customer(Y), &cDL[OWLONTOLOGY,omitcp,omitcm,omitrp,omitrm,"EDriver"](X),
 not &rDL[OWLONTOLOGY,cp,cm,rp,rm,"worksIn"](X,Z1).
 
 
