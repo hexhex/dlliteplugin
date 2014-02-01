@@ -1,5 +1,3 @@
-
-
 % collect all customers into customer predicate
 customer(X):- isIn(X,Z), not &cDL[OWLONTOLOGY,custcp,custcm,custrp,custrm,"-Customer"](X).
 
@@ -10,11 +8,9 @@ driver(X):-isIn(X,Z), not customer(X).
 drives(X,Y):-driver(X),customer(Y),isIn(X,Z),isIn(Y,Z), not omit(X,Y).
 
 % condition which omits assignments
-omit(X,Y):-needsTo(Y,Z1), customer(Y), &cDL[OWLONTOLOGY,omitcp,omitcm,omitrp,omitrm,"EDriver"](X),
+omit(X,Y):-needsTo(Y,Z1), drives(X,Y), &cDL[OWLONTOLOGY,omitcp,omitcm,omitrp,omitrm,"EDriver"](X),
 not &rDL[OWLONTOLOGY,cp,cm,rp,rm,"worksIn"](X,Z1).
-
 
 % extention of ontological predicates
  custrp("worksIn",X,X1):-drivesTo(X,X1).
- omitcp("Driver",X):-drives(X,Y).
-
+ omitcp("Driver",X):-driver(X).
