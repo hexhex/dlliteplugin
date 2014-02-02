@@ -674,6 +674,10 @@ bool DLLitePlugin::CachedOntology::isOwlConstant(std::string str) const{
 	return !theDLLitePlugin.isOwlType(str);
 }
 
+bool DLLitePlugin::CachedOntology::containsNamespace(std::string str) const{
+	return (str.substr(0, ontologyNamespace.length()) == ontologyNamespace || str[0] == '-' && str.substr(1, ontologyNamespace.length()) == ontologyNamespace);
+}
+
 std::string DLLitePlugin::CachedOntology::addNamespaceToString(std::string str) const{
 	if (str[0] == '-') return "-" + ontologyNamespace + "#" + str.substr(1);
 	else return ontologyNamespace + "#" + str;
@@ -701,7 +705,7 @@ bool DLLitePlugin::DLPluginAtom::Actor_collector::apply(const TaxonomyVertex& no
 	DBGLOG(DBG, "Actor collector called with " << node.getPrimer()->getName());
 	std::string returnValue(node.getPrimer()->getName());
 
-	if (node.getPrimer()->getId() == -1 || !ontology->isOwlConstant(returnValue)){
+	if (node.getPrimer()->getId() == -1 || !ontology->containsNamespace(returnValue)){
 		DBGLOG(WARNING, "DLLite resoner returned constant " << returnValue << ", which seems to be not a valid individual name (will ignore it)");
 	}else{
 		ID tid = theDLLitePlugin.storeQuotedConstantTerm(ontology->removeNamespaceFromString(returnValue));

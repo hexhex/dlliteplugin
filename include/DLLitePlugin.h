@@ -91,6 +91,7 @@ public:
 		InterpretationPtr getAllIndividuals(const PluginAtom::Query& query);
 
 		inline bool isOwlConstant(std::string str) const;
+		inline bool containsNamespace(std::string str) const;
 		inline std::string addNamespaceToString(std::string str) const;
 		inline std::string removeNamespaceFromString(std::string str) const;
 
