@@ -22,7 +22,7 @@ elif [[ $4 -le 66 ]]; then
 
 else 
 	prop1=32767
-fi 
+fi
 
 for (( i=1; i <= $1; i++ ))
 do
