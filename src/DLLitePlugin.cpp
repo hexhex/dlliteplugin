@@ -885,7 +885,7 @@ void DLLitePlugin::DLPluginAtom::learnSupportSets(const Query& query, NogoodCont
 	ID outvarID = reg->storeVariableTerm("O");
 	Tuple outlist;
 	outlist.push_back(outvarID);
-	ID outlit = NogoodContainer::createLiteral(ExternalLearningHelper::getOutputAtom(query, outlist, true)) | ID(ID::NAF_MASK, 0);
+	ID outlit = NogoodContainer::createLiteral(ExternalLearningHelper::getOutputAtom(query, outlist, false));
 #ifndef NDEBUG
 	std::string outlitStr = RawPrinter::toString(reg, outlit);
 	DBGLOG(DBG, "LSS: Output atom is " << outlitStr);
