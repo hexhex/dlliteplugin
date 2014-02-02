@@ -12,5 +12,5 @@ omit(X,Y):-needsTo(Y,Z1), drives(X,Y), &cDL[OWLONTOLOGY,omitcp,omitcm,omitrp,omi
 not &rDL[OWLONTOLOGY,cp,cm,rp,rm,"worksIn"](X,Z1).
 
 % extention of ontological predicates
- custrp("worksIn",X,X1):-drivesTo(X,X1).
- omitcp("Driver",X):-driver(X).
+custrp("worksIn",X,X1):-goTo(X,X1).
+omitcp("Driver",X):-driver(X).

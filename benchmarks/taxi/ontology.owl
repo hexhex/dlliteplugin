@@ -227,14 +227,10 @@
 <owl:Thing rdf:about="#d6"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
 <owl:Thing rdf:about="#d8"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
 <owl:Thing rdf:about="#d11"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
 
 
 </rdf:RDF>
+
 
 
 
