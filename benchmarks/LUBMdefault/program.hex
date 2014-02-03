@@ -1,3 +1,4 @@
+
 pcinemployee("Employee",X):-inemployee(X).
 mcinemployee("Employee",X):-innegemployee(X).
 

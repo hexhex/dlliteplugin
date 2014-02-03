@@ -1,7 +1,8 @@
 pcinemployee("Employee",X):-inemployee(X).
 mcinemployee("Employee",X):-innegemployee(X).
 
-domain(X):- &cDL["lubm_default.owl",a,b,c,d,"Person"](X).
+%domain(X):- &cDL["lubm_default.owl",a,b,c,d,"Person"](X).
+domain("c1").
 inemployee(X):-&cDL["lubm_default.owl",pcinemployee,mcinemployee,c,d,"ResearchAssistant"](X),
 		not &cDL["lubm_default.owl",pcinemployee,mcinemployee,c,d,"-Employee"](X), domain(X).
 
