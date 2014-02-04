@@ -3,6 +3,7 @@
 # $3: number of customers
 # $4: customer probability
 
+
 prop=$((32768 * $4 / 100)) 
 for (( i=1; i <= $3; i++ ))
 do
@@ -14,15 +15,16 @@ do
 	fi
 done
 
-if [[ $4 -le 33 ]]; then 
-	prop1=$((32767 * 30 / 100)) 
+if [[ $4 -le 10 ]]; then 
+	prop1=$((32768 * 30 / 100)) 
 
-elif [[ $4 -le 66 ]]; then 
-	prop1=$((32767 * 70 / 100)) 
+elif [[ $4 -le 20 ]]; then 
+	prop1=$((32768 * 70 / 100)) 
 
 else 
-	prop1=32767
-fi
+	prop1=32768 
+
+fi 
 
 for (( i=1; i <= $1; i++ ))
 do
@@ -33,8 +35,9 @@ do
 	
 	for ((j=1; j<=$2; j++))
 		do
-			if [[ $RANDOM -le $prop1 ]]; then
+			if [[ $RANDOM -le $prop ]]; then
 				echo "goTo(\"d$i\",\"r$j\")."	
 			fi	
-	done
+		done	
+		
 done	
