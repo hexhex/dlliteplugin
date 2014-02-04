@@ -660,7 +660,9 @@
 <owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r1"/></owl:Thing>
 <owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r3"/></owl:Thing>
 <owl:Thing rdf:about="#d21"><rdf:type rdf:resource="#Driver"/></owl:Thing>
+<owl:Thing rdf:about="#d21"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
 <owl:Thing rdf:about="#d22"><rdf:type rdf:resource="#Driver"/></owl:Thing>
+<owl:Thing rdf:about="#d22"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
 <owl:Thing rdf:about="#d23"><rdf:type rdf:resource="#Driver"/></owl:Thing>
 <owl:Thing rdf:about="#d23"><worksIn rdf:resource="#r1"/></owl:Thing>
 <owl:Thing rdf:about="#d23"><worksIn rdf:resource="#r3"/></owl:Thing>
@@ -1216,6 +1218,24 @@
 <owl:Thing rdf:about="#d200"><rdf:type rdf:resource="#Driver"/></owl:Thing>
 <owl:Thing rdf:about="#d200"><worksIn rdf:resource="#r1"/></owl:Thing>
 <owl:Thing rdf:about="#d200"><worksIn rdf:resource="#r3"/></owl:Thing>
+<owl:Thing rdf:about="#d23"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d24"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d25"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d26"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d27"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d28"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d29"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d30"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d31"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d32"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d33"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d34"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d35"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d36"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d37"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d38"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d39"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
+<owl:Thing rdf:about="#d40"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
 
 </rdf:RDF>
 
