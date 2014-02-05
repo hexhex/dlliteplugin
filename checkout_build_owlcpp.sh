@@ -59,7 +59,7 @@ if test $OWLCPPMAINDIR == $OWLCPP_ROOT; then
 	if [ ! -f $OWLCPPMAINDIR/libxml2-$LIBXML2V.zip ]
 	then
 		echo "Downloading libxml2 source version $LIBXML2V"
-		wget -O $OWLCPPMAINDIR/libxml2-$LIBXML2V.zip https://git.gnome.org/browse/libxml2/snapshot/libxml2-$LIBXML2V.zip
+		wget --no-check-certificate -O $OWLCPPMAINDIR/libxml2-$LIBXML2V.zip https://git.gnome.org/browse/libxml2/snapshot/libxml2-$LIBXML2V.zip
 		if [ $? -gt 0 ]
 		then
 			echo "Error while downloading libxml2; aborting"
