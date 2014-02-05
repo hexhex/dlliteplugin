@@ -14,6 +14,8 @@ if [ -f $OWLCPPMAINDIR/successfully_built ]; then
 	exit 0
 fi
 
+osx=$(uname -a | grep "Darwin" | wc -l)
+
 echo "Building owlcpp in $OWLCPPMAINDIR"
 if test $OWLCPPMAINDIR == $OWLCPP_ROOT; then
 
@@ -59,7 +61,12 @@ if test $OWLCPPMAINDIR == $OWLCPP_ROOT; then
 	if [ ! -f $OWLCPPMAINDIR/libxml2-$LIBXML2V.zip ]
 	then
 		echo "Downloading libxml2 source version $LIBXML2V"
-		wget --no-check-certificate -O $OWLCPPMAINDIR/libxml2-$LIBXML2V.zip https://git.gnome.org/browse/libxml2/snapshot/libxml2-$LIBXML2V.zip
+		if [ $osx == 1 ]; then
+			# OS X does not trust this server
+			wget --no-check-certificate -O $OWLCPPMAINDIR/libxml2-$LIBXML2V.zip https://git.gnome.org/browse/libxml2/snapshot/libxml2-$LIBXML2V.zip
+		else
+			wget -O $OWLCPPMAINDIR/libxml2-$LIBXML2V.zip https://git.gnome.org/browse/libxml2/snapshot/libxml2-$LIBXML2V.zip
+		fi
 		if [ $? -gt 0 ]
 		then
 			echo "Error while downloading libxml2; aborting"
@@ -126,7 +133,14 @@ if test $OWLCPPMAINDIR == $OWLCPP_ROOT; then
 		mv $f.up $f
 	done
 	cd ..
-
+	
+	if [ $osx == 1 ]; then
+		echo "Fixing libtool on OS X"
+		cp $OWLCPPMAINDIR/libxml2-$LIBXML2V/autogen.sh $OWLCPPMAINDIR/libxml2-$LIBXML2V/autogen.sh.bak
+		cat $OWLCPPMAINDIR/libxml2-$LIBXML2V/autogen.sh | sed 's/libtoolize --version/echo 0/' > $OWLCPPMAINDIR/libxml2-$LIBXML2V/autogen.sh.bak
+		mv $OWLCPPMAINDIR/libxml2-$LIBXML2V/autogen.sh.bak $OWLCPPMAINDIR/libxml2-$LIBXML2V/autogen.sh
+	fi
+	
 	if [ ! -f $OWLCPPMAINDIR/boost_$BOOSTVU/tools/build/v2/b2 ]; then
 		echo "Building boost.build"
 		pushd $OWLCPPMAINDIR/boost_$BOOSTVU/tools/build/v2 > /dev/null
