@@ -51,10 +51,22 @@ DLVHEX_NAMESPACE_BEGIN
 
 namespace dllite{
 
+class DLPluginAtom;
+class CDLAtom;
+class RDLAtom;
+class ConsDLAtom;
+class InconsDLAtom;
+
 class DLLitePlugin:
   public PluginInterface
 {
 public:
+	friend class DLPluginAtom;
+	friend class CDLAtom;
+	friend class RDLAtom;
+	friend class ConsDLAtom;
+	friend class InconsDLAtom;
+
 	// this class caches an ontology
 	// add member variables here if additional information about the ontology must be stored
 	struct CachedOntology{
@@ -90,10 +102,10 @@ public:
 		// returns the set of all individuals which which occur either in the Abox or in the query (including the DL-namespace)
 		InterpretationPtr getAllIndividuals(const PluginAtom::Query& query);
 
-		inline bool isOwlConstant(std::string str) const;
-		inline bool containsNamespace(std::string str) const;
-		inline std::string addNamespaceToString(std::string str) const;
-		inline std::string removeNamespaceFromString(std::string str) const;
+		bool isOwlConstant(std::string str) const;
+		bool containsNamespace(std::string str) const;
+		std::string addNamespaceToString(std::string str) const;
+		std::string removeNamespaceFromString(std::string str) const;
 
 		CachedOntology(RegistryPtr reg);
 		virtual ~CachedOntology();
@@ -133,98 +145,31 @@ public:
 	};
 
 private:
-	// base class for all DL atoms
-	class DLPluginAtom : public PluginAtom{
-	protected:
-		ProgramCtx& ctx;
-		RegistryPtr reg;
-
-		// checks the guard atoms wrt. the Abox, removes them from ng and sets keep to true in this case, and sets keep to false otherwise
-		virtual void guardSupportSet(bool& keep, Nogood& ng, const ID eaReplacement);
-
-		// expands the Abox with the facts given in the interpretation
-		std::vector<TDLAxiom*> expandAbox(const Query& query);
-
-		// recorvers the original Abox
-		void restoreAbox(const Query& query, std::vector<TDLAxiom*> addedAxioms);
-
-		// used for query answering using FaCT++
-		class Actor_collector{
-		public:
-			enum Type{Concept, Role};
-		private:
-			RegistryPtr reg;
-			Type type;
-			Tuple currentTuple;
-			Answer& answer;
-			CachedOntologyPtr ontology;
-		public:
-			Actor_collector(RegistryPtr reg, Answer& answer, CachedOntologyPtr ontology, Type t);
-			virtual ~Actor_collector();
-			bool apply(const TaxonomyVertex& node);
-			void processTuple(Tuple tup);
-		};
-
-	public:
-		DLPluginAtom(std::string predName, ProgramCtx& ctx, bool monotonic = true);
-
-		virtual void retrieve(const Query& query, Answer& answer);
-		virtual void learnSupportSets(const Query& query, NogoodContainerPtr nogoods);
-	};
-
-	// concept queries
-	class CDLAtom : public DLPluginAtom{
-	public:
-		CDLAtom(ProgramCtx& ctx);
-		virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
-	};
-
-	// role queries
-	class RDLAtom : public DLPluginAtom{
-	public:
-		RDLAtom(ProgramCtx& ctx);
-		virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
-	};
-
-	// consistency check
-	class ConsDLAtom : public DLPluginAtom{
-	public:
-		ConsDLAtom(ProgramCtx& ctx);
-		virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
-	};
-
-	// inconsistency check
-	class InconsDLAtom : public DLPluginAtom{
-	public:
-		InconsDLAtom(ProgramCtx& ctx);
-		virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
-	};
-
 	RegistryPtr reg;
 
 protected:
 	// computed the DL-negation of a concept, i.e., "C" --> "-C" resp. checks if the concept is of such a form
-	inline ID dlNeg(ID id);
-	inline bool isDlNeg(ID id);
+	ID dlNeg(ID id);
+	bool isDlNeg(ID id);
 
 	// creates for concept "C" the concept "exC", removes the prefix "ex", (the same for roles) resp. checks if the concept is of such a form
-	inline ID dlEx(ID id);
-	inline ID dlRemoveEx(ID id);
-	inline bool isDlEx(ID id);
+	ID dlEx(ID id);
+	ID dlRemoveEx(ID id);
+	bool isDlEx(ID id);
 
-	inline ID storeQuotedConstantTerm(std::string str);
+	ID storeQuotedConstantTerm(std::string str);
 
 	// check if a string starts with owl:
-	inline bool isOwlType(std::string str) const;
+	bool isOwlType(std::string str) const;
 
 	// get the part of the string after owl:
-	inline std::string getOwlType(std::string str) const;
+	std::string getOwlType(std::string str) const;
 
 	// checks an owl type of form owl:str against a pattern
 	bool cmpOwlType(std::string str, std::string pattern) const;
 
 	// transforms a guard atom into a human-readable string
-	inline std::string printGuardAtom(ID atom);
+	std::string printGuardAtom(ID atom);
 
 	// frequently used IDs
 	ID guardPredicateID, subID, opID, confID, xID, yID, zID;
