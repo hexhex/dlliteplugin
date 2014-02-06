@@ -463,6 +463,14 @@ InterpretationPtr DLLitePlugin::CachedOntology::getAllIndividuals(const PluginAt
 	return allIndividuals;
 }
 
+bool DLLitePlugin::CachedOntology::isOwlConstant(std::string str) const{
+	// if it starts with the namespace, then it is definitely an owl constant
+	if (str.substr(0, ontologyNamespace.length()) == ontologyNamespace || str[0] == '-' && str.substr(1, ontologyNamespace.length()) == ontologyNamespace) return true;
+
+	// otherwise, if it is not a type, then it is a constant
+	return !theDLLitePlugin.isOwlType(str);
+}
+
 bool DLLitePlugin::CachedOntology::checkConceptAssertion(RegistryPtr reg, ID guardAtomID) const{
 	assert(reg->ogatoms.getByAddress(guardAtomID.address).tuple.size() == 3 && "Concept guard atoms must be of arity 2");
 	assert(!theDLLitePlugin.isDlEx(reg->ogatoms.getByID(guardAtomID).tuple[2]) && "existentials in guard atoms are disallowed");
@@ -479,110 +487,7 @@ bool DLLitePlugin::CachedOntology::checkRoleAssertion(RegistryPtr reg, ID guardA
 	return false;
 }
 
-bool DLLitePlugin::CachedOntology::isOwlConstant(std::string str) const{
-	// if it starts with the namespace, then it is definitely an owl constant
-	if (str.substr(0, ontologyNamespace.length()) == ontologyNamespace || str[0] == '-' && str.substr(1, ontologyNamespace.length()) == ontologyNamespace) return true;
-
-	// otherwise, if it is not a type, then it is a constant
-	return !theDLLitePlugin.isOwlType(str);
-}
-
-bool DLLitePlugin::CachedOntology::containsNamespace(std::string str) const{
-	return (str.substr(0, ontologyNamespace.length()) == ontologyNamespace || str[0] == '-' && str.substr(1, ontologyNamespace.length()) == ontologyNamespace);
-}
-
-std::string DLLitePlugin::CachedOntology::addNamespaceToString(std::string str) const{
-	if (str[0] == '-') return "-" + ontologyNamespace + "#" + str.substr(1);
-	else return ontologyNamespace + "#" + str;
-}
-
-std::string DLLitePlugin::CachedOntology::removeNamespaceFromString(std::string str) const{
-	if (!(str.substr(0, ontologyNamespace.length()) == ontologyNamespace || (str[0] == '-' && str.substr(1, ontologyNamespace.length()) == ontologyNamespace))){
-		DBGLOG(WARNING, "Constant \"" + str + "\" appears to be a constant of the ontology, but does not contain its namespace.");
-		return str;
-	}
-	if (str[0] == '-') return '-' + str.substr(ontologyNamespace.length() + 1 + 1); // +1 because of '-', +1 because of '#'
-	return str.substr(ontologyNamespace.length() + 1); // +1 because of '#'
-}
-
 // ============================== Class DLLitePlugin ==============================
-
-ID DLLitePlugin::dlNeg(ID id){
-	if (reg->terms.getByID(id).getUnquotedString()[0] == '-') return storeQuotedConstantTerm(reg->terms.getByID(id).getUnquotedString().substr(1));
-	else return storeQuotedConstantTerm("-" + reg->terms.getByID(id).getUnquotedString());
-}
-
-bool DLLitePlugin::isDlNeg(ID id){
-	return (reg->terms.getByID(id).getUnquotedString()[0] == '-');
-}
-
-ID DLLitePlugin::dlEx(ID id){
-	return storeQuotedConstantTerm("Ex:" + reg->terms.getByID(id).getUnquotedString());
-}
-
-ID DLLitePlugin::dlRemoveEx(ID id){
-	assert(isDlEx(id) && "tried to translate exC to C, but given term is not of form exC");
-	return storeQuotedConstantTerm(reg->terms.getByID(id).getUnquotedString().substr(3));
-}
-
-ID DLLitePlugin::storeQuotedConstantTerm(std::string str){
-#ifndef NDEBUG
-	if (str[0] == '\"'){
-		DBGLOG(WARNING, "Stored string " + str + ", which seems to contain duplicate quotation marks");
-	}
-	if (str.substr(0, 7).compare("http://") == 0 || str.substr(0, 8).compare("https://") == 0){
-		DBGLOG(WARNING, "Stored string " + str + ", which seems to contain an absolute path including namespace; this should not happen");
-	}
-#endif
-	return reg->storeConstantTerm("\"" + str + "\"");
-}
-
-bool DLLitePlugin::isOwlType(std::string str) const{
-
-	// add prefixes to recognize here
-	std::transform(str.begin(), str.end(), str.begin(), ::tolower);
-	if (str.length() > 4 && str.substr(0, 4).compare("owl:") == 0) return true;
-	if (str.length() > 4 && str.substr(0, 4).compare("rdf:") == 0) return true;
-	if (str.length() > 5 && str.substr(0, 5).compare("rdfs:") == 0) return true;
-	return false;
-}
-
-std::string DLLitePlugin::getOwlType(std::string str) const{
-
-        if (str.find_last_of(':') == std::string::npos) return str;
-        else return str.substr(str.find_last_of(':') + 1);
-
-//	assert(isOwlType(str) && "tried to get the type of a string which does not start with owl:");
-//	return str.substr(4);
-}
-
-bool DLLitePlugin::cmpOwlType(std::string str, std::string pattern) const{
-
-	if (!isOwlType(str)) return false;
-	std::string extracted = getOwlType(str);
-
-	std::transform(extracted.begin(), extracted.end(), extracted.begin(), ::tolower);
-	std::transform(pattern.begin(), pattern.end(), pattern.begin(), ::tolower);
-
-	return extracted == pattern;
-}
-
-bool DLLitePlugin::isDlEx(ID id){
-	return (reg->terms.getByID(id).getUnquotedString().substr(0, 3).compare("Ex:") == 0);
-}
-
-std::string DLLitePlugin::printGuardAtom(ID atom){
-
-	const OrdinaryAtom& oatom = reg->lookupOrdinaryAtom(atom);
-	assert(ID(oatom.kind, 0).isGuardAuxiliary() && oatom.tuple[0] == guardPredicateID && "tried to print non-guard atom as guard atom");
-	std::stringstream ss;
-	ss << reg->terms.getByID(oatom.tuple[1]).getUnquotedString();
-	ss << "(";
-	ss << RawPrinter::toString(reg, oatom.tuple[2]);
-	if (oatom.tuple.size() > 3) ss << ", " << RawPrinter::toString(reg, oatom.tuple[3]);
-	ss << ")";
-	return ss.str();
-}
 
 void DLLitePlugin::constructClassificationProgram(ProgramCtx& ctx){
 

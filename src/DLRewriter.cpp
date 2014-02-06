@@ -54,13 +54,6 @@
 #include "boost/foreach.hpp"
 #include "boost/filesystem.hpp"
 
-#include "owlcpp/rdf/triple_store.hpp"
-#include "owlcpp/rdf/query_triples.hpp"
-#include "owlcpp/io/input.hpp"
-#include "owlcpp/io/catalog.hpp"
-#include "owlcpp/logic/triple_to_fact.hpp"
-#include "owlcpp/terms/node_tags_owl.hpp"
-
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/lexical_cast.hpp>
 

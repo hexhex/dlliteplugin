@@ -41,13 +41,6 @@
 #include "dlvhex2/ComponentGraph.h"
 #include "dlvhex2/HexGrammar.h"
 #include "dlvhex2/HexParserModule.h"
-#include <set>
-
-#include "owlcpp/rdf/triple_store.hpp"
-#include "owlcpp/io/input.hpp"
-#include "owlcpp/io/catalog.hpp"
-#include "owlcpp/terms/node_tags_owl.hpp"
-#include "factpp/Kernel.hpp"
 
 DLVHEX_NAMESPACE_BEGIN
 
