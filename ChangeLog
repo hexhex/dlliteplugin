@@ -1,3 +1,12 @@
+2014-02-06  Christoph Redl  <redl@kr.tuwien.ac.at>
+
+	DLRewriter.cpp: Move parser and rewriter to separate class.
+	include/DLRewriter.h: Likewise.
+	ExternalAtoms.cpp: Move external atom definition to separate class.
+	include/ExternalAtoms.h: Likewise.
+	DLLitePlugin.cpp: Likewise.
+	include/DLLitePlugin.h: Likewise.	
+
 2014-01-28  Christoph Redl  <redl@kr.tuwien.ac.at>
 
 	DLLitePlugin.cpp: Implement DL-syntax.
