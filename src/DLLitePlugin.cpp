@@ -270,10 +270,11 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 	assert(!classification && "Classification for this ontology was already computed");
 
 	DBGLOG(DBG, "Computing classification");
-	
-#if 0
+
+	#if 0
 	// Alternatively to the computation of the classification using an ASP program,
-	// it should also be possible to use FaCT++ as follows (but currently this does not work):
+	// it should also be possible to use FaCT++ as follows (but currently this does not work
+	// because getSubConcepts delivers also individuals):
 	classification = InterpretationPtr(new Interpretation(reg));
 	{
 		// for all concepts
@@ -288,7 +289,6 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			std::string subj = to_string(t.subj_, store);
 			std::string obj = to_string(t.obj_, store);
 			std::string pred = to_string(t.pred_, store);
-			
 			{
 				Actor_collector col(*this, res);
 				kernel->getSubConcepts(kernel->getExpressionManager()->Concept(subj), false, col);
@@ -331,7 +331,7 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			
 			{
 				Actor_collector col(*this, res);
-				kernel-> getSubRoles(kernel->getExpressionManager()->ObjectRole(subj), false, col);
+				kernel->getSubRoles(kernel->getExpressionManager()->ObjectRole(subj), false, col);
 				BOOST_FOREACH (std::string sub, res){
 					OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 					fact.tuple.push_back(theDLLitePlugin.subID);
@@ -343,7 +343,7 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 		}
 	}
 	DBGLOG(DBG, "Computed classification " << *classification);
-#endif
+	#endif
 
 	// prepare data structures for the subprogram P
 	InterpretationPtr edb = InterpretationPtr(new Interpretation(reg));
