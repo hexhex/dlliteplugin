@@ -233,12 +233,117 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 	DBGLOG(DBG, "Concept assertions: " << *conceptAssertions);
 }
 
+#if 0
+// This class is required if DLLitePlugin::CachedOntology::computeClassification computes the classification using FaCT++ (see below)
+namespace{
+class Actor_collector{
+private:
+	DLLitePlugin::CachedOntology& ontology;
+	std::vector<std::string>& res;
+public:
+	
+	Actor_collector(DLLitePlugin::CachedOntology& ontology, std::vector<std::string>& res) : ontology(ontology), res(res){
+		DBGLOG(DBG, "Instantiating Actor_collector");
+	}
+	
+	~Actor_collector(){
+	}
+	
+	bool apply(const TaxonomyVertex& node) {
+		DBGLOG(DBG, "Actor collector called with " << node.getPrimer()->getName());
+		std::string returnValue(node.getPrimer()->getName());
+	
+		if (node.getPrimer()->getId() == -1 || !ontology.containsNamespace(returnValue)){
+			DBGLOG(WARNING, "DLLite resoner returned constant " << returnValue << ", which seems to be not a valid individual name (will ignore it)");
+		}else{
+			res.push_back(returnValue);
+		}
+		return true;
+	}
+};
+}
+#endif
+
 // computes the classification for a given ontology
 void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 
 	assert(!classification && "Classification for this ontology was already computed");
 
 	DBGLOG(DBG, "Computing classification");
+	
+#if 0
+	// Alternatively to the computation of the classification using an ASP program,
+	// it should also be possible to use FaCT++ as follows (but currently this does not work):
+	classification = InterpretationPtr(new Interpretation(reg));
+	{
+		// for all concepts
+		owlcpp::Triple_store::result_b<0,1,1,0>::type r = store.find_triple(
+			owlcpp::any(),
+			owlcpp::terms::rdf_type::id(),
+			owlcpp::terms::owl_Class::id(),
+			owlcpp::any());
+		
+		std::vector<std::string> res;
+		BOOST_FOREACH(owlcpp::Triple const& t, r) {
+			std::string subj = to_string(t.subj_, store);
+			std::string obj = to_string(t.obj_, store);
+			std::string pred = to_string(t.pred_, store);
+			
+			{
+				Actor_collector col(*this, res);
+				kernel->getSubConcepts(kernel->getExpressionManager()->Concept(subj), false, col);
+				BOOST_FOREACH (std::string sub, res){
+					OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+					fact.tuple.push_back(theDLLitePlugin.subID);
+					fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(sub)));
+					fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
+					classification->setFact(reg->storeOrdinaryAtom(fact).address);
+				}
+			}
+			{
+				Actor_collector col(*this, res);
+				kernel-> getDisjointConcepts(kernel->getExpressionManager()->Concept(subj), col);
+				BOOST_FOREACH (std::string sub, res){
+					OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+					fact.tuple.push_back(theDLLitePlugin.confID);
+					fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(sub)));
+					fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
+					classification->setFact(reg->storeOrdinaryAtom(fact).address);
+				}
+			}
+		}
+	}
+	
+	{
+		// for all roles
+		owlcpp::Triple_store::result_b<0,1,1,0>::type r = store.find_triple(
+			owlcpp::any(),
+			owlcpp::terms::rdf_type::id(),
+			owlcpp::terms::owl_ObjectProperty::id(),
+			owlcpp::any());
+		
+		
+		std::vector<std::string> res;
+		BOOST_FOREACH(owlcpp::Triple const& t, r) {
+			std::string subj = to_string(t.subj_, store);
+			std::string obj = to_string(t.obj_, store);
+			std::string pred = to_string(t.pred_, store);
+			
+			{
+				Actor_collector col(*this, res);
+				kernel-> getSubRoles(kernel->getExpressionManager()->ObjectRole(subj), false, col);
+				BOOST_FOREACH (std::string sub, res){
+					OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+					fact.tuple.push_back(theDLLitePlugin.subID);
+					fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(sub));
+					fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
+					classification->setFact(reg->storeOrdinaryAtom(fact).address);
+				}
+			}
+		}
+	}
+	DBGLOG(DBG, "Computed classification " << *classification);
+#endif
 
 	// prepare data structures for the subprogram P
 	InterpretationPtr edb = InterpretationPtr(new Interpretation(reg));
