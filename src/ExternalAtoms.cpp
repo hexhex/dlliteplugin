@@ -28,7 +28,7 @@
  * @author Daria Stepanova
  * @author Christoph Redl
  *
- * @brief Implements the externala atoms of the dllite plugin.
+ * @brief Implements the external atoms of the dllite plugin.
  */
 
 #ifdef HAVE_CONFIG_H
