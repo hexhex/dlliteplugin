@@ -25,7 +25,8 @@ do
 		echo "<owl:Thing rdf:about=\"#c$i\"><rdf:type rdf:resource=\"#${concepts[$c]}\"/></owl:Thing>"
 	else
 		# negative (TODO: adopt the syntax)
-		echo "<owl:Thing rdf:about=\"#c$i\"><rdf:type rdf:resource=\"#${concepts[$c]}\"/></owl:Thing>"
+#		echo "<owl:Thing rdf:about=\"#c$i\"><rdf:type rdf:resource=\"#${concepts[$c]}\"/></owl:Thing>"
+echo  "<owl:Thing rdf:about=\"#c$i\"><rdf:type><owl:Class><owl:complementOf rdf:resource=\"#${concepts[$c]}\"/></owl:Class></rdf:type></owl:Thing>"
 	fi
 
 	# for all roles
