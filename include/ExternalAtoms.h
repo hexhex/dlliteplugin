@@ -24,9 +24,9 @@
  */
 
 /**
- * @file ExternalAtoms.h
- * @author Daria Stepanova
- * @author Christoph Redl
+ * @file 	ExternalAtoms.h
+ * @author 	Daria Stepanova <dasha@kr.tuwien.ac.at>
+ * @author 	Christoph Redl <redl@kr.tuwien.ac.at>
  *
  * @brief Implements the external atoms of the dllite plugin.
  */

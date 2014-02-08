@@ -1,7 +1,7 @@
 /* dlvhex -- Answer-Set Programming with external interfaces.
  * Copyright (C) 2005, 2006, 2007 Roman Schindlauer
  * Copyright (C) 2006, 2007, 2008, 2009, 2010 Thomas Krennwallner
- * Copyright (C) 2009, 2010 Peter Schüller
+ * Copyright (C) 2009, 2010, 2011 Peter Schüller
  * Copyright (C) 2011, 2012, 2013, 2014 Christoph Redl
  * Copyright (C) 2014 Daria Stepanova
  * 
@@ -24,9 +24,9 @@
  */
 
 /**
- * @file RepairModelGenerator.cpp
- * @author Daria Stepanova
- * @author Christoph Redl
+ * @file 	RepairModelGenerator.cpp
+ * @author 	Daria Stepanova <dasha@kr.tuwien.ac.at>
+ * @author 	Christoph Redl <redl@kr.tuwien.ac.at>
  *
  * @brief Implementation of the repair model generator for DLLite.
  */

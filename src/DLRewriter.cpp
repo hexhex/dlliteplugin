@@ -24,9 +24,9 @@
  */
 
 /**
- * @file DLRewriter.h
- * @author Daria Stepanova
- * @author Christoph Redl
+ * @file 	DLRewriter.h
+ * @author 	Daria Stepanova <dasha@kr.tuwien.ac.at>
+ * @author 	Christoph Redl <redl@kr.tuwien.ac.at>
  *
  * @brief Implements the rewriter from DL-syntax to HEX.
  */
@@ -65,10 +65,6 @@ namespace ascii = boost::spirit::ascii;
 
 // ============================== Class DLParserModuleSemantics ==============================
 // (needs to be in dlvhex namespace)
-
-#ifndef NDEBUG
-	#define CheckPredefinedIDs ((theDLLitePlugin.subID != ID_FAIL && theDLLitePlugin.opID != ID_FAIL && theDLLitePlugin.confID != ID_FAIL && theDLLitePlugin.xID != ID_FAIL && theDLLitePlugin.yID != ID_FAIL && theDLLitePlugin.zID != ID_FAIL && theDLLitePlugin.guardPredicateID != ID_FAIL))
-#endif
 
 namespace dllite{
 extern dlvhex::dllite::DLLitePlugin theDLLitePlugin;

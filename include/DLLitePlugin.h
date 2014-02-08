@@ -24,9 +24,9 @@
  */
 
 /**
- * @file DLLitePlugin.h
- * @author Daria Stepanova
- * @author Christoph Redl
+ * @file 	DLLitePlugin.h
+ * @author 	Daria Stepanova <dasha@kr.tuwien.ac.at>
+ * @author 	Christoph Redl <redl@kr.tuwien.ac.at>
  *
  * @brief Implements interface to DL-Lite using owlcpp.
  */

@@ -24,9 +24,9 @@
  */
 
 /**
- * @file DLRewriter.h
- * @author Daria Stepanova
- * @author Christoph Redl
+ * @file 	DLRewriter.h
+ * @author 	Daria Stepanova <dasha@kr.tuwien.ac.at>
+ * @author 	Christoph Redl <redl@kr.tuwien.ac.at>
  *
  * @brief Implements the rewriter from DL-syntax to HEX.
  */
