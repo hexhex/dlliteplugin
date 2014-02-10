@@ -1,0 +1,14 @@
+ischildof("john","alex").
+boy("john").
+
+hasfather(X,Y):-&cDL["family.owl",pcb,b,c,d,"Male"](Y), &rDL["family.owl",a,b,c,d,"hasParent"](X,Y).
+
+:-not &cDL["family.owl",a,b,c,d,"Adopted"](X),hasfather(X,Y1),ischildof(X,Y2),Y1!=Y2,not &cDL["family.owl",pcbb,b,c,d,"-Male"](Y2).
+
+contact(X,Y):-&rDL["family.owl",a,b,c,d,hasParent](X,Y), not omit(X,Y).
+
+omit(X,Y):-&cDL["family.owl",a,b,c,d,"Adopted"](X),Z!=Y,hasfather(X,Y), contact(X,Z).
+
+%pcb("Male",X):-boy(X).
+%pcbb("Child",X):-boy(X).
+
