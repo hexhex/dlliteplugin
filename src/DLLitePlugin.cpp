@@ -72,9 +72,6 @@ namespace spirit = boost::spirit;
 namespace qi = boost::spirit::qi;
 namespace ascii = boost::spirit::ascii;
 
-// ============================== Class DLParserModuleSemantics ==============================
-// (needs to be in dlvhex namespace)
-
 #ifndef NDEBUG
 	#define CheckPredefinedIDs ((theDLLitePlugin.subID != ID_FAIL && theDLLitePlugin.opID != ID_FAIL && theDLLitePlugin.confID != ID_FAIL && theDLLitePlugin.xID != ID_FAIL && theDLLitePlugin.yID != ID_FAIL && theDLLitePlugin.zID != ID_FAIL && theDLLitePlugin.guardPredicateID != ID_FAIL))
 #endif
