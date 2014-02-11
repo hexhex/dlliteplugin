@@ -1,15 +1,26 @@
+
+% John is a child of Alex
 ischildof("john","alex").
+
+% John is a boy
 boy("john").
-domain(X):-boy(X).
-domain(X):-&cDL["family.owl",a,b,c,d,"Thing"](X).
+
+% Collect individuals into the domain predicate
+domain(X):-&cDL["family.owl",a,b,c,d,"Domain"](X).
+
+% Collect male parents into father predicate
 hasfather(X,Y):-&cDL["family.owl",pcb,b,c,d,"Male"](Y), &rDL["family.owl",a,b,c,d,"hasParent"](X,Y).
 
-:-not &cDL["family.owl",a,b,c,d,"Adopted"](X),hasfather(X,Y1),ischildof(X,Y2),Y1!=Y2,not &cDL["family.owl",pcbb,b,c,d,"-Male"](Y2), domain(Y1), domain(Y2).
+% Unless a child is adopted he can not have two mae parents
+:-not &cDL["family.owl",a,b,c,d,"Adopted"](X),hasfather(X,Y1),ischildof(X,Y2), Y1!=Y2,not &cDL["family.owl", pcbb,b,c,d,"-Male"](Y2).
 
+% For a certain child pick a parent whom to contact
 contact(X,Y):-&rDL["family.owl",a,b,c,d,hasParent](X,Y), not omit(X,Y).
 
+% Omit a contact if he is a father of an adopted child
 omit(X,Y):-&cDL["family.owl",a,b,c,d,"Adopted"](X),Z!=Y,hasfather(X,Y), contact(X,Z).
 
-%pcb("Male",X):-boy(X).
-%pcbb("Child",X):-boy(X).
+% predicates specifying updating information
+pcb("Male",X):-boy(X).
+pcbb("Child",X):-boy(X).
 
