@@ -928,10 +928,12 @@ void DLLitePlugin::prepareIDs(){
 	guardPredicateID = reg->getAuxiliaryConstantSymbol('o', ID(0, 0));
 }
  
+// Check whether custom model generator is enabled 
 bool DLLitePlugin::providesCustomModelGeneratorFactory(ProgramCtx& ctx) const{
 	return ctx.getPluginData<DLLitePlugin>().repair;
 }
 
+// Create repair model generator
 BaseModelGeneratorFactoryPtr DLLitePlugin::getCustomModelGeneratorFactory(ProgramCtx& ctx, const ComponentGraph::ComponentInfo& ci) const{
 	return BaseModelGeneratorFactoryPtr(new RepairModelGeneratorFactory(ctx, ci));
 }

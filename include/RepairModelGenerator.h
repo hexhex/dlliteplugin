@@ -1,7 +1,7 @@
 /* dlvhex -- Answer-Set Programming with external interfaces.
  * Copyright (C) 2005, 2006, 2007 Roman Schindlauer
  * Copyright (C) 2006, 2007, 2008, 2009, 2010 Thomas Krennwallner
- * Copyright (C) 2009, 2010, 2011 Peter Schüller
+  * Copyright (C) 2009, 2010, 2011 Peter Schüller
  * Copyright (C) 2011, 2012, 2013, 2014 Christoph Redl
  * Copyright (C) 2014 Daria Stepanova
  * 
@@ -27,7 +27,6 @@
  * @file   RepairModelGenerator.hpp
  * @author Daria Stepanova <dasha@kr.tuwien.ac.at>
  * @author Christoph Redl <redl@kr.tuwien.ac.at>
- * 
  * @brief  Repair Model generator for DLLite.
  *
  * Those units may be of any form.
@@ -52,7 +51,6 @@
 DLVHEX_NAMESPACE_BEGIN
 
 namespace dllite{
-
 // the factory
 class RepairModelGeneratorFactory:
   public FLPModelGeneratorFactoryBase,
@@ -65,8 +63,8 @@ public:
 
   // storage
 protected:
+  // which solver shall be used for external evaluation?
   ProgramCtx& ctx;
-
   ComponentInfo ci;  // should be a reference, but there is currently a bug in the copy constructor of ComponentGraph: it seems that the component info is shared between different copies of a component graph, hence it is deallocated when one of the copies dies.
   #warning TODO see comment above about ComponentInfo copy construction bug
 
@@ -88,11 +86,29 @@ public:
   virtual std::ostream& print(std::ostream& o, bool verbose) const;
 };
 
+class HeuristicsModelGeneratorInterface{
+public:
+	/**
+	* Checks if an external atom auxiliary value can be taken for sure (i.e. it has already been verified against the external source).
+	* The internal check depends on the selected eaVerificationMode.
+	* @param eaAux The ID of the auxiliary in question
+	* @param factWasSet The set of atoms assigned so far
+	*/
+	virtual bool isVerified(ID eaAux, InterpretationConstPtr factWasSet) = 0;
+
+	/**
+	* Returns the ground program in this component
+	* @return const std::vector<ID>& Reference to the ground program in this component
+	*/
+	virtual const OrdinaryASPProgram& getGroundProgram() = 0;
+};
+
 // the model generator (accesses and uses the factory)
 class RepairModelGenerator:
   public FLPModelGeneratorBase,
   public ostream_printable<RepairModelGenerator>,
-  public PropagatorCallback
+  public PropagatorCallback,
+  public HeuristicsModelGeneratorInterface
 {
   // types
 public:
@@ -108,6 +124,8 @@ protected:
   std::vector<bool> eaVerified;
   std::vector<bool> eaEvaluated;
   boost::unordered_map<IDAddress, std::vector<int> > verifyWatchList;
+  ExternalAtomEvaluationHeuristicsPtr externalAtomEvalHeuristics;
+  UnfoundedSetCheckHeuristicsPtr ufsCheckHeuristics;
 
   // edb + original (input) interpretation plus auxiliary atoms for evaluated external atoms
   InterpretationConstPtr postprocessedInput;
@@ -131,6 +149,11 @@ protected:
   void generalizeNogood(Nogood ng);
 
   /**
+   * Learns all support sets provided by external sources and adds them to supportSets
+   */
+  void learnSupportSets();
+
+  /**
    * Triggern nonground nogood learning and instantiation
    * Transferes new nogoods from learnedEANogoods to the solver and updates learnedEANogoodsTransferredIndex accordingly
    */
@@ -141,9 +164,8 @@ protected:
    * Depending on the eaVerificationMode, the compatibility is either directly checked in this function,
    *   of previously recorded verfication results are used to compute the return value.
    */
-  //************bool finalCompatibilityCheck(InterpretationConstPtr modelCandidate);
+
    bool repairCheck(InterpretationConstPtr modelCandidate);
-  
 
   /**
    * Checks if a compatible set is a model, i.e., it does the FLP check.
@@ -217,6 +239,7 @@ protected:
   void propagate(InterpretationConstPtr partialInterpretation, InterpretationConstPtr factWasSet, InterpretationConstPtr changed);
 
   // initialization
+  void setHeuristics();
 
 public:
   RepairModelGenerator(Factory& factory, InterpretationConstPtr input);
@@ -227,7 +250,6 @@ public:
 };
 
 }
-
 DLVHEX_NAMESPACE_END
 
 #endif // GUESSANDCHECK_MODEL_GENERATOR_HPP_INCLUDED

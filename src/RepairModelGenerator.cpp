@@ -35,7 +35,6 @@
 #include "config.h"
 #endif
 
-
 #include "RepairModelGenerator.h"
 #include "dlvhex2/Logger.h"
 #include "dlvhex2/Registry.h"
@@ -55,14 +54,13 @@
 DLVHEX_NAMESPACE_BEGIN
 
 namespace dllite{
-
 RepairModelGeneratorFactory::RepairModelGeneratorFactory(
     ProgramCtx& ctx,
     const ComponentInfo& ci):
-  FLPModelGeneratorFactoryBase(ctx),
-  ctx(ctx),
-  ci(ci),
-  outerEatoms(ci.outerEatoms)
+    FLPModelGeneratorFactoryBase(ctx),
+    ctx(ctx),
+    ci(ci),
+    outerEatoms(ci.outerEatoms)
 {
   // this model generator can handle any components
   // (and there is quite some room for more optimization)
@@ -223,9 +221,10 @@ RepairModelGenerator::RepairModelGenerator(
           "outer eatom computations");
       DLVHEX_BENCHMARK_COUNT(sidcountexternalatomcomps,1);
 
-      assert(!factory.xidb.empty() &&
-          "the guess and check model generator is not required for "
-          "non-idb components! (use plain)");
+//	We might still want to use G&C model generator even if it is not required (e.g. if support sets are used)
+//      assert(!factory.xidb.empty() &&
+//          "the guess and check model generator is not required for "
+//          "non-idb components! (use plain)");
     }
 
     // compute extensions of domain predicates and add it to the input
@@ -249,17 +248,8 @@ RepairModelGenerator::RepairModelGenerator(
 	{
 		DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidhexground, "HEX grounder time");
 		grounder = GenuineGrounder::getInstance(factory.ctx, program);
-		
-		/*
-		RawPrinter rp(std::cout, factory.ctx.registry());
-		std::cout << "nonground: " << std::endl;
-		BOOST_FOREACH (ID rid, program.idb) rp.print(rid);
-		std::cout << "ground: " << std::endl;
-		BOOST_FOREACH (ID rid, grounder->getGroundProgram().idb) rp.print(rid);
-		*/
-
 		annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.innerEatoms);
-    }
+	}
 	solver = GenuineGroundSolver::getInstance(
 		factory.ctx, annotatedGroundProgram,
 		// no interleaved threading because guess and check MG will likely not profit from it
@@ -277,11 +267,14 @@ RepairModelGenerator::RepairModelGenerator(
 	  solver->addPropagator(this);
     }
 
+    setHeuristics();
+
+    learnSupportSets();
 
     // initialize UFS checker
     //   Concerning the last parameter, note that clasp backend uses choice rules for implementing disjunctions:
     //   this must be regarded in UFS checking (see examples/trickyufs.hex)
-    ufscm = UnfoundedSetCheckerManagerPtr(new UnfoundedSetCheckerManager(*this, factory.ctx, annotatedGroundProgram, factory.ctx.config.getOption("GenuineSolver") >= 3));
+    ufscm = UnfoundedSetCheckerManagerPtr(new UnfoundedSetCheckerManager(*this, factory.ctx, annotatedGroundProgram, factory.ctx.config.getOption("GenuineSolver") >= 3, factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : SimpleNogoodContainerPtr()));
 
     // overtake nogoods from the factory
     {
@@ -289,7 +282,7 @@ RepairModelGenerator::RepairModelGenerator(
       for (int i = 0; i < factory.globalLearnedEANogoods->getNogoodCount(); ++i){
         learnedEANogoods->addNogood(factory.globalLearnedEANogoods->getNogood(i));
       }
-      updateEANogoods();
+      //updateEANogoods();
     }
 }
 
@@ -297,6 +290,7 @@ RepairModelGenerator::~RepairModelGenerator(){
 	solver->removePropagator(this);
 	DBGLOG(DBG, "Final Statistics:" << std::endl << solver->getStatistics());
 }
+
 
 
 InterpretationPtr RepairModelGenerator::generateNextModel()
@@ -310,7 +304,7 @@ InterpretationPtr RepairModelGenerator::generateNextModel()
 	{
 		LOG(DBG,"asking for next model");
 		modelCandidate = solver->getNextModel();
-
+//*** model is returned
 		DBGLOG(DBG, "Statistics:" << std::endl << solver->getStatistics());
 		if( !modelCandidate )
 		{
@@ -318,15 +312,14 @@ InterpretationPtr RepairModelGenerator::generateNextModel()
 			return InterpretationPtr();
 		}
 		DLVHEX_BENCHMARK_REGISTER_AND_COUNT(ssidmodelcandidates, "Candidate compatible sets", 1);
-
 		LOG_SCOPE(DBG,"gM", false);
-		
+		LOG(DBG,"got guess model, will do compatibility check on " << *modelCandidate);
 		if (!repairCheck(modelCandidate))
 		{
 			LOG(DBG,"No repair that turns a model candidate into a compatible set was found");
 		}
-		
-		DBGLOG(DBG, "Checking if a model candidate is a model");
+
+		DBGLOG(DBG, "Checking if model candidate is a model");
 		if (!isModel(modelCandidate))
 		{
 			LOG(DBG,"Model candidate is not a model (isModel failed)");
@@ -337,7 +330,7 @@ InterpretationPtr RepairModelGenerator::generateNextModel()
 		modelCandidate->getStorage() -= factory.gpMask.mask()->getStorage();
 		modelCandidate->getStorage() -= factory.gnMask.mask()->getStorage();
 		modelCandidate->getStorage() -= mask->getStorage();
-		
+
 		LOG(DBG,"returning model without guess: " << *modelCandidate);
 		return modelCandidate;
 	}while(true);
@@ -368,6 +361,192 @@ void RepairModelGenerator::generalizeNogood(Nogood ng){
 	ea.pluginAtom->generalizeNogood(ng, &factory.ctx, learnedEANogoods);
 }
 
+void RepairModelGenerator::learnSupportSets(){
+
+	if (factory.ctx.config.getOption("SupportSets")){
+		SimpleNogoodContainerPtr potentialSupportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
+		SimpleNogoodContainerPtr supportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
+		for(unsigned eaIndex = 0; eaIndex < factory.innerEatoms.size(); ++eaIndex){
+//			InterpretationPtr evalIntr(new Interpretation(factory.reg));
+
+			// make sure that ALL input and input auxiliary atoms are true
+//			evalIntr->getStorage() |= annotatedGroundProgram.getEAMask(eaIndex)->mask()->getStorage();
+
+			// evaluate the external atom if it provides support sets
+			const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
+			if (eatom.getExtSourceProperties().providesSupportSets()){
+				DBGLOG(DBG, "Evaluating external atom " << factory.innerEatoms[eaIndex] << " for support set learning");
+//				IntegrateExternalAnswerIntoInterpretationCB dummyCB(evalIntr);
+				learnSupportSetsForExternalAtom(factory.ctx, eatom, potentialSupportSets);
+			}
+		}
+
+		DLVHEX_BENCHMARK_REGISTER(sidnongroundpsupportsets, "nonground potential supportsets");
+		DLVHEX_BENCHMARK_COUNT(sidnongroundpsupportsets, potentialSupportSets->getNogoodCount());
+
+		// ground the support sets exhaustively
+		NogoodGrounderPtr nogoodgrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), potentialSupportSets, potentialSupportSets, annotatedGroundProgram));
+
+		int nc = 0;
+		while (nc < potentialSupportSets->getNogoodCount()){
+			nc = potentialSupportSets->getNogoodCount();
+			nogoodgrounder->update();
+		}
+                DLVHEX_BENCHMARK_REGISTER(sidgroundpsupportsets, "ground potential supportsets");
+                DLVHEX_BENCHMARK_COUNT(sidgroundpsupportsets, supportSets->getNogoodCount());
+
+		// all support sets are also learned nogoods
+		bool keep;
+		for (int i = 0; i < potentialSupportSets->getNogoodCount(); ++i){
+			const Nogood& ng = potentialSupportSets->getNogood(i);
+			if (ng.isGround()){
+				// determine the external atom replacement in ng
+				ID eaAux = ID_FAIL;
+				BOOST_FOREACH (ID lit, ng){
+					if (reg->ogatoms.getIDByAddress(lit.address).isExternalAuxiliary()){
+						if (eaAux != ID_FAIL) throw GeneralError("Set " + ng.getStringRepresentation(reg) + " is not a valid support set because it contains multiple external literals");
+						eaAux = lit;
+					}
+				}
+				if (eaAux == ID_FAIL) throw GeneralError("Set " + ng.getStringRepresentation(reg) + " is not a valid support set because it contains no external literals");
+
+				// determine the according external atom
+				if (annotatedGroundProgram.mapsAux(eaAux.address)){
+					DBGLOG(DBG, "Evaluating guards of " << ng.getStringRepresentation(reg));
+					keep = true;
+					Nogood ng2 = ng;
+					reg->eatoms.getByID(annotatedGroundProgram.getAuxToEA(eaAux.address)[0]).pluginAtom->guardSupportSet(keep, ng2, eaAux);
+					if (keep){
+#ifdef DEBUG
+						// ng2 must be a subset of ng and still a valid support set
+						ID aux = ID_FAIL;
+						BOOST_FOREACH (ID id, ng2){
+							if (reg->ogatoms.getIDByAddress(id.address).isExternalAuxiliary()) aux = id;
+							assert(std::find(ng.begin(), ng.end(), id) != ng.end());
+						}
+						assert(aux != ID_FAIL);
+#endif
+						DBGLOG(DBG, "Keeping in form " << ng2.getStringRepresentation(reg));
+						learnedEANogoods->addNogood(ng2);
+						supportSets->addNogood(ng2);
+#ifdef DEBUG
+					}else{
+						assert(ng == ng2);
+						DBGLOG(DBG, "Rejecting " << ng2.getStringRepresentation(reg));
+#endif
+					}
+				}
+			}
+		}
+
+                DLVHEX_BENCHMARK_REGISTER(sidgroundsupportsets, "final ground supportsets");
+                DLVHEX_BENCHMARK_COUNT(sidgroundsupportsets, supportSets->getNogoodCount());
+
+
+
+
+
+
+
+
+
+
+#if 0
+		// generate rules for this support set
+		int sscnt = 0;
+		typedef std::pair<ID, Nogood> SupportSetPair;
+		std::map<ID, Nogood> supportsetsForEA;
+		OrdinaryASPProgram program(reg, factory.xidb, postprocessedInput, factory.ctx.maxint);
+		program.idb.insert(program.idb.end(), factory.gidb.begin(), factory.gidb.end());
+
+
+		for (int i = 0; i < supportSets->getNogoodCount(); ++i){
+			Nogood& supportset = supportSets->getNogood(i);
+
+			// find the external atom replacement in this support set
+			ID ea = ID_FAIL;
+			BOOST_FOREACH (ID id, supportset){
+				ID bId = reg->ogatoms.getIDByAddress(id.address);
+				if ((bId.kind & ID::PROPERTY_EXTERNALAUX) == ID::PROPERTY_EXTERNALAUX){
+					if (ea != ID_FAIL) throw GeneralError("Support set " + supportset.getStringRepresentation(reg) + " is invalid becaues it contains multiple external atom replacement literals");
+					ea = bId;
+				}
+			}
+			if (ea == ID_FAIL) throw GeneralError("Support set " + supportset.getStringRepresentation(reg) + " is invalid becaues it contains no external atom replacement literal");
+
+			// create a new support set for this external atom if not already present
+			if (supportsetsForEA.find(ea) == supportsetsForEA.end()){
+				OrdinaryAtom repl = reg->ogatoms.getByID(ea);
+				repl.tuple[0] = reg->getAuxiliaryConstantSymbol('r', reg->getIDByAuxiliaryConstantSymbol(repl.tuple[0]));
+				supportsetsForEA[ea].insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(repl)));
+			}
+
+			Rule ssviolation(ID::MAINKIND_RULE | ID::SUBKIND_RULE_CONSTRAINT);
+			BOOST_FOREACH (ID id, supportset){
+				ID bId = ID::posLiteralFromAtom(reg->ogatoms.getIDByAddress(id.address));
+				if (bId != ea){
+
+					if (id.isNaf()) bId.kind |= ID::NAF_MASK;
+					ssviolation.body.push_back(bId);
+
+					Rule derive(ID::MAINKIND_RULE);
+					OrdinaryAtom hatom(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
+					hatom.tuple.push_back(reg->getAuxiliaryConstantSymbol('r', ID(0, sscnt++)));	// new atom
+					ID sup = reg->storeOrdinaryAtom(hatom);
+					derive.head.push_back(sup);
+					ID negBId = bId;
+					negBId.kind ^= ID::NAF_MASK;
+					derive.body.push_back(negBId);
+					ID deriveID = reg->storeRule(derive);
+					DBGLOG(DBG, "Generating rule " << RawPrinter::toString(reg, deriveID) << " for support set " << supportset.getStringRepresentation(reg));
+					program.idb.push_back(deriveID);
+					supportsetsForEA[ea].insert(NogoodContainer::createLiteral(sup));
+				}
+			}
+			ID ssviolationID = reg->storeRule(ssviolation);
+			DBGLOG(DBG, "Generating constraint " << RawPrinter::toString(reg, ssviolationID) << " for support set " << supportset.getStringRepresentation(reg));
+			program.idb.push_back(ssviolationID);
+		}
+
+		BOOST_FOREACH (SupportSetPair ssp, supportsetsForEA){
+			Rule completeness(ID::MAINKIND_RULE | ID::SUBKIND_RULE_CONSTRAINT);
+			BOOST_FOREACH (ID id, ssp.second) completeness.body.push_back(ID::posLiteralFromAtom(reg->ogatoms.getIDByAddress(id.address)));
+			ID completenessID = reg->storeRule(completeness);
+			DBGLOG(DBG, "Generating completeness rule " << RawPrinter::toString(reg, completenessID));
+			program.idb.push_back(completenessID);
+		}
+
+		DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidhexground, "HEX grounder time");
+		grounder = GenuineGrounder::getInstance(factory.ctx, program);
+		annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.innerEatoms);
+
+		solver = GenuineGroundSolver::getInstance(
+			factory.ctx, annotatedGroundProgram,
+			// no interleaved threading because guess and check MG will likely not profit from it
+			false,
+			// do the UFS check for disjunctions only if we don't do
+			// a minimality check in this class;
+			// this will not find unfounded sets due to external sources,
+			// but at least unfounded sets due to disjunctions
+			!factory.ctx.config.getOption("FLPCheck") && !factory.ctx.config.getOption("UFSCheck"));
+		nogoodGrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), learnedEANogoods, learnedEANogoods, annotatedGroundProgram));
+
+		if( factory.ctx.config.getOption("NoPropagator") == 0 )
+		  solver->addPropagator(this);
+#endif
+
+
+
+
+
+
+
+		// add them to the annotated ground program to make use of them for verification
+		DBGLOG(DBG, "Adding " << supportSets->getNogoodCount() << " support sets to annotated ground program");
+		annotatedGroundProgram.setCompleteSupportSetsForVerification(supportSets);
+	}
+}
+
 void RepairModelGenerator::updateEANogoods(
 	InterpretationConstPtr compatibleSet,
 	InterpretationConstPtr factWasSet,
@@ -387,7 +566,7 @@ void RepairModelGenerator::updateEANogoods(
 	}
 
 	// transfer nogoods to the solver
-	DLVHEX_BENCHMARK_REGISTER_AND_COUNT(sidcompatiblesets, "Learned EA-Nogoods", learnedEANogoods->getNogoodCount()-learnedEANogoodsTransferredIndex);
+	DLVHEX_BENCHMARK_REGISTER_AND_COUNT(sidcompatiblesets, "Learned EA-Nogoods", learnedEANogoods->getNogoodCount() - learnedEANogoodsTransferredIndex);
 	for (int i = learnedEANogoodsTransferredIndex; i < learnedEANogoods->getNogoodCount(); ++i){
 		const Nogood& ng = learnedEANogoods->getNogood(i);
 		if (factory.ctx.config.getOption("PrintLearnedNogoods")){
@@ -417,6 +596,7 @@ void RepairModelGenerator::updateEANogoods(
 	if (factory.ctx.config.getOption("UFSCheckAssumptionBased") ||
 	    (annotatedGroundProgram.hasECycles() == 0 && factory.ctx.config.getOption("FLPDecisionCriterionE"))){
 		ufscm->learnNogoodsFromMainSearch(true);
+	//	nogoodGrounder->resetWatched(learnedEANogoods);
 		learnedEANogoods->clear();
 	}else{
 		learnedEANogoods->forgetLeastFrequentlyAdded();
@@ -472,7 +652,7 @@ bool RepairModelGenerator::isModel(InterpretationConstPtr compatibleSet){
 				DBGLOG(DBG, "FLP Check");
 				// do FLP check (possibly with nogood learning) and add the learned nogoods to the main search
 				bool result = isSubsetMinimalFLPModel<GenuineSolver>(compatibleSet, postprocessedInput, factory.ctx, factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : SimpleNogoodContainerPtr());
-				updateEANogoods(compatibleSet);
+				//updateEANogoods(compatibleSet);
 				return result;
 			}
 
@@ -480,7 +660,7 @@ bool RepairModelGenerator::isModel(InterpretationConstPtr compatibleSet){
 			if (factory.ctx.config.getOption("UFSCheck")){
 				DBGLOG(DBG, "UFS Check");
 				std::vector<IDAddress> ufs = ufscm->getUnfoundedSet(compatibleSet, std::set<ID>(), factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : SimpleNogoodContainerPtr());
-				updateEANogoods(compatibleSet);
+				//updateEANogoods(compatibleSet);
 				if (ufs.size() > 0){
 					DBGLOG(DBG, "Got a UFS");
 					if (factory.ctx.config.getOption("UFSLearning")){
@@ -501,7 +681,38 @@ bool RepairModelGenerator::isModel(InterpretationConstPtr compatibleSet){
 }
 
 bool RepairModelGenerator::partialUFSCheck(InterpretationConstPtr partialInterpretation, InterpretationConstPtr factWasSet, InterpretationConstPtr changed){
-	//DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid, "genuine g&c partialUFSchk");
+	DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid, "genuine g&c partialUFSchk");
+
+	if (!factory.ctx.config.getOption("UFSCheck")) return false;
+
+	// ufs check without nogood learning makes no sense if the interpretation is not complete
+	if (factory.ctx.config.getOption("UFSLearning")){
+
+		std::pair<bool, std::set<ID> > decision = ufsCheckHeuristics->doUFSCheck(partialInterpretation, factWasSet, changed);
+
+		if (decision.first){
+
+			DBGLOG(DBG, "Heuristic decides to do an UFS check");
+			std::vector<IDAddress> ufs = ufscm->getUnfoundedSet(partialInterpretation, decision.second, factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : SimpleNogoodContainerPtr());
+			DBGLOG(DBG, "UFS result: " << (ufs.size() == 0 ? "no" : "") << " UFS found (interpretation: " << *partialInterpretation << ", assigned: " << *factWasSet << ")");
+
+			if (ufs.size() > 0){
+				Nogood ng = ufscm->getLastUFSNogood();
+				DBGLOG(DBG, "Adding UFS nogood: " << ng);
+				solver->addNogood(ng);
+
+				// check if nogood is violated
+				BOOST_FOREACH (ID l, ng){
+					if (!factWasSet->getFact(l.address) || l.isNaf() == partialInterpretation->getFact(l.address)) return false;
+				}
+
+				return true;
+			}
+		}else{
+			DBGLOG(DBG, "Heuristic decides not to do an UFS check");
+		}
+	}
+
 	return false;
 }
 
@@ -617,21 +828,7 @@ bool RepairModelGenerator::verifyExternalAtoms(InterpretationConstPtr partialInt
 
 	      // *en is our new watch (as it is either undefined or was recently changed)
 	      verifyWatchList[*en].push_back(eaIndex);
-/*
-	      if (!factWasSet->getFact(*en)){
-		      // XXX why can't we just watch *en? it is undefined
-		      // watch a yet unassigned atom such that the external atom depends on it
-		      IDAddress id = getWatchedLiteral(eaIndex, factWasSet, false);
-		      assert(id != ID::ALL_ONES);
-		      verifyWatchList[id].push_back(eaIndex);
-	      }else{
-		      // XXX why can't we just watch *en? it is changed
-		      // watch a changed atom
-		      IDAddress id = getWatchedLiteral(eaIndex, changed, true);
-		      assert(id != ID::ALL_ONES);
-		      verifyWatchList[id].push_back(eaIndex);
-	      }
-*/
+
 	      // leave, we are done with this external atom as we set eaEvaluated to false
 	      break;
 	    }
@@ -643,6 +840,7 @@ bool RepairModelGenerator::verifyExternalAtoms(InterpretationConstPtr partialInt
 	bool conflict = false;
 	en = changed->getStorage().first();
 	en_end = changed->getStorage().end();
+
 	while (en < en_end){
 		// for all external atoms which watch this atom
 		if (factWasSet->getFact(*en)){
@@ -653,7 +851,7 @@ bool RepairModelGenerator::verifyExternalAtoms(InterpretationConstPtr partialInt
 					bool doEval;
 					{
 					  DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid, "genuine g&c verifyEAtoms eh");
-					  doEval = false;
+					  doEval = externalAtomEvalHeuristics->doEvaluate(eatom, annotatedGroundProgram.getEAMask(eaIndex)->mask(), annotatedGroundProgram.getProgramMask(), partialInterpretation, factWasSet, changed);
 					}
 					if (doEval){
 						// evaluate it
@@ -681,37 +879,55 @@ bool RepairModelGenerator::verifyExternalAtom(int eaIndex, InterpretationConstPt
 	       	InterpretationConstPtr factWasSet, InterpretationConstPtr changed){
 	DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid, "genuine g&c verifyEAtom");
 
-	// prepare EA evaluation
-	InterpretationConstPtr mask = (annotatedGroundProgram.getEAMask(eaIndex)->mask());
 	const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
-	VerifyExternalAtomCB vcb(partialInterpretation, eatom, *(annotatedGroundProgram.getEAMask(eaIndex)));
 
-	InterpretationConstPtr evalIntr = partialInterpretation;
-	if (!factory.ctx.config.getOption("IncludeAuxInputInAuxiliaries")){
-		// make sure that ALL input auxiliary atoms are true, otherwise we might miss some output atoms and consider true output atoms wrongly as unfounded
-		// clone and extend
-		InterpretationPtr ncevalIntr(new Interpretation(*partialInterpretation));
-		ncevalIntr->getStorage() |= annotatedGroundProgram.getEAMask(eaIndex)->getAuxInputMask()->getStorage();
-		evalIntr = ncevalIntr;
-	}
-	// evaluate the external atom (and learn nogoods if external learning is used)
-	DBGLOG(DBG, "Verifying external Atom " << factory.innerEatoms[eaIndex] << " under " << *evalIntr);
-	evaluateExternalAtom(factory.ctx, eatom, evalIntr, vcb, factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : NogoodContainerPtr());
-	updateEANogoods(partialInterpretation, factWasSet, changed);
+	// if support sets are enabled, and the external atom provides complete support sets, we use them for verification
+	if (factory.ctx.config.getOption("SupportSets") && (eatom.getExtSourceProperties().providesCompletePositiveSupportSets() || eatom.getExtSourceProperties().providesCompleteNegativeSupportSets()) && annotatedGroundProgram.allowsForVerificationUsingCompleteSupportSets()){
+		assert (!factWasSet && !changed && " verification using complete support sets is only possible wrt. complete interpretations");
 
-	// if the input to the external atom was complete, then remember the verification result
-	// (for incomplete input we cannot yet decide this)
-	if( !factWasSet || bm::any_sub( annotatedGroundProgram.getEAMask(eaIndex)->mask()->getStorage(), factWasSet->getStorage() ) ) {
-		bool verify = vcb.verify();
-		DBGLOG(DBG, "Verifying " << factory.innerEatoms[eaIndex] << " (Result: " << verify << ")");
-		eaVerified[eaIndex] = verify;
+		eaVerified[eaIndex] = annotatedGroundProgram.verifyExternalAtomsUsingCompleteSupportSets(eaIndex, partialInterpretation, InterpretationPtr());
+
 		// we remember that we evaluated, only if there is a propagator that can undo this memory (that can unverify an eatom during model search)
-		if( factory.ctx.config.getOption("NoPropagator") == 0 )
+		if( factory.ctx.config.getOption("NoPropagator") == 0 ){
 		  eaEvaluated[eaIndex] = true;
+		}
 
-		return !verify;
+		return !eaVerified[eaIndex];
 	}else{
-		return false;
+		// otherwise we need to evaluate the external atom
+
+		// prepare EA evaluation
+		InterpretationConstPtr mask = (annotatedGroundProgram.getEAMask(eaIndex)->mask());
+		VerifyExternalAtomCB vcb(partialInterpretation, eatom, *(annotatedGroundProgram.getEAMask(eaIndex)));
+
+		InterpretationConstPtr evalIntr = partialInterpretation;
+		if (!factory.ctx.config.getOption("IncludeAuxInputInAuxiliaries")){
+			// make sure that ALL input auxiliary atoms are true, otherwise we might miss some output atoms and consider true output atoms wrongly as unfounded
+			// clone and extend
+			InterpretationPtr ncevalIntr(new Interpretation(*partialInterpretation));
+			ncevalIntr->getStorage() |= annotatedGroundProgram.getEAMask(eaIndex)->getAuxInputMask()->getStorage();
+			evalIntr = ncevalIntr;
+		}
+		// evaluate the external atom (and learn nogoods if external learning is used)
+		DBGLOG(DBG, "Verifying external Atom " << factory.innerEatoms[eaIndex] << " under " << *evalIntr);
+		evaluateExternalAtom(factory.ctx, eatom, evalIntr, vcb, factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : NogoodContainerPtr());
+		//updateEANogoods(partialInterpretation, factWasSet, changed);
+
+		// if the input to the external atom was complete, then remember the verification result
+		// (for incomplete input we cannot yet decide this)
+		if( !factWasSet || !bm::any_sub( annotatedGroundProgram.getEAMask(eaIndex)->mask()->getStorage() & annotatedGroundProgram.getProgramMask()->getStorage(), factWasSet->getStorage() & annotatedGroundProgram.getProgramMask()->getStorage() ) ) {
+			bool verify = vcb.verify();
+			DBGLOG(DBG, "Verifying " << factory.innerEatoms[eaIndex] << " (Result: " << verify << ")");
+			eaVerified[eaIndex] = verify;
+			// we remember that we evaluated, only if there is a propagator that can undo this memory (that can unverify an eatom during model search)
+			if( factory.ctx.config.getOption("NoPropagator") == 0 ){
+			  eaEvaluated[eaIndex] = true;
+		        }
+
+			return !verify;
+		}else{
+			return false;
+		}
 	}
 }
 
@@ -730,7 +946,6 @@ void RepairModelGenerator::propagate(InterpretationConstPtr partialInterpretatio
 }
 
 }
-
 DLVHEX_NAMESPACE_END
 
 // vi:ts=8:noexpandtab:
