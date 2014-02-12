@@ -519,7 +519,15 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 #ifndef NDEBUG
 	DBGLOG(DBG, "LSS: Using the following facts as input to the classification program: " << *edb);
 #endif
-	std::vector<InterpretationPtr> answersets = ctx.evaluateSubprogram(edb, theDLLitePlugin.classificationIDB);
+
+	// evaluate the classification program without custom model generators
+	ProgramCtx pc = ctx;
+	pc.idb = theDLLitePlugin.classificationIDB;
+	pc.edb = edb;
+	pc.currentOptimum.clear();
+	pc.customModelGeneratorProvider.reset();
+
+	std::vector<InterpretationPtr> answersets = ctx.evaluateSubprogram(pc, false);
 	assert(answersets.size() == 1 && "Subprogram must have exactly one answer set");
 	DBGLOG(DBG, "Classification: " << *answersets[0]);
 
