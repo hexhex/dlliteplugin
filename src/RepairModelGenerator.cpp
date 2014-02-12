@@ -268,7 +268,7 @@ RepairModelGenerator::RepairModelGenerator(
     }
 
    // setHeuristics();
-
+ DBGLOG(DBG,"learning support sets is started");
     learnSupportSets();
 
     // initialize UFS checker
@@ -363,8 +363,9 @@ void RepairModelGenerator::generalizeNogood(Nogood ng){
 }
 
 void RepairModelGenerator::learnSupportSets(){
-
+	DBGLOG(DBG,"learning support sets is started")
 	if (factory.ctx.config.getOption("SupportSets")){
+	DBGLOG(DBG,"Option supportsets is recognized");
 		SimpleNogoodContainerPtr potentialSupportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
 		SimpleNogoodContainerPtr supportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
 		for(unsigned eaIndex = 0; eaIndex < factory.innerEatoms.size(); ++eaIndex){
@@ -375,11 +376,11 @@ void RepairModelGenerator::learnSupportSets(){
 
 			// evaluate the external atom if it provides support sets
 			const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
-			/***if (eatom.getExtSourceProperties().providesSupportSets()){
+			if (eatom.getExtSourceProperties().providesSupportSets()){
 				DBGLOG(DBG, "Evaluating external atom " << factory.innerEatoms[eaIndex] << " for support set learning");
 //				IntegrateExternalAnswerIntoInterpretationCB dummyCB(evalIntr);
 				learnSupportSetsForExternalAtom(factory.ctx, eatom, potentialSupportSets);
-			}***/
+			}
 		}
 
 		DLVHEX_BENCHMARK_REGISTER(sidnongroundpsupportsets, "nonground potential supportsets");
@@ -398,8 +399,11 @@ void RepairModelGenerator::learnSupportSets(){
 
 		// all support sets are also learned nogoods
 		bool keep;
+		DBGLOG(DBG,"Number of potential support sets is: " << potentialSupportSets->getNogoodCount());		
 		for (int i = 0; i < potentialSupportSets->getNogoodCount(); ++i){
 			const Nogood& ng = potentialSupportSets->getNogood(i);
+			// Check if it is a nogood with a guard
+			DBGLOG(DBG,"String represenation of " << ng <<" is "<< ng.getStringRepresentation(reg));
 			if (ng.isGround()){
 				// determine the external atom replacement in ng
 				ID eaAux = ID_FAIL;
@@ -613,7 +617,7 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	int ngCount;
 	repairExists = true;
 	// Ideally we want to have all external atoms either as inner or as outer
-	// Maybe it is possible to get access to the size of the set of all external atoms as factory.Eatoms.size()
+	// Maybe it is possible to get askingaccess to the size of the set of all external atoms as factory.Eatoms.size()
 	DBGLOG(DBG,"Number of inner external atoms: " << factory.innerEatoms.size());
 	DBGLOG(DBG,"Number of outer external atoms: " << factory.outerEatoms.size()); 
 	// DBGLOG(DBG,"Number of all external atoms: " << factory.Eatoms.size()); 
@@ -622,9 +626,34 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	// group D1: those that were guessed true in modelCandidate; 
 	// group D2: and those that were guessed false in modelCandidate.
 		
-	for (int eaIndex = 0; eaIndex < factory.outerEatoms.size(); ++eaIndex){
+	/*for (int eaIndex = 0; eaIndex < factory.outerEatoms.size(); ++eaIndex){
 		DBGLOG(DBG,"Considered external atom: " << factory.outerEatoms[eaIndex]);
+		DBGLOG(DBG,"It is in fact: " << factory.outerEatoms[eaIndex]);
+	}*/
+	
+	bm::bvector<>::enumerator en = modelCandidate->getStorage().first();
+	bm::bvector<>::enumerator en_end =  modelCandidate->getStorage().end();
+	
+	
+	while (en < en_end){
+		ID id = reg->ogatoms.getIDByAddress(*en);
+		if (id.isExternalAuxiliary() && !id.isExternalInputAuxiliary()){
+		// it is an external atom replacement, now check if it is positive or negative
+			if (reg->isPositiveExternalAtomAuxiliaryAtom(id)){
+				DBGLOG(DBG,"Atom " << id << " is positive");
+			}else{
+				DBGLOG(DBG,"Atom " << id << " is negative");
+				// negative
+
+		// the following assertion is not needed, but should be added to make the implementation more rebust
+		// (it might help to find programming errors later on)
+		//assert(reg->isNegativeExternalAtomAuxiliaryAtom(id) && "replacement atom is neither positive nor negative");
+			}
+		}
+		en++;
 	}
+
+
 
 
 	// It is ensured by apriori defined nogoods that all support sets for external atoms from D2 are dependent on the ABox (their guards are nonempty) 
@@ -768,58 +797,6 @@ bool RepairModelGenerator::isVerified(ID eaAux, InterpretationConstPtr factWasSe
 	return false;
 }
 
-IDAddress RepairModelGenerator::getWatchedLiteral(int eaIndex, InterpretationConstPtr search, bool truthValue){
-
-	DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid, "getWatchedLiteral");
-	bm::bvector<>::enumerator eaDepAtoms = annotatedGroundProgram.getEAMask(eaIndex)->mask()->getStorage().first();
-	bm::bvector<>::enumerator eaDepAtoms_end = annotatedGroundProgram.getEAMask(eaIndex)->mask()->getStorage().end();
-	bm::bvector<>::enumerator searchb = search->getStorage().first();
-	bm::bvector<>::enumerator searchb_end = search->getStorage().end();
-
-	#if 1
-	// go through eamask
-	while (eaDepAtoms < eaDepAtoms_end){
-		// if search bitset has correct truth value
-		if (search->getFact(*eaDepAtoms) == truthValue){
-			DBGLOG(DBG, "Found watch " << *eaDepAtoms << " for atom " << factory.innerEatoms[eaIndex]);
-			return *eaDepAtoms; // reg->ogatoms.getIDByAddress(*eaDepAtoms);
-		}
-		eaDepAtoms++;
-	}
-	#else
-	// optimized for truthValue (not a good optimization, as optimization on small eamask is the best we can do, and it is done above) XXX only thing we could improve is a queue of watches so that we have constant time for getWatchedLiteral
-	if( truthValue )
-	{
-	  // looking for the first common bit in eaDepAtoms and searchb
-	  while( eaDepAtoms != eaDepAtoms_end && searchb != searchb_end ) {
-	    if( *eaDepAtoms == *searchb ) {
-	      DBGLOG(DBG, "Found watch " << *eaDepAtoms << " for atom " << factory.innerEatoms[eaIndex]);
-	      return *eaDepAtoms; // reg->ogatoms.getIDByAddress(*eaDepAtoms);
-	    } else if( *eaDepAtoms < *searchb ) {
-	      eaDepAtoms++;
-	    } else { assert( *eaDepAtoms > *searchb );
-	      searchb++;
-	    }
-	  }
-	} else {
-	  // looking for the first bit in eaDepAtoms that is not in searchb
-	  while( eaDepAtoms != eaDepAtoms_end && searchb != searchb_end ) {
-	    if( *eaDepAtoms == *searchb ) { // we need to find a different pair
-	      eaDepAtoms++;
-	      searchb++;
-	    } else if( *eaDepAtoms < *searchb ) { // found it!
-	      DBGLOG(DBG, "Found watch " << *eaDepAtoms << " for atom " << factory.innerEatoms[eaIndex]);
-	      return *eaDepAtoms; //reg->ogatoms.getIDByAddress(*eaDepAtoms);
-	    } else { assert( *eaDepAtoms > *searchb ); // we found a bit that is in searchb but not in eaDepAtoms
-	      searchb++;
-	    }
-	  }
-	}
-	#endif
-
-	return ID::ALL_ONES; //ID_FAIL;
-}
-
 bool RepairModelGenerator::verifyExternalAtoms(InterpretationConstPtr partialInterpretation, InterpretationConstPtr factWasSet, InterpretationConstPtr changed){
 	DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid, "genuine g&c verifyEAtoms");
 
@@ -946,7 +923,7 @@ bool RepairModelGenerator::verifyExternalAtom(int eaIndex, InterpretationConstPt
 		// evaluate the external atom (and learn nogoods if external learning is used)
 		DBGLOG(DBG, "Verifying external Atom " << factory.innerEatoms[eaIndex] << " under " << *evalIntr);
 		evaluateExternalAtom(factory.ctx, eatom, evalIntr, vcb, factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : NogoodContainerPtr());
-		//updateEANogoods(partialInterpretation, factWasSet, changed);
+		updateEANogoods(partialInterpretation, factWasSet, changed);
 
 		// if the input to the external atom was complete, then remember the verification result
 		// (for incomplete input we cannot yet decide this)
