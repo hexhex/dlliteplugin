@@ -267,7 +267,7 @@ RepairModelGenerator::RepairModelGenerator(
 	  solver->addPropagator(this);
     }
 
-    setHeuristics();
+   // setHeuristics();
 
     learnSupportSets();
 
@@ -304,7 +304,8 @@ InterpretationPtr RepairModelGenerator::generateNextModel()
 	{
 		LOG(DBG,"asking for next model");
 		modelCandidate = solver->getNextModel();
-//*** model is returned
+		DBGLOG(DBG,"a model candidate is obtained: " << *modelCandidate);
+		//*** model is returned
 		DBGLOG(DBG, "Statistics:" << std::endl << solver->getStatistics());
 		if( !modelCandidate )
 		{
@@ -313,7 +314,7 @@ InterpretationPtr RepairModelGenerator::generateNextModel()
 		}
 		DLVHEX_BENCHMARK_REGISTER_AND_COUNT(ssidmodelcandidates, "Candidate compatible sets", 1);
 		LOG_SCOPE(DBG,"gM", false);
-		LOG(DBG,"got guess model, will do compatibility check on " << *modelCandidate);
+		LOG(DBG,"got guess model, will do repair check on " << *modelCandidate);
 		if (!repairCheck(modelCandidate))
 		{
 			LOG(DBG,"No repair that turns a model candidate into a compatible set was found");
@@ -374,11 +375,11 @@ void RepairModelGenerator::learnSupportSets(){
 
 			// evaluate the external atom if it provides support sets
 			const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
-			if (eatom.getExtSourceProperties().providesSupportSets()){
+			/***if (eatom.getExtSourceProperties().providesSupportSets()){
 				DBGLOG(DBG, "Evaluating external atom " << factory.innerEatoms[eaIndex] << " for support set learning");
 //				IntegrateExternalAnswerIntoInterpretationCB dummyCB(evalIntr);
 				learnSupportSetsForExternalAtom(factory.ctx, eatom, potentialSupportSets);
-			}
+			}***/
 		}
 
 		DLVHEX_BENCHMARK_REGISTER(sidnongroundpsupportsets, "nonground potential supportsets");
@@ -605,17 +606,50 @@ void RepairModelGenerator::updateEANogoods(
 }
 
 bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
-
+	DBGLOG(DBG,"Repair check is started:");
 	// did we already verify during model construction or do we have to do the verification now?
+	// repair exists is a flag that witnesses the ABox repair existence 	
 	bool repairExists;
 	int ngCount;
-
 	repairExists = true;
-	for (int eaIndex = 0; eaIndex < factory.innerEatoms.size(); ++eaIndex){
+	// Ideally we want to have all external atoms either as inner or as outer
+	// Maybe it is possible to get access to the size of the set of all external atoms as factory.Eatoms.size()
+	DBGLOG(DBG,"Number of inner external atoms: " << factory.innerEatoms.size());
+	DBGLOG(DBG,"Number of outer external atoms: " << factory.outerEatoms.size()); 
+	// DBGLOG(DBG,"Number of all external atoms: " << factory.Eatoms.size()); 
+	
+	// We divide all external atoms into two groups: 
+	// group D1: those that were guessed true in modelCandidate; 
+	// group D2: and those that were guessed false in modelCandidate.
 		
+	for (int eaIndex = 0; eaIndex < factory.outerEatoms.size(); ++eaIndex){
+		DBGLOG(DBG,"Considered external atom: " << factory.outerEatoms[eaIndex]);
 	}
-	DBGLOG(DBG, "**********Repair ABox existence: " << repairExists);
 
+
+	// It is ensured by apriori defined nogoods that all support sets for external atoms from D2 are dependent on the ABox (their guards are nonempty) 
+	// Set repairABox=originalABox
+		// for (each external atom d_i from D1) {
+			// take the set Si of its ground support sets which are kept for the considered modelCandidate 
+			// if (there is at least one support set in Si which does not have a guard, i.e. it consists only of signed input predicates of di)  
+				//then i++, i.e. move to the next external atom in D1 
+			// else 
+				//for each dj in D2 {
+					// take the set Sj of ground support sets for dj which are kept for the current modelCandidate
+					// for each S' in Sj {
+						// eliminate from Si support sets which have the same guards as S'
+						// eliminate from repairABox all ABox assertions that cause S' being in Sj 
+						// eliminate S' from Sj 
+				 	//}
+					// j++, i.e. move to the next dj in D2
+				//}
+			// if (Si is empty) 
+				//stop with this modelCandidate, set repairExists=false 
+			//else i++, i.e. move to the next external atom in D1
+		//}	
+		// go through all left support sets S' for exteral atoms in D2 and eliminate ABox assertions from repairABox which are involved in S'
+		// return repairExists;
+	DBGLOG(DBG, "***** Repair ABox existence: " << repairExists);
 	return repairExists;
 }
 
@@ -794,7 +828,7 @@ bool RepairModelGenerator::verifyExternalAtoms(InterpretationConstPtr partialInt
 	bm::bvector<>::enumerator en;
 	bm::bvector<>::enumerator en_begin = changed->getStorage().first();
 	bm::bvector<>::enumerator en_end = changed->getStorage().end();
-
+	DBGLOG(DBG, "We are still here");
 	{
 	DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid, "genuine g&c verifyEAtoms wl");
 
@@ -851,7 +885,8 @@ bool RepairModelGenerator::verifyExternalAtoms(InterpretationConstPtr partialInt
 					bool doEval;
 					{
 					  DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid, "genuine g&c verifyEAtoms eh");
-					  doEval = externalAtomEvalHeuristics->doEvaluate(eatom, annotatedGroundProgram.getEAMask(eaIndex)->mask(), annotatedGroundProgram.getProgramMask(), partialInterpretation, factWasSet, changed);
+					  doEval = false;
+//externalAtomEvalHeuristics->doEvaluate(eatom, annotatedGroundProgram.getEAMask(eaIndex)->mask(), annotatedGroundProgram.getProgramMask(), partialInterpretation, factWasSet, changed);
 					}
 					if (doEval){
 						// evaluate it

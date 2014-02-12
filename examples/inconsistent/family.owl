@@ -62,6 +62,7 @@
     <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#Child -->
 
     <owl:Class rdf:about="#Child">
+        <rdfs:subClassOf rdf:resource="#Domain"/>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="#hasParent"/>
@@ -72,15 +73,24 @@
     
 
 
+    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#Domain -->
+
+    <owl:Class rdf:about="#Domain"/>
+    
+
+
     <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#Female -->
 
-    <owl:Class rdf:about="#Female"/>
+    <owl:Class rdf:about="#Female">
+        <rdfs:subClassOf rdf:resource="#Domain"/>
+    </owl:Class>
     
 
 
     <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#Male -->
 
     <owl:Class rdf:about="#Male">
+        <rdfs:subClassOf rdf:resource="#Domain"/>
         <owl:disjointWith rdf:resource="#Female"/>
     </owl:Class>
     
@@ -106,6 +116,7 @@
     <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#john -->
 
     <owl:Thing rdf:about="#john">
+        <rdf:type rdf:resource="#Domain"/>
         <rdf:type rdf:resource="#Male"/>
         <hasParent rdf:resource="#pat"/>
     </owl:Thing>
