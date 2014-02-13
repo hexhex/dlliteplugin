@@ -667,6 +667,7 @@ CDLAtom::CDLAtom(ProgramCtx& ctx) : DLPluginAtom("cDL", ctx)
 	prop.completePositiveSupportSets = true; // we even provide (positive) complete support sets
 }
 
+// called from the core
 void CDLAtom::retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods)
 {
 	DBGLOG(DBG, "CDLAtom::retrieve");

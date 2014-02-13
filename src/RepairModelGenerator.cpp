@@ -80,6 +80,11 @@ RepairModelGeneratorFactory::RepairModelGeneratorFactory(
   }
 
   innerEatoms = ci.innerEatoms;
+  
+  allEatoms.insert(allEatoms.end(), innerEatoms.begin(), innerEatoms.end());
+  allEatoms.insert(allEatoms.end(), outerEatoms.begin(), outerEatoms.end());
+
+
   // create guessing rules "gidb" for innerEatoms in all inner rules and constraints
   createEatomGuessingRules(ctx);
 
@@ -185,7 +190,7 @@ RepairModelGenerator::RepairModelGenerator(
   reg(factory.reg)
 {
     DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidconstruct, "Repair model generator constructor");
-    DBGLOG(DBG, "Repair model generator is instantiated for a " << (factory.ci.disjunctiveHeads ? "" : "non-") << "disjunctive component");
+    DBGLOG(DBG, "RMG: Repair model generator is instantiated for a " << (factory.ci.disjunctiveHeads ? "" : "non-") << "disjunctive component");
 
     RegistryPtr reg = factory.reg;
 
@@ -265,36 +270,44 @@ RepairModelGenerator::RepairModelGenerator(
 	learnedEANogoodsTransferredIndex = 0;
 	nogoodGrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), learnedEANogoods, learnedEANogoods, annotatedGroundProgram));
 
-	if( factory.ctx.config.getOption("NoPropagator") == 0 )
-	  solver->addPropagator(this);
+	//if( factory.ctx.config.getOption("NoPropagator") == 0 )
+	//  solver->addPropagator(this);
     }
 
    // setHeuristics();
- DBGLOG(DBG,"learning support sets is started");
+ DBGLOG(DBG,"RMG: before calling learnSupportSets method");
     learnSupportSets();
+ DBGLOG(DBG,"RMG: after learnSupportSets method is finished");
 
     // initialize UFS checker
     //   Concerning the last parameter, note that clasp backend uses choice rules for implementing disjunctions:
     //   this must be regarded in UFS checking (see examples/trickyufs.hex)
-    ufscm = UnfoundedSetCheckerManagerPtr(new UnfoundedSetCheckerManager(*this, factory.ctx, annotatedGroundProgram, factory.ctx.config.getOption("GenuineSolver") >= 3, factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : SimpleNogoodContainerPtr()));
+
+ 	ufscm = UnfoundedSetCheckerManagerPtr(new UnfoundedSetCheckerManager(*this, factory.ctx, annotatedGroundProgram, factory.ctx.config.getOption("GenuineSolver") >= 3, factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : SimpleNogoodContainerPtr()));
+ 	DBGLOG(DBG,"RMG: after creation of unfoundedset managerchecker");
 
     // overtake nogoods from the factory
     {
+   	  DBGLOG(DBG,"RMG: before DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid,genuine g&c init nogoods)");
       DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid,"genuine g&c init nogoods");
+      DBGLOG(DBG,"RMG: after DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid,genuine g&c init nogoods)");
       for (int i = 0; i < factory.globalLearnedEANogoods->getNogoodCount(); ++i){
-        learnedEANogoods->addNogood(factory.globalLearnedEANogoods->getNogood(i));
+    	  DBGLOG(DBG,"RMG: going through nogoods");
+    	  DBGLOG(DBG,"RMG: consider nogood number "<< i<< " which is "<<  factory.globalLearnedEANogoods->getNogood(i));
+    	  learnedEANogoods->addNogood(factory.globalLearnedEANogoods->getNogood(i));
       }
       //updateEANogoods();
     }
+    DBGLOG(DBG,"RMG: RepairModelGenerator constructor is finished");
 }
 
 RepairModelGenerator::~RepairModelGenerator(){
-	solver->removePropagator(this);
+	//solver->removePropagator(this);
 	DBGLOG(DBG, "Final Statistics:" << std::endl << solver->getStatistics());
 }
 
 
-
+//called from the core
 InterpretationPtr RepairModelGenerator::generateNextModel()
 {
 	// now we have postprocessed input in postprocessedInput
@@ -306,6 +319,7 @@ InterpretationPtr RepairModelGenerator::generateNextModel()
 	{
 		LOG(DBG,"asking for next model");
 		modelCandidate = solver->getNextModel();
+		// getnextmodel calls propogate method 
 		DBGLOG(DBG,"a model candidate is obtained: " << *modelCandidate);
 		//*** model is returned
 		DBGLOG(DBG, "Statistics:" << std::endl << solver->getStatistics());
@@ -341,27 +355,6 @@ InterpretationPtr RepairModelGenerator::generateNextModel()
 
 void RepairModelGenerator::generalizeNogood(Nogood ng){
 
-	if (!ng.isGround()) return;
-
-	DBGLOG(DBG, "Generalizing " << ng.getStringRepresentation(reg));
-
-	// find the external atom related to this nogood
-	ID eaid = ID_FAIL;
-	BOOST_FOREACH (ID l, ng){
-		if (reg->ogatoms.getIDByAddress(l.address).isExternalAuxiliary() && annotatedGroundProgram.mapsAux(l.address)){
-			eaid = l;
-			break;
-		}
-	}
-	if (eaid == ID_FAIL) return;
-
-	assert(annotatedGroundProgram.getAuxToEA(eaid.address).size() > 0);
-	DBGLOG(DBG, "external atom is " << annotatedGroundProgram.getAuxToEA(eaid.address)[0]);
-	const ExternalAtom& ea = reg->eatoms.getByID(annotatedGroundProgram.getAuxToEA(eaid.address)[0]);
-
-	// learn related nonground nogoods
-	int oldCount = learnedEANogoods->getNogoodCount();
-	ea.pluginAtom->generalizeNogood(ng, &factory.ctx, learnedEANogoods);
 }
 
 void RepairModelGenerator::learnSupportSets(){
@@ -369,23 +362,19 @@ void RepairModelGenerator::learnSupportSets(){
 	if (factory.ctx.config.getOption("SupportSets")){
 	DBGLOG(DBG,"RMG: option supportsets is recognized");
 		SimpleNogoodContainerPtr potentialSupportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
-		SimpleNogoodContainerPtr supportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
-		// create a vector for storing all external atoms
-		std::vector<ID> allEatoms;
-		allEatoms.insert(allEatoms.end(), factory.innerEatoms.begin(), factory.innerEatoms.end());
-		allEatoms.insert(allEatoms.end(), factory.outerEatoms.begin(), factory.outerEatoms.end());
+		factory.supportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
 
 		DBGLOG(DBG,"RMG: Number of innereatoms: "<<factory.innerEatoms.size());
 		DBGLOG(DBG,"RMG: Number of outerereatoms: "<<factory.outerEatoms.size());
-		DBGLOG(DBG,"RMG: Number of all eatoms: "<<allEatoms.size());
+		DBGLOG(DBG,"RMG: Number of all eatoms: "<<factory.allEatoms.size());
 				
 		
 		// learn support sets for all external atoms
-		for(unsigned eaIndex = 0; eaIndex < allEatoms.size(); ++eaIndex){
+		for(unsigned eaIndex = 0; eaIndex < factory.allEatoms.size(); ++eaIndex){
 			DBGLOG(DBG,"RMG: start going through all external atoms and learning potential support sets for them");
-			const ExternalAtom& eatom = reg->eatoms.getByID(allEatoms[eaIndex]);
+			const ExternalAtom& eatom = reg->eatoms.getByID(factory.allEatoms[eaIndex]);
 			if (eatom.getExtSourceProperties().providesSupportSets()){
-				DBGLOG(DBG, "RMG: evaluating external atom " << allEatoms[eaIndex] << " for support set learning");
+				DBGLOG(DBG, "RMG: evaluating external atom " << factory.allEatoms[eaIndex] << " for support set learning");
 				learnSupportSetsForExternalAtom(factory.ctx, eatom, potentialSupportSets);
 			}
 			DBGLOG(DBG,"RMG: finished going through all external atoms and potential support sets were learnt for them");
@@ -437,8 +426,7 @@ void RepairModelGenerator::learnSupportSets(){
 						else {
 						    	isGuard=true;
 								DBGLOG(DBG,"RMG: support set viewed as nogood "<< ng.getStringRepresentation(reg) <<" contains a guard " << possibleGuardAtom.tuple[0]);
-							    break;
-							}
+							    break;							}
 					}
 				}
 				else {
@@ -484,89 +472,7 @@ void RepairModelGenerator::learnSupportSets(){
                 DLVHEX_BENCHMARK_REGISTER(sidgroundsupportsets, "final ground supportsets");
                 DLVHEX_BENCHMARK_COUNT(sidgroundsupportsets, supportSets->getNogoodCount());
 
-#if 0
-		// generate rules for this support set
-		int sscnt = 0;
-		typedef std::pair<ID, Nogood> SupportSetPair;
-		std::map<ID, Nogood> supportsetsForEA;
-		OrdinaryASPProgram program(reg, factory.xidb, postprocessedInput, factory.ctx.maxint);
-		program.idb.insert(program.idb.end(), factory.gidb.begin(), factory.gidb.end());
-
-
-		for (int i = 0; i < supportSets->getNogoodCount(); ++i){
-			Nogood& supportset = supportSets->getNogood(i);
-
-			// find the external atom replacement in this support set
-			ID ea = ID_FAIL;
-			BOOST_FOREACH (ID id, supportset){
-				ID bId = reg->ogatoms.getIDByAddress(id.address);
-				if ((bId.kind & ID::PROPERTY_EXTERNALAUX) == ID::PROPERTY_EXTERNALAUX){
-					if (ea != ID_FAIL) throw GeneralError("Support set " + supportset.getStringRepresentation(reg) + " is invalid becaues it contains multiple external atom replacement literals");
-					ea = bId;
-				}
-			}
-			if (ea == ID_FAIL) throw GeneralError("Support set " + supportset.getStringRepresentation(reg) + " is invalid becaues it contains no external atom replacement literal");
-
-			// create a new support set for this external atom if not already present
-			if (supportsetsForEA.find(ea) == supportsetsForEA.end()){
-				OrdinaryAtom repl = reg->ogatoms.getByID(ea);
-				repl.tuple[0] = reg->getAuxiliaryConstantSymbol('r', reg->getIDByAuxiliaryConstantSymbol(repl.tuple[0]));
-				supportsetsForEA[ea].insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(repl)));
-			}
-
-			Rule ssviolation(ID::MAINKIND_RULE | ID::SUBKIND_RULE_CONSTRAINT);
-			BOOST_FOREACH (ID id, supportset){
-				ID bId = ID::posLiteralFromAtom(reg->ogatoms.getIDByAddress(id.address));
-				if (bId != ea){
-
-					if (id.isNaf()) bId.kind |= ID::NAF_MASK;
-					ssviolation.body.push_back(bId);
-
-					Rule derive(ID::MAINKIND_RULE);
-					OrdinaryAtom hatom(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
-					hatom.tuple.push_back(reg->getAuxiliaryConstantSymbol('r', ID(0, sscnt++)));	// new atom
-					ID sup = reg->storeOrdinaryAtom(hatom);
-					derive.head.push_back(sup);
-					ID negBId = bId;
-					negBId.kind ^= ID::NAF_MASK;
-					derive.body.push_back(negBId);
-					ID deriveID = reg->storeRule(derive);
-					DBGLOG(DBG, "Generating rule " << RawPrinter::toString(reg, deriveID) << " for support set " << supportset.getStringRepresentation(reg));
-					program.idb.push_back(deriveID);
-					supportsetsForEA[ea].insert(NogoodContainer::createLiteral(sup));
-				}
-			}
-			ID ssviolationID = reg->storeRule(ssviolation);
-			DBGLOG(DBG, "Generating constraint " << RawPrinter::toString(reg, ssviolationID) << " for support set " << supportset.getStringRepresentation(reg));
-			program.idb.push_back(ssviolationID);
-		}
-
-		BOOST_FOREACH (SupportSetPair ssp, supportsetsForEA){
-			Rule completeness(ID::MAINKIND_RULE | ID::SUBKIND_RULE_CONSTRAINT);
-			BOOST_FOREACH (ID id, ssp.second) completeness.body.push_back(ID::posLiteralFromAtom(reg->ogatoms.getIDByAddress(id.address)));
-			ID completenessID = reg->storeRule(completeness);
-			DBGLOG(DBG, "Generating completeness rule " << RawPrinter::toString(reg, completenessID));
-			program.idb.push_back(completenessID);
-		}
-
-		DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidhexground, "HEX grounder time");
-		grounder = GenuineGrounder::getInstance(factory.ctx, program);
-		annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.innerEatoms);
-
-		solver = GenuineGroundSolver::getInstance(
-			factory.ctx, annotatedGroundProgram,
-			// no interleaved threading because guess and check MG will likely not profit from it
-			false,
-			// do the UFS check for disjunctions only if we don't do
-			// a minimality check in this class;
-			// this will not find unfounded sets due to external sources,
-			// but at least unfounded sets due to disjunctions
-			!factory.ctx.config.getOption("FLPCheck") && !factory.ctx.config.getOption("UFSCheck"));
-		nogoodGrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), learnedEANogoods, learnedEANogoods, annotatedGroundProgram));
-
-		if( factory.ctx.config.getOption("NoPropagator") == 0 )
-		  solver->addPropagator(this);
-#endif
+	    DBGLOG(DBG, "RMG: learnSupportSets method is finished");
 
 }
 
@@ -635,11 +541,17 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	bool repairExists;
 	int ngCount;
 	repairExists = true;
-	// Ideally we want to have all external atoms either as inner or as outer
-	// Maybe it is possible to get askingaccess to the size of the set of all external atoms as factory.Eatoms.size()
-	DBGLOG(DBG,"Number of inner external atoms: " << factory.innerEatoms.size());
-	DBGLOG(DBG,"Number of outer external atoms: " << factory.outerEatoms.size()); 
-	
+	// now vector alleatoms is created twice, this needs to be changed
+	/*std::vector<ID> allEatoms;
+	allEatoms.insert(allEatoms.end(), factory.innerEatoms.begin(), factory.innerEatoms.end());
+	allEatoms.insert(allEatoms.end(), factory.outerEatoms.begin(), factory.outerEatoms.end());
+*/
+	DBGLOG(DBG,"RMG: Number of inner external atoms: " << factory.innerEatoms.size());
+	DBGLOG(DBG,"RMG: Number of outer external atoms: " << factory.outerEatoms.size());
+	DBGLOG(DBG,"RMG: Number of all external atoms: " << factory.allEatoms.size());
+	InterpretationPtr dpos(new Interpretation(reg));
+	InterpretationPtr dneg(new Interpretation(reg));
+
 	// We divide all external atoms into two groups: 
 	// group D1: those that were guessed true in modelCandidate; 
 	// group D2: and those that were guessed false in modelCandidate.
@@ -649,18 +561,18 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 		DBGLOG(DBG,"It is in fact: " << factory.outerEatoms[eaIndex]);
 	}*/
 	
-	bm::bvector<>::enumerator en = modelCandidate->getStorage().first();
-	bm::bvector<>::enumerator en_end =  modelCandidate->getStorage().end();
+//	bm::bvector<>::enumerator en = modelCandidate->getStorage().first();
+//	bm::bvector<>::enumerator en_end =  modelCandidate->getStorage().end();
 	
 	
-	while (en < en_end){
+	/*while (en < en_end){
 		ID id = reg->ogatoms.getIDByAddress(*en);
 		if (id.isExternalAuxiliary() && !id.isExternalInputAuxiliary()){
 		// it is an external atom replacement, now check if it is positive or negative
 			if (reg->isPositiveExternalAtomAuxiliaryAtom(id)){
-				DBGLOG(DBG,"Atom " << id << " is positive");
+				DBGLOG(DBG,"RMG: Atom " << id << " is positive");
 			}else{
-				DBGLOG(DBG,"Atom " << id << " is negative");
+				DBGLOG(DBG,"RMG: Atom " << id << " is negative");
 				// negative
 
 		// the following assertion is not needed, but should be added to make the implementation more rebust
@@ -669,14 +581,108 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 			}
 		}
 		en++;
-	}
+	}*/
 
+	// Go through all atoms in alleatoms
+	// and evaluate them
+	// mask stores all relevant atoms for external atom with index eaindex
+
+
+	for (int eaIndex=0; eaIndex<factory.allEatoms.size();eaIndex++){
+		const InterpretationConstPtr& mask = annotatedGroundProgram.getEAMask(eaIndex)->mask();
+		// make sure that ALL input auxiliary atoms are true, otherwise we might miss some output atoms and consider true output atoms wrongly as unfounded
+		// thus we need the following:
+		InterpretationPtr evalIntr(new Interpretation(reg));
+
+		if (!factory.ctx.config.getOption("IncludeAuxInputInAuxiliaries")){
+				// clone and extend
+				evalIntr->getStorage() |= annotatedGroundProgram.getEAMask(eaIndex)->getAuxInputMask()->getStorage();
+		}
+
+		// call back
+		// interptretation for storing the result true vectors for external atoms is created
+
+		InterpretationPtr newint(new Interpretation(reg));
+		IntegrateExternalAnswerIntoInterpretationCB cb(newint);
+
+		// evaluate external atom
+		evaluateExternalAtom(factory.ctx, reg->eatoms.getByID(factory.allEatoms[eaIndex]), evalIntr, cb);
+		bm::bvector<>::enumerator enm = mask->getStorage().first();
+		bm::bvector<>::enumerator en_endm =  mask->getStorage().end();
+
+		while (enm < en_endm){
+			ID id = reg->ogatoms.getIDByAddress(*enm);
+			if (id.isExternalAuxiliary() && !id.isExternalInputAuxiliary()){
+			// it is an external atom replacement, now check if it is positive or negative
+				if (reg->isPositiveExternalAtomAuxiliaryAtom(id)){
+					DBGLOG(DBG,"RMG: Atom " << id << " is positive");
+					if (newint->getFact(*enm)) {
+						// add it to the set of positive external atoms D1.
+						dpos->setFact(*enm);
+					}
+					}
+				}else{
+					DBGLOG(DBG,"RMG: Atom " << id << " is negative");
+					if (newint->getFact(*enm)) {
+						// add it to the set of negative external atoms D2.
+						dneg->setFact(*enm);
+
+					}
+				}
+			// the following assertion is not needed, but should be added to make the implementation more rebust
+			// (it might help to find programming errors later on)
+					assert(reg->isNegativeExternalAtomAuxiliaryAtom(id) && "replacement atom is neither positive nor negative");
+
+			enm++;
+		}
+	}
 
 
 
 	// It is ensured by apriori defined nogoods that all support sets for external atoms from D2 are dependent on the ABox (their guards are nonempty) 
 	// Set repairABox=originalABox
-		// for (each external atom d_i from D1) {
+
+	DLLitePlugin::CachedOntologyPtr newOntology = theDLLitePlugin.prepareOntology(factory.ctx, reg->storeConstantTerm(factory.ctx.getPluginData<DLLitePlugin>().repairOntology));
+	InterpretationPtr newConceptsABoxPtr = newOntology->conceptAssertions;
+	InterpretationPtr newConceptsABox(new Interpretation(reg));
+	newConceptsABox->add(*newConceptsABoxPtr);
+	std::vector<DLLitePlugin::CachedOntology::RoleAssertion> newRolesABox = newOntology->roleAssertions;
+
+	// crate a map that maps ids of external atoms to vector of support sets relevant to them
+	  for (int i = 0; i<factory.supportSets->getNogoodCount();i++) {
+		bool keep = true;
+		ID currentExternalId;
+		BOOST_FOREACH(ID id,factory.supportSets->getNogood(i)) {
+			// distinct between ordinary atoms, replacement atoms and the guards
+			ID newid = reg->ogatoms.getIDByAddress(id.address);
+			if (newid.isExternalAuxiliary()) {  //replacement atom
+				// add id to the map
+				currentExternalId = newid;
+			}
+			else if (newid.isGuardAuxiliary()) {  //guard atom
+
+			}
+			else{ // ordinary input atom
+			if (modelCandidate->getFact(newid.address)!=newid.isNaf());
+				else keep = false;
+			}
+
+		}
+		if (keep) {//map.add(id, factory.supportSets->getNogood(i))
+		
+		}
+	}
+
+
+
+	// for (each external atom d_i from D1) {
+	bm::bvector<>::enumerator enpos = dpos->getStorage().first();
+	bm::bvector<>::enumerator en_endpos = dpos->getStorage().end();
+
+			while (enpos < en_endpos){
+				ID id = reg->ogatoms.getIDByAddress(*enpos);
+				
+			}
 			// take the set Si of its ground support sets which are kept for the considered modelCandidate 
 			// if (there is at least one support set in Si which does not have a guard, i.e. it consists only of signed input predicates of di)  
 				//then i++, i.e. move to the next external atom in D1 
@@ -763,203 +769,27 @@ bool RepairModelGenerator::isModel(InterpretationConstPtr compatibleSet){
 
 bool RepairModelGenerator::partialUFSCheck(InterpretationConstPtr partialInterpretation, InterpretationConstPtr factWasSet, InterpretationConstPtr changed){
 	DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid, "genuine g&c partialUFSchk");
-
-	if (!factory.ctx.config.getOption("UFSCheck")) return false;
-
-	// ufs check without nogood learning makes no sense if the interpretation is not complete
-	if (factory.ctx.config.getOption("UFSLearning")){
-
-		std::pair<bool, std::set<ID> > decision = ufsCheckHeuristics->doUFSCheck(partialInterpretation, factWasSet, changed);
-
-		if (decision.first){
-
-			DBGLOG(DBG, "Heuristic decides to do an UFS check");
-			std::vector<IDAddress> ufs = ufscm->getUnfoundedSet(partialInterpretation, decision.second, factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : SimpleNogoodContainerPtr());
-			DBGLOG(DBG, "UFS result: " << (ufs.size() == 0 ? "no" : "") << " UFS found (interpretation: " << *partialInterpretation << ", assigned: " << *factWasSet << ")");
-
-			if (ufs.size() > 0){
-				Nogood ng = ufscm->getLastUFSNogood();
-				DBGLOG(DBG, "Adding UFS nogood: " << ng);
-				solver->addNogood(ng);
-
-				// check if nogood is violated
-				BOOST_FOREACH (ID l, ng){
-					if (!factWasSet->getFact(l.address) || l.isNaf() == partialInterpretation->getFact(l.address)) return false;
-				}
-
-				return true;
-			}
-		}else{
-			DBGLOG(DBG, "Heuristic decides not to do an UFS check");
-		}
-	}
-
 	return false;
 }
 
 bool RepairModelGenerator::isVerified(ID eaAux, InterpretationConstPtr factWasSet){
-
-	assert(annotatedGroundProgram.getAuxToEA(eaAux.address).size() > 0);
-
-	// check if at least one of the external atoms which can derive this auxiliary were verified
-	BOOST_FOREACH (ID ea, annotatedGroundProgram.getAuxToEA(eaAux.address)){
-		int eaIndex = 0;
-		while (factory.innerEatoms[eaIndex] != ea) eaIndex++;
-
-		if (eaEvaluated[eaIndex] && eaVerified[eaIndex]){
-			DBGLOG(DBG, "Auxiliary " << eaAux.address << " is verified by " << ea);
-			return true;
-		}
-	}
-	DBGLOG(DBG, "Auxiliary " << eaAux.address << " is not verified");
 	return false;
 }
-
+// 1. current interpretation
+// 2. which facts are assigned
+// 3. which atoms changed their truth value from the revious call (which were reassigned)
+// 2,3, can be 0
 bool RepairModelGenerator::verifyExternalAtoms(InterpretationConstPtr partialInterpretation, InterpretationConstPtr factWasSet, InterpretationConstPtr changed){
 	DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid, "genuine g&c verifyEAtoms");
-
-	DBGLOG(DBG, "Evaluating External Atoms");
-
-	bm::bvector<>::enumerator en;
-	bm::bvector<>::enumerator en_begin = changed->getStorage().first();
-	bm::bvector<>::enumerator en_end = changed->getStorage().end();
-	DBGLOG(DBG, "We are still here");
-	{
-	DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid, "genuine g&c verifyEAtoms wl");
-
-	// for each eatom, if it is evaluated:
-	// * look if there is a bit in changed that matches the eatom mask
-	// * if yes:
-	//     * unverify eatom and use the changed bit as new watch
-	//     * if a watched atom was assigned, possibly evaluate the external atom (driven by a heuristics)
-
-	// unverify/unfalsify external atoms which watch this atom
-	for(unsigned eaIndex = 0; eaIndex < factory.innerEatoms.size(); ++eaIndex){
-	  if( !eaEvaluated[eaIndex] )
-	    // we don't need to verify watches because the eatom was not evaluated
-	    continue;
-
-	  const InterpretationConstPtr& mask = annotatedGroundProgram.getEAMask(eaIndex)->mask();
-
-	  // check if something in its mask was changed
-	  en = en_begin;
-	  while (en < en_end){
-	    if( mask->getFact(*en) )
-	    {
-	      // yes, it changed, so we unverify and leave
-	      DBGLOG(DBG, "atom " << printToString<RawPrinter>(reg->ogatoms.getIDByAddress(*en), reg) <<
-		 " changed and unverified external atom " <<
-		 printToString<RawPrinter>(factory.innerEatoms[eaIndex], reg));
-
-	      // unverify
-	      eaVerified[eaIndex] = false;
-	      eaEvaluated[eaIndex] = false;
-
-	      // *en is our new watch (as it is either undefined or was recently changed)
-	      verifyWatchList[*en].push_back(eaIndex);
-
-	      // leave, we are done with this external atom as we set eaEvaluated to false
-	      break;
-	    }
-	    en++;
-	  }
-	}
-	}
-
-	bool conflict = false;
-	en = changed->getStorage().first();
-	en_end = changed->getStorage().end();
-
-	while (en < en_end){
-		// for all external atoms which watch this atom
-		if (factWasSet->getFact(*en)){
-			BOOST_FOREACH (int eaIndex, verifyWatchList[*en]){
-				if (!eaEvaluated[eaIndex]){
-					// evaluate external atom if the heuristics decides so
-					const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
-					bool doEval;
-					{
-					  DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid, "genuine g&c verifyEAtoms eh");
-					  doEval = false;
-//externalAtomEvalHeuristics->doEvaluate(eatom, annotatedGroundProgram.getEAMask(eaIndex)->mask(), annotatedGroundProgram.getProgramMask(), partialInterpretation, factWasSet, changed);
-					}
-					if (doEval){
-						// evaluate it
-						conflict |= (verifyExternalAtom(eaIndex, partialInterpretation, factWasSet, changed));
-					}
-					if (!eaEvaluated[eaIndex]){
-						// find a new yet unassigned atom to watch
-						IDAddress id = getWatchedLiteral(eaIndex, factWasSet, false);
-						if (id != ID::ALL_ONES)
-						  verifyWatchList[id].push_back(eaIndex);
-					}
-				}
-			}
-			// current atom was set, so remove all watches
-			verifyWatchList[*en].clear();
-		}
-
-		en++;
-	}
-
-	return conflict;
+    return false;
 }
 
 bool RepairModelGenerator::verifyExternalAtom(int eaIndex, InterpretationConstPtr partialInterpretation,
 	       	InterpretationConstPtr factWasSet, InterpretationConstPtr changed){
 	DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid, "genuine g&c verifyEAtom");
-
-	const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
-
-	// if support sets are enabled, and the external atom provides complete support sets, we use them for verification
-	if (factory.ctx.config.getOption("SupportSets") && (eatom.getExtSourceProperties().providesCompletePositiveSupportSets() || eatom.getExtSourceProperties().providesCompleteNegativeSupportSets()) && annotatedGroundProgram.allowsForVerificationUsingCompleteSupportSets()){
-		assert (!factWasSet && !changed && " verification using complete support sets is only possible wrt. complete interpretations");
-
-		eaVerified[eaIndex] = annotatedGroundProgram.verifyExternalAtomsUsingCompleteSupportSets(eaIndex, partialInterpretation, InterpretationPtr());
-
-		// we remember that we evaluated, only if there is a propagator that can undo this memory (that can unverify an eatom during model search)
-		if( factory.ctx.config.getOption("NoPropagator") == 0 ){
-		  eaEvaluated[eaIndex] = true;
-		}
-
-		return !eaVerified[eaIndex];
-	}else{
-		// otherwise we need to evaluate the external atom
-
-		// prepare EA evaluation
-		InterpretationConstPtr mask = (annotatedGroundProgram.getEAMask(eaIndex)->mask());
-		VerifyExternalAtomCB vcb(partialInterpretation, eatom, *(annotatedGroundProgram.getEAMask(eaIndex)));
-
-		InterpretationConstPtr evalIntr = partialInterpretation;
-		if (!factory.ctx.config.getOption("IncludeAuxInputInAuxiliaries")){
-			// make sure that ALL input auxiliary atoms are true, otherwise we might miss some output atoms and consider true output atoms wrongly as unfounded
-			// clone and extend
-			InterpretationPtr ncevalIntr(new Interpretation(*partialInterpretation));
-			ncevalIntr->getStorage() |= annotatedGroundProgram.getEAMask(eaIndex)->getAuxInputMask()->getStorage();
-			evalIntr = ncevalIntr;
-		}
-		// evaluate the external atom (and learn nogoods if external learning is used)
-		DBGLOG(DBG, "Verifying external Atom " << factory.innerEatoms[eaIndex] << " under " << *evalIntr);
-		evaluateExternalAtom(factory.ctx, eatom, evalIntr, vcb, factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : NogoodContainerPtr());
-		updateEANogoods(partialInterpretation, factWasSet, changed);
-
-		// if the input to the external atom was complete, then remember the verification result
-		// (for incomplete input we cannot yet decide this)
-		if( !factWasSet || !bm::any_sub( annotatedGroundProgram.getEAMask(eaIndex)->mask()->getStorage() & annotatedGroundProgram.getProgramMask()->getStorage(), factWasSet->getStorage() & annotatedGroundProgram.getProgramMask()->getStorage() ) ) {
-			bool verify = vcb.verify();
-			DBGLOG(DBG, "Verifying " << factory.innerEatoms[eaIndex] << " (Result: " << verify << ")");
-			eaVerified[eaIndex] = verify;
-			// we remember that we evaluated, only if there is a propagator that can undo this memory (that can unverify an eatom during model search)
-			if( factory.ctx.config.getOption("NoPropagator") == 0 ){
-			  eaEvaluated[eaIndex] = true;
-		        }
-
-			return !verify;
-		}else{
-			return false;
-		}
-	}
+    return false;
 }
+
 
 const OrdinaryASPProgram& RepairModelGenerator::getGroundProgram(){
 	return grounder->getGroundProgram();
@@ -967,12 +797,6 @@ const OrdinaryASPProgram& RepairModelGenerator::getGroundProgram(){
 
 void RepairModelGenerator::propagate(InterpretationConstPtr partialInterpretation, InterpretationConstPtr factWasSet, InterpretationConstPtr changed){
 
-	bool conflict = verifyExternalAtoms(partialInterpretation, factWasSet, changed);
-
-	// UFS check requires a conflict-free interpretation
-	if (conflict) return;
-
-	partialUFSCheck(partialInterpretation, factWasSet, changed);
 }
 
 }

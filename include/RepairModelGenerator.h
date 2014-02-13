@@ -70,10 +70,12 @@ protected:
 
   // outer external atoms
   std::vector<ID> outerEatoms;
-
+  std::vector<ID> allEatoms;
   // nogoods which shall be kept beyond the lifespan of the model generator
   // (useful for nonground nogoods)
   SimpleNogoodContainerPtr globalLearnedEANogoods;
+  SimpleNogoodContainerPtr supportSets;
+
 
 public:
   RepairModelGeneratorFactory(
