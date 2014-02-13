@@ -67,6 +67,7 @@ public:
 	friend class RDLAtom;
 	friend class ConsDLAtom;
 	friend class InconsDLAtom;
+	friend class RepairModelGenerator;
 
 	// this class caches an ontology
 	// add member variables here if additional information about the ontology must be stored

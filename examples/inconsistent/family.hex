@@ -8,10 +8,10 @@ boy("john").
 % Collect individuals into the domain predicate
 domain(X):-&cDL["family.owl",a,b,c,d,"Domain"](X).
 
-:-not &cDL["family.owl",pcb,b,c,d,"Male"](Y), boy(Y).
+%:-not &cDL["family.owl",pcb,b,c,d,"Male"](Y), boy(Y).
 
 % Collect male parents into father predicate
-%hasfather(X,Y):-&cDL["family.owl",pcb,b,c,d,"Male"](Y), &rDL["family.owl",a,b,c,d,"hasParent"](X,Y).
+hasfather(X,Y):-&cDL["family.owl",pcb,b,c,d,"Male"](Y), &rDL["family.owl",a,b,c,d,"hasParent"](X,Y), domain(X), domain(Y	).
 
 % Unless a child is adopted he can not have two mae parents
 %:-not &cDL["family.owl",a,b,c,d,"Adopted"](X),hasfather(X,Y1),ischildof(X,Y2), Y1!=Y2,not &cDL["family.owl", pcbb,b,c,d,"-Male"](Y%2).
@@ -23,6 +23,6 @@ domain(X):-&cDL["family.owl",a,b,c,d,"Domain"](X).
 %omit(X,Y):-&cDL["family.owl",a,b,c,d,"Adopted"](X),Z!=Y,hasfather(X,Y), contact(X,Z).
 
 % predicates specifying updating information
-%pcb("Male",X):-boy(X).
+pcb("Male",X):-boy(X).
 %pcbb("Child",X):-boy(X).
 

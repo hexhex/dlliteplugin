@@ -46,7 +46,7 @@
 #include "dlvhex2/Benchmarking.h"
 #include "dlvhex2/InternalGroundDASPSolver.h"
 #include "dlvhex2/UnfoundedSetChecker.h"
-
+#include "DLLitePlugin.h"
 #include <bm/bmalgo.h>
 
 #include <boost/foreach.hpp>
@@ -54,6 +54,8 @@
 DLVHEX_NAMESPACE_BEGIN
 
 namespace dllite{
+extern DLLitePlugin theDLLitePlugin;
+
 RepairModelGeneratorFactory::RepairModelGeneratorFactory(
     ProgramCtx& ctx,
     const ComponentInfo& ci):
@@ -354,7 +356,7 @@ void RepairModelGenerator::generalizeNogood(Nogood ng){
 	if (eaid == ID_FAIL) return;
 
 	assert(annotatedGroundProgram.getAuxToEA(eaid.address).size() > 0);
-	DBGLOG(DBG, "External atom is " << annotatedGroundProgram.getAuxToEA(eaid.address)[0]);
+	DBGLOG(DBG, "external atom is " << annotatedGroundProgram.getAuxToEA(eaid.address)[0]);
 	const ExternalAtom& ea = reg->eatoms.getByID(annotatedGroundProgram.getAuxToEA(eaid.address)[0]);
 
 	// learn related nonground nogoods
@@ -363,30 +365,38 @@ void RepairModelGenerator::generalizeNogood(Nogood ng){
 }
 
 void RepairModelGenerator::learnSupportSets(){
-	DBGLOG(DBG,"learning support sets is started")
+	DBGLOG(DBG,"RMG: learning support sets is started")
 	if (factory.ctx.config.getOption("SupportSets")){
-	DBGLOG(DBG,"Option supportsets is recognized");
+	DBGLOG(DBG,"RMG: option supportsets is recognized");
 		SimpleNogoodContainerPtr potentialSupportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
 		SimpleNogoodContainerPtr supportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
-		for(unsigned eaIndex = 0; eaIndex < factory.innerEatoms.size(); ++eaIndex){
-//			InterpretationPtr evalIntr(new Interpretation(factory.reg));
+		// create a vector for storing all external atoms
+		std::vector<ID> allEatoms;
+		allEatoms.insert(allEatoms.end(), factory.innerEatoms.begin(), factory.innerEatoms.end());
+		allEatoms.insert(allEatoms.end(), factory.outerEatoms.begin(), factory.outerEatoms.end());
 
-			// make sure that ALL input and input auxiliary atoms are true
-//			evalIntr->getStorage() |= annotatedGroundProgram.getEAMask(eaIndex)->mask()->getStorage();
-
-			// evaluate the external atom if it provides support sets
-			const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
+		DBGLOG(DBG,"RMG: Number of innereatoms: "<<factory.innerEatoms.size());
+		DBGLOG(DBG,"RMG: Number of outerereatoms: "<<factory.outerEatoms.size());
+		DBGLOG(DBG,"RMG: Number of all eatoms: "<<allEatoms.size());
+				
+		
+		// learn support sets for all external atoms
+		for(unsigned eaIndex = 0; eaIndex < allEatoms.size(); ++eaIndex){
+			DBGLOG(DBG,"RMG: start going through all external atoms and learning potential support sets for them");
+			const ExternalAtom& eatom = reg->eatoms.getByID(allEatoms[eaIndex]);
 			if (eatom.getExtSourceProperties().providesSupportSets()){
-				DBGLOG(DBG, "Evaluating external atom " << factory.innerEatoms[eaIndex] << " for support set learning");
-//				IntegrateExternalAnswerIntoInterpretationCB dummyCB(evalIntr);
+				DBGLOG(DBG, "RMG: evaluating external atom " << allEatoms[eaIndex] << " for support set learning");
 				learnSupportSetsForExternalAtom(factory.ctx, eatom, potentialSupportSets);
 			}
+			DBGLOG(DBG,"RMG: finished going through all external atoms and potential support sets were learnt for them");
 		}
+
 
 		DLVHEX_BENCHMARK_REGISTER(sidnongroundpsupportsets, "nonground potential supportsets");
 		DLVHEX_BENCHMARK_COUNT(sidnongroundpsupportsets, potentialSupportSets->getNogoodCount());
 
 		// ground the support sets exhaustively
+		DBGLOG(DBG,"RMG: grounding of potential support sets is started ");		
 		NogoodGrounderPtr nogoodgrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), potentialSupportSets, potentialSupportSets, annotatedGroundProgram));
 
 		int nc = 0;
@@ -397,64 +407,82 @@ void RepairModelGenerator::learnSupportSets(){
                 DLVHEX_BENCHMARK_REGISTER(sidgroundpsupportsets, "ground potential supportsets");
                 DLVHEX_BENCHMARK_COUNT(sidgroundpsupportsets, supportSets->getNogoodCount());
 
-		// all support sets are also learned nogoods
+		// some support sets are also learned nogoods
 		bool keep;
-		DBGLOG(DBG,"Number of potential support sets is: " << potentialSupportSets->getNogoodCount());		
-		for (int i = 0; i < potentialSupportSets->getNogoodCount(); ++i){
+		bool isGuard;
+		DBGLOG(DBG,"RMG: number of potential ground support sets is: " << potentialSupportSets->getNogoodCount());			DBGLOG(DBG,"RMG: start going through potential ground support sets and pick those that are without a guard, they will be added as nogoods");		
+		for (int i = 0; i < potentialSupportSets->getNogoodCount(); ++i) {
 			const Nogood& ng = potentialSupportSets->getNogood(i);
-			// Check if it is a nogood with a guard
-			DBGLOG(DBG,"String represenation of " << ng <<" is "<< ng.getStringRepresentation(reg));
-			if (ng.isGround()){
-				// determine the external atom replacement in ng
-				ID eaAux = ID_FAIL;
-				BOOST_FOREACH (ID lit, ng){
-					if (reg->ogatoms.getIDByAddress(lit.address).isExternalAuxiliary()){
-						if (eaAux != ID_FAIL) throw GeneralError("Set " + ng.getStringRepresentation(reg) + " is not a valid support set because it contains multiple external literals");
-						eaAux = lit;
+			isGuard=false;
+			DBGLOG(DBG,"RMG: consider potential support set viewed as nogood " << ng.getStringRepresentation(reg) << " with id " << ng);		
+			// Check if it is a nogood without a guard, use flag isGuard for that
+			DBGLOG(DBG,"RMG: checking guards presence");	
+		
+			BOOST_FOREACH (ID lit, ng){
+				// for each literal we check whether it is ground or nonground
+				// and then for ground and nonround literals we seperately identify whether it is a guard or not
+				if (lit.isOrdinaryGroundAtom()) {
+					DBGLOG(DBG,"RMG: considered literal " << lit << " is ground. ");
+					ID litID = reg->ogatoms.getIDByAddress(lit.address);
+					DBGLOG(DBG,"RMG: ID of the considered literal is " << litID);
+					// check if it is not a guard atom
+					if (litID.isAuxiliary()){
+						DBGLOG(DBG,"RMG: " << litID <<" is auxiliary.");
+						const OrdinaryAtom& possibleGuardAtom = reg->lookupOrdinaryAtom(lit);
+						DBGLOG(DBG,"RMG: possible guard atom is " << possibleGuardAtom<< " tuple[0] is "<< possibleGuardAtom.tuple[0]);
+						if (possibleGuardAtom.tuple[0] != theDLLitePlugin.guardPredicateID) {
+								DBGLOG(DBG,"RMG: "<< possibleGuardAtom.tuple[0] << "!=" << theDLLitePlugin.guardPredicateID);
+								continue;
+						}
+						else {
+						    	isGuard=true;
+								DBGLOG(DBG,"RMG: support set viewed as nogood "<< ng.getStringRepresentation(reg) <<" contains a guard " << possibleGuardAtom.tuple[0]);
+							    break;
+							}
 					}
 				}
-				if (eaAux == ID_FAIL) throw GeneralError("Set " + ng.getStringRepresentation(reg) + " is not a valid support set because it contains no external literals");
-
-				// determine the according external atom
-				if (annotatedGroundProgram.mapsAux(eaAux.address)){
-					DBGLOG(DBG, "Evaluating guards of " << ng.getStringRepresentation(reg));
-					keep = true;
-					Nogood ng2 = ng;
-					reg->eatoms.getByID(annotatedGroundProgram.getAuxToEA(eaAux.address)[0]).pluginAtom->guardSupportSet(keep, ng2, eaAux);
-					if (keep){
-#ifdef DEBUG
-						// ng2 must be a subset of ng and still a valid support set
-						ID aux = ID_FAIL;
-						BOOST_FOREACH (ID id, ng2){
-							if (reg->ogatoms.getIDByAddress(id.address).isExternalAuxiliary()) aux = id;
-							assert(std::find(ng.begin(), ng.end(), id) != ng.end());
+				else {
+					DBGLOG(DBG,"RMG: considered literal " << lit << " is nonground. ");
+					ID litID = reg->onatoms.getIDByAddress(lit.address);
+					DBGLOG(DBG,"RMG: ID of the considered literal is " << litID);
+					// check if it is not a guard atom
+					if (litID.isAuxiliary()){
+						const OrdinaryAtom& possibleGuardAtom = reg->lookupOrdinaryAtom(lit);
+						DBGLOG(DBG,"RMG: possible guard atom is " << possibleGuardAtom<< " tuple[0] is "<< possibleGuardAtom.tuple[0]);
+						if (possibleGuardAtom.tuple[0] != theDLLitePlugin.guardPredicateID) {
+							DBGLOG(DBG,"RMG: theDLLitePlugin.guardPredicateIn is "  << theDLLitePlugin.guardPredicateID);
+							continue;
 						}
-						assert(aux != ID_FAIL);
-#endif
-						DBGLOG(DBG, "Keeping in form " << ng2.getStringRepresentation(reg));
-						learnedEANogoods->addNogood(ng2);
-						supportSets->addNogood(ng2);
-#ifdef DEBUG
-					}else{
-						assert(ng == ng2);
-						DBGLOG(DBG, "Rejecting " << ng2.getStringRepresentation(reg));
-#endif
+						else {
+						  	isGuard=true;
+							DBGLOG(DBG,"RMG: support set viewed as nogood "<< ng.getStringRepresentation(reg) <<" contains a guard " << possibleGuardAtom.tuple[0]);
+						}
 					}
 				}
 			}
+			DBGLOG(DBG,"RMG: ******************Finished analysing the current ng************************ ");
+			if (ng.isGround()){
+									// determine the external atom replacement in ng
+				ID eaAux = ID_FAIL;
+				BOOST_FOREACH (ID lit, ng){
+						if (reg->ogatoms.getIDByAddress(lit.address).isExternalAuxiliary()){
+							if (eaAux != ID_FAIL) throw GeneralError("Set " + ng.getStringRepresentation(reg) + " is not a valid support set because it contains multiple external literals");
+							eaAux = lit;
+						}
+				}
+				if (eaAux == ID_FAIL) throw GeneralError("Set " + ng.getStringRepresentation(reg) + " is not a valid support set because it contains no external literals");
+
+				if (isGuard==false) {
+					DBGLOG(DBG, "RMG: adding the followig nogood: " << ng.getStringRepresentation(reg));
+					learnedEANogoods->addNogood(ng);
+					}
+				}
+			}	
+				
 		}
 
                 DLVHEX_BENCHMARK_REGISTER(sidgroundsupportsets, "final ground supportsets");
                 DLVHEX_BENCHMARK_COUNT(sidgroundsupportsets, supportSets->getNogoodCount());
-
-
-
-
-
-
-
-
-
 
 #if 0
 		// generate rules for this support set
@@ -540,16 +568,6 @@ void RepairModelGenerator::learnSupportSets(){
 		  solver->addPropagator(this);
 #endif
 
-
-
-
-
-
-
-		// add them to the annotated ground program to make use of them for verification
-		DBGLOG(DBG, "Adding " << supportSets->getNogoodCount() << " support sets to annotated ground program");
-		annotatedGroundProgram.setCompleteSupportSetsForVerification(supportSets);
-	}
 }
 
 void RepairModelGenerator::updateEANogoods(
@@ -610,6 +628,7 @@ void RepairModelGenerator::updateEANogoods(
 }
 
 bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
+	
 	DBGLOG(DBG,"Repair check is started:");
 	// did we already verify during model construction or do we have to do the verification now?
 	// repair exists is a flag that witnesses the ABox repair existence 	
@@ -620,7 +639,6 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	// Maybe it is possible to get askingaccess to the size of the set of all external atoms as factory.Eatoms.size()
 	DBGLOG(DBG,"Number of inner external atoms: " << factory.innerEatoms.size());
 	DBGLOG(DBG,"Number of outer external atoms: " << factory.outerEatoms.size()); 
-	// DBGLOG(DBG,"Number of all external atoms: " << factory.Eatoms.size()); 
 	
 	// We divide all external atoms into two groups: 
 	// group D1: those that were guessed true in modelCandidate; 

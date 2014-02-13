@@ -521,7 +521,9 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 #endif
 
 	// evaluate the classification program without custom model generators
+
 	ProgramCtx pc = ctx;
+	pc.config.setOption("ForceGC", 0);
 	pc.idb = theDLLitePlugin.classificationIDB;
 	pc.edb = edb;
 	pc.currentOptimum.clear();
