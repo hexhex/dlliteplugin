@@ -80,6 +80,7 @@ public:
 		std::string ontologyPath, ontologyNamespace, ontologyVersion;
 
 		ID ontologyName;			// ID of constant with filename (as given in the program or on command-line)
+		bool includeAbox;			// true if the ontology was loaded including the Abox, false if it was loaded with empty Abox
 		bool loaded;				// true if the ontology is ready to use
 
 		// interface to internal reasoner
@@ -129,7 +130,7 @@ public:
 		virtual ~CachedOntology();
 
 		// loads the ontology
-		void load(ID ontologyName);
+		void load(ID ontologyName, bool includeAbox);
 
 		// computes the classification for a given ontology
 		void computeClassification(ProgramCtx& ctx);
@@ -260,7 +261,7 @@ protected:
 	void constructClassificationProgram(ProgramCtx& ctx);
 
 	// loads an ontology and computes its classification or returns a reference to it if already present
-	CachedOntologyPtr prepareOntology(ProgramCtx& ctx, ID ontologyNameID);
+	CachedOntologyPtr prepareOntology(ProgramCtx& ctx, ID ontologyNameID, bool includeAbox = true);
 
 	// creates a atom template and adds the AUX property if necessary (depending on the predicate)
 	OrdinaryAtom getNewAtom(ID pred, bool ground = false);

@@ -62,7 +62,7 @@ protected:
 	virtual void guardSupportSet(bool& keep, Nogood& ng, const ID eaReplacement);
 
 	// expands the Abox with the facts given in the interpretation
-	std::vector<TDLAxiom*> expandAbox(const Query& query);
+	std::vector<TDLAxiom*> expandAbox(const Query& query, bool useExistingAbox);
 
 	// recorvers the original Abox
 	void restoreAbox(const Query& query, std::vector<TDLAxiom*> addedAxioms);

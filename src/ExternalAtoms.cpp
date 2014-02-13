@@ -116,8 +116,10 @@ void DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const ID eaReplacemen
 	assert(ng.isGround());
 
 	// get the ontology name
-	ID ontologyNameID = reg->ogatoms.getByID(eaReplacement).tuple[1];
-	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, ontologyNameID);
+	const OrdinaryAtom& repl = reg->ogatoms.getByID(eaReplacement);
+	ID ontologyNameID = repl.tuple[1];
+	bool useAbox = (repl.tuple.size() == 6 || repl.tuple.size() == 7 && repl.tuple[6].address == 1);
+	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, ontologyNameID, useAbox);
 
 	DBGLOG(DBG, "Filtering SupportSet " << ng.getStringRepresentation(reg) << " wrt. " << *ontology->conceptAssertions);
 
@@ -170,11 +172,11 @@ void DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const ID eaReplacemen
 	keep = true;
 }
 
-std::vector<TDLAxiom*> DLPluginAtom::expandAbox(const Query& query){
+std::vector<TDLAxiom*> DLPluginAtom::expandAbox(const Query& query, bool useExistingAbox){
 
 	RegistryPtr reg = getRegistry();
 
-	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0]);
+	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0], useExistingAbox);
 
 	// add the additional assertions
 	std::vector<TDLAxiom*> addedAxioms;
@@ -661,6 +663,7 @@ CDLAtom::CDLAtom(ProgramCtx& ctx) : DLPluginAtom("cDL", ctx)
 	addInputPredicate(); // the positive role
 	addInputPredicate(); // the negative role
 	addInputConstant(); // the query
+	addInputTuple(); // optional integer parameter: 0 to ignore the Abox from the ontology file, 1 to use it
 	setOutputArity(1); // arity of the output list
 
 	prop.supportSets = true; // we provide support sets
@@ -674,8 +677,11 @@ void CDLAtom::retrieve(const Query& query, Answer& answer, NogoodContainerPtr no
 
 	RegistryPtr reg = getRegistry();
 
-	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0]);
-	std::vector<TDLAxiom*> addedAxioms = expandAbox(query);
+	if (query.input.size() > 7) throw PluginError("cDL accepts at most 7 parameters");
+	if (query.input.size() == 7 && (!query.input[6].isIntegerTerm() || query.input[6].address >= 2)) throw PluginError("Last parameter of cDL must be 0 or 1");
+	bool useAbox = (query.input.size() < 7 || query.input[6].address == 1);
+	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0], useAbox);
+	std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox);
 
 	// handle inconsistency
 	if (!ontology->kernel->isKBConsistent()){
@@ -744,6 +750,7 @@ RDLAtom::RDLAtom(ProgramCtx& ctx) : DLPluginAtom("rDL", ctx)
 	addInputPredicate(); // the positive role
 	addInputPredicate(); // the negative role
 	addInputConstant(); // the query
+	addInputTuple(); // optional integer parameter: 0 to ignore the Abox from the ontology file, 1 to use it
 	setOutputArity(2); // arity of the output list
 
 	prop.supportSets = true; // we provide support sets
@@ -757,8 +764,11 @@ void RDLAtom::retrieve(const Query& query, Answer& answer, NogoodContainerPtr no
 
 	RegistryPtr reg = getRegistry();
 
-	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0]);
-	std::vector<TDLAxiom*> addedAxioms = expandAbox(query);
+	if (query.input.size() > 7) throw PluginError("rDL accepts at most 7 parameters");
+	if (query.input.size() == 7 && (!query.input[6].isIntegerTerm() || query.input[6].address >= 2)) throw PluginError("Last parameter of rDL must be 0 or 1");
+	bool useAbox = (query.input.size() < 7 || query.input[6].address == 1);
+	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0], useAbox);
+	std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox);
 
 	// handle inconsistency
 	if (!ontology->kernel->isKBConsistent()){
@@ -845,6 +855,7 @@ ConsDLAtom::ConsDLAtom(ProgramCtx& ctx) : DLPluginAtom("consDL", ctx, false)	// 
 	addInputPredicate(); // the negative concept
 	addInputPredicate(); // the positive role
 	addInputPredicate(); // the negative role
+	addInputTuple(); // optional integer parameter: 0 to ignore the Abox from the ontology file, 1 to use it
 	setOutputArity(0); // arity of the output list
 }
 
@@ -855,11 +866,11 @@ void ConsDLAtom::retrieve(const Query& query, Answer& answer, NogoodContainerPtr
 
 	RegistryPtr reg = getRegistry();
 
-	// learn support sets (if enabled)
-	//DLPluginAtom::retrieve(query, answer, nogoods);
-
-	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0]);
-	std::vector<TDLAxiom*> addedAxioms = expandAbox(query);
+	if (query.input.size() > 6) throw PluginError("consDL accepts at most 6 parameters");
+	if (query.input.size() == 6 && (!query.input[5].isIntegerTerm() || query.input[5].address >= 2)) throw PluginError("Last parameter of consDL must be 0 or 1");
+	bool useAbox = (query.input.size() < 6 || query.input[5].address == 1);
+	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0], useAbox);
+	std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox);
 
 	// handle inconsistency
 	if (ontology->kernel->isKBConsistent()){
@@ -880,6 +891,7 @@ InconsDLAtom::InconsDLAtom(ProgramCtx& ctx) : DLPluginAtom("inconsDL", ctx)
 	addInputPredicate(); // the negative concept
 	addInputPredicate(); // the positive role
 	addInputPredicate(); // the negative role
+	addInputTuple(); // optional integer parameter: 0 to ignore the Abox from the ontology file, 1 to use it
 	setOutputArity(0); // arity of the output list
 }
 
@@ -890,11 +902,11 @@ void InconsDLAtom::retrieve(const Query& query, Answer& answer, NogoodContainerP
 
 	RegistryPtr reg = getRegistry();
 
-	// learn support sets (if enabled)
-	//DLPluginAtom::retrieve(query, answer, nogoods);
-
-	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0]);
-	std::vector<TDLAxiom*> addedAxioms = expandAbox(query);
+	if (query.input.size() > 6) throw PluginError("inconsDL accepts at most 6 parameters");
+	if (query.input.size() == 6 && (!query.input[5].isIntegerTerm() || query.input[5].address >= 2)) throw PluginError("Last parameter of inconsDL must be 0 or 1");
+	bool useAbox = (query.input.size() < 6 || query.input[5].address == 1);
+	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0], useAbox);
+	std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox);
 
 	// handle inconsistency
 	if (!ontology->kernel->isKBConsistent()){

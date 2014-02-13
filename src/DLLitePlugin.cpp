@@ -61,6 +61,8 @@
 #include "owlcpp/io/input.hpp"
 #include "owlcpp/io/catalog.hpp"
 #include "owlcpp/logic/triple_to_fact.hpp"
+#include "owlcpp/logic/triple_to_fact.hpp"
+#include "owlcpp/logic/detail/triple_to_fact_adaptor.hpp"
 #include "owlcpp/terms/node_tags_owl.hpp"
 
 #include <boost/algorithm/string/predicate.hpp>
@@ -89,22 +91,18 @@ DLLitePlugin::CachedOntology::CachedOntology(RegistryPtr reg) : reg(reg){
 DLLitePlugin::CachedOntology::~CachedOntology(){
 }
 
-void DLLitePlugin::CachedOntology::load(ID ontologyName){
+void DLLitePlugin::CachedOntology::load(ID ontologyName, bool includeAbox){
 
 	assert(!loaded && "ontology was already loaded");
 	assert(!!reg && "registry must be set before load is called");
 	DBGLOG(DBG, "Assigning ontology name");
 	this->ontologyName = ontologyName;
+	this->includeAbox = includeAbox;
 
 	// load and prepare the ontology here
 	try{
 		DBGLOG(DBG, "Reading file " << reg->terms.getByID(ontologyName).getUnquotedString());
 		load_file(reg->terms.getByID(ontologyName).getUnquotedString(), store);
-
-		DBGLOG(DBG, "Submitting ontology to reasoning kernel");
-		submit(store, *kernel, true);
-
-		DBGLOG(DBG, "Consistency of KB: " << kernel->isKBConsistent());
 
 		DBGLOG(DBG, "Extracting ontology namespace");
 		owlcpp::Catalog cat;
@@ -118,6 +116,37 @@ void DLLitePlugin::CachedOntology::load(ID ontologyName){
 		}
 		DBGLOG(DBG, "Namespace is: " << ontologyNamespace << " (path: " << ontologyPath << ", version: " << ontologyVersion << ")");
 		assert(oCount == 1 && "The file should contain exactly one ontology");
+
+		DBGLOG(DBG, "Submitting ontology " << (includeAbox ? "with" : "without") << " Abox to reasoning kernel");
+		if (includeAbox){
+			submit(store, *kernel, true);
+		}else{
+			// submit all triples separately, but skip Abox assertions
+			owlcpp::logic::factpp::Adaptor_triple at(store, *kernel, true);
+			BOOST_FOREACH(owlcpp::Triple const& t, store.map_triple()) {
+				std::string subj = to_string(t.subj_, store);
+				std::string obj = to_string(t.obj_, store);
+				std::string pred = to_string(t.pred_, store);
+
+				DBGLOG(DBG, "Current triple: " << subj << " / " << pred << " / " << obj);
+				if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && isOwlConstant(obj)) {
+					DBGLOG(DBG, "Skipping concept assertion");
+					continue;
+				}else if (isOwlConstant(subj) && isOwlConstant(pred) && isOwlConstant(obj)) {
+					DBGLOG(DBG, "Skipping role assertion");
+					continue;
+				}else{
+					DBGLOG(DBG, "Submitting triple");
+					try{
+						at.submit(t);
+					}catch(owlcpp::Logic_err const&){
+						throw PluginError("Error while sending ontology without Abox to FaCT++");
+					}
+				}
+			}
+		}
+
+		DBGLOG(DBG, "Consistency of KB: " << kernel->isKBConsistent());
 	}catch(...){
 		throw PluginError("DLLite reasoner failed while loading file \"" + reg->terms.getByID(ontologyName).getUnquotedString() + "\", ensure that it is a valid ontology");
 	}
@@ -144,13 +173,13 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 		std::string obj = to_string(t.obj_, store);
 		std::string pred = to_string(t.pred_, store);
 
-		DBGLOG(DBG, "Current triple: " << to_string(t.subj_, store) << " / " << pred << " / " << obj);
+		DBGLOG(DBG, "Current triple: " << subj << " / " << pred << " / " << obj);
 
 		// concept definition
 		DBGLOG(DBG, "Checking if this is a concept definition");
-		if (isOwlConstant(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "Class")) {
+		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "Class")) {
 			DBGLOG(DBG, "Yes");
-			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
+			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj));
 #ifndef NDEBUG
 			std::string conceptStr = RawPrinter::toString(reg, conceptID);
 			DBGLOG(DBG, "Found concept: " << conceptStr);
@@ -164,7 +193,7 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 		DBGLOG(DBG, "Checking if this is a role definition");
 		if (isOwlConstant(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "ObjectProperty")) {
 			DBGLOG(DBG, "Yes");
-			ID roleID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
+			ID roleID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj));
 #ifndef NDEBUG
 			std::string roleStr = RawPrinter::toString(reg, roleID);
 			DBGLOG(DBG, "Found role: " << roleStr);
@@ -176,10 +205,10 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 
 		// concept assertion
 		DBGLOG(DBG, "Checking if this is a concept assertion");
-		if (isOwlConstant(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && isOwlConstant(obj)) {
+		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && isOwlConstant(obj)) {
 			DBGLOG(DBG, "Yes");
 			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj));
-			ID individualID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
+			ID individualID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj));
 			OrdinaryAtom guard = theDLLitePlugin.getNewGuardAtom(true /* ground! */ );
 			guard.tuple.push_back(conceptID);
 			guard.tuple.push_back(individualID);
@@ -198,10 +227,10 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 
 		// role assertion
 		DBGLOG(DBG, "Checking if this is a role assertion");
-		if (isOwlConstant(pred) && isOwlConstant(pred) && isOwlConstant(obj)) {
+		if (isOwlConstant(subj) && isOwlConstant(pred) && isOwlConstant(obj)) {
 			DBGLOG(DBG, "Yes");
 			ID roleID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(pred));
-			ID individual1ID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store)));
+			ID individual1ID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj));
 			ID individual2ID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj));
 #ifndef NDEBUG
 			std::string roleAssertionStr = RawPrinter::toString(reg, roleID) + "(" + RawPrinter::toString(reg, individual1ID) + "," + RawPrinter::toString(reg, individual2ID) + ")";
@@ -219,9 +248,9 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 
 		// individual definition
 		DBGLOG(DBG, "Checking if this is an individual definition");
-		if (isOwlConstant(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(obj, "Thing") && theDLLitePlugin.cmpOwlType(pred, "type")) {
+		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(obj, "Thing") && theDLLitePlugin.cmpOwlType(pred, "type")) {
 			DBGLOG(DBG, "Yes");
-			individuals->setFact(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(to_string(t.subj_, store))).address);
+			individuals->setFact(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)).address);
 		}else{
 			DBGLOG(DBG, "No");
 		}
@@ -741,7 +770,7 @@ void DLLitePlugin::constructClassificationProgram(ProgramCtx& ctx){
 	DBGLOG(DBG, "Constructed classification program");
 }
 
-DLLitePlugin::CachedOntologyPtr DLLitePlugin::prepareOntology(ProgramCtx& ctx, ID ontologyNameID){
+DLLitePlugin::CachedOntologyPtr DLLitePlugin::prepareOntology(ProgramCtx& ctx, ID ontologyNameID, bool includeAbox){
 
 	std::vector<CachedOntologyPtr>& ontologies = ctx.getPluginData<DLLitePlugin>().ontologies;
 
@@ -749,7 +778,7 @@ DLLitePlugin::CachedOntologyPtr DLLitePlugin::prepareOntology(ProgramCtx& ctx, I
 	DBGLOG(DBG, "prepareOntology");
 
 	BOOST_FOREACH (CachedOntologyPtr o, ontologies){
-		if (o->ontologyName == ontologyNameID){
+		if (o->ontologyName == ontologyNameID && o->includeAbox == includeAbox){
 			DBGLOG(DBG, "Accessing cached ontology " << reg->terms.getByID(ontologyNameID).getUnquotedString());
 			return o;
 		}
@@ -765,13 +794,12 @@ DLLitePlugin::CachedOntologyPtr DLLitePlugin::prepareOntology(ProgramCtx& ctx, I
 		origcerr = std::cerr.rdbuf(errstr.rdbuf());
 	}
 
-
 	// ontology is not in the cache --> load it
 	DBGLOG(DBG, "Loading ontology" << reg->terms.getByID(ontologyNameID).getUnquotedString());
 
 	CachedOntologyPtr co = CachedOntologyPtr(new CachedOntology(reg));
 	try{
-		co->load(ontologyNameID);
+		co->load(ontologyNameID, includeAbox);
 		ontologies.push_back(co);
 	}catch(...){
 		// restore stderr
