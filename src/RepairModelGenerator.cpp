@@ -554,34 +554,6 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	InterpretationPtr dpos(new Interpretation(reg));
 	InterpretationPtr dneg(new Interpretation(reg));
 
-		
-	/*for (int eaIndex = 0; eaIndex < factory.outerEatoms.size(); ++eaIndex){
-		DBGLOG(DBG,"Considered external atom: " << factory.outerEatoms[eaIndex]);
-		DBGLOG(DBG,"It is in fact: " << factory.outerEatoms[eaIndex]);
-	}*/
-	
-//	bm::bvector<>::enumerator en = modelCandidate->getStorage().first();
-//	bm::bvector<>::enumerator en_end =  modelCandidate->getStorage().end();
-	
-	
-	/*while (en < en_end){
-		ID id = reg->ogatoms.getIDByAddress(*en);
-		if (id.isExternalAuxiliary() && !id.isExternalInputAuxiliary()){
-		// it is an external atom replacement, now check if it is positive or negative
-			if (reg->isPositiveExternalAtomAuxiliaryAtom(id)){
-				DBGLOG(DBG,"RMG: Atom " << id << " is positive");
-			}else{
-				DBGLOG(DBG,"RMG: Atom " << id << " is negative");
-				// negative
-
-		// the following assertion is not needed, but should be added to make the implementation more rebust
-		// (it might help to find programming errors later on)
-		//assert(reg->isNegativeExternalAtomAuxiliaryAtom(id) && "replacement atom is neither positive nor negative");
-			}
-		}
-		en++;
-	}*/
-
 	// Go through all atoms in alleatoms
 	// and evaluate them
 	// mask stores all relevant atoms for external atom with index eaindex
@@ -682,6 +654,7 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 			}
 			// if the current atom is a guard then do nothing
 			else if (newid.isGuardAuxiliary()) {  //guard atom
+				// the current support set for the current atom has a guard
 				hasAuxiliary = true;
 			}
 			// if the current atom is an ordinary atom then check whether it is true in the current model and if it is then
@@ -729,34 +702,42 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 												del=true;
 											}
 										}
-										// delete support set which contains guard idns from the set of support sets for
+										// delete support set which contains guard idns from the set of support sets for the current positve atom
 										if (del==true) {
-											//	dlatsupportsets[idpos].erase(j);
+												dlatsupportsets[idpos].erase(dlatsupportsets[idpos].begin() + j);
 										}
 									}
 									// find out whether the guard is a concept or a role and eliminate it from the repair ABox
 									// determine the type of the guard by the size of its tuple
-									if (reg->ogatoms.getByAddress(idns.address).tuple.size()==2) {
-										//it is a concept, thus clear the assertion from conceptABox
-										newConceptsABox->clearFact(idns.address);
+									if (reg->ogatoms.getByAddress(idns.address).tuple.size()==3) {
+										//it is a concept, thus delete the assertion from conceptABox
+										if (newConceptsABox->getFact(idns.address)==true)
+											newConceptsABox->clearFact(idns.address);
 									}
 									else {
 										// it is a role, thus delete the assertion from the roleABox
+										DLLitePlugin::CachedOntology::RoleAssertion ra;
+										ra.first=reg->ogatoms.getByAddress(idns.address).tuple[1];
+										ra.second.first=reg->ogatoms.getByAddress(idns.address).tuple[2];
+										ra.second.second=reg->ogatoms.getByAddress(idns.address).tuple[3];
+										std::vector<DLLitePlugin::CachedOntology::RoleAssertion>::iterator it;
+										it = find(newRolesABox.begin(), newRolesABox.end(), ra);
+										if (it != newRolesABox.end())
+										{
+											newRolesABox.erase(remove(newRolesABox.begin(), newRolesABox.end(), ra), newRolesABox.end());
+											
+										}
 									}
 								}
 							}
 						}
-
+					}
+					if (dlatsupportsets[idpos].size()==0) {
+						repairExists=false;
 					}
 				}
 			}
 
-							// if (Si is empty)
-				//stop with this modelCandidate, set repairExists=false 
-			//else i++, i.e. move to the next external atom in D1
-		//}	
-		// go through all left support sets S' for exteral atoms in D2 and eliminate ABox assertions from repairABox which are involved in S'
-		// return repairExists;
 	DBGLOG(DBG, "***** Repair ABox existence: " << repairExists);
 	return repairExists;
 }
