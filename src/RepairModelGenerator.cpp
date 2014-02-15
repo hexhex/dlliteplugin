@@ -48,8 +48,10 @@
 #include "dlvhex2/UnfoundedSetChecker.h"
 #include "DLLitePlugin.h"
 #include <bm/bmalgo.h>
-
+#include <map>
+#include <vector>
 #include <boost/foreach.hpp>
+
 
 DLVHEX_NAMESPACE_BEGIN
 
@@ -536,25 +538,22 @@ void RepairModelGenerator::updateEANogoods(
 bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	
 	DBGLOG(DBG,"Repair check is started:");
-	// did we already verify during model construction or do we have to do the verification now?
 	// repair exists is a flag that witnesses the ABox repair existence 	
 	bool repairExists;
 	int ngCount;
 	repairExists = true;
-	// now vector alleatoms is created twice, this needs to be changed
-	/*std::vector<ID> allEatoms;
-	allEatoms.insert(allEatoms.end(), factory.innerEatoms.begin(), factory.innerEatoms.end());
-	allEatoms.insert(allEatoms.end(), factory.outerEatoms.begin(), factory.outerEatoms.end());
-*/
+
 	DBGLOG(DBG,"RMG: Number of inner external atoms: " << factory.innerEatoms.size());
 	DBGLOG(DBG,"RMG: Number of outer external atoms: " << factory.outerEatoms.size());
 	DBGLOG(DBG,"RMG: Number of all external atoms: " << factory.allEatoms.size());
+
+	// We divide all external atoms into two groups:
+		// group dpos: those that were guessed true in modelCandidate;
+		// group npos: and those that were guessed false in modelCandidate.
+
 	InterpretationPtr dpos(new Interpretation(reg));
 	InterpretationPtr dneg(new Interpretation(reg));
 
-	// We divide all external atoms into two groups: 
-	// group D1: those that were guessed true in modelCandidate; 
-	// group D2: and those that were guessed false in modelCandidate.
 		
 	/*for (int eaIndex = 0; eaIndex < factory.outerEatoms.size(); ++eaIndex){
 		DBGLOG(DBG,"Considered external atom: " << factory.outerEatoms[eaIndex]);
@@ -589,7 +588,9 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 
 
 	for (int eaIndex=0; eaIndex<factory.allEatoms.size();eaIndex++){
+		DBGLOG(DBG,"RMG: consider external atom number "<< eaIndex);
 		const InterpretationConstPtr& mask = annotatedGroundProgram.getEAMask(eaIndex)->mask();
+		DBGLOG(DBG,"RMG: interpretation mask is created "<< mask);
 		// make sure that ALL input auxiliary atoms are true, otherwise we might miss some output atoms and consider true output atoms wrongly as unfounded
 		// thus we need the following:
 		InterpretationPtr evalIntr(new Interpretation(reg));
@@ -601,102 +602,156 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 
 		// call back
 		// interptretation for storing the result true vectors for external atoms is created
-
+		DBGLOG(DBG,"RMG: interpretation for storing result true values of external atoms is created "<< mask);
 		InterpretationPtr newint(new Interpretation(reg));
 		IntegrateExternalAnswerIntoInterpretationCB cb(newint);
 
 		// evaluate external atom
+		DBGLOG(DBG,"RMG: evaluation of external atom number "<< eaIndex << ", namely "<< factory.allEatoms[eaIndex] << " is started");
 		evaluateExternalAtom(factory.ctx, reg->eatoms.getByID(factory.allEatoms[eaIndex]), evalIntr, cb);
 		bm::bvector<>::enumerator enm = mask->getStorage().first();
-		bm::bvector<>::enumerator en_endm =  mask->getStorage().end();
+		bm::bvector<>::enumerator enm_end =  mask->getStorage().end();
 
-		while (enm < en_endm){
+		while (enm < enm_end){
 			ID id = reg->ogatoms.getIDByAddress(*enm);
 			if (id.isExternalAuxiliary() && !id.isExternalInputAuxiliary()){
 			// it is an external atom replacement, now check if it is positive or negative
 				if (reg->isPositiveExternalAtomAuxiliaryAtom(id)){
 					DBGLOG(DBG,"RMG: Atom " << id << " is positive");
 					if (newint->getFact(*enm)) {
-						// add it to the set of positive external atoms D1.
+						// add the current atom to the set of positive external atoms D1.
+						DBGLOG(DBG,"RMG: add atom with id " << id << " to the set of those that are guessed true ");
 						dpos->setFact(*enm);
 					}
 					}
-				}else{
-					DBGLOG(DBG,"RMG: Atom " << id << " is negative");
+				}else {
+					DBGLOG(DBG,"RMG: Atom " << id << " is negative,"<<" indeed, reg->isPositiveExternalAtomAuxiliaryAtom(id) is "<<reg->isPositiveExternalAtomAuxiliaryAtom(id));
 					if (newint->getFact(*enm)) {
 						// add it to the set of negative external atoms D2.
+						DBGLOG(DBG,"RMG: add atom with id " << id << " to the set of those that are guessed false ");
 						dneg->setFact(*enm);
-
 					}
+					DBGLOG(DBG,"RMG: finished adding negative external atom to the set dneg");
 				}
+			DBGLOG(DBG,"RMG: finished analysing the current external atom");
 			// the following assertion is not needed, but should be added to make the implementation more rebust
 			// (it might help to find programming errors later on)
 					assert(reg->isNegativeExternalAtomAuxiliaryAtom(id) && "replacement atom is neither positive nor negative");
-
+			DBGLOG(DBG,"RMG: current enm is" << *enm);
 			enm++;
+			DBGLOG(DBG,"RMG: enm is incremented and now it is "<< *enm);
 		}
+		DBGLOG(DBG,"RMG: finished evluating external atom number "<< eaIndex);
 	}
+	DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
 
 
+	// It is ensured by apriori defined nogoods that all support sets for external atoms from dneg
+	// are dependent on the ABox (their guards are nonempty)
 
-	// It is ensured by apriori defined nogoods that all support sets for external atoms from D2 are dependent on the ABox (their guards are nonempty) 
-	// Set repairABox=originalABox
-
+	// Set create a temporary repairABox and store there original ABox
+	DBGLOG(DBG,"RMG: start creating a temporary ABox");
 	DLLitePlugin::CachedOntologyPtr newOntology = theDLLitePlugin.prepareOntology(factory.ctx, reg->storeConstantTerm(factory.ctx.getPluginData<DLLitePlugin>().repairOntology));
 	InterpretationPtr newConceptsABoxPtr = newOntology->conceptAssertions;
 	InterpretationPtr newConceptsABox(new Interpretation(reg));
 	newConceptsABox->add(*newConceptsABoxPtr);
 	std::vector<DLLitePlugin::CachedOntology::RoleAssertion> newRolesABox = newOntology->roleAssertions;
-
-	// crate a map that maps ids of external atoms to vector of support sets relevant to them
+	DBGLOG(DBG,"RMG: a temporary ABox is created");
+	DBGLOG(DBG,"RMG: start creating a map for external atoms IDs");
+	// create a map that maps id of external atoms to vector of its support sets 
+	 std::map<ID,std::vector<Nogood> > dlatsupportsets;
+	 // set of IDs of DL-atoms which have support sets which do not contain any guards
+	 std::vector<ID> dlatnoguard;
+	 // go through all stored nogoods
 	  for (int i = 0; i<factory.supportSets->getNogoodCount();i++) {
+		// keep is a flag that identifies whether a certain support set for a DL-atom should be kept and added to the map
 		bool keep = true;
+		bool hasAuxiliary = false;
 		ID currentExternalId;
 		BOOST_FOREACH(ID id,factory.supportSets->getNogood(i)) {
 			// distinct between ordinary atoms, replacement atoms and the guards
 			ID newid = reg->ogatoms.getIDByAddress(id.address);
-			if (newid.isExternalAuxiliary()) {  //replacement atom
-				// add id to the map
+			// if the atom is replacement atom, then store its id in currentExternalId
+			if (newid.isExternalAuxiliary()) {
 				currentExternalId = newid;
+				// if the current replacement atom is not already present in the map then add it to the map
+				if (dlatsupportsets.count(currentExternalId)==0) {
+					std::vector<Nogood> supset;
+					dlatsupportsets[currentExternalId] = supset;
+				}
 			}
+			// if the current atom is a guard then do nothing
 			else if (newid.isGuardAuxiliary()) {  //guard atom
-
+				hasAuxiliary = true;
 			}
-			else{ // ordinary input atom
-			if (modelCandidate->getFact(newid.address)!=newid.isNaf());
-				else keep = false;
+			// if the current atom is an ordinary atom then check whether it is true in the current model and if it is then
+			else { // ordinary input atom
+				if (modelCandidate->getFact(newid.address)==newid.isNaf()) keep = false;
 			}
-
 		}
-		if (keep) {//map.add(id, factory.supportSets->getNogood(i))
-		
+		if (keep) {
+			dlatsupportsets[currentExternalId].push_back(factory.supportSets->getNogood(i));
+			if (hasAuxiliary == false)
+			{
+				dlatnoguard.push_back(currentExternalId);
+			}
 		}
 	}
 
-
-
-	// for (each external atom d_i from D1) {
 	bm::bvector<>::enumerator enpos = dpos->getStorage().first();
-	bm::bvector<>::enumerator en_endpos = dpos->getStorage().end();
+	bm::bvector<>::enumerator enpos_end = dpos->getStorage().end();
+	bm::bvector<>::enumerator enneg = dneg->getStorage().first();
+	bm::bvector<>::enumerator enneg_end = dneg->getStorage().end();
 
-			while (enpos < en_endpos){
-				ID id = reg->ogatoms.getIDByAddress(*enpos);
-				
+			// for (each external atom d_i from dpos) {
+			while (enpos < enpos_end){
+				ID idpos = reg->ogatoms.getIDByAddress(*enpos);
+				// if (there is at least one support set in the set of kept support sets which does not have a guard, i.e. it consists only of signed input predicates of di)
+					//then move to the next external atom in D1
+
+				if (std::find(dlatnoguard.begin(), dlatnoguard.end(), idpos) != dlatnoguard.end()) {
+					continue;
+				}
+				else {
+					// go through negative external atoms
+					while (enneg < enneg_end){
+						ID idneg = reg->ogatoms.getIDByAddress(*enneg);
+						// go through support sets for the current negative atom
+						for (int i=0;i<dlatsupportsets[idneg].size();i++) {
+							// check whether the current support set has a guard and
+							// if it does then eliminate all support sets of atoms in dpos that contain the same guard
+							BOOST_FOREACH(ID idns,dlatsupportsets[idneg][i]) {
+								if (idns.isGuardAuxiliary()) {
+									for (int j=0;j<dlatsupportsets[idpos].size();j++) {
+										bool del=false;
+										BOOST_FOREACH(ID idps,dlatsupportsets[idpos][j]) {
+											if (idps==idns) {
+												del=true;
+											}
+										}
+										// delete support set which contains guard idns from the set of support sets for
+										if (del==true) {
+											//	dlatsupportsets[idpos].erase(j);
+										}
+									}
+									// find out whether the guard is a concept or a role and eliminate it from the repair ABox
+									// determine the type of the guard by the size of its tuple
+									if (reg->ogatoms.getByAddress(idns.address).tuple.size()==2) {
+										//it is a concept, thus clear the assertion from conceptABox
+										newConceptsABox->clearFact(idns.address);
+									}
+									else {
+										// it is a role, thus delete the assertion from the roleABox
+									}
+								}
+							}
+						}
+
+					}
+				}
 			}
-			// take the set Si of its ground support sets which are kept for the considered modelCandidate 
-			// if (there is at least one support set in Si which does not have a guard, i.e. it consists only of signed input predicates of di)  
-				//then i++, i.e. move to the next external atom in D1 
-			// else 
-				//for each dj in D2 {
-					// take the set Sj of ground support sets for dj which are kept for the current modelCandidate
-					// for each S' in Sj {
-						// eliminate from Si support sets which have the same guards as S'
-						// eliminate from repairABox all ABox assertions that cause S' being in Sj 
-						// eliminate S' from Sj 
-				 	//}
-					// j++, i.e. move to the next dj in D2
-				//}
-			// if (Si is empty) 
+
+							// if (Si is empty)
 				//stop with this modelCandidate, set repairExists=false 
 			//else i++, i.e. move to the next external atom in D1
 		//}	
