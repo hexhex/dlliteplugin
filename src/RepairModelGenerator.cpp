@@ -286,13 +286,9 @@ RepairModelGenerator::RepairModelGenerator(
     //   this must be regarded in UFS checking (see examples/trickyufs.hex)
 
  	ufscm = UnfoundedSetCheckerManagerPtr(new UnfoundedSetCheckerManager(*this, factory.ctx, annotatedGroundProgram, factory.ctx.config.getOption("GenuineSolver") >= 3, factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : SimpleNogoodContainerPtr()));
- 	DBGLOG(DBG,"RMG: after creation of unfoundedset managerchecker");
-
     // overtake nogoods from the factory
     {
-   	  DBGLOG(DBG,"RMG: before DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid,genuine g&c init nogoods)");
       DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid,"genuine g&c init nogoods");
-      DBGLOG(DBG,"RMG: after DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid,genuine g&c init nogoods)");
       for (int i = 0; i < factory.globalLearnedEANogoods->getNogoodCount(); ++i){
     	  DBGLOG(DBG,"RMG: going through nogoods");
     	  DBGLOG(DBG,"RMG: consider nogood number "<< i<< " which is "<<  factory.globalLearnedEANogoods->getNogood(i));
@@ -450,9 +446,10 @@ void RepairModelGenerator::learnSupportSets(){
 					}
 				}
 			}
-			DBGLOG(DBG,"RMG: ******************Finished analysing the current ng************************ ");
+			DBGLOG(DBG,"RMG: ******************Finished analysing " << ng.getStringRepresentation(reg)<<"************************ ");
 			if (ng.isGround()){
-									// determine the external atom replacement in ng
+				// determine the external atom replacement in ng
+				DBGLOG(DBG,"nogood " << ng.getStringRepresentation(reg)<< " is ground");
 				ID eaAux = ID_FAIL;
 				BOOST_FOREACH (ID lit, ng){
 						if (reg->ogatoms.getIDByAddress(lit.address).isExternalAuxiliary()){
@@ -558,11 +555,12 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	// and evaluate them
 	// mask stores all relevant atoms for external atom with index eaindex
 
-
+		DBGLOG(DBG,"RMG: number of indexes of external atoms is "<< factory.allEatoms.size());
 	for (int eaIndex=0; eaIndex<factory.allEatoms.size();eaIndex++){
-		DBGLOG(DBG,"RMG: consider external atom number "<< eaIndex);
+		DBGLOG(DBG,"RMG: consider external atom with index "<< eaIndex << "which is smaller then "<<factory.allEatoms.size());
 		const InterpretationConstPtr& mask = annotatedGroundProgram.getEAMask(eaIndex)->mask();
 		DBGLOG(DBG,"RMG: interpretation mask is created "<< mask);
+
 		// make sure that ALL input auxiliary atoms are true, otherwise we might miss some output atoms and consider true output atoms wrongly as unfounded
 		// thus we need the following:
 		InterpretationPtr evalIntr(new Interpretation(reg));
@@ -578,44 +576,82 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 		InterpretationPtr newint(new Interpretation(reg));
 		IntegrateExternalAnswerIntoInterpretationCB cb(newint);
 
-		// evaluate external atom
+		// evaluate the current external atom
 		DBGLOG(DBG,"RMG: evaluation of external atom number "<< eaIndex << ", namely "<< factory.allEatoms[eaIndex] << " is started");
 		evaluateExternalAtom(factory.ctx, reg->eatoms.getByID(factory.allEatoms[eaIndex]), evalIntr, cb);
 		bm::bvector<>::enumerator enm = mask->getStorage().first();
 		bm::bvector<>::enumerator enm_end =  mask->getStorage().end();
 
-		while (enm < enm_end){
+	/*	while (enm < enm_end){
 			ID id = reg->ogatoms.getIDByAddress(*enm);
+
+			//determine type of the atom
 			if (id.isExternalAuxiliary() && !id.isExternalInputAuxiliary()){
-			// it is an external atom replacement, now check if it is positive or negative
+
+				// it is an external atom replacement, now check if it is positive or negative
 				if (reg->isPositiveExternalAtomAuxiliaryAtom(id)){
+
+					// it is positive
 					DBGLOG(DBG,"RMG: Atom " << id << " is positive");
+
+					// add the current atom to the set of positive external atoms dpos.
 					if (newint->getFact(*enm)) {
-						// add the current atom to the set of positive external atoms D1.
 						DBGLOG(DBG,"RMG: add atom with id " << id << " to the set of those that are guessed true ");
 						dpos->setFact(*enm);
 					}
-					}
-				}else {
+
+				}
+				else {
+					// it is negative
 					DBGLOG(DBG,"RMG: Atom " << id << " is negative,"<<" indeed, reg->isPositiveExternalAtomAuxiliaryAtom(id) is "<<reg->isPositiveExternalAtomAuxiliaryAtom(id));
 					if (newint->getFact(*enm)) {
-						// add it to the set of negative external atoms D2.
+
+						// add it to the set of negative external atoms dneg
 						DBGLOG(DBG,"RMG: add atom with id " << id << " to the set of those that are guessed false ");
 						dneg->setFact(*enm);
 					}
 					DBGLOG(DBG,"RMG: finished adding negative external atom to the set dneg");
 				}
+			}
 			DBGLOG(DBG,"RMG: finished analysing the current external atom");
-			// the following assertion is not needed, but should be added to make the implementation more rebust
-			// (it might help to find programming errors later on)
-					assert(reg->isNegativeExternalAtomAuxiliaryAtom(id) && "replacement atom is neither positive nor negative");
 			DBGLOG(DBG,"RMG: current enm is" << *enm);
 			enm++;
 			DBGLOG(DBG,"RMG: enm is incremented and now it is "<< *enm);
+
+	}*/
+
+
+		while (enm < enm_end){
+			ID id = reg->ogatoms.getIDByAddress(*enm);
+			if (id. isExternalAuxiliary() && !id. isExternalInputAuxiliary()){
+
+				// it is an external atom replacement, now check if it is positive or negative
+				if (reg->isPositiveExternalAtomAuxiliaryAtom(id)){
+
+					// add it to dpos
+					if (newint->getFact(*enm)) {
+						DBGLOG(DBG,"RMG: add atom with id " << id << " to the set of positive atoms dpos ");
+						dpos->setFact(*enm);
+					}
+				}
+				else {
+					if (newint->getFact(*enm)) {
+
+						// add it to dneg
+						DBGLOG(DBG,"RMG: add atom with id " << id << " to the set of negative atoms dneg ");
+						dneg->setFact(*enm);
+					}
+					// negative
+					// the following assertion is not needed, but should be added to make the implementation more rebust
+					// (it might help to find programming errors later on)
+				}
+				//assert(reg->isNegativeExternalAtomAuxiliaryAtom(id) && "replacement atom is neither positive nor negative");
+			}
+			enm++;
 		}
-		DBGLOG(DBG,"RMG: finished evluating external atom number "<< eaIndex);
-	}
-	DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
+		DBGLOG(DBG,"RMG: finished evaluating external atom number "<< eaIndex);
+}
+DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
 
 
 	// It is ensured by apriori defined nogoods that all support sets for external atoms from dneg
@@ -630,22 +666,29 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	std::vector<DLLitePlugin::CachedOntology::RoleAssertion> newRolesABox = newOntology->roleAssertions;
 	DBGLOG(DBG,"RMG: a temporary ABox is created");
 	DBGLOG(DBG,"RMG: start creating a map for external atoms IDs");
+
 	// create a map that maps id of external atoms to vector of its support sets 
 	 std::map<ID,std::vector<Nogood> > dlatsupportsets;
+
 	 // set of IDs of DL-atoms which have support sets which do not contain any guards
 	 std::vector<ID> dlatnoguard;
+
 	 // go through all stored nogoods
 	  for (int i = 0; i<factory.supportSets->getNogoodCount();i++) {
+
 		// keep is a flag that identifies whether a certain support set for a DL-atom should be kept and added to the map
 		bool keep = true;
 		bool hasAuxiliary = false;
 		ID currentExternalId;
 		BOOST_FOREACH(ID id,factory.supportSets->getNogood(i)) {
+
 			// distinct between ordinary atoms, replacement atoms and the guards
 			ID newid = reg->ogatoms.getIDByAddress(id.address);
+
 			// if the atom is replacement atom, then store its id in currentExternalId
 			if (newid.isExternalAuxiliary()) {
 				currentExternalId = newid;
+
 				// if the current replacement atom is not already present in the map then add it to the map
 				if (dlatsupportsets.count(currentExternalId)==0) {
 					std::vector<Nogood> supset;
@@ -654,6 +697,7 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 			}
 			// if the current atom is a guard then do nothing
 			else if (newid.isGuardAuxiliary()) {  //guard atom
+
 				// the current support set for the current atom has a guard
 				hasAuxiliary = true;
 			}
@@ -679,6 +723,7 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 			// for (each external atom d_i from dpos) {
 			while (enpos < enpos_end){
 				ID idpos = reg->ogatoms.getIDByAddress(*enpos);
+
 				// if (there is at least one support set in the set of kept support sets which does not have a guard, i.e. it consists only of signed input predicates of di)
 					//then move to the next external atom in D1
 
@@ -689,8 +734,10 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 					// go through negative external atoms
 					while (enneg < enneg_end){
 						ID idneg = reg->ogatoms.getIDByAddress(*enneg);
+
 						// go through support sets for the current negative atom
 						for (int i=0;i<dlatsupportsets[idneg].size();i++) {
+
 							// check whether the current support set has a guard and
 							// if it does then eliminate all support sets of atoms in dpos that contain the same guard
 							BOOST_FOREACH(ID idns,dlatsupportsets[idneg][i]) {
@@ -702,19 +749,23 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 												del=true;
 											}
 										}
+
 										// delete support set which contains guard idns from the set of support sets for the current positve atom
 										if (del==true) {
 												dlatsupportsets[idpos].erase(dlatsupportsets[idpos].begin() + j);
 										}
 									}
+
 									// find out whether the guard is a concept or a role and eliminate it from the repair ABox
 									// determine the type of the guard by the size of its tuple
 									if (reg->ogatoms.getByAddress(idns.address).tuple.size()==3) {
+
 										//it is a concept, thus delete the assertion from conceptABox
 										if (newConceptsABox->getFact(idns.address)==true)
 											newConceptsABox->clearFact(idns.address);
 									}
 									else {
+
 										// it is a role, thus delete the assertion from the roleABox
 										DLLitePlugin::CachedOntology::RoleAssertion ra;
 										ra.first=reg->ogatoms.getByAddress(idns.address).tuple[1];
@@ -746,6 +797,7 @@ bool RepairModelGenerator::isModel(InterpretationConstPtr compatibleSet){
 
 	// which semantics?
 	if (factory.ctx.config.getOption("WellJustified")){
+
 		// well-justified FLP: fixpoint iteration
 		InterpretationPtr fixpoint = welljustifiedSemanticsGetFixpoint(factory.ctx, compatibleSet, grounder->getGroundProgram());
 		InterpretationPtr reference = InterpretationPtr(new Interpretation(*compatibleSet));
@@ -763,6 +815,7 @@ bool RepairModelGenerator::isModel(InterpretationConstPtr compatibleSet){
 			return false;
 		}
 	}else{
+
 		// FLP: ensure minimality of the compatible set wrt. the reduct (if necessary)
 		if (annotatedGroundProgram.hasHeadCycles() == 0 && annotatedGroundProgram.hasECycles() == 0 && factory.ctx.config.getOption("FLPDecisionCriterionHead") && factory.ctx.config.getOption("FLPDecisionCriterionE")){
 			DBGLOG(DBG, "No head- or e-cycles --> No FLP/UFS check necessary");
@@ -773,8 +826,10 @@ bool RepairModelGenerator::isModel(InterpretationConstPtr compatibleSet){
 			// Explicit FLP check
 			if (factory.ctx.config.getOption("FLPCheck")){
 				DBGLOG(DBG, "FLP Check");
+
 				// do FLP check (possibly with nogood learning) and add the learned nogoods to the main search
 				bool result = isSubsetMinimalFLPModel<GenuineSolver>(compatibleSet, postprocessedInput, factory.ctx, factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : SimpleNogoodContainerPtr());
+
 				//updateEANogoods(compatibleSet);
 				return result;
 			}
@@ -783,6 +838,7 @@ bool RepairModelGenerator::isModel(InterpretationConstPtr compatibleSet){
 			if (factory.ctx.config.getOption("UFSCheck")){
 				DBGLOG(DBG, "UFS Check");
 				std::vector<IDAddress> ufs = ufscm->getUnfoundedSet(compatibleSet, std::set<ID>(), factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : SimpleNogoodContainerPtr());
+
 				//updateEANogoods(compatibleSet);
 				if (ufs.size() > 0){
 					DBGLOG(DBG, "Got a UFS");
