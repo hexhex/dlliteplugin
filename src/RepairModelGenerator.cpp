@@ -726,7 +726,7 @@ void RepairModelGenerator::updateEANogoods(
 bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	
 	DBGLOG(DBG,"RMG: repair check is started:");
-	DBGLOG(DBG,"RMG: current model candidate is: "<< *modelCandidate);
+	DBGLOG(DBG,"RMG: (Result) current model candidate is: "<< *modelCandidate);
 
 	// repair exists is a flag that witnesses the ABox repair existence 	
 	bool repairExists;
@@ -977,7 +977,8 @@ DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
 										if (idns.isGuardAuxiliary()) {
 											DBGLOG(DBG,"RMG: yes ");
 											for (int j=0;j<dlatsupportsets[idpos].size();j++) {
-												bool del=false;
+												DBGLOG(DBG,"RMG: found same guard in sup. set for atom in dpos");
+				bool del=false;
 												BOOST_FOREACH(ID idps,dlatsupportsets[idpos][j]) {
 													if (idps==idns) {
 														del=true;
@@ -1037,6 +1038,7 @@ DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
 
 		for (unsigned eaIndex=0; eaIndex<factory.allEatoms.size();eaIndex++) {
 			const ExternalAtom& ea = reg->eatoms.getByID(factory.allEatoms[eaIndex]);
+
 			pconc.push_back(ea.tuple[1]);
 			nconc.push_back(ea.tuple[2]);
 			prole.push_back(ea.tuple[3]);
@@ -1048,9 +1050,15 @@ DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
 		enma = newConceptsABox->getStorage().first();
 	    enma_end = newConceptsABox->getStorage().end();
 
-		DBGLOG(DBG,"RMG: go through concept ABox");
+		DBGLOG(DBG,"RMG: (Result) REPAIR ABOX");
+		DBGLOG(DBG,"RMG: (Result) Concept assertions: ");
+
 		while (enma < enma_end){
 			const OrdinaryAtom& oa = reg->ogatoms.getByAddress(*enma);
+			//DBGLOG(DBG,"RMG: " << oa);
+			DBGLOG(DBG,"RMG: (Result) CONCEPT "<<RawPrinter::toString(reg,reg->ogatoms.getIDByAddress(*enma)));
+
+
 			if (theDLLitePlugin.dlNeg(oa.tuple[1]))
 				BOOST_FOREACH(ID id,nconc) {
 				OrdinaryAtom conc (ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
@@ -1075,11 +1083,12 @@ DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
 			enma++;
 		}
 
-
+		DBGLOG(DBG,"RMG: (Result) role assertions");
 		BOOST_FOREACH (DLLitePlugin::CachedOntology::RoleAssertion rolea, newRolesABox){
 			ID idr = rolea.first;
 			ID idcr = rolea.second.first;
 			ID iddr = rolea.second.second;
+			DBGLOG(DBG,"RMG: (Result) ROLE: "<<RawPrinter::toString(reg,idr)<<"("<<RawPrinter::toString(reg,idcr)<<","<<RawPrinter::toString(reg,iddr)<<")");
 
 			if (theDLLitePlugin.dlNeg(idr))
 				BOOST_FOREACH(ID id,nrole) {
@@ -1108,7 +1117,7 @@ DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
 
 		if (!isModel(extIntr)) repairExists=false;
 	}
-	DBGLOG(DBG, "***** Repair ABox existence ***** " << repairExists);
+	DBGLOG(DBG, "RMG: (Result) ***** Repair ABox existence ***** " << repairExists);
 //	DBGLOG(DBG, "Repair ABox is: ");
 
 	return repairExists;

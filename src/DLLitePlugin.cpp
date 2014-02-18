@@ -50,6 +50,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <map>
 
 #include "boost/program_options.hpp"
 #include "boost/range.hpp"
@@ -374,7 +375,13 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 	// prepare data structures for the subprogram P
 	InterpretationPtr edb = InterpretationPtr(new Interpretation(reg));
 
-	// use the ontology to construct the EDB
+
+	// structures for storing domain restrictions
+//	 std::vector<owlcpp::Triple> domainRestr;
+	 std::map<std::string,std::string> domainRestr;
+	 std::map<std::string,std::string> onProp;
+
+	 // use the ontology to construct the EDB
 	BOOST_FOREACH(owlcpp::Triple const& t, store.map_triple()) {
 		std::string subj = to_string(t.subj_, store);
 		std::string obj = to_string(t.obj_, store);
@@ -446,23 +453,40 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			DBGLOG(DBG, "No");
 		}
 
-		//domainRestricion
+		//std::vector<owlcpp::Triple> domainRestricion;
 		DBGLOG(DBG, "Checking if this is a concept inclusion");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "subclassOf") && isOwlConstant(obj))
 		{
 			DBGLOG(DBG, "Yes");
-				//if ()
-			DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
-			{
-				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
-				fact.tuple.push_back(theDLLitePlugin.subID);
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
-				fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj)));
-				edb->setFact(reg->storeOrdinaryAtom(fact).address);
+			DBGLOG(DBG, "Checking if this is a domain restriction");
+			std::size_t foundobj = obj.find("_:Doc");
+			if (foundobj!=std::string::npos) {
+				DBGLOG(DBG, "Yes");
+				DBGLOG(DBG, "Store domainRestr["<<subj<<"] = "<<obj);
+				domainRestr[subj]=obj;
+		   	}
+			else {
+				DBGLOG(DBG,"No");
+				DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
+				{
+					OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+					fact.tuple.push_back(theDLLitePlugin.subID);
+					fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
+					fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj)));
+					edb->setFact(reg->storeOrdinaryAtom(fact).address);
+				}
 			}
 		}else{
 			DBGLOG(DBG, "No");
 		}
+		DBGLOG(DBG, "Checking if this is description of domain restriction");
+		if (theDLLitePlugin.cmpOwlType(pred, "onProperty")) {
+			DBGLOG(DBG, "Yes");
+			onProp[subj]=obj;
+			DBGLOG(DBG, "Addition to map onProp: "<<"onProp["<<subj<<"] = "<<obj);
+		}
+		else DBGLOG(DBG, "No");
+
 
 		DBGLOG(DBG, "Checking if this is role inclusion");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "subpropertyOf") && isOwlConstant(obj))
@@ -542,6 +566,64 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			}
 		}else{
 			DBGLOG(DBG, "No");
+		}
+	}
+
+	DBGLOG(DBG,"Checking if there are any domain restrictions on properties");
+	/*std::map<std::string,std::string>::iterator p;
+
+	for(std::vector<owlcpp::Triple>::size_type i = 0; i != domainRestr.size(); i++) {
+		owlcpp::Triple const& t = domainRestr[i];
+		std::string subj1 = to_string(t.subj_);
+		DBGLOG(DBG, "subj1 is "<<subj1);
+		std::string obj1 = to_string(t.obj_);
+		DBGLOG(DBG, "obj1 is "<<obj1);
+		for(p = onProp.begin(); p != onProp.end(); p++) {
+			std::string subj2 = p->first;
+			DBGLOG(DBG, "subj2 is "<<subj2);
+			std::string obj2 = p->second;
+			DBGLOG(DBG, "obj2 is "<<obj2);
+			if (obj1==subj2) {
+					DBGLOG(DBG,"Yes");
+					DBGLOG(DBG,"Construct facts of the form sub(Subj,exObj)");
+					{
+						OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+						fact.tuple.push_back(theDLLitePlugin.subID);
+						fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj1)));
+						fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj2))));
+						edb->setFact(reg->storeOrdinaryAtom(fact).address);
+					}
+			DBGLOG(DBG,"Constructed fact: sub("<<theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj1))<<","<<theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj2))));
+			}
+			else	DBGLOG(DBG,"No");
+
+		}
+	}*/
+
+
+	std::map<std::string,std::string>::iterator p1;
+	std::map<std::string,std::string>::iterator p2;
+	for(p1 = domainRestr.begin(); p1!= domainRestr.end(); p1++) {
+		std::string subj1 = p1->first;
+		DBGLOG(DBG, "subj1 is "<<subj1);
+		std::string obj1 = p1->second;
+		DBGLOG(DBG, "obj1 is "<<obj1);
+		
+		for(p2 = onProp.begin(); p2 != onProp.end(); p2++) {
+			std::string subj2 = p2->first;
+			DBGLOG(DBG, "subj2 is "<<subj2);
+			std::string obj2 = p2->second;
+			DBGLOG(DBG, "obj2 is "<<obj2);
+			if (obj1==subj2) {
+				DBGLOG(DBG,"Yes");
+				DBGLOG(DBG,"Construct facts of the form sub(Subj,exObj)");
+				{
+					OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+					fact.tuple.push_back(theDLLitePlugin.subID);
+					fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj1)));					fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj2))));		edb->setFact(reg->storeOrdinaryAtom(fact).address);
+				}
+			}
+			else DBGLOG(DBG,"No");
 		}
 	}
 	DBGLOG(DBG, "EDB of classification program: " << *edb);
