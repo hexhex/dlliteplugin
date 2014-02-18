@@ -317,12 +317,12 @@ InterpretationPtr RepairModelGenerator::generateNextModel()
 	{
 		LOG(DBG,"asking for next model");
 		modelCandidate = solver->getNextModel();
+	//	DBGLOG(DBG,"a model candidate is obtained: " << *modelCandidate);
 		// getnextmodel calls propogate method 
 		//*** model is returned
 		DBGLOG(DBG, "Statistics:" << std::endl << solver->getStatistics());
 		if( !modelCandidate )
 		{
-			DBGLOG(DBG,"a model candidate is obtained: " << *modelCandidate);
 			LOG(DBG,"unsatisfiable -> returning no model");
 			return InterpretationPtr();
 		}
@@ -331,9 +331,22 @@ InterpretationPtr RepairModelGenerator::generateNextModel()
 		LOG(DBG,"got guess model, will do repair check on " << *modelCandidate);
 		if (!repairCheck(modelCandidate))
 		{
-			LOG(DBG,"No repair that turns a model candidate into a compatible set was found");
+			LOG(DBG,"RMG: no repair ABox was found");
+			return InterpretationPtr();
+
 		}
 		else {
+			LOG(DBG,"RMG: repair ABox was found");
+
+			modelCandidate->getStorage() -= factory.gpMask.mask()->getStorage();
+			modelCandidate->getStorage() -= factory.gnMask.mask()->getStorage();
+			modelCandidate->getStorage() -= mask->getStorage();
+
+			LOG(DBG,"returning model without guess: " << *modelCandidate);
+			return modelCandidate;
+		}
+
+		/*else {
 			DBGLOG(DBG, "Checking if model candidate is a model");
 			if (!isModel(modelCandidate))
 			{
@@ -348,7 +361,7 @@ InterpretationPtr RepairModelGenerator::generateNextModel()
 		modelCandidate->getStorage() -= mask->getStorage();
 
 		LOG(DBG,"returning model without guess: " << *modelCandidate);
-		return modelCandidate;}
+		return modelCandidate;}*/
 	}while(true);
 }
 
@@ -540,7 +553,8 @@ void RepairModelGenerator::learnSupportSets(){
 					ID litID = reg->ogatoms.getIDByAddress(lit.address);
 					DBGLOG(DBG, "RMG: is "<< RawPrinter::toString(reg,litID)<< " an auxiliary literal?");
 					if (!isGuard)
-						if (litID.isAuxiliary()) {
+						if (litID.isAuxiliary()) {								DBGLOG(DBG, "RMG: ");
+
 							DBGLOG(DBG, "RMG: yes");
 							const OrdinaryAtom& possibleGuardAtom = reg->lookupOrdinaryAtom(lit);
 							DBGLOG(DBG, "RMG: is "<< RawPrinter::toString(reg,litID) <<" a guard?");
@@ -585,8 +599,45 @@ void RepairModelGenerator::learnSupportSets(){
 								DBGLOG(DBG, "RMG: support set "<< ng.getStringRepresentation(reg)<<" has no guards");
 								DBGLOG(DBG, "RMG: add it to set of nogoods");
 								learnedEANogoods->addNogood(ng);
+								//supportSets->addNogood(ng);
 							}
-							supportSets->addNogood(ng);
+							bool add=true;
+							DBGLOG(DBG, "RMG: decide whether to add nogood to set of support sets (check minimality)");
+							DBGLOG(DBG, "RMG: now there are "<<supportSets->getNogoodCount()<<" support sets in supportSets");
+							if (supportSets->getNogoodCount()==0)
+								DBGLOG(DBG, "RMG: currently there are no support sets");
+							for (int i = 0; i<supportSets->getNogoodCount();i++) {
+								bool notadd;
+								DBGLOG(DBG, "RMG: compare ng and "<<supportSets->getNogood(i).getStringRepresentation(reg));
+
+								if (supportSets->getNogood(i).size()<=ng.size()) {
+									DBGLOG(DBG, "RMG: supset is smaller or equal then ng, i.e. "<<supportSets->getNogood(i)<<" is smaller then "<<ng);
+									notadd=true;
+									DBGLOG(DBG, "RMG: check whether ng is a superset of supset");
+									//check whether ng is a superset of supportSets->getNogood(i)
+									BOOST_FOREACH(ID l,supportSets->getNogood(i))
+										if (!ng.contains(l)) { notadd=false; }
+								}
+								else if (supportSets->getNogood(i).size()>ng.size()) {
+								//	DBGLOG(DBG, "RMG: supset is bigger then ng, i.e. "<<supportSets->getNogood(i)<<" is biger then "<<ng");
+									//check whether ng is a subset of supportSets->getNogood(i)
+									bool remove=true;
+									DBGLOG(DBG, "RMG: check whether supset is a superset of ng");
+										BOOST_FOREACH(ID l,ng)
+										if (!supportSets->getNogood(i).contains(l)) {
+											remove=false;
+										}
+										if (remove)  {
+										DBGLOG(DBG,"yes, it is a superset, remove supset");
+										supportSets->removeNogood(supportSets->getNogood(i));
+										}
+								}
+								if (notadd) {add=false; DBGLOG(DBG,"RMG: ng is a subset of some support set which is already in the set");}
+							}
+							if (add) {
+								supportSets->addNogood(ng);
+								DBGLOG(DBG, "RMG: add ng to supportSets");
+							}
 					} else {
 						DBGLOG(DBG, "RMG: rejecting " << ng.getStringRepresentation(reg));
 					}
