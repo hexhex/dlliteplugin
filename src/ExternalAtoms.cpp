@@ -110,15 +110,32 @@ bool DLPluginAtom::Actor_collector::apply(const TaxonomyVertex& node) {
 DLPluginAtom::DLPluginAtom(std::string predName, ProgramCtx& ctx, bool monotonic) : PluginAtom(predName, monotonic), ctx(ctx){
 }
 
+
+bool DLPluginAtom::changeABox(const Query& query){
+
+InterpretationConstPtr extintr = query.interpretation;
+bm::bvector<>::enumerator enext = extintr->getStorage().first();
+bm::bvector<>::enumerator enext_end = extintr->getStorage().end();
+		while (enext < enext_end){
+			const OrdinaryAtom& a = getRegistry()->ogatoms.getByAddress(*enext);
+			if (a.tuple.size()==1)
+				if ((a.tuple[0]==query.input[1])||(a.tuple[0]==query.input[2])||(a.tuple[0]==query.input[3])||(a.tuple[0]==query.input[4])) {
+					return true;
+				}
+			enext++;
+		}
+return false;
+}
+
 void DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const ID eaReplacement)
-{
-	RegistryPtr reg = getRegistry();
+{   RegistryPtr reg = getRegistry();
 	assert(ng.isGround());
 
 	// get the ontology name
 	const OrdinaryAtom& repl = reg->ogatoms.getByID(eaReplacement);
 	ID ontologyNameID = repl.tuple[1];
 	bool useAbox = (repl.tuple.size() == 6 || repl.tuple.size() == 7 && repl.tuple[6].address == 1);
+	// use ABox is used for repair, it says whether the original ABox should be ignored or not
 	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, ontologyNameID, useAbox);
 
 	DBGLOG(DBG, "Filtering SupportSet " << ng.getStringRepresentation(reg) << " wrt. " << *ontology->conceptAssertions);
@@ -192,7 +209,7 @@ std::vector<TDLAxiom*> DLPluginAtom::expandAbox(const Query& query, bool useExis
 		// determine type of additional assertion
 		if (ogatom.tuple[0] == query.input[1] || ogatom.tuple[0] == query.input[2]){
 			// c+ or c-
-			assert(ogatom.tuple.size() == 3 && "Second parameter must be a binary predicate");
+			assert(((ogatom.tuple.size() == 3)||((ogatom.tuple.size() == 4)&&(ogatom.tuple[3].address<=1)&&(ogatom.tuple[3].isIntegerTerm()))) && "Second parameter must be a binary predicate");
 			ID concept = ogatom.tuple[1];
 			if (!ontology->concepts->getFact(concept.address)){
 				throw PluginError("Tried to expand concept " + RawPrinter::toString(reg, concept) + ", which does not appear in the ontology");
@@ -200,7 +217,10 @@ std::vector<TDLAxiom*> DLPluginAtom::expandAbox(const Query& query, bool useExis
 			ID individual = ogatom.tuple[2];
 			DBGLOG(DBG, "Adding concept assertion: " << (ogatom.tuple[0] == query.input[2] ? "-" : "") << reg->terms.getByID(concept).getUnquotedString() << "(" << reg->terms.getByID(individual).getUnquotedString() << ")");
 			TDLConceptExpression* factppConcept = ontology->kernel->getExpressionManager()->Concept(ontology->addNamespaceToString(reg->terms.getByID(concept).getUnquotedString()));
-			if (ogatom.tuple[0] == query.input[2]) factppConcept = ontology->kernel->getExpressionManager()->Not(factppConcept);
+			if (ogatom.tuple.size()==4)
+				if (ogatom.tuple[3].address==1) factppConcept = ontology->kernel->getExpressionManager()->Not(factppConcept);
+ 
+			else if (ogatom.tuple[0] == query.input[2]) factppConcept = ontology->kernel->getExpressionManager()->Not(factppConcept);
 			addedAxioms.push_back(ontology->kernel->instanceOf(
 					ontology->kernel->getExpressionManager()->Individual(ontology->addNamespaceToString(reg->terms.getByID(individual).getUnquotedString())),
 					factppConcept));
@@ -670,16 +690,21 @@ CDLAtom::CDLAtom(ProgramCtx& ctx) : DLPluginAtom("cDL", ctx)
 	prop.completePositiveSupportSets = true; // we even provide (positive) complete support sets
 }
 
+
+
 // called from the core
 void CDLAtom::retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods)
 {
+
+
 	DBGLOG(DBG, "CDLAtom::retrieve");
 
 	RegistryPtr reg = getRegistry();
 
 	if (query.input.size() > 7) throw PluginError("cDL accepts at most 7 parameters");
 	if (query.input.size() == 7 && (!query.input[6].isIntegerTerm() || query.input[6].address >= 2)) throw PluginError("Last parameter of cDL must be 0 or 1");
-	bool useAbox = (query.input.size() < 7 || query.input[6].address == 1);
+	// TODO: add useAbox to other DL-atoms 
+	bool useAbox = !changeABox(query)&&(query.input.size() < 7 || query.input[6].address == 1);
 	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0], useAbox);
 	std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox);
 
@@ -763,10 +788,10 @@ void RDLAtom::retrieve(const Query& query, Answer& answer, NogoodContainerPtr no
 	DBGLOG(DBG, "RDLAtom::retrieve");
 
 	RegistryPtr reg = getRegistry();
-
+	
 	if (query.input.size() > 7) throw PluginError("rDL accepts at most 7 parameters");
 	if (query.input.size() == 7 && (!query.input[6].isIntegerTerm() || query.input[6].address >= 2)) throw PluginError("Last parameter of rDL must be 0 or 1");
-	bool useAbox = (query.input.size() < 7 || query.input[6].address == 1);
+	bool useAbox = !changeABox(query)&&(query.input.size() < 7 || query.input[6].address == 1);
 	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0], useAbox);
 	std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox);
 
@@ -868,7 +893,7 @@ void ConsDLAtom::retrieve(const Query& query, Answer& answer, NogoodContainerPtr
 
 	if (query.input.size() > 6) throw PluginError("consDL accepts at most 6 parameters");
 	if (query.input.size() == 6 && (!query.input[5].isIntegerTerm() || query.input[5].address >= 2)) throw PluginError("Last parameter of consDL must be 0 or 1");
-	bool useAbox = (query.input.size() < 6 || query.input[5].address == 1);
+	bool useAbox = !changeABox(query)&&(query.input.size() < 6 || query.input[5].address == 1);
 	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0], useAbox);
 	std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox);
 
@@ -904,7 +929,8 @@ void InconsDLAtom::retrieve(const Query& query, Answer& answer, NogoodContainerP
 
 	if (query.input.size() > 6) throw PluginError("inconsDL accepts at most 6 parameters");
 	if (query.input.size() == 6 && (!query.input[5].isIntegerTerm() || query.input[5].address >= 2)) throw PluginError("Last parameter of inconsDL must be 0 or 1");
-	bool useAbox = (query.input.size() < 6 || query.input[5].address == 1);
+
+	bool useAbox = !changeABox(query)&&(query.input.size() < 6 || query.input[5].address == 1);
 	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0], useAbox);
 	std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox);
 

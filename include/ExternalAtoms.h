@@ -83,10 +83,9 @@ protected:
 		bool apply(const TaxonomyVertex& node);
 		void processTuple(Tuple tup);
 	};
-
+	bool changeABox(const Query& query);
 public:
 	DLPluginAtom(std::string predName, ProgramCtx& ctx, bool monotonic = true);
-
 	virtual void retrieve(const Query& query, Answer& answer);
 	virtual void learnSupportSets(const Query& query, NogoodContainerPtr nogoods);
 };

@@ -718,6 +718,11 @@ void RepairModelGenerator::updateEANogoods(
 	learnedEANogoodsTransferredIndex = learnedEANogoods->getNogoodCount();
 }
 
+
+
+
+
+
 bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	
 	DBGLOG(DBG,"RMG: repair check is started:");
@@ -743,7 +748,9 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	DBGLOG(DBG,"RMG: go through external atoms and store those that are positive in dpos and negative in dneg");
 	for (unsigned eaIndex=0; eaIndex<factory.allEatoms.size();eaIndex++){
 		DBGLOG(DBG,"RMG: consider external atom "<< RawPrinter::toString(reg,factory.allEatoms[eaIndex])<<" with index "<< eaIndex << " which is smaller then "<<factory.allEatoms.size());
+		annotatedGroundProgram.getEAMask(eaIndex)->updateMask();
 		const InterpretationConstPtr& mask = annotatedGroundProgram.getEAMask(eaIndex)->mask();
+
 		DBGLOG(DBG,"RMG: interpretation mask is created "<< *mask);
 
 		bm::bvector<>::enumerator enm;
@@ -1023,7 +1030,84 @@ DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
 			}
 
 
+	if (repairExists) {
+		InterpretationPtr extIntr (new Interpretation(reg));
+		// create vector of IDs <ID>
+		 std::vector<ID> pconc, nconc, prole, nrole;
 
+		for (unsigned eaIndex=0; eaIndex<factory.allEatoms.size();eaIndex++) {
+			const ExternalAtom& ea = reg->eatoms.getByID(factory.allEatoms[eaIndex]);
+			pconc.push_back(ea.tuple[1]);
+			nconc.push_back(ea.tuple[2]);
+			prole.push_back(ea.tuple[3]);
+			nrole.push_back(ea.tuple[4]);
+		}
+
+		bm::bvector<>::enumerator enma;
+		bm::bvector<>::enumerator enma_end;
+		enma = newConceptsABox->getStorage().first();
+	    enma_end = newConceptsABox->getStorage().end();
+
+		DBGLOG(DBG,"RMG: go through concept ABox");
+		while (enma < enma_end){
+			const OrdinaryAtom& oa = reg->ogatoms.getByAddress(*enma);
+			if (theDLLitePlugin.dlNeg(oa.tuple[1]))
+				BOOST_FOREACH(ID id,nconc) {
+				OrdinaryAtom conc (ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+				conc.tuple.push_back(id);
+				conc.tuple.push_back(oa.tuple[1]);
+				conc.tuple.push_back(oa.tuple[2]);
+				conc.tuple.push_back(ID::termFromInteger(1));
+				ID concID = reg->storeOrdinaryAtom(conc);
+				extIntr->setFact(concID.address);
+			}
+				else
+
+				BOOST_FOREACH(ID id,pconc) {
+				OrdinaryAtom conc (ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+				conc.tuple.push_back(id);
+				conc.tuple.push_back(oa.tuple[1]);
+				conc.tuple.push_back(oa.tuple[2]);
+				conc.tuple.push_back(ID::termFromInteger(0));
+				ID concID = reg->storeOrdinaryAtom(conc);
+				extIntr->setFact(concID.address);
+			}
+			enma++;
+		}
+
+
+		BOOST_FOREACH (DLLitePlugin::CachedOntology::RoleAssertion rolea, newRolesABox){
+			ID idr = rolea.first;
+			ID idcr = rolea.second.first;
+			ID iddr = rolea.second.second;
+
+			if (theDLLitePlugin.dlNeg(idr))
+				BOOST_FOREACH(ID id,nrole) {
+            		OrdinaryAtom role (ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+        			role.tuple.push_back(idr);
+        			role.tuple.push_back(idcr);
+        			role.tuple.push_back(iddr);
+        			role.tuple.push_back(ID::termFromInteger(1));
+        			ID roleID = reg->storeOrdinaryAtom(role);
+        			extIntr->setFact(roleID.address);
+        		}
+			else
+
+				BOOST_FOREACH(ID id,prole) {
+            		OrdinaryAtom role (ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+        			role.tuple.push_back(idr);
+        			role.tuple.push_back(idcr);
+        			role.tuple.push_back(iddr);
+        			role.tuple.push_back(ID::termFromInteger(0));
+        			ID roleID = reg->storeOrdinaryAtom(role);
+        			extIntr->setFact(roleID.address);
+        		}
+
+        }
+		//TODO do same for roles newRolesABox
+
+		if (!isModel(extIntr)) repairExists=false;
+	}
 	DBGLOG(DBG, "***** Repair ABox existence ***** " << repairExists);
 //	DBGLOG(DBG, "Repair ABox is: ");
 

@@ -446,10 +446,12 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			DBGLOG(DBG, "No");
 		}
 
+		//domainRestricion
 		DBGLOG(DBG, "Checking if this is a concept inclusion");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "subclassOf") && isOwlConstant(obj))
 		{
 			DBGLOG(DBG, "Yes");
+				//if ()
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
