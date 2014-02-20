@@ -1,8 +1,7 @@
 
-hasfather(X,Y):-&cDL[OWLONTOLOGY,pcb,b,c,d,"Male"](Y), &rDL[OWLONTOLOGY,a,b,c,d,"hasParent"](X,Y).
+hasfather(X,Y):-&cDL[OWLONTOLOGY,pcb,b,c,d,"Male"](Y), &rDL[OWLONTOLOGY,a,b,c,d,"hasParent"](X,Y), domain(X), domain(Y).
 
-:-not &cDL[OWLONTOLOGY,a,b,c,d,"Adopted"](X),hasfather(X,Y1),ischildof(X,Y2),Y1!=Y2,not &cDL[OWLONTOLOGY,pcbb,b,c,d,"-Male"](Y2).
+:-not &cDL[OWLONTOLOGY,a,b,c,d,"Adopted"](X),hasfather(X,Y1),ischildof(X,Y2),Y1!=Y2,not &cDL[OWLONTOLOGY,pcbb,b,c,d,"-Male"](Y2), domain(X), domain(Y1), domain(Y2).
 
 pcb("Male",X):-boy(X).
 pcbb("Child",X):-boy(X).
-
