@@ -499,7 +499,7 @@ void RepairModelGenerator::learnSupportSets(){
 
 
 void RepairModelGenerator::learnSupportSets(){
-	DBGLOG(DBG,"RMG: learning support sets is started")
+	DBGLOG(DBG,"RMG: learning support sets is started");
 	DBGLOG(DBG,"RMG: Number of all eatoms: "<<factory.allEatoms.size());
 
 	if (factory.ctx.config.getOption("SupportSets")){
