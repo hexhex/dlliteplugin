@@ -6,8 +6,8 @@ export PATH=$1
 export LD_LIBRARY_PATH=$2
 instance=$3
 to=$4
-
-confstr=";--supportsets;-n=1;--supportsets -n=1"
+owlfile="${instance%%.hex}.owl"
+confstr=";--supportsets;--supportsets --repair=$owlfile"
 confstr2=$(cat conf)
 if [ $? == 0 ]; then
         confstr=$confstr2
@@ -32,7 +32,7 @@ i=0
 for c in "${confs[@]}"
 do
 	echo -ne -e " "
-	output=$(timeout $to time -o $instance.$i.time.dat -f %e dlvhex2 $c --heuristics=monolithic --liberalsafety --plugindir=../../../src/ $instance > /dev/null)
+	output=$(timeout $to time -o $instance.$i.time.dat -f %e dlvhex2 $c --heuristics=monolithic --liberalsafety --plugindir=../../../../src/ --flpcheck=none $instance > /dev/null)
 	ret=$?
 	if [[ $ret == 0 ]]; then
 	        output=$(cat $instance.$i.time.dat)

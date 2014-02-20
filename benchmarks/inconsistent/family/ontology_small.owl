@@ -100,7 +100,7 @@
 
     <owl:Class rdf:about="&owl;Thing"/>
     
-
+
 
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -109,26 +109,6 @@
     //
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
-
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#john -->
-
-    <owl:Thing rdf:about="#john">
-        <rdf:type rdf:resource="#Domain"/>
-        <rdf:type rdf:resource="#Male"/>
-        <hasParent rdf:resource="#pat"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#pat -->
-
-    <owl:Thing rdf:about="#pat">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-
 
 
 
