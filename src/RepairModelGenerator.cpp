@@ -294,7 +294,7 @@ RepairModelGenerator::RepairModelGenerator(
     	  DBGLOG(DBG,"RMG: consider nogood number "<< i<< " which is "<<  factory.globalLearnedEANogoods->getNogood(i));
     	  learnedEANogoods->addNogood(factory.globalLearnedEANogoods->getNogood(i));
       }
-      //updateEANogoods();
+      updateEANogoods();
     }
     DBGLOG(DBG,"RMG: RepairModelGenerator constructor is finished");
 }
@@ -332,7 +332,8 @@ InterpretationPtr RepairModelGenerator::generateNextModel()
 		if (!repairCheck(modelCandidate))
 		{
 			LOG(DBG,"RMG: no repair ABox was found");
-			return InterpretationPtr();
+			continue;
+		//	return InterpretationPtr();
 
 		}
 		else {
@@ -551,10 +552,9 @@ void RepairModelGenerator::learnSupportSets(){
 				isGuard=false;
 				BOOST_FOREACH (ID lit, ng){
 					ID litID = reg->ogatoms.getIDByAddress(lit.address);
-					DBGLOG(DBG, "RMG: is "<< RawPrinter::toString(reg,litID)<< " an auxiliary literal?");
+					DBGLOG(DBG, "RMG: is "<< RawPrinter::toString(reg,litID)<< "  auxiliary literal?");
 					if (!isGuard)
-						if (litID.isAuxiliary()) {								DBGLOG(DBG, "RMG: ");
-
+						if (litID.isAuxiliary()) {							
 							DBGLOG(DBG, "RMG: yes");
 							const OrdinaryAtom& possibleGuardAtom = reg->lookupOrdinaryAtom(lit);
 							DBGLOG(DBG, "RMG: is "<< RawPrinter::toString(reg,litID) <<" a guard?");
@@ -656,6 +656,8 @@ void RepairModelGenerator::learnSupportSets(){
 		factory.supportSets = supportSets;
 		DBGLOG(DBG, "RMG: there are "<< factory.supportSets->getNogoodCount()<<" support sets in factory.supportsets");
 		DBGLOG(DBG, "RMG: among them "<< learnedEANogoods->getNogoodCount()<<" are nogoods");
+		DBGLOG(DBG, "Adding " << learnedEANogoods->getNogoodCount() << " support sets to annotated ground program");
+		annotatedGroundProgram.setCompleteSupportSetsForVerification(learnedEANogoods);	
 	}
 }
 
@@ -720,18 +722,16 @@ void RepairModelGenerator::updateEANogoods(
 
 
 
-
-
-
 bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	
 	DBGLOG(DBG,"RMG: repair check is started:");
 	DBGLOG(DBG,"RMG: (Result) current model candidate is: "<< *modelCandidate);
 
 	// repair exists is a flag that witnesses the ABox repair existence 	
-	bool repairExists;
+	bool repairexists;
+	bool emptyrepair;
+	repairexists = true;
 	int ngCount;
-	repairExists = true;
 
 	DBGLOG(DBG,"RMG: number of all external atoms: " << factory.allEatoms.size());
 
@@ -745,13 +745,12 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	// Go through all atoms in alleatoms
 	// and evaluate them
 	// mask stores all relevant atoms for external atom with index eaindex
-	DBGLOG(DBG,"RMG: go through external atoms and store those that are positive in dpos and negative in dneg");
 	for (unsigned eaIndex=0; eaIndex<factory.allEatoms.size();eaIndex++){
 		DBGLOG(DBG,"RMG: consider external atom "<< RawPrinter::toString(reg,factory.allEatoms[eaIndex])<<" with index "<< eaIndex << " which is smaller then "<<factory.allEatoms.size());
 		annotatedGroundProgram.getEAMask(eaIndex)->updateMask();
 		const InterpretationConstPtr& mask = annotatedGroundProgram.getEAMask(eaIndex)->mask();
 
-		DBGLOG(DBG,"RMG: interpretation mask is created "<< *mask);
+		DBGLOG(DBG,"RMG: mask is created "<< *mask);
 
 		bm::bvector<>::enumerator enm;
 		bm::bvector<>::enumerator enm_end;
@@ -770,49 +769,45 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 		enm = mask->getStorage().first();
 	    enm_end = mask->getStorage().end();
 
-		DBGLOG(DBG,"RMG: go through elements of the mask ");
+		DBGLOG(DBG,"RMG: go through elements of mask ");
 		while (enm < enm_end){
 			ID id = reg->ogatoms.getIDByAddress(*enm);
-			DBGLOG(DBG,"RMG: consider atom "<<RawPrinter::toString(reg,id));
+			DBGLOG(DBG,"RMG: atom "<<RawPrinter::toString(reg,id));
 
-			DBGLOG(DBG,"RMG: is it a replacement atom?");
 			if (id.isExternalAuxiliary() && !id.isExternalInputAuxiliary()){
 				// it is an external atom replacement, now check if it is positive or negative
-				DBGLOG(DBG,"RMG: yes");
-				DBGLOG(DBG,"RMG: is it positive?");
+				DBGLOG(DBG,"RMG: replacement");
 				if (reg->isPositiveExternalAtomAuxiliaryAtom(id)){
-					DBGLOG(DBG,"RMG: yes");
+					DBGLOG(DBG,"RMG: positive");
 					// add it to dpos
-					DBGLOG(DBG,"RMG: is it true in model candidate "<< *modelCandidate<<"?");
 					if (modelCandidate->getFact(*enm)) {
-						DBGLOG(DBG,"RMG: yes");
-						DBGLOG(DBG,"RMG: add atom " << RawPrinter::toString(reg,id) << " to set of atoms dpos guessed true ");
+						DBGLOG(DBG,"RMG: guessed true");
+						DBGLOG(DBG,"RMG: add " << RawPrinter::toString(reg,id) << " to dpos ");
 						dpos->setFact(*enm);
 					}
-					else DBGLOG(DBG,"RMG: no");
+					else DBGLOG(DBG,"RMG: guessed false");
 
 				}
-				else { 	DBGLOG(DBG,"RMG: no"); // it is negative
-					DBGLOG(DBG,"RMG: is it true in model candidate "<<*modelCandidate<<"?");
+				else { 	DBGLOG(DBG,"RMG: negative"); // it is negative
 					if (modelCandidate->getFact(*enm)) {
-						DBGLOG(DBG,"RMG: yes");
+						DBGLOG(DBG,"RMG: guessed true");
 						ID inverse = reg->swapExternalAtomAuxiliaryAtom(id);
-						DBGLOG(DBG,"RMG: add atom " << RawPrinter::toString(reg,inverse) << " to set of atoms dneg	 guessed false ");
+						DBGLOG(DBG,"RMG: add atom " << RawPrinter::toString(reg,inverse) << " to set dneg ");
 						dneg->setFact(reg->swapExternalAtomAuxiliaryAtom(id).address);
 					}
-					else DBGLOG(DBG,"RMG: no");
+					else DBGLOG(DBG,"RMG: guessed false");
 					// the following assertion is not needed, but should be added to make the implementation more rebust
 					// (it might help to find programming errors later on)
 				}
 				//assert(reg->isNegativeExternalAtomAuxiliaryAtom(id) && "replacement atom is neither positive nor negative");
 			}
 			else //  it is not a replacement atom
-				DBGLOG(DBG,"no");
+				DBGLOG(DBG,"nonreplacement");
 			enm++;
 		}
-		DBGLOG(DBG,"RMG: finished evaluating external atom number "<< eaIndex);
+		DBGLOG(DBG,"RMG: finished with atom "<< eaIndex);
 }
-DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
+DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dneg ");
 
 
 
@@ -826,9 +821,8 @@ DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
 	InterpretationPtr newConceptsABox(new Interpretation(reg));
 	newConceptsABox->add(*newConceptsABoxPtr);
 	std::vector<DLLitePlugin::CachedOntology::RoleAssertion> newRolesABox = newOntology->roleAssertions;
-	DBGLOG(DBG,"RMG: temporary ABox is created");
 
-	DBGLOG(DBG,"RMG: create map for external atoms IDs, it maps ids to vectors of relevant support sets ");
+	DBGLOG(DBG,"RMG: create map (id of atom->set of supp sets for it ");
 	// create a map that maps id of external atoms to vector of its support sets 
 	 std::map<ID,std::vector<Nogood> > dlatsupportsets;
 
@@ -836,10 +830,10 @@ DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
 	 std::vector<ID> dlatnoguard;
 
 	 // go through all stored nogoods
-	DBGLOG(DBG,"RMG: go through " << factory.supportSets->getNogoodCount()<< " support sets");
+	DBGLOG(DBG,"RMG: go through all " << factory.supportSets->getNogoodCount()<< " support sets");
 
 	for (int i = 0; i<factory.supportSets->getNogoodCount();i++) {
-		DBGLOG(DBG,"RMG: consider support set number "<< i <<", namely " << factory.supportSets->getNogood(i).getStringRepresentation(reg) << " is considered");
+		DBGLOG(DBG,"RMG: consider support set number "<< i <<": " << factory.supportSets->getNogood(i).getStringRepresentation(reg) << " is considered");
 
 		// keep is a flag that identifies whether a certain support set for a DL-atom should be kept and added to the map
 		bool keep = true;
@@ -851,62 +845,58 @@ DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
 			// distinct between ordinary atoms, replacement atoms and the guards
 
 			ID newid = reg->ogatoms.getIDByAddress(id.address);
-			DBGLOG(DBG,"RMG: consider literal "<< RawPrinter::toString(reg,id));
+			DBGLOG(DBG,"RMG: literal: "<< RawPrinter::toString(reg,id));
 
 			// if the atom is replacement atom, then store its id in currentExternalId
 			if (newid.isExternalAuxiliary()) {
-				DBGLOG(DBG,"RMG: it is replacement atom");
+				DBGLOG(DBG,"RMG: replacement atom");
 
 				if (reg->isPositiveExternalAtomAuxiliaryAtom(newid)) {
-					DBGLOG(DBG,"RMG: it is positive");
+					DBGLOG(DBG,"RMG: positive");
 					currentExternalId = newid;
 				}
 				else {
-					DBGLOG(DBG,"RMG: it is negative");
+					DBGLOG(DBG,"RMG: negative");
 					currentExternalId = reg->swapExternalAtomAuxiliaryAtom(newid);
 				}
 
-				DBGLOG(DBG,"RMG: it is replacement atom");
-
 				// if the current replacement atom is not already present in the map then add it to the map
 				if (dlatsupportsets.count(currentExternalId)==0) {
-					DBGLOG(DBG,"RMG: it is not yet in map");
+					DBGLOG(DBG,"RMG: not yet in map");
 
 					std::vector<Nogood> supset;
-					DBGLOG(DBG,"RMG: add it to map");
 					dlatsupportsets[currentExternalId] = supset;
-					DBGLOG(DBG,"RMG: number of elements in map: "<<dlatsupportsets.size());
 				}
-				else DBGLOG(DBG,"RMG: it is in map");
+				else DBGLOG(DBG,"RMG: it is in map already");
 			}
 			// if the current atom is a guard then do nothing
 			else if (newid.isGuardAuxiliary()) {  //guard atom
-				DBGLOG(DBG,"RMG: it is a guard");
+				DBGLOG(DBG,"RMG: guard atom");
 				// the current support set for the current atom has a guard
 				hasAuxiliary = true;
 			}
 
 			// if the current atom is an ordinary atom then check whether it is true in the current model and if it is then
 			else { // ordinary input atom
-				DBGLOG(DBG,"RMG: it is an ordinary atom");
-				DBGLOG(DBG,"RMG: is it true in the current model candidate "<< *modelCandidate<<"?");
+				DBGLOG(DBG,"RMG: ordinary atom");
 				if (modelCandidate->getFact(newid.address)==newid.isNaf()) {
-					DBGLOG(DBG,"RMG: no");
+					DBGLOG(DBG,"RMG: false");
 					keep = false;
 				}
-				else DBGLOG(DBG,"RMG: yes");
+				else DBGLOG(DBG,"RMG: true");
 			}
 		}
 		DBGLOG(DBG,"RMG: finished going through literals");
 
 		if (keep) {
-			DBGLOG(DBG,"RMG: addition to map: add sup. set " <<factory.supportSets->getNogood(i).getStringRepresentation(reg)<<" for "<< RawPrinter::toString(reg,currentExternalId));
+			DBGLOG(DBG,"RMG: add to map: " <<factory.supportSets->getNogood(i).getStringRepresentation(reg)<<" for "<< RawPrinter::toString(reg,currentExternalId));
 			dlatsupportsets[currentExternalId].push_back(factory.supportSets->getNogood(i));
 			if (hasAuxiliary == false)
 			{
-				DBGLOG(DBG,"RMG: support set with no auxiliary atoms, we add it to set dlatnoguard");
+				DBGLOG(DBG,"RMG: support set with no auxiliary atoms, we add it to dlatnoguard");
 				dlatnoguard.push_back(currentExternalId);
 			}
+			else DBGLOG(DBG,"RMG: support set has auxiliary atoms");
 		}
 	}
 
@@ -921,88 +911,106 @@ DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
 
 			if (enpos>=enpos_end) {
 				// set of positive atoms is empty
-				DBGLOG(DBG,"RMG: dpos is empty, empty ABox is a repair");
-				repairExists=true;
+				DBGLOG(DBG,"RMG: dpos is empty");
+				if (enneg>=enneg_end) {
+					DBGLOG(DBG,"RMG: dneg is empty");
+					DBGLOG(DBG,"RMG: repair exists, any ABox is a repair");
+				}
+				else {
+					DBGLOG(DBG,"RMG: dneg is nonempty");
+					while (enneg < enneg_end){
+						ID idneg=reg->ogatoms.getIDByAddress(*enneg);
+						if(std::find(dlatnoguard.begin(), dlatnoguard.end(), idneg) != dlatnoguard.end()) {
+							DBGLOG(DBG,"RMG: no repair exists: atom in dneg has support sets with no guards");
+								repairexists=false;
+						}
+						else  {
+							DBGLOG(DBG,"RMG: repair exists, empty ABox is repair");
+							emptyrepair=true;
+						}
+					}
+				}
 			}
 			else {
+				DBGLOG(DBG,"RMG: dpos is nonempty");
 				if (enneg>=enneg_end) {
-					// set of positive atoms is nonempty but set of negative ones in empty
-					DBGLOG(DBG,"RMG: dneg is empty, check whether every atom in dpos has at least one relevant support set");
+					// set of positive atoms is nonempty but set of negative ones is empty
+					DBGLOG(DBG,"RMG: dneg is empty");
+					DBGLOG(DBG,"RMG: check whether every atom in dpos has at least one support set");
 					while (enpos < enpos_end){
 						ID idpos = reg->ogatoms.getIDByAddress(*enpos);
 						DBGLOG(DBG,"RMG: consider "<<RawPrinter::toString(reg,idpos));
 						if (dlatsupportsets[idpos].empty()) {
-							DBGLOG(DBG,"RMG: set of support sets is empty, no repair exists");
-							repairExists=false;
+							DBGLOG(DBG,"RMG: no repair exists, atom in dpos has no support sets");
+							repairexists=false;
 						}
-						else DBGLOG(DBG,"RMG: set of support sets is nonempty");
 						enpos++;
 					}
-						DBGLOG(DBG,"repairExists = "<< repairExists);
 				}
 				else {
 					// neither set of positive nor set of negative atoms is empty
-					DBGLOG(DBG,"RMG: dpos and dneg are nonempty");
+					DBGLOG(DBG,"RMG: dneg is nonempty");
+					DBGLOG(DBG,"RMG: go through atoms in dpos "<<*dpos);
 					while (enpos < enpos_end){
-
-						DBGLOG(DBG,"RMG: dpos is nonempty");
 						ID idpos = reg->ogatoms.getIDByAddress(*enpos);
-
+						emptyrepair=true;
 						DBGLOG(DBG,"RMG: consider "<<RawPrinter::toString(reg,idpos));
 						DBGLOG(DBG,"RMG: it has "<< dlatsupportsets[idpos].size()<< " support sets");
-
 						if (std::find(dlatnoguard.begin(), dlatnoguard.end(), idpos) != dlatnoguard.end()) {
 							DBGLOG(DBG,"RMG: "<< RawPrinter::toString(reg,idpos)<<" has a sup set with no guards");
-							DBGLOG(DBG,"RMG: thus move to next atom in dpos");
+							DBGLOG(DBG,"RMG: move to next atom in dpos");
 						}
 
 						else {
+							emptyrepair=false;
 							// go through negative external atoms
-							DBGLOG(DBG,"RMG: go through elements in dneg "<<*dneg);
+							DBGLOG(DBG,"RMG: go through atoms in dneg "<<*dneg);
 
 
 							while (enneg < enneg_end){
-								DBGLOG(DBG,"RMG: dneg is nonempty");
 								ID idneg = reg->ogatoms.getIDByAddress(*enneg);
-								DBGLOG(DBG,"RMG: consider "<<RawPrinter::toString(reg,idneg));
-								DBGLOG(DBG,"RMG: go through support sets for current external atom");
-
+								if(std::find(dlatnoguard.begin(), dlatnoguard.end(), idneg) != dlatnoguard.end()) {
+									DBGLOG(DBG,"RMG: no repair exists: atom in dneg has support sets with no guards");
+									repairexists=false;
+									break;
+								}
+								else {
+								DBGLOG(DBG,"RMG: consider atom in dneg: "<<RawPrinter::toString(reg,idneg));
+								DBGLOG(DBG,"RMG: go through its "<<dlatsupportsets[idneg].size()<<" support sets");
 								// go through support sets for the current negative atom
 								for (int i=0;i<dlatsupportsets[idneg].size();i++) {
 									DBGLOG(DBG,"RMG: consider support set number "<<i);
-									// check whether the current support set has a guard and
-									// if it does then eliminate all support sets of atoms in dpos that contain the same guard
-									DBGLOG(DBG,"RMG: check whether it has guard");
+									// find guards
+									DBGLOG(DBG,"RMG: find guard");
 									BOOST_FOREACH(ID idns,dlatsupportsets[idneg][i]) {
 										if (idns.isGuardAuxiliary()) {
-											DBGLOG(DBG,"RMG: yes ");
+											DBGLOG(DBG,"RMG: found ");
 											for (int j=0;j<dlatsupportsets[idpos].size();j++) {
 												DBGLOG(DBG,"RMG: found same guard in sup. set for atom in dpos");
-				bool del=false;
+												bool del=false;
 												BOOST_FOREACH(ID idps,dlatsupportsets[idpos][j]) {
 													if (idps==idns) {
 														del=true;
-														DBGLOG(DBG,"RMG: found same guard in sup. set for atom in dpos");
 													}
 												}
 
 												// delete support set which contains guard idns from the set of support sets for the current positve atom
 												if (del==true) {
 														dlatsupportsets[idpos].erase(dlatsupportsets[idpos].begin() + j);
-														DBGLOG(DBG,"RMG: eliminate support set");
+														DBGLOG(DBG,"RMG: eliminate support set for dpos");
 												}
 											}
 
-											// find out whether the guard is a concept or a role and eliminate it from the repair ABox
 											// determine the type of the guard by the size of its tuple
 											if (reg->ogatoms.getByAddress(idns.address).tuple.size()==3) {
 
+												DBGLOG(DBG,"RMG: guard is concept");
 												//it is a concept, thus delete the assertion from conceptABox
 												if (newConceptsABox->getFact(idns.address)==true)
 													newConceptsABox->clearFact(idns.address);
 											}
 											else {
-
+												DBGLOG(DBG,"RMG: guard is role");
 												// it is a role, thus delete the assertion from the roleABox
 												DLLitePlugin::CachedOntology::RoleAssertion ra;
 												ra.first=reg->ogatoms.getByAddress(idns.address).tuple[1];
@@ -1020,9 +1028,10 @@ DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
 									}
 								}
 								enneg++;
+								}
 							}
 							if (dlatsupportsets[idpos].empty()) {
-								repairExists=false;
+								repairexists=false;
 							}
 						}
 						enpos++;
@@ -1030,8 +1039,29 @@ DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
 				}
 			}
 
+			bm::bvector<>::enumerator enma;
+			bm::bvector<>::enumerator enma_end;
+			enma = newConceptsABox->getStorage().first();
+			enma_end = newConceptsABox->getStorage().end();
+			DBGLOG(DBG,"RMG: (Result) REPAIR ABOX");
+			DBGLOG(DBG,"RMG: (Result) Concept assertions: ");
 
+					while (enma < enma_end){
+						const OrdinaryAtom& oa = reg->ogatoms.getByAddress(*enma);
+						//DBGLOG(DBG,"RMG: " << oa);
+						DBGLOG(DBG,"RMG: (Result) CONCEPT "<<RawPrinter::toString(reg,reg->ogatoms.getIDByAddress(*enma)));
+						enma++;
+					}
+					DBGLOG(DBG,"RMG: (Result) role assertions");
+					BOOST_FOREACH (DLLitePlugin::CachedOntology::RoleAssertion rolea, newRolesABox){
+						ID idr = rolea.first;
+						ID idcr = rolea.second.first;
+						ID iddr = rolea.second.second;
+						DBGLOG(DBG,"RMG: (Result) ROLE: "<<RawPrinter::toString(reg,idr)<<"("<<RawPrinter::toString(reg,idcr)<<","<<RawPrinter::toString(reg,iddr)<<")");
+					}
+/*
 	if (repairExists) {
+		if (!emptyrepair) {
 		InterpretationPtr extIntr (new Interpretation(reg));
 		// create vector of IDs <ID>
 		 std::vector<ID> pconc, nconc, prole, nrole;
@@ -1115,12 +1145,14 @@ DBGLOG(DBG,"RMG: got out of the loop that goes through all external atoms");
         }
 		//TODO do same for roles newRolesABox
 
-		if (!isModel(extIntr)) repairExists=false;
-	}
-	DBGLOG(DBG, "RMG: (Result) ***** Repair ABox existence ***** " << repairExists);
+		if (!isModel(extIntr))
+			repairExists=false;
+		}
+	}*/
+	DBGLOG(DBG, "RMG: (Result) ***** Repair ABox existence ***** " << repairexists);
 //	DBGLOG(DBG, "Repair ABox is: ");
 
-	return repairExists;
+	return repairexists;
 }
 
 bool RepairModelGenerator::isModel(InterpretationConstPtr compatibleSet){

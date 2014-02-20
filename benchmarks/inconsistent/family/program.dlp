@@ -1,0 +1,6 @@
+ischildof(john,alex).
+boy(john).
+hasfather(X,Y):-DL[Male+=boy;Male](Y), DL[;hasParent](X,Y).
+:-not DL[;Adopted](X),Y1!=Y2,hasfather(X,Y1),ischildof(X,Y2), not DL[Child+=boy;-Male](Y2).
+% contact(X,Y):-DL[;hasParent](X,Y), not omit(X,Y).
+% omit(X,Y):-DL[;Adopted](X),Z!=Y,hasfather(X,Y), contact(X,Z).
