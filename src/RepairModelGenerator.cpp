@@ -499,7 +499,7 @@ void RepairModelGenerator::learnSupportSets(){
 
 
 void RepairModelGenerator::learnSupportSets(){
-	DBGLOG(DBG,"RMG: learning support sets is started")
+	DBGLOG(DBG,"RMG: learning support sets is started");
 	DBGLOG(DBG,"RMG: Number of all eatoms: "<<factory.allEatoms.size());
 
 	if (factory.ctx.config.getOption("SupportSets")){
@@ -1041,28 +1041,31 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 			}
 
 			DBGLOG(DBG, "RMG: (Result) ***** Repair ABox existence ***** " << repairexists);
-			if (emptyrepair) 	DBGLOG(DBG,"RMG: (Result) REPAIR ABOX: empty ABox is a repair"); else {
+			if (emptyrepair) 	{
+				DBGLOG(DBG,"RMG: (Result) REPAIR ABOX: empty ABox is a repair");
+			}
+			else {
 
-			bm::bvector<>::enumerator enma;
-			bm::bvector<>::enumerator enma_end;
-			enma = newConceptsABox->getStorage().first();
-			enma_end = newConceptsABox->getStorage().end();
-			DBGLOG(DBG,"RMG: (Result) REPAIR ABOX");
-			DBGLOG(DBG,"RMG: (Result) Concept assertions: ");
+				bm::bvector<>::enumerator enma;
+				bm::bvector<>::enumerator enma_end;
+				enma = newConceptsABox->getStorage().first();
+				enma_end = newConceptsABox->getStorage().end();
+				DBGLOG(DBG,"RMG: (Result) REPAIR ABOX");
+				DBGLOG(DBG,"RMG: (Result) Concept assertions: ");
 
-					while (enma < enma_end){
-						const OrdinaryAtom& oa = reg->ogatoms.getByAddress(*enma);
-						//DBGLOG(DBG,"RMG: " << oa);
-						DBGLOG(DBG,"RMG: (Result) CONCEPT "<<RawPrinter::toString(reg,reg->ogatoms.getIDByAddress(*enma)));
-						enma++;
-					}
-					DBGLOG(DBG,"RMG: (Result) role assertions");
-					BOOST_FOREACH (DLLitePlugin::CachedOntology::RoleAssertion rolea, newRolesABox){
-						ID idr = rolea.first;
-						ID idcr = rolea.second.first;
-						ID iddr = rolea.second.second;
-						DBGLOG(DBG,"RMG: (Result) ROLE: "<<RawPrinter::toString(reg,idr)<<"("<<RawPrinter::toString(reg,idcr)<<","<<RawPrinter::toString(reg,iddr)<<")");
-					}
+						while (enma < enma_end){
+							const OrdinaryAtom& oa = reg->ogatoms.getByAddress(*enma);
+							//DBGLOG(DBG,"RMG: " << oa);
+							DBGLOG(DBG,"RMG: (Result) CONCEPT "<<RawPrinter::toString(reg,reg->ogatoms.getIDByAddress(*enma)));
+							enma++;
+						}
+						DBGLOG(DBG,"RMG: (Result) role assertions");
+						BOOST_FOREACH (DLLitePlugin::CachedOntology::RoleAssertion rolea, newRolesABox){
+							ID idr = rolea.first;
+							ID idcr = rolea.second.first;
+							ID iddr = rolea.second.second;
+							DBGLOG(DBG,"RMG: (Result) ROLE: "<<RawPrinter::toString(reg,idr)<<"("<<RawPrinter::toString(reg,idcr)<<","<<RawPrinter::toString(reg,iddr)<<")");
+						}
 			}
 /*
 	if (repairExists) {
