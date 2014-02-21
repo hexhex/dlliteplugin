@@ -499,7 +499,7 @@ void RepairModelGenerator::learnSupportSets(){
 
 
 void RepairModelGenerator::learnSupportSets(){
-	DBGLOG(DBG,"RMG: learning support sets is started");
+	DBGLOG(DBG,"RMG: learning support sets is started")
 	DBGLOG(DBG,"RMG: Number of all eatoms: "<<factory.allEatoms.size());
 
 	if (factory.ctx.config.getOption("SupportSets")){
@@ -748,6 +748,7 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	for (unsigned eaIndex=0; eaIndex<factory.allEatoms.size();eaIndex++){
 		DBGLOG(DBG,"RMG: consider external atom "<< RawPrinter::toString(reg,factory.allEatoms[eaIndex])<<" with index "<< eaIndex << " which is smaller then "<<factory.allEatoms.size());
 		annotatedGroundProgram.getEAMask(eaIndex)->updateMask();
+
 		const InterpretationConstPtr& mask = annotatedGroundProgram.getEAMask(eaIndex)->mask();
 
 		DBGLOG(DBG,"RMG: mask is created "<< *mask);
@@ -1039,6 +1040,9 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 				}
 			}
 
+			DBGLOG(DBG, "RMG: (Result) ***** Repair ABox existence ***** " << repairexists);
+			if (emptyrepair) 	DBGLOG(DBG,"RMG: (Result) REPAIR ABOX: empty ABox is a repair"); else {
+
 			bm::bvector<>::enumerator enma;
 			bm::bvector<>::enumerator enma_end;
 			enma = newConceptsABox->getStorage().first();
@@ -1059,6 +1063,7 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 						ID iddr = rolea.second.second;
 						DBGLOG(DBG,"RMG: (Result) ROLE: "<<RawPrinter::toString(reg,idr)<<"("<<RawPrinter::toString(reg,idcr)<<","<<RawPrinter::toString(reg,iddr)<<")");
 					}
+			}
 /*
 	if (repairExists) {
 		if (!emptyrepair) {
@@ -1150,7 +1155,6 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 		}
 	}*/
 	DBGLOG(DBG, "RMG: (Result) ***** Repair ABox existence ***** " << repairexists);
-//	DBGLOG(DBG, "Repair ABox is: ");
 
 	return repairexists;
 }

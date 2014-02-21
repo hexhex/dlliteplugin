@@ -6,7 +6,7 @@ smallest(X) :- domain(X), not notsmallest(X).
 notsuccessor(X, Z) :- domain(X), domain(Y), domain(Z), X<Y, Y<Z.
 successor(X, Y) :- domain(X), domain(Y), not notsuccessor(X,Y).
 renameTo(X, 1) :- smallest(X).
-renameTo(Y, N2) :- renameTo(X, N), succ(X, Y), N2 = N + 1.
+renameTo(Y, N2) :- renameTo(X, N), successor(X, Y), N2 = N + 1.
 
 edge(c,N1,c,N2):-edgeline(X,Y,Z,W), renameTo(X,N1), renameTo(Y,N2).
 
