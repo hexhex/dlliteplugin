@@ -33,7 +33,7 @@ for c in "${confs[@]}"
 do
 	echo -ne -e " 
 	output=$(timeout $to time -o $instance.$i.time.dat -f %e dlvhex2 $c --heuristics=monolithic --liberalsafety --plugindir=../../../../src/ --flpcheck=none $instance >$instance.out)
-	#linecount=$(cat $instance.out|wc -l)
+	linecount=$(cat $instance.out|wc -l)
 	ret=$?
 	if [[ $ret == 0 ]]; then
 	        output=$(cat $instance.$i.time.dat)

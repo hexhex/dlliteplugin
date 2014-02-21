@@ -2,12 +2,8 @@ main("c44").
 node("c44").
 %node("c43").
 node("c42").
-%node("c22").
 node("c37").
 node("c38").
-%node("c39").
-%node("c40").
-%node("c41").
 n("c44").
 
 
