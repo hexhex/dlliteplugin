@@ -7,7 +7,7 @@ export LD_LIBRARY_PATH=$2
 instance=$3
 to=$4
 owlfile="${instance%%.hex}.owl"
-confstr=";--supportsets;--supportsets --repair=$owlfile"
+confstr=";--supportsets;--supportsets --repair=$owlfile -n=1;--supportsets --repair=$owlfile"
 confstr2=$(cat conf)
 if [ $? == 0 ]; then
         confstr=$confstr2
@@ -31,8 +31,9 @@ echo -ne "$instance"
 i=0
 for c in "${confs[@]}"
 do
-	echo -ne -e " "
-	output=$(timeout $to time -o $instance.$i.time.dat -f %e dlvhex2 $c --heuristics=monolithic --liberalsafety --plugindir=../../../../src/ --flpcheck=none $instance > /dev/null)
+	echo -ne -e " 
+	output=$(timeout $to time -o $instance.$i.time.dat -f %e dlvhex2 $c --heuristics=monolithic --liberalsafety --plugindir=../../../../src/ --flpcheck=none $instance >$instance.out)
+	#linecount=$(cat $instance.out|wc -l)
 	ret=$?
 	if [[ $ret == 0 ]]; then
 	        output=$(cat $instance.$i.time.dat)
@@ -40,6 +41,7 @@ do
 		output="---"
 	fi
 	echo -ne "$output"
+	echo "$linecount"
 
 	rm $instance.$i.time.dat
 
