@@ -41,7 +41,7 @@ do
 		output="---"
 	fi
 	echo -ne "$output"
-	echo "$linecount"
+	echo -ne "$linecount"
 
 	rm $instance.$i.time.dat
 
