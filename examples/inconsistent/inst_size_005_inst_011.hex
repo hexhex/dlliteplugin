@@ -1,0 +1,14 @@
+boy("c48").
+domain("c48").
+domain("p48").
+domain("p49").
+domain("p50").
+ischildof("c48","p52").
+domain("p52").
+
+hasfather(X,Y):-&cDL["inst_size_005_inst_011.owl",pcb,b,c,d,"Male"](Y), &rDL["inst_size_005_inst_011.owl",a,b,c,d,"hasParent"](X,Y), domain(X), domain(Y).
+
+:-not &cDL["inst_size_005_inst_011.owl",a,b,c,d,"Adopted"](X),hasfather(X,Y1),ischildof(X,Y2),Y1!=Y2,not &cDL["inst_size_005_inst_011.owl",pcbb,b,c,d,"-Male"](Y2), domain(X), domain(Y1), domain(Y2).
+
+pcb("Male",X):-boy(X).
+pcbb("Child",X):-boy(X).
