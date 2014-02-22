@@ -248,7 +248,7 @@ RepairModelGenerator::RepairModelGenerator(
     // evaluate edb+xidb+gidb
     {
 	DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid,"genuine g&c init guessprog");
-	DBGLOG(DBG,"evaluating guessing program");
+	DBGLOG(DBG,"RMG: evaluating guessing program");
 	// no mask
 	OrdinaryASPProgram program(reg, factory.xidb, postprocessedInput, factory.ctx.maxint);
 	// append gidb to xidb
@@ -257,7 +257,9 @@ RepairModelGenerator::RepairModelGenerator(
 	{
 		DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidhexground, "HEX grounder time");
 		grounder = GenuineGrounder::getInstance(factory.ctx, program);
+		DBGLOG(DBG,"RMG: before new line");
 		annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.allEatoms);
+		DBGLOG(DBG,"RMG: after new line");
 	}
 	solver = GenuineGroundSolver::getInstance(
 		factory.ctx, annotatedGroundProgram,
@@ -669,7 +671,7 @@ void RepairModelGenerator::updateEANogoods(
 	InterpretationConstPtr changed){
 
 	// generalize ground nogoods to nonground ones
-	if (factory.ctx.config.getOption("ExternalLearningGeneralize")){
+	if (factory.ctx.config.getOption("ExternalLeaok, now its clearrningGeneralize")){
 		int max = learnedEANogoods->getNogoodCount();
 		for (int i = learnedEANogoodsTransferredIndex; i < max; ++i){
 			generalizeNogood(learnedEANogoods->getNogood(i));
@@ -924,10 +926,12 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 						if(std::find(dlatnoguard.begin(), dlatnoguard.end(), idneg) != dlatnoguard.end()) {
 							DBGLOG(DBG,"RMG: no repair exists: atom in dneg has support sets with no guards");
 								repairexists=false;
+								break;
 						}
 						else  {
 							DBGLOG(DBG,"RMG: repair exists, empty ABox is repair");
 							emptyrepair=true;
+							break;
 						}
 					}
 				}
@@ -944,6 +948,7 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 						if (dlatsupportsets[idpos].empty()) {
 							DBGLOG(DBG,"RMG: no repair exists, atom in dpos has no support sets");
 							repairexists=false;
+							break;
 						}
 						enpos++;
 					}
@@ -952,14 +957,15 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 					// neither set of positive nor set of negative atoms is empty
 					DBGLOG(DBG,"RMG: dneg is nonempty");
 					DBGLOG(DBG,"RMG: go through atoms in dpos "<<*dpos);
+					emptyrepair=true;
 					while (enpos < enpos_end){
 						ID idpos = reg->ogatoms.getIDByAddress(*enpos);
-						emptyrepair=true;
 						DBGLOG(DBG,"RMG: consider "<<RawPrinter::toString(reg,idpos));
 						DBGLOG(DBG,"RMG: it has "<< dlatsupportsets[idpos].size()<< " support sets");
 						if (std::find(dlatnoguard.begin(), dlatnoguard.end(), idpos) != dlatnoguard.end()) {
-							DBGLOG(DBG,"RMG: "<< RawPrinter::toString(reg,idpos)<<" has a sup set with no guards");
+							DBGLOG(DBG,"RMG: "<< RawPrinter::toString(reg,idpos)<<" has a supp set with no guards");
 							DBGLOG(DBG,"RMG: move to next atom in dpos");
+							enpos++;
 						}
 
 						else {
@@ -976,10 +982,11 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 									break;
 								}
 								else {
-								DBGLOG(DBG,"RMG: consider atom in dneg: "<<RawPrinter::toString(reg,idneg));
-								DBGLOG(DBG,"RMG: go through its "<<dlatsupportsets[idneg].size()<<" support sets");
-								// go through support sets for the current negative atom
-								for (int i=0;i<dlatsupportsets[idneg].size();i++) {
+									DBGLOG(DBG,"RMG: consider atom in dneg: "<<RawPrinter::toString(reg,idneg));
+									DBGLOG(DBG,"RMG: go through its "<<dlatsupportsets[idneg].size()<<" support sets");
+									// go through support sets for the current negative atom
+
+									for (int i=0;i<dlatsupportsets[idneg].size();i++) {
 									DBGLOG(DBG,"RMG: consider support set number "<<i);
 									// find guards
 									DBGLOG(DBG,"RMG: find guard");
@@ -987,10 +994,10 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 										if (idns.isGuardAuxiliary()) {
 											DBGLOG(DBG,"RMG: found ");
 											for (int j=0;j<dlatsupportsets[idpos].size();j++) {
-												DBGLOG(DBG,"RMG: found same guard in sup. set for atom in dpos");
 												bool del=false;
 												BOOST_FOREACH(ID idps,dlatsupportsets[idpos][j]) {
 													if (idps==idns) {
+														DBGLOG(DBG,"RMG: found same guard in supp. set for atom in dpos");
 														del=true;
 													}
 												}
@@ -999,6 +1006,9 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 												if (del==true) {
 														dlatsupportsets[idpos].erase(dlatsupportsets[idpos].begin() + j);
 														DBGLOG(DBG,"RMG: eliminate support set for dpos");
+												}
+												else {
+													DBGLOG(DBG,"RMG: no support set in dpos was found");
 												}
 											}
 
@@ -1012,6 +1022,7 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 											}
 											else {
 												DBGLOG(DBG,"RMG: guard is role");
+
 												// it is a role, thus delete the assertion from the roleABox
 												DLLitePlugin::CachedOntology::RoleAssertion ra;
 												ra.first=reg->ogatoms.getByAddress(idns.address).tuple[1];
@@ -1032,7 +1043,9 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 								}
 							}
 							if (dlatsupportsets[idpos].empty()) {
+								DBGLOG(DBG,"RMG: atom guessed true does not have any support sets anymore");
 								repairexists=false;
+								break;
 							}
 						}
 						enpos++;
