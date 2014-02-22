@@ -8,7 +8,7 @@ for (( i=1; i <= $1; i++ ))
 do
 	if [[ $RANDOM -le $prop ]]; then 
 		echo "boy(\"c$i\")."
-		echo "domain(\"c$i\")."
+
 		echo "domain(\"p$i\")."
 		echo "domain(\"p$(($i+1))\")."
 		echo "domain(\"p$(($i+2))\")."
