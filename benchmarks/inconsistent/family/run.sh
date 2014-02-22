@@ -5,7 +5,7 @@ source dlvhex_run_header.sh
 # run instances
 if [[ $all -eq 1 ]]; then
 	# run all instances using the benchmark script run insts
-	$bmscripts/runinsts.sh "instances/*.hex" "$mydir/run.sh" "$mydir" "$to" "$mydir/aggregationWithAnswerSets.sh"
+	$bmscripts/runinsts.sh "instances/*.hex" "$mydir/run.sh" "$mydir" "$to" "$mydir/aggregationWithAnswerSets.sh" "" "$req"
 else
 	# run single instance
 	owlfile="${instance%%.hex}.owl"
