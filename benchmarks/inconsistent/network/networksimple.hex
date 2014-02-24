@@ -1,6 +1,5 @@
 main("c44").
 node("c44").
-%node("c43").
 node("c42").
 node("c37").
 node("c38").

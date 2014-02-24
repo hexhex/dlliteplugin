@@ -35,6 +35,9 @@
 #include "config.h"
 #endif
 
+#undef DBGLOG
+#define DBGLOG(level,msg) { std::cout << msg << std::endl; }
+
 #include "RepairModelGenerator.h"
 #include "dlvhex2/Logger.h"
 #include "dlvhex2/Registry.h"
@@ -825,12 +828,14 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 	newConceptsABox->add(*newConceptsABoxPtr);
 	std::vector<DLLitePlugin::CachedOntology::RoleAssertion> newRolesABox = newOntology->roleAssertions;
 
-	DBGLOG(DBG,"RMG: create map (id of atom->set of supp sets for it ");
+	DBGLOG(DBG,"RMG: create map (id of atom)->set of supp sets for it ");
 	// create a map that maps id of external atoms to vector of its support sets 
 	 std::map<ID,std::vector<Nogood> > dlatsupportsets;
+	 DBGLOG(DBG,"RMG: map is created ");
 
 	 // set of IDs of DL-atoms which have support sets which do not contain any guards
 	 std::vector<ID> dlatnoguard;
+	DBGLOG(DBG,"RMG: vector that store atoms without guards is created");
 
 	 // go through all stored nogoods
 	DBGLOG(DBG,"RMG: go through all " << factory.supportSets->getNogoodCount()<< " support sets");
@@ -931,6 +936,7 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 						else  {
 							DBGLOG(DBG,"RMG: repair exists, empty ABox is repair");
 							emptyrepair=true;
+							repairexists=true;
 							break;
 						}
 					}

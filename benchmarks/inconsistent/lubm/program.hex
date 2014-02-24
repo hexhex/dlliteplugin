@@ -1,9 +1,7 @@
-pcinemployee("Employee",X):-inemployee(X).
-mcinemployee("Employee",X):-innegemployee(X).
+domain("ta1").
+course("c1").
 
-inemployee(X):-&cDL["inst_concprop_020_inst_009.owl",a,b,c,d,"ResearchAssistant"](X),
-		not &cDL["inst_concprop_020_inst_009.owl",pcinemployee,mcinemployee,c,d,"-Employee"](X), domain(X).
-innegemployee(X):-&cDL["inst_concprop_020_inst_009.owl",a,b,c,d,"Student"](X),
-		not &cDL["inst_concprop_020_inst_009.owl",pcinemployee,mcinemployee,c,d,"Employee"](X), domain(X).
 
-:-inemployee(X),innegemployee(X).
+ta(X,Y):-&rDL["ontology.owl",pcd,b,c,d,"teachingAssistantOfC"](X,Y), course(Y), domain(X).
+
+pcd("Person",X):-domain(X).
