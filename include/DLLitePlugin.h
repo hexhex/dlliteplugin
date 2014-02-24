@@ -95,6 +95,7 @@ public:
 		typedef std::pair<ID, std::pair<ID, ID> > RoleAssertion;	// stores a role assertion (i1,i2) in R as <R, <i1, i2> >
 		std::vector<RoleAssertion> roleAssertions;
 		InterpretationPtr conceptAssertions;				// stores addresses of all true concept guard atoms
+		InterpretationPtr AboxPredicates;
 
 		// checks if a concept guard atom of form GuardPredID(C, I) holds
 		bool checkConceptAssertion(RegistryPtr reg, ID guardAtomID) const;

@@ -630,22 +630,23 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 		DBGLOG(DBG,"Ordinary atom is: " << qy);
 
 		qy.tuple.push_back(query.input[5]);
-		if (query.eatom->tuple.size()==1) {
+		if (ontology->concepts->getFact(qID.address)) {
 			DBGLOG(DBG,"This is a concept query");
 			qy.tuple.push_back(outvarID);
 		}
-		else if (query.eatom->tuple.size()==2){
+		else if (ontology->roles->getFact(qID.address)){
 			DBGLOG(DBG,"This is a role");
 			qy.tuple.push_back(outvarID1);
 			qy.tuple.push_back(outvarID2);
 		}
+
 		Nogood supportset;
 		supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(qy)));
 		supportset.insert(outlit);
 		DBGLOG(DBG, "LSS:      --> Learned support set: " << supportset.getStringRepresentation(reg));
 		nogoods->addNogood(supportset);
 
-		if (qy.tuple.size()==2) {
+		if (ontology->concepts->getFact(qID.address)) {
 			DBGLOG(DBG, "Do all checks for concept case");
 
 		// check if sub(C, Q) is true in the classification assignment (for some C)
@@ -700,7 +701,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 			en++;
 		}
 	}
-	else if (qy.tuple.size()==3) {
+	else if (ontology->roles->getFact(qID.address)) {
 		DBGLOG(DBG, "Do all checks for role case");
 		// check if sub(C, Q) is true in the classification assignment (for some C)
 		#ifndef NDEBUG

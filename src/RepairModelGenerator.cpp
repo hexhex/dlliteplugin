@@ -375,133 +375,6 @@ void RepairModelGenerator::generalizeNogood(Nogood ng){
 
 }
 
-/*
-void RepairModelGenerator::learnSupportSets(){
-	DBGLOG(DBG,"RMG: learning support sets is started")
-	if (factory.ctx.config.getOption("SupportSets")){
-	DBGLOG(DBG,"RMG: option supportsets is recognized");
-		//SimpleNogoodContainerPtr potentialSupportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
-		factory.supportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
-
-		DBGLOG(DBG,"RMG: Number of innereatoms: "<<factory.innerEatoms.size());
-		DBGLOG(DBG,"RMG: Number of outerereatoms: "<<factory.outerEatoms.size());
-		DBGLOG(DBG,"RMG: Number of all eatoms: "<<factory.allEatoms.size());
-				
-		
-		// learn support sets for all external atoms
-		DBGLOG(DBG,"RMG: start going through all external atoms and learning potential support sets for them");
-		for(unsigned eaIndex = 0; eaIndex < factory.allEatoms.size(); ++eaIndex){
-			const ExternalAtom& eatom = reg->eatoms.getByID(factory.allEatoms[eaIndex]);
-			if (eatom.getExtSourceProperties().providesSupportSets()){
-				DBGLOG(DBG, "RMG: evaluating external atom " << factory.allEatoms[eaIndex] << " for support set learning");
-				learnSupportSetsForExternalAtom(factory.ctx, eatom, potentialSupportSets);
-			}
-		}
-		DBGLOG(DBG,"RMG: finished going through all external atoms and potential support sets were learnt for them");
-
-
-		DLVHEX_BENCHMARK_REGISTER(sidnongroundpsupportsets, "nonground potential supportsets");
-		DLVHEX_BENCHMARK_COUNT(sidnongroundpsupportsets, potentialSupportSets->getNogoodCount());
-
-		// ground the support sets exhaustively
-		DBGLOG(DBG,"RMG: grounding of potential support sets is started ");		
-		NogoodGrounderPtr nogoodgrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), potentialSupportSets, potentialSupportSets, annotatedGroundProgram));
-
-		int nc = 0;
-		while (nc < potentialSupportSets->getNogoodCount()){
-			nc = potentialSupportSets->getNogoodCount();
-			nogoodgrounder->update();
-		}
-
-                DLVHEX_BENCHMARK_REGISTER(sidgroundpsupportsets, "ground potential supportsets");
-                DLVHEX_BENCHMARK_COUNT(sidgroundpsupportsets, supportSets->getNogoodCount());
-
-		// some support sets are also learned nogoods
-		bool keep;
-		bool isGuard;
-		DBGLOG(DBG,"RMG: number of potential ground support sets is: " << potentialSupportSets->getNogoodCount());			DBGLOG(DBG,"RMG: start going through them, pick those that are without a guard, add them as nogoods");		
-		for (int i = 0; i < potentialSupportSets->getNogoodCount(); ++i) {
-			const Nogood& ng = potentialSupportSets->getNogood(i);
-			isGuard=false;
-			DBGLOG(DBG,"RMG: candidate for addition as nogood: " << ng.getStringRepresentation(reg));		
-
-			// Check if it is a nogood without a guard, use flag isGuard for that
-			DBGLOG(DBG,"RMG: checking guards presence");	
-		
-			BOOST_FOREACH (ID lit, ng){
-
-				// for each literal we check whether it is ground or nonground
-				// and then for ground and nonround literals seperately identify whether it is a guard or not
-				if (lit.isOrdinaryGroundAtom()) {
-					DBGLOG(DBG,"RMG: considered literal " << lit << " is ground. ");
-					ID litID = reg->ogatoms.getIDByAddress(lit.address);
-					DBGLOG(DBG,"RMG: ID of the considered literal is " << litID);
-
-					// check if it is not a guard atom
-					if (litID.isAuxiliary()){
-						DBGLOG(DBG,"RMG: " << litID <<" is auxiliary.");
-						const OrdinaryAtom& possibleGuardAtom = reg->lookupOrdinaryAtom(lit);
-						DBGLOG(DBG,"RMG: possible guard atom is " << possibleGuardAtom<< " tuple[0] is "<< possibleGuardAtom.tuple[0]);
-						if (possibleGuardAtom.tuple[0] != theDLLitePlugin.guardPredicateID) {
-								DBGLOG(DBG,"RMG: "<< possibleGuardAtom.tuple[0] << "!=" << theDLLitePlugin.guardPredicateID);
-								continue;
-						}
-						else {
-						    	isGuard=true;
-								DBGLOG(DBG,"RMG: support set viewed as nogood "<< ng.getStringRepresentation(reg) <<" contains a guard " << possibleGuardAtom.tuple[0]);
-							    break;							}
-					}
-				}
-				else {
-					DBGLOG(DBG,"RMG: considered literal " << lit << " is nonground. ");
-					ID litID = reg->onatoms.getIDByAddress(lit.address);
-					DBGLOG(DBG,"RMG: ID of the considered literal is " << litID);
-					// check if it is not a guard atom
-					if (litID.isAuxiliary()){
-						const OrdinaryAtom& possibleGuardAtom = reg->lookupOrdinaryAtom(lit);
-						DBGLOG(DBG,"RMG: possible guard atom is " << possibleGuardAtom<< " tuple[0] is "<< possibleGuardAtom.tuple[0]);
-						if (possibleGuardAtom.tuple[0] != theDLLitePlugin.guardPredicateID) {
-							DBGLOG(DBG,"RMG: theDLLitePlugin.guardPredicateIn is "  << theDLLitePlugin.guardPredicateID);
-							continue;
-						}
-						else {
-						  	isGuard=true;
-							DBGLOG(DBG,"RMG: support set viewed as nogood "<< ng.getStringRepresentation(reg) <<" contains a guard " << possibleGuardAtom.tuple[0]);
-						}
-					}
-				}
-			}
-			DBGLOG(DBG,"RMG: Finished analysing: " << ng.getStringRepresentation(reg));
-			if (ng.isGround()){
-				// determine the external atom replacement in ng
-				DBGLOG(DBG,"nogood " << ng.getStringRepresentation(reg)<< " is ground");
-				ID eaAux = ID_FAIL;
-				BOOST_FOREACH (ID lit, ng){
-						if (reg->ogatoms.getIDByAddress(lit.address).isExternalAuxiliary()){
-							if (eaAux != ID_FAIL) throw GeneralError("Set " + ng.getStringRepresentation(reg) + " is not a valid support set because it contains multiple external literals");
-							eaAux = lit;
-						}
-				}
-				if (eaAux == ID_FAIL) throw GeneralError("Set " + ng.getStringRepresentation(reg) + " is not a valid support set because it contains no external literals");
-
-				if (isGuard==false) {
-					DBGLOG(DBG, "RMG: adding the followig nogood: " << ng.getStringRepresentation(reg));
-					learnedEANogoods->addNogood(ng);
-					}
-				}
-			}	
-				
-		}
-
-                DLVHEX_BENCHMARK_REGISTER(sidgroundsupportsets, "final ground supportsets");
-                DLVHEX_BENCHMARK_COUNT(sidgroundsupportsets, supportSets->getNogoodCount());
-
-	    DBGLOG(DBG, "RMG: learnSupportSets method is finished");
-
-}*/
-
-
-
 
 void RepairModelGenerator::learnSupportSets(){
 	DBGLOG(DBG,"RMG: learning support sets is started");
@@ -520,10 +393,35 @@ void RepairModelGenerator::learnSupportSets(){
 			if (eatom.getExtSourceProperties().providesSupportSets()){
 				DBGLOG(DBG, "RMG: evaluating external atom " << RawPrinter::toString(reg,factory.allEatoms[eaIndex]) << " for support set learning");
 				learnSupportSetsForExternalAtom(factory.ctx, eatom, potentialSupportSets);
-				DBGLOG(DBG, "RMG: current number of leart support sets: " << potentialSupportSets->getNogoodCount());
+				DBGLOG(DBG, "RMG: current number of learnt support sets: " << potentialSupportSets->getNogoodCount());
 			}
 		}
+		
+		// get ABox predicates
+		InterpretationPtr abp = theDLLitePlugin.prepareOntology(factory.ctx, reg->storeConstantTerm(factory.ctx.getPluginData<DLLitePlugin>().repairOntology))->AboxPredicates;
 
+		DBGLOG(DBG, "RMG: eliminate unneccessary nonground support sets " );
+		for (int i = 0; i < potentialSupportSets->getNogoodCount(); ++i) {
+			const Nogood& ng = potentialSupportSets->getNogood(i);
+			DBGLOG(DBG,"RMG: consider support set: "<<ng.getStringRepresentation(reg));
+			DBGLOG(DBG,"RMG: is it of size >2?");
+			if (ng.size()>2) {
+				DBGLOG(DBG,"RMG: yes");
+				supportSets->removeNogood(ng);
+				DBGLOG(DBG,"RMG: eliminated");
+			}
+			else BOOST_FOREACH(ID litid, ng) {
+				DBGLOG(DBG,"no");
+				DBGLOG(DBG,"is it a guard with ontology predicate that is not in ABox?");
+				ID newid = reg->onatoms.getIDByAddress(litid.address);
+				if (newid.isGuardAuxiliary() && (abp->getFact(litid.address)==false)) {
+					DBGLOG(DBG,"yes");
+					supportSets->removeNogood(ng);
+					DBGLOG(DBG,"eliminated");							
+				}
+				else DBGLOG(DBG,"no");
+			}
+		}
 		DLVHEX_BENCHMARK_REGISTER(sidnongroundpsupportsets, "nonground potential supportsets");
 		DLVHEX_BENCHMARK_COUNT(sidnongroundpsupportsets, potentialSupportSets->getNogoodCount());
 
@@ -541,28 +439,25 @@ void RepairModelGenerator::learnSupportSets(){
 
 
 		// some support sets are also learned nogoods
-        DBGLOG(DBG, "RMG: add ground support sets without guards to the set of nogoods");
 		DBGLOG(DBG, "RMG: after grounding number of support sets is "<<potentialSupportSets->getNogoodCount());
 
+		DBGLOG(DBG,"RMG: decide which support sets to keep");
 		bool keep;
 		bool isGuard;
 		for (int i = 0; i < potentialSupportSets->getNogoodCount(); ++i){
 			const Nogood& ng = potentialSupportSets->getNogood(i);
-			DBGLOG(DBG, "RMG: consider nogood "<<i<<" namely " << ng.getStringRepresentation(reg));
+			DBGLOG(DBG, "RMG: current support set "<<i<<" namely " << ng.getStringRepresentation(reg));
 			DBGLOG(DBG, "RMG: is it ground?");
 			if (ng.isGround()) {
 			DBGLOG(DBG, "RMG: yes");
 				// determine whether it has a guard
-				DBGLOG(DBG, "RMG: does it have a guard among its literals?");
+				DBGLOG(DBG, "RMG: does it have guard atom?");
 				isGuard=false;
 				BOOST_FOREACH (ID lit, ng){
 					ID litID = reg->ogatoms.getIDByAddress(lit.address);
-					DBGLOG(DBG, "RMG: is "<< RawPrinter::toString(reg,litID)<< "  auxiliary literal?");
 					if (!isGuard)
 						if (litID.isAuxiliary()) {							
-							DBGLOG(DBG, "RMG: yes");
 							const OrdinaryAtom& possibleGuardAtom = reg->lookupOrdinaryAtom(lit);
-							DBGLOG(DBG, "RMG: is "<< RawPrinter::toString(reg,litID) <<" a guard?");
 							if (possibleGuardAtom.tuple[0]==theDLLitePlugin.guardPredicateID) {
 								DBGLOG(DBG, "RMG: yes");
 								isGuard=true;
@@ -583,7 +478,6 @@ void RepairModelGenerator::learnSupportSets(){
 				}
 				if (eaAux == ID_FAIL) throw GeneralError("Set " + ng.getStringRepresentation(reg) + " is not a valid support set because it contains no external literals");
 
-				// determine the according external atom
 					if (annotatedGroundProgram.mapsAux(eaAux.address)){
 						DBGLOG(DBG, "RMG: evaluating guards (if there are any) of " << ng.getStringRepresentation(reg));
 						keep = true;
@@ -604,65 +498,25 @@ void RepairModelGenerator::learnSupportSets(){
 								DBGLOG(DBG, "RMG: support set "<< ng.getStringRepresentation(reg)<<" has no guards");
 								DBGLOG(DBG, "RMG: add it to set of nogoods");
 								learnedEANogoods->addNogood(ng);
-								//supportSets->addNogood(ng);
 							}
-							bool add=true;
-							DBGLOG(DBG, "RMG: decide whether to add nogood to set of support sets (check minimality)");
-							DBGLOG(DBG, "RMG: now there are "<<supportSets->getNogoodCount()<<" support sets in supportSets");
-							if (supportSets->getNogoodCount()==0)
-								DBGLOG(DBG, "RMG: currently there are no support sets");
-							for (int i = 0; i<supportSets->getNogoodCount();i++) {
-								bool notadd;
-								DBGLOG(DBG, "RMG: compare ng and "<<supportSets->getNogood(i).getStringRepresentation(reg));
-
-								if (supportSets->getNogood(i).size()<=ng.size()) {
-									DBGLOG(DBG, "RMG: supset is smaller or equal then ng, i.e. "<<supportSets->getNogood(i)<<" is smaller then "<<ng);
-									notadd=true;
-									DBGLOG(DBG, "RMG: check whether ng is a superset of supset");
-									//check whether ng is a superset of supportSets->getNogood(i)
-									BOOST_FOREACH(ID l,supportSets->getNogood(i))
-										if (!ng.contains(l)) { notadd=false; }
-								}
-								else if (supportSets->getNogood(i).size()>ng.size()) {
-								//	DBGLOG(DBG, "RMG: supset is bigger then ng, i.e. "<<supportSets->getNogood(i)<<" is biger then "<<ng");
-									//check whether ng is a subset of supportSets->getNogood(i)
-									bool remove=true;
-									DBGLOG(DBG, "RMG: check whether supset is a superset of ng");
-										BOOST_FOREACH(ID l,ng)
-										if (!supportSets->getNogood(i).contains(l)) {
-											remove=false;
-										}
-										if (remove)  {
-										DBGLOG(DBG,"yes, it is a superset, remove supset");
-										supportSets->removeNogood(supportSets->getNogood(i));
-										}
-								}
-								if (notadd) {add=false; DBGLOG(DBG,"RMG: ng is a subset of some support set which is already in the set");}
-							}
-							if (add) {
-								supportSets->addNogood(ng);
-								DBGLOG(DBG, "RMG: add ng to supportSets");
-							}
-					} else {
-						DBGLOG(DBG, "RMG: rejecting " << ng.getStringRepresentation(reg));
+							DBGLOG(DBG, "RMG: add to supportSets");
+							supportSets->addNogood(ng);
+						}
+						else {
+							DBGLOG(DBG, "RMG: reject " << ng.getStringRepresentation(reg));
+						}
 					}
-				}
 			}
-			else DBGLOG(DBG, "RMG: no, it is nonground");
+			else DBGLOG(DBG, "RMG: no");
 		}
-	//	DBGLOG(DBG, "RMG: finished analyzing support sets");
+		DBGLOG(DBG, "RMG: finished analyzing support sets");
+		 DLVHEX_BENCHMARK_REGISTER(sidgroundsupportsets, "final ground supportsets");
+		 DLVHEX_BENCHMARK_COUNT(sidgroundsupportsets, supportSets->getNogoodCount());
 
-
-                DLVHEX_BENCHMARK_REGISTER(sidgroundsupportsets, "final ground supportsets");
-                DLVHEX_BENCHMARK_COUNT(sidgroundsupportsets, supportSets->getNogoodCount());
-
-		// add them to the annotated ground program to make use of them for verification
-		DBGLOG(DBG, "RMG: add " << supportSets->getNogoodCount() << " support sets to factory");
-		factory.supportSets = supportSets;
-		DBGLOG(DBG, "RMG: there are "<< factory.supportSets->getNogoodCount()<<" support sets in factory.supportsets");
-		DBGLOG(DBG, "RMG: among them "<< learnedEANogoods->getNogoodCount()<<" are nogoods");
-		DBGLOG(DBG, "Adding " << learnedEANogoods->getNogoodCount() << " support sets to annotated ground program");
-		annotatedGroundProgram.setCompleteSupportSetsForVerification(learnedEANogoods);	
+		 DBGLOG(DBG, "RMG: add " << supportSets->getNogoodCount() << " support sets to factory");
+		 factory.supportSets = supportSets;
+		 DBGLOG(DBG, "RMG: add "<< learnedEANogoods->getNogoodCount()<<" nogoods to annotated program");
+		 annotatedGroundProgram.setCompleteSupportSetsForVerification(learnedEANogoods);
 	}
 }
 
