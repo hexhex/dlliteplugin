@@ -433,6 +433,8 @@ void RepairModelGenerator::learnSupportSets(){
 		}
 			if (elim) potentialSupportSets->removeNogood(ng);
 	}
+		potentialSupportSets->defragment();
+
 		DBGLOG(DBG,"RMG: after elimination number of support sets is: "<<potentialSupportSets->getNogoodCount());
 
 		DLVHEX_BENCHMARK_REGISTER(sidnongroundpsupportsets, "nonground potential supportsets");
@@ -687,8 +689,6 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 
 
 
-	// It is ensured by apriori defined nogoods that all support sets for external atoms from dneg
-	// are dependent on the ABox (their guards are nonempty)
 
 	// Set create a temporary repairABox and store there original ABox
 	DBGLOG(DBG,"RMG: create temporary ABox");
@@ -697,6 +697,9 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 	InterpretationPtr newConceptsABox(new Interpretation(reg));
 	newConceptsABox->add(*newConceptsABoxPtr);
 	std::vector<DLLitePlugin::CachedOntology::RoleAssertion> newRolesABox = newOntology->roleAssertions;
+
+
+	DLLitePlugin::CachedOntologyPtr delontology;
 
 	/*DLLitePlugin::CachedOntologyPtr delOntology;
 	InterpretationPtr delConceptsABoxPtr = delOntology->conceptAssertions;
@@ -783,6 +786,8 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 			else DBGLOG(DBG,"RMG: support set has auxiliary atoms");
 		}
 	}
+
+
 
 	bm::bvector<>::enumerator enpos = dpos->getStorage().first();
 	bm::bvector<>::enumerator enpos_end = dpos->getStorage().end();
