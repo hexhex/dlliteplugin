@@ -99,7 +99,6 @@ void DLLitePlugin::CachedOntology::load(ID ontologyName, bool includeAbox){
 	DBGLOG(DBG, "Assigning ontology name");
 	this->ontologyName = ontologyName;
 	this->includeAbox = includeAbox;
-
 	// load and prepare the ontology here
 	try{
 		DBGLOG(DBG, "Reading file " << reg->terms.getByID(ontologyName).getUnquotedString());
@@ -131,10 +130,11 @@ void DLLitePlugin::CachedOntology::load(ID ontologyName, bool includeAbox){
 
 				DBGLOG(DBG, "Current triple: " << subj << " / " << pred << " / " << obj);
 				if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && isOwlConstant(obj)) {
+					ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj));
 					DBGLOG(DBG, "Skipping concept assertion");
 					continue;
 				}else if (isOwlConstant(subj) && isOwlConstant(pred) && isOwlConstant(obj)) {
-					DBGLOG(DBG, "Skipping role assertion");
+					ID roleID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(pred));
 					continue;
 				}else{
 					DBGLOG(DBG, "Submitting triple");
@@ -169,7 +169,8 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 	roles = InterpretationPtr(new Interpretation(reg));
 	individuals = InterpretationPtr(new Interpretation(reg));
 	conceptAssertions = InterpretationPtr(new Interpretation(reg));
-	AboxPredicates = InterpretationPtr(new Interpretation(reg));
+
+
 	BOOST_FOREACH(owlcpp::Triple const& t, store.map_triple()) {
 		std::string subj = to_string(t.subj_, store);
 		std::string obj = to_string(t.obj_, store);
@@ -210,13 +211,16 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && isOwlConstant(obj)) {
 			DBGLOG(DBG, "Yes");
 			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj));
-			AboxPredicates->setFact(conceptID);
 			ID individualID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj));
 			OrdinaryAtom guard = theDLLitePlugin.getNewGuardAtom(true /* ground! */ );
 			guard.tuple.push_back(conceptID);
 			guard.tuple.push_back(individualID);
 			ID guardAtomID = reg->storeOrdinaryAtom(guard);
 			conceptAssertions->setFact(guardAtomID.address);
+			if (std::find(AboxPredicates.begin(), AboxPredicates.end(), conceptID) == AboxPredicates.end()) {
+				AboxPredicates.push_back(conceptID);
+			}
+
 #ifndef NDEBUG
 			std::string individualStr = RawPrinter::toString(reg, individualID);
 			std::string conceptAssertionStr = theDLLitePlugin.printGuardAtom(guardAtomID);
@@ -235,7 +239,10 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 			ID roleID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(pred));
 			ID individual1ID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj));
 			ID individual2ID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj));
-			AboxPredicates->setFact(roleID);
+			if (std::find(AboxPredicates.begin(), AboxPredicates.end(), roleID) == AboxPredicates.end()) {
+				AboxPredicates.push_back(roleID);
+			}
+
 #ifndef NDEBUG
 			std::string roleAssertionStr = RawPrinter::toString(reg, roleID) + "(" + RawPrinter::toString(reg, individual1ID) + "," + RawPrinter::toString(reg, individual2ID) + ")";
 			DBGLOG(DBG, "Found role assertion: " << roleAssertionStr);

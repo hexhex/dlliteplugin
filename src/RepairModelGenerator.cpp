@@ -383,6 +383,13 @@ void RepairModelGenerator::learnSupportSets(){
 	if (factory.ctx.config.getOption("SupportSets")){
 		SimpleNogoodContainerPtr potentialSupportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
 		SimpleNogoodContainerPtr supportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
+		// get ABox predicates
+		DBGLOG(DBG,"RMG: Abox predicates are:");
+
+		std::vector<ID> abp = theDLLitePlugin.prepareOntology(factory.ctx, reg->storeConstantTerm(factory.ctx.getPluginData<DLLitePlugin>().repairOntology))->AboxPredicates;
+		BOOST_FOREACH(ID id,abp) {
+				DBGLOG(DBG,"RMG: " <<RawPrinter::toString(reg,id)<<" with "<< id);
+		}
 
 		for(unsigned eaIndex = 0; eaIndex < factory.allEatoms.size(); ++eaIndex){
 			DBGLOG(DBG,"RMG: consider atom "<< RawPrinter::toString(reg,factory.allEatoms[eaIndex]));
@@ -397,31 +404,37 @@ void RepairModelGenerator::learnSupportSets(){
 			}
 		}
 		
-		// get ABox predicates
-		InterpretationPtr abp = theDLLitePlugin.prepareOntology(factory.ctx, reg->storeConstantTerm(factory.ctx.getPluginData<DLLitePlugin>().repairOntology))->AboxPredicates;
-
 		DBGLOG(DBG, "RMG: eliminate unneccessary nonground support sets " );
-		for (int i = 0; i < potentialSupportSets->getNogoodCount(); ++i) {
+		int s = potentialSupportSets->getNogoodCount();
+		for (int i = 0; i < s; i++) {
+			bool elim=false;
 			const Nogood& ng = potentialSupportSets->getNogood(i);
 			DBGLOG(DBG,"RMG: consider support set: "<<ng.getStringRepresentation(reg));
-			DBGLOG(DBG,"RMG: is it of size >2?");
-			if (ng.size()>2) {
+			DBGLOG(DBG,"RMG: is it of size >3? "<<ng.size());
+			if (ng.size()>3) {
 				DBGLOG(DBG,"RMG: yes");
-				supportSets->removeNogood(ng);
-				DBGLOG(DBG,"RMG: eliminated");
+				elim=true;
+				DBGLOG(DBG,"RMG: support set is eliminated");
 			}
-			else BOOST_FOREACH(ID litid, ng) {
-				DBGLOG(DBG,"no");
-				DBGLOG(DBG,"is it a guard with ontology predicate that is not in ABox?");
-				ID newid = reg->onatoms.getIDByAddress(litid.address);
-				if (newid.isGuardAuxiliary() && (abp->getFact(litid.address)==false)) {
-					DBGLOG(DBG,"yes");
-					supportSets->removeNogood(ng);
-					DBGLOG(DBG,"eliminated");							
-				}
-				else DBGLOG(DBG,"no");
+			else {
+				DBGLOG(DBG,"RMG: no");
+				BOOST_FOREACH(ID litid, ng) {
+					ID newid = reg->onatoms.getIDByAddress(litid.address);
+					const OrdinaryAtom& oa = reg->onatoms.getByAddress(litid.address);
+					DBGLOG(DBG,"RMG: is " <<RawPrinter::toString(reg,newid)<<" a guard with predicate not occurring in ABox?");
+					DBGLOG(DBG,"RMG: check for " <<RawPrinter::toString(reg,oa.tuple[1])<<" with "<<oa.tuple[1]);
+					if ((newid.isGuardAuxiliary())&&(std::find(abp.begin(), abp.end(), oa.tuple[1]) == abp.end())) {
+							DBGLOG(DBG,"RMG: yes");
+							elim=true;
+							DBGLOG(DBG,"RMG: support set is eliminated");
+					}
+					else DBGLOG(DBG,"RMG: no");
 			}
 		}
+			if (elim) potentialSupportSets->removeNogood(ng);
+	}
+		DBGLOG(DBG,"RMG: after elimination number of support sets is: "<<potentialSupportSets->getNogoodCount());
+
 		DLVHEX_BENCHMARK_REGISTER(sidnongroundpsupportsets, "nonground potential supportsets");
 		DLVHEX_BENCHMARK_COUNT(sidnongroundpsupportsets, potentialSupportSets->getNogoodCount());
 
@@ -432,6 +445,7 @@ void RepairModelGenerator::learnSupportSets(){
 		int nc = 0;
 		while (nc < potentialSupportSets->getNogoodCount()){
 			nc = potentialSupportSets->getNogoodCount();
+			DBGLOG(DBG, "RMG: number of support sets is "<<nc);
 			nogoodgrounder->update();
 		}
                 DLVHEX_BENCHMARK_REGISTER(sidgroundpsupportsets, "ground potential supportsets");
@@ -459,12 +473,14 @@ void RepairModelGenerator::learnSupportSets(){
 						if (litID.isAuxiliary()) {							
 							const OrdinaryAtom& possibleGuardAtom = reg->lookupOrdinaryAtom(lit);
 							if (possibleGuardAtom.tuple[0]==theDLLitePlugin.guardPredicateID) {
-								DBGLOG(DBG, "RMG: yes");
 								isGuard=true;
 							}
-							else DBGLOG(DBG, "RMG: no");
 						}
-					if (isGuard) DBGLOG(DBG, "RMG: support set "<<ng.getStringRepresentation(reg)<<" has a guard, do not add it to nogoods");
+					if (isGuard) {
+						DBGLOG(DBG, "RMG: yes, support set "<<ng.getStringRepresentation(reg)<<" has a guard, do not add it to nogoods");
+					}
+					else DBGLOG(DBG, "RMG: no");
+
 				}
 
 				// determine the external atom replacement in ng
@@ -605,7 +621,7 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	// and evaluate them
 	// mask stores all relevant atoms for external atom with index eaindex
 	for (unsigned eaIndex=0; eaIndex<factory.allEatoms.size();eaIndex++){
-		DBGLOG(DBG,"RMG: consider external atom "<< RawPrinter::toString(reg,factory.allEatoms[eaIndex])<<" with index "<< eaIndex << " which is smaller then "<<factory.allEatoms.size());
+		DBGLOG(DBG,"RMG: consider atom "<< eaIndex<<", namely "<< RawPrinter::toString(reg,factory.allEatoms[eaIndex]));
 		annotatedGroundProgram.getEAMask(eaIndex)->updateMask();
 
 		const InterpretationConstPtr& mask = annotatedGroundProgram.getEAMask(eaIndex)->mask();
@@ -682,6 +698,12 @@ DBGLOG(DBG,"RMG: got out of the loop that sorts replacement atoms to dpos and dn
 	newConceptsABox->add(*newConceptsABoxPtr);
 	std::vector<DLLitePlugin::CachedOntology::RoleAssertion> newRolesABox = newOntology->roleAssertions;
 
+	/*DLLitePlugin::CachedOntologyPtr delOntology;
+	InterpretationPtr delConceptsABoxPtr = delOntology->conceptAssertions;
+	InterpretationPtr delConceptsABox(new Interpretation(reg));
+	delConceptsABox->add(*delConceptsABoxPtr);
+	std::vector<DLLitePlugin::CachedOntology::RoleAssertion> delRolesABox = delOntology->roleAssertions;
+	*/
 	DBGLOG(DBG,"RMG: create map (id of atom)->set of supp sets for it ");
 	// create a map that maps id of external atoms to vector of its support sets 
 	 std::map<ID,std::vector<Nogood> > dlatsupportsets;
