@@ -1,0 +1,5 @@
+domain("c1").
+domain("c2").
+n("c1").
+r(X,Y):-&rDL["simple.owl",a,b,c,d,"R"](X,Y),domain(X),domain(Y).
+a("Domain",X):-n(X).
