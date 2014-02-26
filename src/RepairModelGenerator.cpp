@@ -333,8 +333,12 @@ InterpretationPtr RepairModelGenerator::generateNextModel()
 		}
 		DLVHEX_BENCHMARK_REGISTER_AND_COUNT(ssidmodelcandidates, "Candidate compatible sets", 1);
 		LOG_SCOPE(DBG,"gM", false);
-		LOG(DBG,"got guess model, will do repair check on " << *modelCandidate);
-		if (!repairCheck(modelCandidate))
+
+		LOG(DBG,"got guess model, this is the final result " << *modelCandidate);
+
+		return modelCandidate;
+		//LOG(DBG,"got guess model, will do repair check on " << *modelCandidate);
+		/*if (!repairCheck(modelCandidate))
 		{
 			LOG(DBG,"RMG: no repair ABox was found");
 			continue;
@@ -350,7 +354,7 @@ InterpretationPtr RepairModelGenerator::generateNextModel()
 
 			LOG(DBG,"returning model without guess: " << *modelCandidate);
 			return modelCandidate;
-		}
+		}*/
 
 		/*else {
 			DBGLOG(DBG, "Checking if model candidate is a model");
@@ -382,7 +386,7 @@ void RepairModelGenerator::learnSupportSets(){
 
 	// create a map that maps external atom to set of nonground support sets for it
 	DBGLOG(DBG,"RMG: create map from id of atom to set of supp sets for it ");
-		 std::map<ID,std::vector<Nogood> > dlatsupportsets;
+		// std::map<ID,std::vector<Nogood> > dlatsupportsets;
 
 
 	// we need a separate set of support sets for each external atom
@@ -419,6 +423,7 @@ void RepairModelGenerator::learnSupportSets(){
 			if (eatom.getExtSourceProperties().providesSupportSets()){
 				DBGLOG(DBG, "RMG: evaluating external atom " << RawPrinter::toString(reg,factory.allEatoms[eaIndex]) << " for support set learning");
 				learnSupportSetsForExternalAtom(factory.ctx, eatom, supportSetsOfExternalAtom[eaIndex]);
+				DBGLOG(DBG, "RMG: Number of learnt support sets: "<<supportSetsOfExternalAtom[eaIndex]->getNogoodCount());
 //				DBGLOG(DBG, "RMG: current number of learnt support sets: " << potentialSupportSets->getNogoodCount());
 			}
 
