@@ -162,7 +162,6 @@ void DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const ID eaReplacemen
 				holds = ontology->checkConceptAssertion(reg, litID);
 			}else{
 				// role guard
-				DBGLOG(DBG, "GUARD: Checking role assertion");
 				holds = ontology->checkRoleAssertion(reg, litID);
 			}
 			DBGLOG(DBG, "GUARD: Guard atom " << guardStr << " " << (holds ? " holds" : "does not hold"));
@@ -274,7 +273,7 @@ void DLPluginAtom::retrieve(const Query& query, Answer& answer){
 void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoods){
 
 	DBGLOG(DBG, "LSS: Learning support sets");
-	DBGLOG(DBG, "LSS: query arity: "<< query.eatom->tuple.size());
+
 	// make sure that the ontology is in the cache and retrieve its classification
 	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0]);
 
@@ -293,15 +292,22 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 	ID outvarID1 = reg->storeVariableTerm("O1");
 	ID outvarID2 = reg->storeVariableTerm("O2");
 	Tuple outlist;
-	if (query.eatom->tuple.size()==1) {
-		DBGLOG(DBG, "This is a concept query");
+
+	if ((ontology->concepts->getFact(query.input[5].address))||(ontology->concepts->getFact(theDLLitePlugin.dlNeg(query.input[5]).address))) {
+		DBGLOG(DBG, "Query is a concept");
 		outlist.push_back(outvarID);
 	}
-	else if (query.eatom->tuple.size()==2){
-		DBGLOG(DBG, "This is role query");
+
+
+	else if ((ontology->roles->getFact(query.input[5].address))||(ontology->roles->getFact(theDLLitePlugin.dlNeg(query.input[5]).address))) {
+		DBGLOG(DBG, "Query is a role");
 		outlist.push_back(outvarID1);
 		outlist.push_back(outvarID2);
 	}
+
+	else {}
+
+
 	ID outlit = NogoodContainer::createLiteral(ExternalLearningHelper::getOutputAtom(query, outlist, false));
 #ifndef NDEBUG
 	std::string outlitStr = RawPrinter::toString(reg, outlit);
@@ -318,6 +324,8 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 	#define DBGCHECKATOM(id) { std::stringstream ss; RawPrinter printer(ss, reg); printer.print(id); DBGLOG(DBG, "LSS:                Checking if " << ss.str() << " holds in CM:"); }
 	while (en < en_end){
 		// check if it is c+, c-, r+ or r-
+
+
 #ifndef NDEBUG
 		std::string enStr = RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en));
 		DBGLOG(DBG, "LSS:      Current input atom: " << enStr);
@@ -328,8 +336,8 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 			// c+
 			DBGLOG(DBG, "LSS:           Atom belongs to c+");
 			assert(oatom.tuple.size() == 3 && "Second parameter must be a binary predicate");
-
 			ID cID = oatom.tuple[1];
+
 
 			// check if sub(C, Q) is true in the classification assignment
 			OrdinaryAtom subcq(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -363,7 +371,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 			if (classification->getFact(confccID.address)){
 				OrdinaryAtom cpcx = theDLLitePlugin.getNewAtom(query.input[1]);
 				cpcx.tuple.push_back(cID);
-				cpcx.tuple.push_back(outvarID);
+				cpcx.tuple.push_back(theDLLitePlugin.xID);
 				Nogood supportset;
 				supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcx)));
 				supportset.insert(outlit);
@@ -477,7 +485,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 
 			ID cID = oatom.tuple[1];
 
-			// check if sub(negC, Q) is true in the classification assignment
+		/*	// check if sub(negC, Q) is true in the classification assignment
 			OrdinaryAtom subncq(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 			subncq.tuple.push_back(theDLLitePlugin.subID);
 			subncq.tuple.push_back(theDLLitePlugin.dlNeg(cID));
@@ -496,7 +504,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 				nogoods->addNogood(supportset);
 			}else{
 				DBGLOG(DBG, "LSS:                     Does not hold");
-			}
+			}*/
 		}else if (oatom.tuple[0] == query.input[3]){
 			// r+
 			DBGLOG(DBG, "LSS:           Atom belongs to r+");
@@ -505,7 +513,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 			ID rID = oatom.tuple[1];
 			ID exrID = theDLLitePlugin.dlEx(rID);
 
-			// check if sub(negC, Q) is true in the classification assignment
+			// check if sub(exR, Q) is true in the classification assignment (applicable only for concepts)
 			OrdinaryAtom subexrq(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 			subexrq.tuple.push_back(theDLLitePlugin.subID);
 			subexrq.tuple.push_back(theDLLitePlugin.dlEx(rID));
@@ -533,6 +541,34 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 			DBGLOG(DBG, "LSS:                Checking if sub(" << exrIDStr << ", C) is true in the classification assignment (for some C)");
 			DBGLOG(DBG, "LSS:                 or if if sub(" << rIDStr << ", R') is true in the classification assignment (for some R')");
 #endif
+
+
+
+			// check if sub(R, Q) is true in the classification assignment (applicable only for roles)
+			OrdinaryAtom subrq(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+			subrq.tuple.push_back(theDLLitePlugin.subID);
+			subrq.tuple.push_back(rID);
+			subrq.tuple.push_back(qID);
+			ID subrqID = reg->storeOrdinaryAtom(subrq);
+
+			DBGCHECKATOM(subrqID)
+			if (classification->getFact(subrqID.address)){
+				OrdinaryAtom rprxy = theDLLitePlugin.getNewAtom(query.input[1]);
+				rprxy.tuple.push_back(rID);
+				rprxy.tuple.push_back(outvarID1);
+				rprxy.tuple.push_back(outvarID2);
+				Nogood supportset;
+				supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
+				supportset.insert(outlit);
+				DBGLOG(DBG, "LSS:                     Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
+				nogoods->addNogood(supportset);
+			}else{
+				DBGLOG(DBG, "LSS:                     Does not hold");
+			}
+
+			
+
+			
 			bm::bvector<>::enumerator en2 = classification->getStorage().first();
 			bm::bvector<>::enumerator en2_end = classification->getStorage().end();
 			while (en2 < en2_end){
@@ -541,10 +577,10 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 					DBGLOG(DBG, "LSS:                          --> Found a match with C=" << RawPrinter::toString(reg, at.tuple[2]));
 					Nogood supportset;
 
-					// add { T r+(R,O,Y), -C(O) }
+					// add { T r+(R,X,Y), -C(O) }
 					OrdinaryAtom rprxy = theDLLitePlugin.getNewAtom(query.input[3]);
 					rprxy.tuple.push_back(rID);
-					rprxy.tuple.push_back(outvarID);
+					rprxy.tuple.push_back(theDLLitePlugin.xID);
 					rprxy.tuple.push_back(theDLLitePlugin.yID);
 					supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
 
@@ -552,7 +588,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 					ID negctID = theDLLitePlugin.dlNeg(at.tuple[2]);
 					OrdinaryAtom negc = theDLLitePlugin.getNewGuardAtom();
 					negc.tuple.push_back(negctID);
-					negc.tuple.push_back(outvarID);
+					negc.tuple.push_back(theDLLitePlugin.xID);
 					ID negcID = reg->storeOrdinaryAtom(negc);
 					supportset.insert(NogoodContainer::createLiteral(negcID));
 
@@ -565,10 +601,10 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 					DBGLOG(DBG, "LSS:                          --> Found a match with R'=" << RawPrinter::toString(reg, at.tuple[2]));
 					Nogood supportset;
 
-					// add { T r+(R,O,Y), -R'(O,Y) }
+					// add { T r+(R,X,Y), -R'(X,Y) }
 					OrdinaryAtom rprxy = theDLLitePlugin.getNewAtom(query.input[3]);
 					rprxy.tuple.push_back(rID);
-					rprxy.tuple.push_back(outvarID);
+					rprxy.tuple.push_back(theDLLitePlugin.xID);
 					rprxy.tuple.push_back(theDLLitePlugin.yID);
 					supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
 
@@ -576,7 +612,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 					ID negrptID = theDLLitePlugin.dlNeg(at.tuple[2]);
 					OrdinaryAtom negrp = theDLLitePlugin.getNewGuardAtom();
 					negrp.tuple.push_back(negrptID);
-					negrp.tuple.push_back(outvarID);
+					negrp.tuple.push_back(theDLLitePlugin.xID);
 					negrp.tuple.push_back(theDLLitePlugin.yID);
 					ID negrpID = reg->storeOrdinaryAtom(negrp);
 					supportset.insert(NogoodContainer::createLiteral(negrpID));
@@ -596,7 +632,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 
 			ID rID = oatom.tuple[1];
 
-			// check if sub(negC, Q) is true in the classification assignment
+			/*// check if sub(negexR, Q) is true in the classification assignment
 			OrdinaryAtom subnexrq(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 			subnexrq.tuple.push_back(theDLLitePlugin.subID);
 			subnexrq.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.dlEx(rID)));
@@ -616,7 +652,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 				nogoods->addNogood(supportset);
 			}else{
 				DBGLOG(DBG, "LSS:                     Does not hold");
-			}
+			}*/
 		}
 		en++;
 	}
@@ -627,18 +663,21 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 
 		// guard atom for Q(Y)
 		OrdinaryAtom qy = theDLLitePlugin.getNewGuardAtom();
-		DBGLOG(DBG,"Ordinary atom is: " << qy);
-
 		qy.tuple.push_back(query.input[5]);
-		if (ontology->concepts->getFact(qID.address)) {
-			DBGLOG(DBG,"This is a concept query");
+		
+		if ((ontology->concepts->getFact(query.input[5].address))||(ontology->concepts->getFact(theDLLitePlugin.dlNeg(query.input[5]).address))) {
+			DBGLOG(DBG,"Query is a concept");
 			qy.tuple.push_back(outvarID);
 		}
-		else if (ontology->roles->getFact(qID.address)){
-			DBGLOG(DBG,"This is a role");
+		else if ((ontology->roles->getFact(query.input[5].address))||(ontology->roles->getFact(theDLLitePlugin.dlNeg(query.input[5]).address))) {
+			DBGLOG(DBG,"Query is a role");
 			qy.tuple.push_back(outvarID1);
 			qy.tuple.push_back(outvarID2);
+		//	DBGLOG(DBG,"Here is guard atom for it: "<<RawPrinter::toString(reg, reg->ogatoms.getIDByStorage(qy)));
+
+			//DBGLOG(DBG,"Guard atom for role is: "<<RawPrinter::toString(reg, reg->onatoms.getIDByStorage(qy));
 		}
+		else {}
 
 		Nogood supportset;
 		supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(qy)));
@@ -646,10 +685,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 		DBGLOG(DBG, "LSS:      --> Learned support set: " << supportset.getStringRepresentation(reg));
 		nogoods->addNogood(supportset);
 
-		if (ontology->concepts->getFact(qID.address)) {
-			DBGLOG(DBG, "Do all checks for concept case");
-
-		// check if sub(C, Q) is true in the classification assignment (for some C)
+		// check if sub(C, Q) or sub(R,Q) is true in the classification assignment (for some C)
 #ifndef NDEBUG
 		std::string qstr = RawPrinter::toString(reg, query.input[5]);
 
@@ -679,62 +715,33 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 					nogoods->addNogood(supportset);
 				}else{
 					DBGLOG(DBG, "LSS:                     (this is not form exR)");
-					OrdinaryAtom co = theDLLitePlugin.getNewGuardAtom();
-					//if (qy.tuple.size()==1){
-						co.tuple.push_back(cID);
+					if ((ontology->concepts->getFact(query.input[5].address))||(ontology->concepts->getFact(theDLLitePlugin.dlNeg(query.input[5]).address))) {
 						// guard atom for C(O)
+						OrdinaryAtom co = theDLLitePlugin.getNewGuardAtom();
+						co.tuple.push_back(cID);
 						co.tuple.push_back(outvarID);
-					//}
-				//	else if (qy.tuple.size()==2){
-						// guard atom for R(O1,O2)
-				//		co.tuple.push_back(rID);
-				//		co.tuple.push_back(outvarID1);
-				//		co.tuple.push_back(outvarID2);
-				//	}
-					Nogood supportset;
-					supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(co)));
-					supportset.insert(outlit);
-					DBGLOG(DBG, "LSS:                          --> Learned support set: " << supportset.getStringRepresentation(reg));
-					nogoods->addNogood(supportset);
+						Nogood supportset;
+						supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(co)));
+						supportset.insert(outlit);
+						DBGLOG(DBG, "LSS:                          --> Learned support set: " << supportset.getStringRepresentation(reg));
+						nogoods->addNogood(supportset);
+					}
+					else if ((ontology->roles->getFact(query.input[5].address))||(ontology->roles->getFact(theDLLitePlugin.dlNeg(query.input[5]).address))) {
+						// guard atom for C(O1,O2)
+						OrdinaryAtom co = theDLLitePlugin.getNewGuardAtom();
+						co.tuple.push_back(cID);
+						co.tuple.push_back(outvarID1);
+						co.tuple.push_back(outvarID2);
+						Nogood supportset;
+						supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(co)));
+						supportset.insert(outlit);
+						DBGLOG(DBG, "LSS:                          --> Learned support set: " << supportset.getStringRepresentation(reg));
+						nogoods->addNogood(supportset);
+					}
 				}
 			}
 			en++;
 		}
-	}
-	else if (ontology->roles->getFact(qID.address)) {
-		DBGLOG(DBG, "Do all checks for role case");
-		// check if sub(C, Q) is true in the classification assignment (for some C)
-		#ifndef NDEBUG
-				std::string qstr = RawPrinter::toString(reg, query.input[5]);
-
-				DBGLOG(DBG, "LSS:           Checking if sub(R, " << qstr << ") is true in the classification assignment (for some C')");
-		#endif
-				bm::bvector<>::enumerator en = classification->getStorage().first();
-				bm::bvector<>::enumerator en_end = classification->getStorage().end();
-				while (en < en_end){
-					DBGLOG(DBG, "LSS:                Current classification atom: " << RawPrinter::toString(reg, reg->ogatoms.getIDByAddress(*en)));
-					const OrdinaryAtom& clAtom = reg->ogatoms.getByAddress(*en);
-					if (clAtom.tuple[0] == theDLLitePlugin.subID && clAtom.tuple[2] == qID){
-						ID rID = clAtom.tuple[1];
-		#ifndef NDEBUG
-						DBGLOG(DBG, "LSS:                     Found a match with R=" << RawPrinter::toString(reg, rID));
-		#endif
-							OrdinaryAtom co = theDLLitePlugin.getNewGuardAtom();
-							// guard atom for R(O1,O2)
-							co.tuple.push_back(rID);
-							co.tuple.push_back(outvarID1);
-							co.tuple.push_back(outvarID2);
-							Nogood supportset;
-							supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(co)));
-							supportset.insert(outlit);
-							DBGLOG(DBG, "LSS:                          --> Learned support set: " << supportset.getStringRepresentation(reg));
-							nogoods->addNogood(supportset);
-
-					}
-					en++;
-				}
-
-}
 	}
 
 	DBGLOG(DBG, "LSS: Finished support set learning");
@@ -1020,3 +1027,4 @@ DLVHEX_NAMESPACE_END
 // Local Variables:
 // mode: C++
 // End:
+

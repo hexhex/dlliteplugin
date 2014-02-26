@@ -380,10 +380,17 @@ void RepairModelGenerator::learnSupportSets(){
 	DBGLOG(DBG,"RMG: learning support sets is started");
 	DBGLOG(DBG,"RMG: Number of all eatoms: "<<factory.allEatoms.size());
 
+	// create a map that maps external atom to set of nonground support sets for it
+	DBGLOG(DBG,"RMG: create map from id of atom to set of supp sets for it ");
+		 std::map<ID,std::vector<Nogood> > dlatsupportsets;
+
+
+
 	if (factory.ctx.config.getOption("SupportSets")){
 		SimpleNogoodContainerPtr potentialSupportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
 		SimpleNogoodContainerPtr supportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
-		// get ABox predicates
+
+		// get ABox predicates, they will be needed to filter out unnuccessary support sets
 		DBGLOG(DBG,"RMG: Abox predicates are:");
 
 		std::vector<ID> abp = theDLLitePlugin.prepareOntology(factory.ctx, reg->storeConstantTerm(factory.ctx.getPluginData<DLLitePlugin>().repairOntology))->AboxPredicates;
@@ -391,6 +398,7 @@ void RepairModelGenerator::learnSupportSets(){
 				DBGLOG(DBG,"RMG: " <<RawPrinter::toString(reg,id)<<" with "<< id);
 		}
 
+		// go through external atoms and add its set of nonground support sets
 		for(unsigned eaIndex = 0; eaIndex < factory.allEatoms.size(); ++eaIndex){
 			DBGLOG(DBG,"RMG: consider atom "<< RawPrinter::toString(reg,factory.allEatoms[eaIndex]));
 
@@ -414,7 +422,7 @@ void RepairModelGenerator::learnSupportSets(){
 			if (ng.size()>3) {
 				DBGLOG(DBG,"RMG: yes");
 				elim=true;
-				DBGLOG(DBG,"RMG: support set is eliminated");
+				DBGLOG(DBG,"RMG: support set is marked for elimination");
 			}
 			else {
 				DBGLOG(DBG,"RMG: no");
@@ -426,16 +434,60 @@ void RepairModelGenerator::learnSupportSets(){
 					if ((newid.isGuardAuxiliary())&&(std::find(abp.begin(), abp.end(), oa.tuple[1]) == abp.end())) {
 							DBGLOG(DBG,"RMG: yes");
 							elim=true;
-							DBGLOG(DBG,"RMG: support set is eliminated");
+							DBGLOG(DBG,"RMG: support set is marked for elimination");
+							break;
 					}
 					else DBGLOG(DBG,"RMG: no");
 			}
 		}
-			if (elim) potentialSupportSets->removeNogood(ng);
+			if (elim) {
+				DBGLOG(DBG,"RMG: if current support set is marked, eliminate it");
+				potentialSupportSets->removeNogood(ng);
+			}
+			else {
+				DBGLOG(DBG,"RMG: leave this support set");
+			}
 	}
+		DBGLOG(DBG,"RMG: before elimination");
 		potentialSupportSets->defragment();
 
+
 		DBGLOG(DBG,"RMG: after elimination number of support sets is: "<<potentialSupportSets->getNogoodCount());
+
+		// TODO store support sets from potentialSupportSets in the map as follows
+		// dlatsupsets[eatomID]=set od support sets for it
+
+		// given the map dlatsupportsets construct rules for the extended replacement program:
+		// for (unsigned eaindex = 1; eaindex<factory.allEatoms.size();++eaindex) {
+		//
+		//			std::vector<ID> s=dlatsupsets[factory.allEatoms[eaIndex]]
+		//			if (s for external atom a("Q",O) contains both a guard aux_o("C",X) and a normal atom aux_p("D",Y)) {
+		//				create the following rules:
+		//				*	bar_aux_o("C",X):-aux_p("D",Y), aux_o("C",X), n_e_a("Q",O). (neg. repl. of eatom)
+		//				*   supp_e_a("Q",O):-aux_p("D",Y), aux_o("C",X),e_a("Q",O), not bar_aux_o("C",X).
+		//				* 	:-e_a("Q",O),not supp_e_a("Q",O).
+		//			where bar_aux_o is a fresh predicate and intuitively stands for elimination of C(X) from the ABox
+		//			supp_e_a is also a fresh predicate that denotes existence of a support set for a certain atom
+
+		//			}
+		//			else if (s for external atom a("Q",O) contains only a guard aux_o("C",X)) }
+		//				create the following rules:
+		//				*	bar_aux_o("C",X):-aux_o("C",X), n_e_a("Q",O). (neg. repl. of eatom)
+		//				*   supp_e_a("Q",O):-aux_o("C",X),e_a("Q",O), not bar_aux_o("C",X).
+		//				* 	:-e_a("Q",O),not supp_e_a("Q",O).
+		//		}
+		//				else if (s for external atom a("Q",O) contains only a guard aux_o("C",X)) {
+	    //				create the following rules:
+		//				*	bar_aux_o("C",X):-aux_o("C",X), n_e_a("Q",O). (neg. repl. of eatom)
+		//				*   supp_e_a("Q",O):-aux_o("C",X),e_a("Q",O), not bar_aux_o("C",X).
+		//				* 	:-e_a("Q",O),not supp_e_a("Q",O).
+		//			}
+		//	}
+		// add ontology ABox in form of facts aux_o("D",c) (accordingly aux_o("R",c1,c2)).
+
+		// ground the program and evaluate it
+		// get the results, filter them out with respect to only relevant predicates (all apart from aux_o, replacement atoms)
+
 
 		DLVHEX_BENCHMARK_REGISTER(sidnongroundpsupportsets, "nonground potential supportsets");
 		DLVHEX_BENCHMARK_COUNT(sidnongroundpsupportsets, potentialSupportSets->getNogoodCount());

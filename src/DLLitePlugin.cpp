@@ -714,7 +714,7 @@ bool DLLitePlugin::CachedOntology::checkConceptAssertion(RegistryPtr reg, ID gua
 
 bool DLLitePlugin::CachedOntology::checkRoleAssertion(RegistryPtr reg, ID guardAtomID) const{
 	const OrdinaryAtom& ogatom = reg->ogatoms.getByAddress(guardAtomID.address);
-	assert(ogatom.tuple.size() == 4 && "Role guard atoms must be of arity 2");
+	assert(ogatom.tuple.size() == 4 && "Role guard atoms must be of arity 3");
 	assert(!theDLLitePlugin.isDlEx(ogatom.tuple[2]) && !theDLLitePlugin.isDlEx(ogatom.tuple[3]) && "existentials in guard atoms are disallowed");
 	BOOST_FOREACH (RoleAssertion ra, roleAssertions){
 		if (ra.first == ogatom.tuple[1] && ra.second.first == ogatom.tuple[2] && ra.second.second == ogatom.tuple[3]) return true;
