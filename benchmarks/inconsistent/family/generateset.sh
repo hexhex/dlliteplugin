@@ -11,10 +11,10 @@ do
 		in=`printf "%03d" ${inst}`
 
 		# create ontology instances
-		cp ontology_small.owl instances/inst_size_${propf}_inst_${in}.owl
+		cp ontology.owl instances/inst_size_${propf}_inst_${in}.owl
 
 		# instantiate the program
-		./generate_small.sh 50 10 $prop > "instances/inst_size_${propf}_inst_${in}.dlp"
+		./generate.sh 50 10 $prop > "instances/inst_size_${propf}_inst_${in}.dlp"
 		cp instances/inst_size_${propf}_inst_${in}.dlp instances/inst_size_${propf}_inst_${in}.hex
 
 		cat program.hex | sed "s/OWLONTOLOGY/\"instances\/inst_size_${propf}_inst_${in}.owl\"/g" >> "instances/inst_size_${propf}_inst_${in}.hex"

@@ -8,7 +8,7 @@ cat ontology_header.owl	# ontology_header.owl must contain the static part of th
 for (( i=1; i <= 50; i++ ))
 do
 	echo "<owl:Thing rdf:about=\"#c$i\"><rdf:type rdf:resource=\"#Child\"/></owl:Thing>"
-	echo "<owl:Thing rdf:about=\"#c$i\"><rdf:type rdf:resource=\"#Domain\"/></owl:Thing>"
+	#echo "<owl:Thing rdf:about=\"#c$i\"><rdf:type rdf:resource=\"#Domain\"/></owl:Thing>"
 	if [[ $i -ge 43 ]]; then
 		echo "<owl:Thing rdf:about=\"#c$i\"><rdf:type rdf:resource=\"#Adopted\"/></owl:Thing>"
 	fi
@@ -27,7 +27,7 @@ do
 
 				
 	fi
-		echo "<owl:Thing rdf:about=\"#p$i\"><rdf:type rdf:resource=\"#Domain\"/></owl:Thing>"
+		#echo "<owl:Thing rdf:about=\"#p$i\"><rdf:type rdf:resource=\"#Domain\"/></owl:Thing>"
 done
 
 
@@ -39,7 +39,7 @@ do
 #	rem=$(( $i % 2 ))
 
 		echo "<owl:Thing rdf:about=\"#p$i\"><rdf:type rdf:resource=\"#Male\"/></owl:Thing>"
-		echo "<owl:Thing rdf:about=\"#p$i\"><rdf:type rdf:resource=\"#Domain\"/></owl:Thing>"
+		#echo "<owl:Thing rdf:about=\"#p$i\"><rdf:type rdf:resource=\"#Domain\"/></owl:Thing>"
 			
 done
 
