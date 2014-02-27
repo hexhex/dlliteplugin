@@ -763,6 +763,8 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 		}
 	}
 
+	DBGLOG(DBG, "LSS: Number of learned nogoods: "<< potentialSupportSets->getNogoodCount());
+
 	optimizeSupportSets(potentialSupportSets,nogoods);
 
 	DBGLOG(DBG, "LSS: Finished support set learning");
@@ -773,7 +775,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 void DLPluginAtom::optimizeSupportSets(SimpleNogoodContainerPtr initial,NogoodContainerPtr final){
 
 
-	DBGLOG(DBG,"RMG: Abox predicates are:");
+	DBGLOG(DBG,"LSSO: Abox predicates are:");
 	std::vector<ID> abp;
 	RegistryPtr reg = getRegistry();
 	if (ctx.getPluginData<DLLitePlugin>().repair) {
@@ -786,43 +788,49 @@ void DLPluginAtom::optimizeSupportSets(SimpleNogoodContainerPtr initial,NogoodCo
 				DBGLOG(DBG,RawPrinter::toString(reg,id)<<" with "<< id);
 		}
 
-	DBGLOG(DBG, "Eliminate unneccessary nonground support sets " );
+	DBGLOG(DBG, "LSSO: Eliminate unneccessary nonground support sets " );
 	int s = initial->getNogoodCount();
+	DBGLOG(DBG, "LSSO: Inintial number of nonground support sets:"<<s );
+	int n=0;
 	for (int i = 0; i < s; i++) {
 		bool elim=false;
 		const Nogood& ng = initial->getNogood(i);
-		DBGLOG(DBG,"RMG: consider support set: "<<ng.getStringRepresentation(reg));
-		DBGLOG(DBG,"RMG: is it of size >3? "<<ng.size());
+		DBGLOG(DBG,"LSSO: consider support set: "<<ng.getStringRepresentation(reg));
+		DBGLOG(DBG,"LSSO: is it of size >3? "<<ng.size());
 		if (ng.size()>3) {
-			DBGLOG(DBG,"RMG: yes");
+			DBGLOG(DBG,"LSSO: yes");
 			elim=true;
-			DBGLOG(DBG,"RMG: support set is marked for elimination");
+			DBGLOG(DBG,"LSSO: support set is marked for elimination");
 		}else{
-			DBGLOG(DBG,"RMG: no");
+			DBGLOG(DBG,"LSSO: no");
 			BOOST_FOREACH(ID litid, ng) {
 				ID newid = reg->onatoms.getIDByAddress(litid.address);
 				const OrdinaryAtom& oa = reg->onatoms.getByAddress(litid.address);
-				DBGLOG(DBG,"RMG: is " <<RawPrinter::toString(reg,newid)<<" a guard with predicate not occurring in ABox?");
-				DBGLOG(DBG,"RMG: check for " <<RawPrinter::toString(reg,oa.tuple[1])<<" with "<<oa.tuple[1]);
+				DBGLOG(DBG,"LSSO: is " <<RawPrinter::toString(reg,newid)<<" a guard with predicate not occurring in ABox?");
+				DBGLOG(DBG,"LSSO: check for " <<RawPrinter::toString(reg,oa.tuple[1])<<" with "<<oa.tuple[1]);
 				if ((newid.isGuardAuxiliary())&&(std::find(abp.begin(), abp.end(), oa.tuple[1]) == abp.end())) {
-					DBGLOG(DBG,"RMG: yes");
+					DBGLOG(DBG,"LSSO: yes");
 					elim = true;
-					DBGLOG(DBG,"RMG: support set is marked for elimination");
+					DBGLOG(DBG,"LSSO: support set is marked for elimination");
 					break;
 				}else{
-					DBGLOG(DBG,"RMG: no");
+					DBGLOG(DBG,"LSSO: no");
 				}
 			}
 		}
 		if (elim) {
-			DBGLOG(DBG,"RMG: if current support set is marked, eliminate it");
+			DBGLOG(DBG,"LSSO: if current support set is marked, eliminate it");
 			initial->removeNogood(ng);
 		}
 		else {
 			final->addNogood(ng);
-			DBGLOG(DBG,"RMG: leave this support set");
+			DBGLOG(DBG,"LSSO: leave this support set");
+			n++;
 		}
 	}
+
+DBGLOG(DBG,"LSSO: Number of support sets after elimination: "<<n);
+	
 }
 
 

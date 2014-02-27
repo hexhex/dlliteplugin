@@ -179,9 +179,9 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 		DBGLOG(DBG, "Current triple: " << subj << " / " << pred << " / " << obj);
 
 		// concept definition
-		DBGLOG(DBG, "Checking if this is a concept definition");
+		//DBGLOG(DBG, "Checking if this is a concept definition");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "Class")) {
-			DBGLOG(DBG, "Yes");
+		//	DBGLOG(DBG, "Yes");
 			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj));
 #ifndef NDEBUG
 			std::string conceptStr = RawPrinter::toString(reg, conceptID);
@@ -189,13 +189,13 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 #endif
 			concepts->setFact(conceptID.address);
 		}else{
-			DBGLOG(DBG, "No");
+		//	DBGLOG(DBG, "No");
 		}
 
 		// role definition
-		DBGLOG(DBG, "Checking if this is a role definition");
+		//DBGLOG(DBG, "Checking if this is a role definition");
 		if (isOwlConstant(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "ObjectProperty")) {
-			DBGLOG(DBG, "Yes");
+			//DBGLOG(DBG, "Yes");
 			ID roleID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj));
 #ifndef NDEBUG
 			std::string roleStr = RawPrinter::toString(reg, roleID);
@@ -203,13 +203,13 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 #endif
 			roles->setFact(roleID.address);
 		}else{
-			DBGLOG(DBG, "No");
+			//DBGLOG(DBG, "No");
 		}
 
 		// concept assertion
-		DBGLOG(DBG, "Checking if this is a concept assertion");
+		//DBGLOG(DBG, "Checking if this is a concept assertion");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && isOwlConstant(obj)) {
-			DBGLOG(DBG, "Yes");
+			//DBGLOG(DBG, "Yes");
 			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj));
 			ID individualID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj));
 			OrdinaryAtom guard = theDLLitePlugin.getNewGuardAtom(true /* ground! */ );
@@ -229,13 +229,13 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 #endif
 			individuals->setFact(individualID.address);
 		}else{
-			DBGLOG(DBG, "No");
+			//DBGLOG(DBG, "No");
 		}
 
 		// role assertion
-		DBGLOG(DBG, "Checking if this is a role assertion");
+		//DBGLOG(DBG, "Checking if this is a role assertion");
 		if (isOwlConstant(subj) && isOwlConstant(pred) && isOwlConstant(obj)) {
-			DBGLOG(DBG, "Yes");
+			//DBGLOG(DBG, "Yes");
 			ID roleID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(pred));
 			ID individual1ID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj));
 			ID individual2ID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj));
@@ -254,16 +254,16 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 						individual1ID,
 						individual2ID )));
 		}else{
-			DBGLOG(DBG, "No");
+		//	DBGLOG(DBG, "No");
 		}
 
 		// individual definition
-		DBGLOG(DBG, "Checking if this is an individual definition");
+		//DBGLOG(DBG, "Checking if this is an individual definition");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(obj, "Thing") && theDLLitePlugin.cmpOwlType(pred, "type")) {
-			DBGLOG(DBG, "Yes");
+		//	DBGLOG(DBG, "Yes");
 			individuals->setFact(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)).address);
 		}else{
-			DBGLOG(DBG, "No");
+		//	DBGLOG(DBG, "No");
 		}
 	}
 
@@ -398,9 +398,9 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 		std::string pred = to_string(t.pred_, store);
 
 		DBGLOG(DBG, "Current triple: " << subj << " / " << pred << " / " << obj);
-		DBGLOG(DBG, "Checking if this is a concept definition");
+	//	DBGLOG(DBG, "Checking if this is a concept definition");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "Class")) {
-			DBGLOG(DBG, "Yes");
+		//	DBGLOG(DBG, "Yes");
 
 			// concepts should already be discovered in CachedOntology::analyzeTboxAndAbox
 			assert(concepts->getFact(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)).address) && "found a concept which was previously missed");
@@ -421,11 +421,11 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}else{
-			DBGLOG(DBG, "No");
+	//		DBGLOG(DBG, "No");
 		}
-		DBGLOG(DBG, "Checking if this is a role definition");
+	//	DBGLOG(DBG, "Checking if this is a role definition");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "ObjectProperty")) {
-			DBGLOG(DBG, "Yes");
+	//		DBGLOG(DBG, "Yes");
 
 			// roles should already be discovered in CachedOntology::analyzeTboxAndAbox
 			assert(roles->getFact(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)).address) && "found a role which was previously missed");
@@ -464,20 +464,20 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 		}
 
 		//std::vector<owlcpp::Triple> domainRestricion;
-		DBGLOG(DBG, "Checking if this is a concept inclusion");
+		//DBGLOG(DBG, "Checking if this is a concept inclusion");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "subclassOf") && isOwlConstant(obj))
 		{
-			DBGLOG(DBG, "Yes");
-			DBGLOG(DBG, "Checking if this is a domain restriction");
+		//	DBGLOG(DBG, "Yes");
+		//	DBGLOG(DBG, "Checking if this is a domain restriction");
 			std::size_t foundobj = obj.find("_:Doc");
 			if (foundobj!=std::string::npos) {
-				DBGLOG(DBG, "Yes");
-				DBGLOG(DBG, "Store domainRestr["<<subj<<"] = "<<obj);
+		//		DBGLOG(DBG, "Yes");
+		//		DBGLOG(DBG, "Store domainRestr["<<subj<<"] = "<<obj);
 				domainRestr[subj]=obj;
 		   	}
 			else {
-				DBGLOG(DBG,"No");
-				DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
+		//		DBGLOG(DBG,"No");
+		//		DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
 				{
 					OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 					fact.tuple.push_back(theDLLitePlugin.subID);
@@ -489,19 +489,19 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 		}else{
 			DBGLOG(DBG, "No");
 		}
-		DBGLOG(DBG, "Checking if this is description of domain restriction");
+		//DBGLOG(DBG, "Checking if this is description of domain restriction");
 		if (theDLLitePlugin.cmpOwlType(pred, "onProperty")) {
-			DBGLOG(DBG, "Yes");
+			//DBGLOG(DBG, "Yes");
 			onProp[subj]=obj;
-			DBGLOG(DBG, "Addition to map onProp: "<<"onProp["<<subj<<"] = "<<obj);
+			//DBGLOG(DBG, "Addition to map onProp: "<<"onProp["<<subj<<"] = "<<obj);
 		}
-		else DBGLOG(DBG, "No");
+		else //DBGLOG(DBG, "No");
 
 
-		DBGLOG(DBG, "Checking if this is role inclusion");
+		//DBGLOG(DBG, "Checking if this is role inclusion");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "subpropertyOf") && isOwlConstant(obj))
 		{
-			DBGLOG(DBG, "Yes");
+			//DBGLOG(DBG, "Yes");
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -514,10 +514,10 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			DBGLOG(DBG, "No");
 		}
 
-		DBGLOG(DBG, "Checking if this is a concept disjointness axiom");
+		//DBGLOG(DBG, "Checking if this is a concept disjointness axiom");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "disjointWith") && isOwlConstant(obj))
 		{
-			DBGLOG(DBG, "Yes");
+			//DBGLOG(DBG, "Yes");
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,negObj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -530,7 +530,7 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			DBGLOG(DBG, "No");
 		}
 
-		DBGLOG(DBG, "Checking if this is a complement concept");
+		//DBGLOG(DBG, "Checking if this is a complement concept");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "complementOf") && isOwlConstant(obj))
 		{
 			DBGLOG(DBG, "Yes");
@@ -546,7 +546,7 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			DBGLOG(DBG, "No");
 		}
 
-		DBGLOG(DBG, "Checking if this is a role disjointness axiom");
+		//DBGLOG(DBG, "Checking if this is a role disjointness axiom");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "propertyDisjointWith") && isOwlConstant(obj))
 		{
 			DBGLOG(DBG, "Yes");
@@ -562,7 +562,7 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 			DBGLOG(DBG, "No");
 		}
 
-		DBGLOG(DBG, "Checking if this is a domain definition");
+	//	DBGLOG(DBG, "Checking if this is a domain definition");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "domain") && isOwlConstant(obj))
 		{
 			DBGLOG(DBG, "Yes");
