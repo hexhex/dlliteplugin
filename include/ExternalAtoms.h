@@ -88,6 +88,7 @@ public:
 	DLPluginAtom(std::string predName, ProgramCtx& ctx, bool monotonic = true);
 	virtual void retrieve(const Query& query, Answer& answer);
 	virtual void learnSupportSets(const Query& query, NogoodContainerPtr nogoods);
+	void optimizeSupportSets(SimpleNogoodContainerPtr initial, NogoodContainerPtr final);
 };
 
 // concept queries

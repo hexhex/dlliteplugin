@@ -274,8 +274,11 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 
 	DBGLOG(DBG, "LSS: Learning support sets");
 
+	SimpleNogoodContainerPtr potentialSupportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
 	// make sure that the ontology is in the cache and retrieve its classification
 	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(ctx, query.input[0]);
+
+
 
 	// classify the Tbox if not already done
 	if (!ontology->classification) ontology->computeClassification(ctx);
@@ -286,6 +289,21 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 #endif
 	RegistryPtr reg = getRegistry();
 
+	ID cQID = ID_FAIL;
+	ID rQID = ID_FAIL;
+
+	ID cdlID = reg->storeConstantTerm("cDL");
+	ID rdlID = reg->storeConstantTerm("rDL");
+
+	if (query.eatom->predicate==cdlID) {
+		cQID = query.eatom->inputs[5];
+	}
+
+	else if (query.eatom->predicate==rdlID) {
+		rQID = query.eatom->inputs[5];
+	}
+
+	else {assert(false);}
 	// prepare output variable, tuple and negative output atom
 	DBGLOG(DBG, "Storing output atom which will be part of any support set");
 	ID outvarID = reg->storeVariableTerm("O");
@@ -293,19 +311,19 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 	ID outvarID2 = reg->storeVariableTerm("O2");
 	Tuple outlist;
 
-	if ((ontology->concepts->getFact(query.input[5].address))||(ontology->concepts->getFact(theDLLitePlugin.dlNeg(query.input[5]).address))) {
+	if (cQID!=ID_FAIL) {
 		DBGLOG(DBG, "Query is a concept");
 		outlist.push_back(outvarID);
 	}
 
 
-	else if ((ontology->roles->getFact(query.input[5].address))||(ontology->roles->getFact(theDLLitePlugin.dlNeg(query.input[5]).address))) {
+	else if (rQID!=ID_FAIL) {
 		DBGLOG(DBG, "Query is a role");
 		outlist.push_back(outvarID1);
 		outlist.push_back(outvarID2);
 	}
 
-	else {}
+	else {assert(false);}
 
 
 	ID outlit = NogoodContainer::createLiteral(ExternalLearningHelper::getOutputAtom(query, outlist, false));
@@ -355,7 +373,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 				supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcx)));
 				supportset.insert(outlit);
 				DBGLOG(DBG, "LSS:                     Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
-				nogoods->addNogood(supportset);
+				potentialSupportSets->addNogood(supportset);
 			}else{
 				DBGLOG(DBG, "LSS:                     Does not hold");
 			}
@@ -376,7 +394,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 				supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcx)));
 				supportset.insert(outlit);
 				DBGLOG(DBG, "LSS:                     Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
-				nogoods->addNogood(supportset);
+				potentialSupportSets->addNogood(supportset);
 			}else{
 				DBGLOG(DBG, "LSS:                     Does not hold");
 			}
@@ -438,7 +456,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 					DBGLOG(DBG, "LSS:                     --> Learned support set: " << supportset.getStringRepresentation(reg) << " where " << negcpStr << " is the guard atom " << guardStr);
 #endif
 
-					nogoods->addNogood(supportset);
+					potentialSupportSets->addNogood(supportset);
 
 					// check if c-(C', Y) occurs in the maximal interpretation
 					bm::bvector<>::enumerator en3 = query.interpretation->getStorage().first();
@@ -469,7 +487,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 							supportset.insert(outlit);
 
 							DBGLOG(DBG, "LSS:                          --> Learned support set: " << supportset.getStringRepresentation(reg));
-							nogoods->addNogood(supportset);
+							potentialSupportSets->addNogood(supportset);
 						}
 						en3++;
 					}
@@ -530,7 +548,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 				supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
 				supportset.insert(outlit);
 				DBGLOG(DBG, "LSS:                     Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
-				nogoods->addNogood(supportset);
+				potentialSupportSets->addNogood(supportset);
 			}else{
 				DBGLOG(DBG, "LSS:                     Does not hold");
 			}
@@ -561,7 +579,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 				supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
 				supportset.insert(outlit);
 				DBGLOG(DBG, "LSS:                     Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
-				nogoods->addNogood(supportset);
+				potentialSupportSets->addNogood(supportset);
 			}else{
 				DBGLOG(DBG, "LSS:                     Does not hold");
 			}
@@ -595,7 +613,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 					supportset.insert(outlit);
 
 					DBGLOG(DBG, "LSS:                          --> Learned support set: " << supportset.getStringRepresentation(reg));
-					nogoods->addNogood(supportset);
+					potentialSupportSets->addNogood(supportset);
 				}
 				if (at.tuple[0] == query.input[3] && at.tuple[1] == rID){
 					DBGLOG(DBG, "LSS:                          --> Found a match with R'=" << RawPrinter::toString(reg, at.tuple[2]));
@@ -620,7 +638,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 					supportset.insert(outlit);
 
 					DBGLOG(DBG, "LSS:                          --> Learned support set: " << supportset.getStringRepresentation(reg));
-					nogoods->addNogood(supportset);
+					potentialSupportSets->addNogood(supportset);
 				}
 
 				en2++;
@@ -665,11 +683,11 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 		OrdinaryAtom qy = theDLLitePlugin.getNewGuardAtom();
 		qy.tuple.push_back(query.input[5]);
 		
-		if ((ontology->concepts->getFact(query.input[5].address))||(ontology->concepts->getFact(theDLLitePlugin.dlNeg(query.input[5]).address))) {
+		if (cQID!=ID_FAIL) {
 			DBGLOG(DBG,"Query is a concept");
 			qy.tuple.push_back(outvarID);
 		}
-		else if ((ontology->roles->getFact(query.input[5].address))||(ontology->roles->getFact(theDLLitePlugin.dlNeg(query.input[5]).address))) {
+		else if (rQID!=ID_FAIL) {
 			DBGLOG(DBG,"Query is a role");
 			qy.tuple.push_back(outvarID1);
 			qy.tuple.push_back(outvarID2);
@@ -683,7 +701,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 		supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(qy)));
 		supportset.insert(outlit);
 		DBGLOG(DBG, "LSS:      --> Learned support set: " << supportset.getStringRepresentation(reg));
-		nogoods->addNogood(supportset);
+		potentialSupportSets->addNogood(supportset);
 
 		// check if sub(C, Q) or sub(R,Q) is true in the classification assignment (for some C)
 #ifndef NDEBUG
@@ -712,10 +730,10 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 					supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(roy)));
 					supportset.insert(outlit);
 					DBGLOG(DBG, "LSS:                          --> Learned support set: " << supportset.getStringRepresentation(reg));
-					nogoods->addNogood(supportset);
+					potentialSupportSets->addNogood(supportset);
 				}else{
 					DBGLOG(DBG, "LSS:                     (this is not form exR)");
-					if ((ontology->concepts->getFact(query.input[5].address))||(ontology->concepts->getFact(theDLLitePlugin.dlNeg(query.input[5]).address))) {
+					if (cQID!=ID_FAIL) {
 						// guard atom for C(O)
 						OrdinaryAtom co = theDLLitePlugin.getNewGuardAtom();
 						co.tuple.push_back(cID);
@@ -724,9 +742,9 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 						supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(co)));
 						supportset.insert(outlit);
 						DBGLOG(DBG, "LSS:                          --> Learned support set: " << supportset.getStringRepresentation(reg));
-						nogoods->addNogood(supportset);
+						potentialSupportSets->addNogood(supportset);
 					}
-					else if ((ontology->roles->getFact(query.input[5].address))||(ontology->roles->getFact(theDLLitePlugin.dlNeg(query.input[5]).address))) {
+					else if (rQID!=ID_FAIL) {
 						// guard atom for C(O1,O2)
 						OrdinaryAtom co = theDLLitePlugin.getNewGuardAtom();
 						co.tuple.push_back(cID);
@@ -736,16 +754,77 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 						supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(co)));
 						supportset.insert(outlit);
 						DBGLOG(DBG, "LSS:                          --> Learned support set: " << supportset.getStringRepresentation(reg));
-						nogoods->addNogood(supportset);
+						potentialSupportSets->addNogood(supportset);
 					}
+					else {assert(false);}
 				}
 			}
 			en++;
 		}
 	}
 
+	optimizeSupportSets(potentialSupportSets,nogoods);
+
 	DBGLOG(DBG, "LSS: Finished support set learning");
 }
+
+
+
+void DLPluginAtom::optimizeSupportSets(SimpleNogoodContainerPtr initial,NogoodContainerPtr final){
+
+
+	DBGLOG(DBG,"RMG: Abox predicates are:");
+	std::vector<ID> abp;
+	RegistryPtr reg = getRegistry();
+	if (ctx.getPluginData<DLLitePlugin>().repair) {
+		abp = theDLLitePlugin.prepareOntology(ctx, reg->storeConstantTerm(ctx.getPluginData<DLLitePlugin>().repairOntology))->AboxPredicates;
+	}
+	else if (ctx.getPluginData<DLLitePlugin>().rewrite) {
+		abp = theDLLitePlugin.prepareOntology(ctx, reg->storeConstantTerm(ctx.getPluginData<DLLitePlugin>().ontology))->AboxPredicates;
+	}
+		BOOST_FOREACH(ID id,abp) {
+				DBGLOG(DBG,RawPrinter::toString(reg,id)<<" with "<< id);
+		}
+
+	DBGLOG(DBG, "Eliminate unneccessary nonground support sets " );
+	int s = initial->getNogoodCount();
+	for (int i = 0; i < s; i++) {
+		bool elim=false;
+		const Nogood& ng = initial->getNogood(i);
+		DBGLOG(DBG,"RMG: consider support set: "<<ng.getStringRepresentation(reg));
+		DBGLOG(DBG,"RMG: is it of size >3? "<<ng.size());
+		if (ng.size()>3) {
+			DBGLOG(DBG,"RMG: yes");
+			elim=true;
+			DBGLOG(DBG,"RMG: support set is marked for elimination");
+		}else{
+			DBGLOG(DBG,"RMG: no");
+			BOOST_FOREACH(ID litid, ng) {
+				ID newid = reg->onatoms.getIDByAddress(litid.address);
+				const OrdinaryAtom& oa = reg->onatoms.getByAddress(litid.address);
+				DBGLOG(DBG,"RMG: is " <<RawPrinter::toString(reg,newid)<<" a guard with predicate not occurring in ABox?");
+				DBGLOG(DBG,"RMG: check for " <<RawPrinter::toString(reg,oa.tuple[1])<<" with "<<oa.tuple[1]);
+				if ((newid.isGuardAuxiliary())&&(std::find(abp.begin(), abp.end(), oa.tuple[1]) == abp.end())) {
+					DBGLOG(DBG,"RMG: yes");
+					elim = true;
+					DBGLOG(DBG,"RMG: support set is marked for elimination");
+					break;
+				}else{
+					DBGLOG(DBG,"RMG: no");
+				}
+			}
+		}
+		if (elim) {
+			DBGLOG(DBG,"RMG: if current support set is marked, eliminate it");
+			initial->removeNogood(ng);
+		}
+		else {
+			final->addNogood(ng);
+			DBGLOG(DBG,"RMG: leave this support set");
+		}
+	}
+}
+
 
 // ============================== Class CDLAtom ==============================
 
