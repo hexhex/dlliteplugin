@@ -677,7 +677,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 
 			//DBGLOG(DBG,"Guard atom for role is: "<<RawPrinter::toString(reg, reg->onatoms.getIDByStorage(qy));
 		}
-		else {}
+		else {DBGLOG(DBG,"Query is neither a concept nor a role");}
 
 		Nogood supportset;
 		supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(qy)));
