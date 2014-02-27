@@ -311,8 +311,7 @@ RepairModelGenerator::~RepairModelGenerator(){
 
 
 //called from the core
-InterpretationPtr RepairModelGenerator::generateNextModel()
-{
+InterpretationPtr RepairModelGenerator::generateNextModel() {
 	// now we have postprocessed input in postprocessedInput
 	DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidgcsolve, "genuine guess and check loop");
 	DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidhexsolve, "HEX solver time");
@@ -333,8 +332,12 @@ InterpretationPtr RepairModelGenerator::generateNextModel()
 		}
 		DLVHEX_BENCHMARK_REGISTER_AND_COUNT(ssidmodelcandidates, "Candidate compatible sets", 1);
 		LOG_SCOPE(DBG,"gM", false);
-		LOG(DBG,"got guess model, will do repair check on " << *modelCandidate);
-		if (!repairCheck(modelCandidate))
+
+		LOG(DBG,"got guess model, this is the final result " << *modelCandidate);
+
+		return modelCandidate;
+		//LOG(DBG,"got guess model, will do repair check on " << *modelCandidate);
+		/*if (!repairCheck(modelCandidate))
 		{
 			LOG(DBG,"RMG: no repair ABox was found");
 			continue;
@@ -350,7 +353,7 @@ InterpretationPtr RepairModelGenerator::generateNextModel()
 
 			LOG(DBG,"returning model without guess: " << *modelCandidate);
 			return modelCandidate;
-		}
+		}*/
 
 		/*else {
 			DBGLOG(DBG, "Checking if model candidate is a model");
@@ -370,6 +373,7 @@ InterpretationPtr RepairModelGenerator::generateNextModel()
 		return modelCandidate;}*/
 	}while(true);
 }
+
 
 void RepairModelGenerator::generalizeNogood(Nogood ng){
 
@@ -586,6 +590,8 @@ void RepairModelGenerator::learnSupportSets(){
 										repl.tuple.push_back(varoID1);
 										repl.tuple.push_back(varoID2);
 									}else assert(false);
+
+									rule.body.push_back(reg->storeOrdinaryAtom(repl));
 								}
 
 								// not bar_aux_o("C",X)
