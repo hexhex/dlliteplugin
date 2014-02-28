@@ -62,7 +62,6 @@
     <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#Child -->
 
     <owl:Class rdf:about="#Child">
-        <rdfs:subClassOf rdf:resource="#Domain"/>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="#hasParent"/>
@@ -73,24 +72,15 @@
     
 
 
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#Domain -->
-
-    <owl:Class rdf:about="#Domain"/>
-    
-
-
     <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#Female -->
 
-    <owl:Class rdf:about="#Female">
-        <rdfs:subClassOf rdf:resource="#Domain"/>
-    </owl:Class>
+    <owl:Class rdf:about="#Female"/>
     
 
 
     <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#Male -->
 
     <owl:Class rdf:about="#Male">
-        <rdfs:subClassOf rdf:resource="#Domain"/>
         <owl:disjointWith rdf:resource="#Female"/>
     </owl:Class>
     
@@ -99,21 +89,7 @@
     <!-- http://www.w3.org/2002/07/owl#Thing -->
 
     <owl:Class rdf:about="&owl;Thing"/>
-    
 
-
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Individuals
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
-
-    
-
-
-   
 
 
 

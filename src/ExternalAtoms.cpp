@@ -152,7 +152,8 @@ void DLPluginAtom::guardSupportSet(bool& keep, Nogood& ng, const ID eaReplacemen
 
 #ifndef NDEBUG
 			std::string guardStr = theDLLitePlugin.printGuardAtom(litID);
-			DBGLOG(DBG, "GUARD: Checking " << (possibleGuardAtom.tuple.size() == 2 ? "concept" : "role") << " guard atom " << guardStr);
+			
+			DBGLOG(DBG, "GUARD: Checking " << (possibleGuardAtom.tuple.size() == 3 ? "concept" : "role") << " guard atom " << guardStr);
 #endif
 
 			// concept or role guard?

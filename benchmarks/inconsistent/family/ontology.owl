@@ -89,944 +89,220 @@
     <!-- http://www.w3.org/2002/07/owl#Thing -->
 
     <owl:Class rdf:about="&owl;Thing"/>
-    
 
-
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Individuals
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
-
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c1 -->
-
-    <Child rdf:about="#c1">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p1"/>
-        <hasParent rdf:resource="#p2"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c10 -->
-
-    <Child rdf:about="#c10">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p11"/>
-        <hasParent rdf:resource="#p12"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c11 -->
-
-    <owl:Thing rdf:about="#c11">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p11"/>
-        <hasParent rdf:resource="#p12"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c12 -->
-
-    <Child rdf:about="#c12">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p13"/>
-        <hasParent rdf:resource="#p14"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c13 -->
-
-    <Child rdf:about="#c13">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p13"/>
-        <hasParent rdf:resource="#p14"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c14 -->
-
-    <Child rdf:about="#c14">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p15"/>
-        <hasParent rdf:resource="#p16"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c15 -->
-
-    <owl:Thing rdf:about="#c15">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p15"/>
-        <hasParent rdf:resource="#p16"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c16 -->
-
-    <Child rdf:about="#c16">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p17"/>
-        <hasParent rdf:resource="#p18"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c17 -->
-
-    <Child rdf:about="#c17">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p17"/>
-        <hasParent rdf:resource="#p18"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c18 -->
-
-    <Child rdf:about="#c18">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p19"/>
-        <hasParent rdf:resource="#p20"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c19 -->
-
-    <owl:Thing rdf:about="#c19">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p19"/>
-        <hasParent rdf:resource="#p20"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c2 -->
-
-    <owl:Thing rdf:about="#c2">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p3"/>
-        <hasParent rdf:resource="#p4"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c20 -->
-
-    <owl:Thing rdf:about="#c20">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p21"/>
-        <hasParent rdf:resource="#p22"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c21 -->
-
-    <Child rdf:about="#c21">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p21"/>
-        <hasParent rdf:resource="#p22"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c22 -->
-
-    <Child rdf:about="#c22">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p23"/>
-        <hasParent rdf:resource="#p24"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c23 -->
-
-    <owl:Thing rdf:about="#c23">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p23"/>
-        <hasParent rdf:resource="#p24"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c24 -->
-
-    <Child rdf:about="#c24">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p25"/>
-        <hasParent rdf:resource="#p26"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c25 -->
-
-    <Child rdf:about="#c25">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p25"/>
-        <hasParent rdf:resource="#p26"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c26 -->
-
-    <owl:Thing rdf:about="#c26">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p27"/>
-        <hasParent rdf:resource="#p28"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c27 -->
-
-    <Child rdf:about="#c27">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p27"/>
-        <hasParent rdf:resource="#p28"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c28 -->
-
-    <Child rdf:about="#c28">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p29"/>
-        <hasParent rdf:resource="#p30"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c29 -->
-
-    <Child rdf:about="#c29">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p1"/>
-        <hasParent rdf:resource="#p2"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c3 -->
-
-    <Child rdf:about="#c3">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p3"/>
-        <hasParent rdf:resource="#p4"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c30 -->
-
-    <Child rdf:about="#c30">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p3"/>
-        <hasParent rdf:resource="#p4"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c31 -->
-
-    <Child rdf:about="#c31">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p3"/>
-        <hasParent rdf:resource="#p4"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c32 -->
-
-    <owl:Thing rdf:about="#c32">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p5"/>
-        <hasParent rdf:resource="#p6"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c33 -->
-
-    <owl:Thing rdf:about="#c33">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p5"/>
-        <hasParent rdf:resource="#p6"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c34 -->
-
-    <owl:Thing rdf:about="#c34">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p7"/>
-        <hasParent rdf:resource="#p8"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c35 -->
-
-    <owl:Thing rdf:about="#c35">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p7"/>
-        <hasParent rdf:resource="#p8"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c36 -->
-
-    <Child rdf:about="#c36">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p10"/>
-        <hasParent rdf:resource="#p9"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c37 -->
-
-    <owl:Thing rdf:about="#c37">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p10"/>
-        <hasParent rdf:resource="#p9"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c38 -->
-
-    <owl:Thing rdf:about="#c38">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p11"/>
-        <hasParent rdf:resource="#p12"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c39 -->
-
-    <Child rdf:about="#c39">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p11"/>
-        <hasParent rdf:resource="#p12"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c4 -->
-
-    <owl:Thing rdf:about="#c4">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p5"/>
-        <hasParent rdf:resource="#p6"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c40 -->
-
-    <Child rdf:about="#c40">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p13"/>
-        <hasParent rdf:resource="#p14"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c41 -->
-
-    <Child rdf:about="#c41">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p13"/>
-        <hasParent rdf:resource="#p14"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c42 -->
-
-    <owl:Thing rdf:about="#c42">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p15"/>
-        <hasParent rdf:resource="#p16"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c43 -->
-
-    <owl:Thing rdf:about="#c43">
-        <rdf:type rdf:resource="#Adopted"/>
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p15"/>
-        <hasParent rdf:resource="#p16"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c44 -->
-
-    <owl:Thing rdf:about="#c44">
-        <rdf:type rdf:resource="#Adopted"/>
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p33"/>
-        <hasParent rdf:resource="#p34"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c45 -->
-
-    <owl:Thing rdf:about="#c45">
-        <rdf:type rdf:resource="#Adopted"/>
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p33"/>
-        <hasParent rdf:resource="#p34"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c46 -->
-
-    <Child rdf:about="#c46">
-        <rdf:type rdf:resource="#Adopted"/>
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p35"/>
-        <hasParent rdf:resource="#p36"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c47 -->
-
-    <Adopted rdf:about="#c47">
-        <rdf:type rdf:resource="#Child"/>
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p35"/>
-        <hasParent rdf:resource="#p36"/>
-    </Adopted>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c48 -->
-
-    <Child rdf:about="#c48">
-        <rdf:type rdf:resource="#Adopted"/>
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p37"/>
-        <hasParent rdf:resource="#p38"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c49 -->
-
-    <Adopted rdf:about="#c49">
-        <rdf:type rdf:resource="#Child"/>
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p37"/>
-        <hasParent rdf:resource="#p38"/>
-    </Adopted>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c5 -->
-
-    <owl:Thing rdf:about="#c5">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p5"/>
-        <hasParent rdf:resource="#p6"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c50 -->
-
-    <Child rdf:about="#c50">
-        <rdf:type rdf:resource="#Adopted"/>
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p39"/>
-        <hasParent rdf:resource="#p40"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c6 -->
-
-    <Child rdf:about="#c6">
-        <rdf:type rdf:resource="&owl;Thing"/>
-        <hasParent rdf:resource="#p7"/>
-        <hasParent rdf:resource="#p8"/>
-    </Child>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c7 -->
-
-    <owl:Thing rdf:about="#c7">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p7"/>
-        <hasParent rdf:resource="#p8"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c8 -->
-
-    <owl:Thing rdf:about="#c8">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p10"/>
-        <hasParent rdf:resource="#p9"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#c9 -->
-
-    <owl:Thing rdf:about="#c9">
-        <rdf:type rdf:resource="#Child"/>
-        <hasParent rdf:resource="#p10"/>
-        <hasParent rdf:resource="#p9"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p1 -->
-
-    <owl:Thing rdf:about="#p1">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p10 -->
-
-    <Female rdf:about="#p10">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Female>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p11 -->
-
-    <owl:Thing rdf:about="#p11">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p12 -->
-
-    <Female rdf:about="#p12">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Female>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p13 -->
-
-    <Male rdf:about="#p13">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Male>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p14 -->
-
-    <owl:Thing rdf:about="#p14">
-        <rdf:type rdf:resource="#Female"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p15 -->
-
-    <owl:Thing rdf:about="#p15">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p16 -->
-
-    <Female rdf:about="#p16">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Female>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p17 -->
-
-    <owl:Thing rdf:about="#p17">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p18 -->
-
-    <owl:Thing rdf:about="#p18">
-        <rdf:type rdf:resource="#Female"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p19 -->
-
-    <owl:Thing rdf:about="#p19">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p2 -->
-
-    <Female rdf:about="#p2">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Female>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p20 -->
-
-    <owl:Thing rdf:about="#p20">
-        <rdf:type rdf:resource="#Female"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p21 -->
-
-    <Male rdf:about="#p21">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Male>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p22 -->
-
-    <owl:Thing rdf:about="#p22">
-        <rdf:type rdf:resource="#Female"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p23 -->
-
-    <owl:Thing rdf:about="#p23">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p24 -->
-
-    <Female rdf:about="#p24">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Female>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p25 -->
-
-    <Male rdf:about="#p25">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Male>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p26 -->
-
-    <Female rdf:about="#p26">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Female>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p27 -->
-
-    <Male rdf:about="#p27">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Male>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p28 -->
-
-    <Female rdf:about="#p28">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Female>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p29 -->
-
-    <owl:Thing rdf:about="#p29">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p3 -->
-
-    <Male rdf:about="#p3">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Male>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p30 -->
-
-    <owl:Thing rdf:about="#p30">
-        <rdf:type rdf:resource="#Female"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p31 -->
-
-    <owl:Thing rdf:about="#p31">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p32 -->
-
-    <owl:Thing rdf:about="#p32">
-        <rdf:type rdf:resource="#Female"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p33 -->
-
-    <Male rdf:about="#p33">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Male>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p34 -->
-
-    <Female rdf:about="#p34">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Female>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p35 -->
-
-    <owl:Thing rdf:about="#p35">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p36 -->
-
-    <owl:Thing rdf:about="#p36">
-        <rdf:type rdf:resource="#Female"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p37 -->
-
-    <owl:Thing rdf:about="#p37">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p38 -->
-
-    <owl:Thing rdf:about="#p38">
-        <rdf:type rdf:resource="#Female"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p39 -->
-
-    <owl:Thing rdf:about="#p39">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p4 -->
-
-    <Female rdf:about="#p4">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Female>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p40 -->
-
-    <Female rdf:about="#p40">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Female>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p41 -->
-
-    <Male rdf:about="#p41">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Male>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p42 -->
-
-    <Male rdf:about="#p42">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Male>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p43 -->
-
-    <owl:Thing rdf:about="#p43">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p44 -->
-
-    <owl:Thing rdf:about="#p44">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p45 -->
-
-    <owl:Thing rdf:about="#p45">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p46 -->
-
-    <owl:Thing rdf:about="#p46">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p47 -->
-
-    <Male rdf:about="#p47">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Male>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p48 -->
-
-    <Male rdf:about="#p48">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Male>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p49 -->
-
-    <Male rdf:about="#p49">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Male>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p5 -->
-
-    <owl:Thing rdf:about="#p5">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p50 -->
-
-    <Male rdf:about="#p50">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Male>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p51 -->
-
-    <owl:Thing rdf:about="#p51">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p52 -->
-
-    <Male rdf:about="#p52">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Male>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p6 -->
-
-    <Female rdf:about="#p6">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Female>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p7 -->
-
-    <owl:Thing rdf:about="#p7">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p8 -->
-
-    <Female rdf:about="#p8">
-        <rdf:type rdf:resource="&owl;Thing"/>
-    </Female>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/1/family.owl#p9 -->
-
-    <owl:Thing rdf:about="#p9">
-        <rdf:type rdf:resource="#Male"/>
-    </owl:Thing>
-</rdf:RDF>
 
 
 
 <!-- Generated by the OWL API (version 2.2.1.1138) http://owlapi.sourceforge.net -->
 
+<owl:Thing rdf:about="#c1"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c2"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c3"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c4"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c5"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c6"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c7"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c8"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c9"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c10"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c11"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c12"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c13"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c14"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c15"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c16"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c17"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c18"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c19"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c20"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c21"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c22"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c23"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c24"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c25"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c26"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c27"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c28"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c29"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c30"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c31"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c32"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c33"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c34"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c35"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c36"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c37"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c38"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c39"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c40"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c41"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c42"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c43"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c43"><rdf:type rdf:resource="#Adopted"/></owl:Thing>
+<owl:Thing rdf:about="#c44"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c44"><rdf:type rdf:resource="#Adopted"/></owl:Thing>
+<owl:Thing rdf:about="#c45"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c45"><rdf:type rdf:resource="#Adopted"/></owl:Thing>
+<owl:Thing rdf:about="#c46"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c46"><rdf:type rdf:resource="#Adopted"/></owl:Thing>
+<owl:Thing rdf:about="#c47"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c47"><rdf:type rdf:resource="#Adopted"/></owl:Thing>
+<owl:Thing rdf:about="#c48"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c48"><rdf:type rdf:resource="#Adopted"/></owl:Thing>
+<owl:Thing rdf:about="#c49"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c49"><rdf:type rdf:resource="#Adopted"/></owl:Thing>
+<owl:Thing rdf:about="#c50"><rdf:type rdf:resource="#Child"/></owl:Thing>
+<owl:Thing rdf:about="#c50"><rdf:type rdf:resource="#Adopted"/></owl:Thing>
+<owl:Thing rdf:about="#p1"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p2"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p3"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p4"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p5"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p6"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p7"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p8"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p9"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p10"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p11"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p12"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p13"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p14"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p15"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p16"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p17"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p18"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p19"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p20"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p21"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p22"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p23"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p24"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p25"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p26"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p27"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p28"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p29"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p30"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p31"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p32"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p33"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p34"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p35"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p36"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p37"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p38"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p39"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p40"><rdf:type rdf:resource="#Female"/></owl:Thing>
+<owl:Thing rdf:about="#p41"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p42"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p43"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p44"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p45"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p46"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p47"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p48"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p49"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p50"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p51"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#p52"><rdf:type rdf:resource="#Male"/></owl:Thing>
+<owl:Thing rdf:about="#c1"><hasParent rdf:resource="#p1"/></owl:Thing>
+<owl:Thing rdf:about="#c1"><hasParent rdf:resource="#p2"/></owl:Thing>
+<owl:Thing rdf:about="#c2"><hasParent rdf:resource="#p3"/></owl:Thing>
+<owl:Thing rdf:about="#c2"><hasParent rdf:resource="#p4"/></owl:Thing>
+<owl:Thing rdf:about="#c3"><hasParent rdf:resource="#p3"/></owl:Thing>
+<owl:Thing rdf:about="#c3"><hasParent rdf:resource="#p4"/></owl:Thing>
+<owl:Thing rdf:about="#c4"><hasParent rdf:resource="#p5"/></owl:Thing>
+<owl:Thing rdf:about="#c4"><hasParent rdf:resource="#p6"/></owl:Thing>
+<owl:Thing rdf:about="#c5"><hasParent rdf:resource="#p5"/></owl:Thing>
+<owl:Thing rdf:about="#c5"><hasParent rdf:resource="#p6"/></owl:Thing>
+<owl:Thing rdf:about="#c6"><hasParent rdf:resource="#p7"/></owl:Thing>
+<owl:Thing rdf:about="#c6"><hasParent rdf:resource="#p8"/></owl:Thing>
+<owl:Thing rdf:about="#c7"><hasParent rdf:resource="#p7"/></owl:Thing>
+<owl:Thing rdf:about="#c7"><hasParent rdf:resource="#p8"/></owl:Thing>
+<owl:Thing rdf:about="#c8"><hasParent rdf:resource="#p9"/></owl:Thing>
+<owl:Thing rdf:about="#c8"><hasParent rdf:resource="#p10"/></owl:Thing>
+<owl:Thing rdf:about="#c9"><hasParent rdf:resource="#p9"/></owl:Thing>
+<owl:Thing rdf:about="#c9"><hasParent rdf:resource="#p10"/></owl:Thing>
+<owl:Thing rdf:about="#c10"><hasParent rdf:resource="#p11"/></owl:Thing>
+<owl:Thing rdf:about="#c10"><hasParent rdf:resource="#p12"/></owl:Thing>
+<owl:Thing rdf:about="#c11"><hasParent rdf:resource="#p11"/></owl:Thing>
+<owl:Thing rdf:about="#c11"><hasParent rdf:resource="#p12"/></owl:Thing>
+<owl:Thing rdf:about="#c12"><hasParent rdf:resource="#p13"/></owl:Thing>
+<owl:Thing rdf:about="#c12"><hasParent rdf:resource="#p14"/></owl:Thing>
+<owl:Thing rdf:about="#c13"><hasParent rdf:resource="#p13"/></owl:Thing>
+<owl:Thing rdf:about="#c13"><hasParent rdf:resource="#p14"/></owl:Thing>
+<owl:Thing rdf:about="#c14"><hasParent rdf:resource="#p15"/></owl:Thing>
+<owl:Thing rdf:about="#c14"><hasParent rdf:resource="#p16"/></owl:Thing>
+<owl:Thing rdf:about="#c15"><hasParent rdf:resource="#p15"/></owl:Thing>
+<owl:Thing rdf:about="#c15"><hasParent rdf:resource="#p16"/></owl:Thing>
+<owl:Thing rdf:about="#c16"><hasParent rdf:resource="#p17"/></owl:Thing>
+<owl:Thing rdf:about="#c16"><hasParent rdf:resource="#p18"/></owl:Thing>
+<owl:Thing rdf:about="#c17"><hasParent rdf:resource="#p17"/></owl:Thing>
+<owl:Thing rdf:about="#c17"><hasParent rdf:resource="#p18"/></owl:Thing>
+<owl:Thing rdf:about="#c18"><hasParent rdf:resource="#p19"/></owl:Thing>
+<owl:Thing rdf:about="#c18"><hasParent rdf:resource="#p20"/></owl:Thing>
+<owl:Thing rdf:about="#c19"><hasParent rdf:resource="#p19"/></owl:Thing>
+<owl:Thing rdf:about="#c19"><hasParent rdf:resource="#p20"/></owl:Thing>
+<owl:Thing rdf:about="#c20"><hasParent rdf:resource="#p21"/></owl:Thing>
+<owl:Thing rdf:about="#c20"><hasParent rdf:resource="#p22"/></owl:Thing>
+<owl:Thing rdf:about="#c21"><hasParent rdf:resource="#p21"/></owl:Thing>
+<owl:Thing rdf:about="#c21"><hasParent rdf:resource="#p22"/></owl:Thing>
+<owl:Thing rdf:about="#c22"><hasParent rdf:resource="#p23"/></owl:Thing>
+<owl:Thing rdf:about="#c22"><hasParent rdf:resource="#p24"/></owl:Thing>
+<owl:Thing rdf:about="#c23"><hasParent rdf:resource="#p23"/></owl:Thing>
+<owl:Thing rdf:about="#c23"><hasParent rdf:resource="#p24"/></owl:Thing>
+<owl:Thing rdf:about="#c24"><hasParent rdf:resource="#p25"/></owl:Thing>
+<owl:Thing rdf:about="#c24"><hasParent rdf:resource="#p26"/></owl:Thing>
+<owl:Thing rdf:about="#c25"><hasParent rdf:resource="#p25"/></owl:Thing>
+<owl:Thing rdf:about="#c25"><hasParent rdf:resource="#p26"/></owl:Thing>
+<owl:Thing rdf:about="#c26"><hasParent rdf:resource="#p27"/></owl:Thing>
+<owl:Thing rdf:about="#c26"><hasParent rdf:resource="#p28"/></owl:Thing>
+<owl:Thing rdf:about="#c27"><hasParent rdf:resource="#p27"/></owl:Thing>
+<owl:Thing rdf:about="#c27"><hasParent rdf:resource="#p28"/></owl:Thing>
+<owl:Thing rdf:about="#c28"><hasParent rdf:resource="#p29"/></owl:Thing>
+<owl:Thing rdf:about="#c28"><hasParent rdf:resource="#p30"/></owl:Thing>
+<owl:Thing rdf:about="#c29"><hasParent rdf:resource="#p1"/></owl:Thing>
+<owl:Thing rdf:about="#c29"><hasParent rdf:resource="#p2"/></owl:Thing>
+<owl:Thing rdf:about="#c30"><hasParent rdf:resource="#p3"/></owl:Thing>
+<owl:Thing rdf:about="#c30"><hasParent rdf:resource="#p4"/></owl:Thing>
+<owl:Thing rdf:about="#c31"><hasParent rdf:resource="#p3"/></owl:Thing>
+<owl:Thing rdf:about="#c31"><hasParent rdf:resource="#p4"/></owl:Thing>
+<owl:Thing rdf:about="#c32"><hasParent rdf:resource="#p5"/></owl:Thing>
+<owl:Thing rdf:about="#c32"><hasParent rdf:resource="#p6"/></owl:Thing>
+<owl:Thing rdf:about="#c33"><hasParent rdf:resource="#p5"/></owl:Thing>
+<owl:Thing rdf:about="#c33"><hasParent rdf:resource="#p6"/></owl:Thing>
+<owl:Thing rdf:about="#c34"><hasParent rdf:resource="#p7"/></owl:Thing>
+<owl:Thing rdf:about="#c34"><hasParent rdf:resource="#p8"/></owl:Thing>
+<owl:Thing rdf:about="#c35"><hasParent rdf:resource="#p7"/></owl:Thing>
+<owl:Thing rdf:about="#c35"><hasParent rdf:resource="#p8"/></owl:Thing>
+<owl:Thing rdf:about="#c36"><hasParent rdf:resource="#p9"/></owl:Thing>
+<owl:Thing rdf:about="#c36"><hasParent rdf:resource="#p10"/></owl:Thing>
+<owl:Thing rdf:about="#c37"><hasParent rdf:resource="#p9"/></owl:Thing>
+<owl:Thing rdf:about="#c37"><hasParent rdf:resource="#p10"/></owl:Thing>
+<owl:Thing rdf:about="#c38"><hasParent rdf:resource="#p11"/></owl:Thing>
+<owl:Thing rdf:about="#c38"><hasParent rdf:resource="#p12"/></owl:Thing>
+<owl:Thing rdf:about="#c39"><hasParent rdf:resource="#p11"/></owl:Thing>
+<owl:Thing rdf:about="#c39"><hasParent rdf:resource="#p12"/></owl:Thing>
+<owl:Thing rdf:about="#c40"><hasParent rdf:resource="#p13"/></owl:Thing>
+<owl:Thing rdf:about="#c40"><hasParent rdf:resource="#p14"/></owl:Thing>
+<owl:Thing rdf:about="#c41"><hasParent rdf:resource="#p13"/></owl:Thing>
+<owl:Thing rdf:about="#c41"><hasParent rdf:resource="#p14"/></owl:Thing>
+<owl:Thing rdf:about="#c42"><hasParent rdf:resource="#p15"/></owl:Thing>
+<owl:Thing rdf:about="#c42"><hasParent rdf:resource="#p16"/></owl:Thing>
+<owl:Thing rdf:about="#c43"><hasParent rdf:resource="#p15"/></owl:Thing>
+<owl:Thing rdf:about="#c43"><hasParent rdf:resource="#p16"/></owl:Thing>
+<owl:Thing rdf:about="#c44"><hasParent rdf:resource="#p33"/></owl:Thing>
+<owl:Thing rdf:about="#c44"><hasParent rdf:resource="#p34"/></owl:Thing>
+<owl:Thing rdf:about="#c45"><hasParent rdf:resource="#p33"/></owl:Thing>
+<owl:Thing rdf:about="#c45"><hasParent rdf:resource="#p34"/></owl:Thing>
+<owl:Thing rdf:about="#c46"><hasParent rdf:resource="#p35"/></owl:Thing>
+<owl:Thing rdf:about="#c46"><hasParent rdf:resource="#p36"/></owl:Thing>
+<owl:Thing rdf:about="#c47"><hasParent rdf:resource="#p35"/></owl:Thing>
+<owl:Thing rdf:about="#c47"><hasParent rdf:resource="#p36"/></owl:Thing>
+<owl:Thing rdf:about="#c48"><hasParent rdf:resource="#p37"/></owl:Thing>
+<owl:Thing rdf:about="#c48"><hasParent rdf:resource="#p38"/></owl:Thing>
+<owl:Thing rdf:about="#c49"><hasParent rdf:resource="#p37"/></owl:Thing>
+<owl:Thing rdf:about="#c49"><hasParent rdf:resource="#p38"/></owl:Thing>
+<owl:Thing rdf:about="#c50"><hasParent rdf:resource="#p39"/></owl:Thing>
+<owl:Thing rdf:about="#c50"><hasParent rdf:resource="#p40"/></owl:Thing>
+</rdf:RDF>
