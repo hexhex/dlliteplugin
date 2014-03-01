@@ -81,6 +81,8 @@
 
 
 <owl:Thing rdf:about="#c1"><edge rdf:resource="#c2"/></owl:Thing>
+<owl:Thing rdf:about="#c2"><edge rdf:resource="#c61"/></owl:Thing>
+
  <owl:Thing rdf:about="#c4"><edge rdf:resource="#c1"/></owl:Thing>
  <owl:Thing rdf:about="#c4"><edge rdf:resource="#c3"/></owl:Thing>
  <owl:Thing rdf:about="#c4"><edge rdf:resource="#c5"/></owl:Thing>
