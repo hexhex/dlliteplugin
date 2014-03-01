@@ -85,9 +85,10 @@ RepairModelGeneratorFactory::RepairModelGeneratorFactory(
   }
 
   innerEatoms = ci.innerEatoms;
+  innerEatoms.insert(innerEatoms.end(), outerEatoms.begin(), outerEatoms.end());
   
-  allEatoms.insert(allEatoms.end(), innerEatoms.begin(), innerEatoms.end());
-  allEatoms.insert(allEatoms.end(), outerEatoms.begin(), outerEatoms.end());
+  //allEatoms.insert(allEatoms.end(), innerEatoms.begin(), innerEatoms.end());
+  //allEatoms.insert(allEatoms.end(), outerEatoms.begin(), outerEatoms.end());
 
 
   // create guessing rules "gidb" for innerEatoms in all inner rules and constraints
@@ -220,7 +221,7 @@ RepairModelGenerator::RepairModelGenerator(
     mask.reset(new Interpretation(*postprocInput));
 
     // manage outer external atoms
-    if( !factory.outerEatoms.empty() )
+    /*if( !factory.outerEatoms.empty() )
     {
       DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidhexground, "HEX grounder time");
 		
@@ -237,7 +238,7 @@ RepairModelGenerator::RepairModelGenerator(
 //      assert(!factory.xidb.empty() &&
 //          "the guess and check model generator is not required for "
 //          "non-idb components! (use plain)");
-    }
+    }*/
 
     // compute extensions of domain predicates and add it to the input
     if (factory.ctx.config.getOption("LiberalSafety")){
@@ -261,7 +262,8 @@ RepairModelGenerator::RepairModelGenerator(
 		DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidhexground, "HEX grounder time");
 		grounder = GenuineGrounder::getInstance(factory.ctx, program);
 		DBGLOG(DBG,"RMG: before new line");
-		annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.allEatoms);
+//		annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.allEatoms);
+		annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.innerEatoms);
 		DBGLOG(DBG,"RMG: after new line");
 	}
 	solver = GenuineGroundSolver::getInstance(
@@ -382,8 +384,8 @@ void RepairModelGenerator::generalizeNogood(Nogood ng){
 
 void RepairModelGenerator::learnSupportSets(){
 	DBGLOG(DBG,"RMG: learning support sets is started");
-	DBGLOG(DBG,"RMG: Number of all eatoms: "<<factory.allEatoms.size());
-
+//	DBGLOG(DBG,"RMG: Number of all eatoms: "<<factory.allEatoms.size());
+	DBGLOG(DBG,"RMG: Number of all eatoms: "<<factory.innerEatoms.size());
 	std::vector<SimpleNogoodContainerPtr> supportSetsOfExternalAtom;
 
 	if (factory.ctx.config.getOption("SupportSets")){
@@ -399,16 +401,20 @@ void RepairModelGenerator::learnSupportSets(){
 		ID varoID1 = reg->storeVariableTerm("O1");
 		ID varoID2 = reg->storeVariableTerm("O2");
 
-		for(unsigned eaIndex = 0; eaIndex < factory.allEatoms.size(); ++eaIndex){
+		for(unsigned eaIndex = 0; eaIndex < factory.innerEatoms.size(); ++eaIndex){
 
-			DBGLOG(DBG,"RMG: consider atom "<< RawPrinter::toString(reg,factory.allEatoms[eaIndex]));
+		//	DBGLOG(DBG,"RMG: consider atom "<< RawPrinter::toString(reg,factory.allEatoms[eaIndex]));
+			DBGLOG(DBG,"RMG: consider atom "<< RawPrinter::toString(reg,factory.innerEatoms[eaIndex]));
 
 			// evaluate the external atom if it provides support sets
 
-			const ExternalAtom& eatom = reg->eatoms.getByID(factory.allEatoms[eaIndex]);
+//			const ExternalAtom& eatom = reg->eatoms.getByID(factory.allEatoms[eaIndex]);
+			const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
+
 			supportSetsOfExternalAtom.push_back(SimpleNogoodContainerPtr(new SimpleNogoodContainer()));
 			if (eatom.getExtSourceProperties().providesSupportSets()){
-				DBGLOG(DBG, "RMG: evaluating external atom " << RawPrinter::toString(reg,factory.allEatoms[eaIndex]) << " for support set learning");
+//				DBGLOG(DBG, "RMG: evaluating external atom " << RawPrinter::toString(reg,factory.allEatoms[eaIndex]) << " for support set learning");
+				DBGLOG(DBG, "RMG: evaluating external atom " << RawPrinter::toString(reg,factory.innerEatoms[eaIndex]) << " for support set learning");
 				learnSupportSetsForExternalAtom(factory.ctx, eatom, supportSetsOfExternalAtom[eaIndex]);
 				DBGLOG(DBG, "RMG: Number of learnt support sets: "<<supportSetsOfExternalAtom[eaIndex]->getNogoodCount());
 			}
@@ -550,7 +556,8 @@ void RepairModelGenerator::learnSupportSets(){
 								// HEAD: supp_e_a("Q",O)
 								{
 									OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
-									headat.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.allEatoms[eaIndex]));
+//									headat.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.allEatoms[eaIndex]));
+									headat.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.innerEatoms[eaIndex]));
 
 									if (cQID!=ID_FAIL){
 										headat.tuple.push_back(cQID);
@@ -642,7 +649,8 @@ void RepairModelGenerator::learnSupportSets(){
 								}
 								{
 									OrdinaryAtom notsupp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
-									notsupp.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.allEatoms[eaIndex]));
+//									notsupp.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.allEatoms[eaIndex]));
+									notsupp.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.innerEatoms[eaIndex]));
 
 									//disctinct between concept and role queries
 
@@ -751,7 +759,14 @@ void RepairModelGenerator::learnSupportSets(){
 						{
 							// HEAD supp_e_a("Q",O)
 							OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
-							headat.tuple.push_back(reg->getAuxiliaryConstantSymbol('s', factory.allEatoms[eaIndex]));
+						//	headat.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.allEatoms[eaIndex]));
+							headat.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.innerEatoms[eaIndex]));
+							headat.tuple.push_back(eatom.inputs[0]);
+							headat.tuple.push_back(eatom.inputs[1]);
+							headat.tuple.push_back(eatom.inputs[2]);
+							headat.tuple.push_back(eatom.inputs[3]);
+							headat.tuple.push_back(eatom.inputs[4]);
+
 							if (cQID!=ID_FAIL){
 								headat.tuple.push_back(cQID);
 								headat.tuple.push_back(varoID);
@@ -850,8 +865,15 @@ void RepairModelGenerator::learnSupportSets(){
 						}
 						{
 							OrdinaryAtom notsupp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
-							notsupp.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.allEatoms[eaIndex]));
+						//	notsupp.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.allEatoms[eaIndex]));
+							notsupp.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.innerEatoms[eaIndex]));
 							//distinct
+							notsupp.tuple.push_back(eatom.inputs[0]);
+							notsupp.tuple.push_back(eatom.inputs[1]);
+							notsupp.tuple.push_back(eatom.inputs[2]);
+							notsupp.tuple.push_back(eatom.inputs[3]);
+							notsupp.tuple.push_back(eatom.inputs[4]);
+
 							if (cQID!=ID_FAIL){
 								notsupp.tuple.push_back(cQID);
 								notsupp.tuple.push_back(varoID);
@@ -922,7 +944,8 @@ void RepairModelGenerator::learnSupportSets(){
 							Rule rule(ID::MAINKIND_RULE);
 							{
 								OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
-								headat.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.allEatoms[eaIndex]));
+//								headat.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.allEatoms[eaIndex]));
+								headat.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.innerEatoms[eaIndex]));
 								if (cQID!=ID_FAIL){
 									headat.tuple.push_back(cQID);
 									headat.tuple.push_back(varoID);
@@ -984,7 +1007,8 @@ void RepairModelGenerator::learnSupportSets(){
 							}
 							{
 								OrdinaryAtom notsupp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
-								notsupp.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.allEatoms[eaIndex]));
+							//	notsupp.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.allEatoms[eaIndex]));
+								notsupp.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.innerEatoms[eaIndex]));
 								// distinct
 								if (cQID!=ID_FAIL){
 									notsupp.tuple.push_back(cQID);
@@ -1044,7 +1068,8 @@ void RepairModelGenerator::learnSupportSets(){
 		// ground the program and evaluate it
 		// get the results, filter them out with respect to only relevant predicates (all apart from aux_o, replacement atoms)
 		grounder = GenuineGrounder::getInstance(factory.ctx, program);
-		annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.allEatoms);
+	//	annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.allEatoms);
+		annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.innerEatoms);
 
 		solver = GenuineGroundSolver::getInstance(
 			factory.ctx, annotatedGroundProgram,
@@ -1229,7 +1254,8 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	repairexists = true;
 	int ngCount;
 
-	DBGLOG(DBG,"RMG: number of all external atoms: " << factory.allEatoms.size());
+//	DBGLOG(DBG,"RMG: number of all external atoms: " << factory.allEatoms.size());
+	DBGLOG(DBG,"RMG: number of all external atoms: " << factory.innerEatoms.size());
 
 	// We divide all external atoms into two groups:
 		// group dpos: those that were guessed true in modelCandidate;
@@ -1241,8 +1267,10 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 	// Go through all atoms in alleatoms
 	// and evaluate them
 	// mask stores all relevant atoms for external atom with index eaindex
-	for (unsigned eaIndex=0; eaIndex<factory.allEatoms.size();eaIndex++){
-		DBGLOG(DBG,"RMG: consider atom "<< eaIndex<<", namely "<< RawPrinter::toString(reg,factory.allEatoms[eaIndex]));
+	//for (unsigned eaIndex=0; eaIndex<factory.allEatoms.size();eaIndex++){
+	for (unsigned eaIndex=0; eaIndex<factory.innerEatoms.size();eaIndex++){
+//		DBGLOG(DBG,"RMG: consider atom "<< eaIndex<<", namely "<< RawPrinter::toString(reg,factory.allEatoms[eaIndex]));
+		DBGLOG(DBG,"RMG: consider atom "<< eaIndex<<", namely "<< RawPrinter::toString(reg,factory.innerEatoms[eaIndex]));
 		annotatedGroundProgram.getEAMask(eaIndex)->updateMask();
 
 		const InterpretationConstPtr& mask = annotatedGroundProgram.getEAMask(eaIndex)->mask();
