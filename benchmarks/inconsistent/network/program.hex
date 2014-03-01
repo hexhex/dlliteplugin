@@ -1,9 +1,9 @@
 
-route(X,Y):-open(X), open(Y), &rDL[OWLONTOLOGY,a,b,c,d,"edge"](X,Y).
+route(X,Y):-open(X), open(Y), &rDL["inst_prop_002_inst_000.owl",a,b,c,d,"edge"](X,Y).
 
-go(X,Y):-route(X,Y), not &rDL[OWLONTOLOGY,pc,b,c,d,"forbid"](X,Y).
+go(X,Y):-route(X,Y), not &rDL["inst_prop_002_inst_000.owl",pc,b,c,d,"forbid"](X,Y).
 
-open(X) v block(X):-not &cDL[OWLONTOLOGY,a,b,c,d,"-Avail"](X), &cDL[OWLONTOLOGY,a,b,c,d,"Node"](X), domain(X).
+open(X) v block(X):-not &cDL["inst_prop_002_inst_000.owl",a,b,c,d,"-Avail"](X), node(X).
 
 negis(X):-domain(X), go(X,Y), X!=Y.
 
