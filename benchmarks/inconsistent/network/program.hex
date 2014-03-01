@@ -1,4 +1,6 @@
 
+go(X,Y):- go(Y,X).
+
 route(X,Y):-open(X), open(Y), &rDL["inst_prop_002_inst_000.owl",a,b,c,d,"edge"](X,Y).
 
 go(X,Y):-route(X,Y), not &rDL["inst_prop_002_inst_000.owl",pc,b,c,d,"forbid"](X,Y).
