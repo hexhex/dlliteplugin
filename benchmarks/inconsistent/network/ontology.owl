@@ -148,6 +148,7 @@
  <owl:Thing rdf:about="#c65"><edge rdf:resource="#c69"/></owl:Thing>
  <owl:Thing rdf:about="#c11"><edge rdf:resource="#c65"/></owl:Thing>
 <owl:Thing rdf:about="#c1"><edge rdf:resource="#c70"/></owl:Thing>
+<owl:Thing rdf:about="#c70"><edge rdf:resource="#c7"/></owl:Thing>
 
 
 <owl:Thing rdf:about="#c1"><rdf:type rdf:resource="#Avail"/></owl:Thing>
@@ -187,7 +188,7 @@
 <owl:Thing rdf:about="#c35"><rdf:type rdf:resource="#Broken"/></owl:Thing>
 <owl:Thing rdf:about="#c36"><rdf:type rdf:resource="#Avail"/></owl:Thing>
 <owl:Thing rdf:about="#c37"><rdf:type rdf:resource="#Avail"/></owl:Thing>
-<owl:Thing rdf:about="#c38"><rdf:type rdf:resource="#Avail"/></owl:Thing>
+<owl:Thing rdf:about="#c38"><rdf:type rdf:resource="#Broken"/></owl:Thing>
 <owl:Thing rdf:about="#c39"><rdf:type rdf:resource="#Avail"/></owl:Thing>
 <owl:Thing rdf:about="#c40"><rdf:type rdf:resource="#Avail"/></owl:Thing>
 <owl:Thing rdf:about="#c41"><rdf:type rdf:resource="#Broken"/></owl:Thing>

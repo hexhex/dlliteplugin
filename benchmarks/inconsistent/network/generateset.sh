@@ -1,3 +1,5 @@
+
+
 if [[ $# -lt 4 ]]; then
 	echo "Error: Script expects 4 parameters"
 	exit 1;
