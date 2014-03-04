@@ -23,7 +23,7 @@ osx=$(uname -a | grep "Darwin" | wc -l)
 if [ ! -f $OWLCPPMAINDIR/owlcpp-$OWLCPPV.zip ]
 then
 	echo "Downloading owlcpp source version $OWLCPPV"
-	wget -O $OWLCPPMAINDIR/owlcpp-$OWLCPPV.zip http://downloads.sourceforge.net/project/owl-cpp/v0.3.3/owlcpp-$OWLCPPV.zip
+	wget -O $OWLCPPMAINDIR/owlcpp-$OWLCPPV.zip http://downloads.sourceforge.net/project/owl-cpp/v0.3.3/owlcpp-v$OWLCPPV.zip
 	if [ $? -gt 0 ]
 	then
 		echo "Error while downloading owlcpp; aborting"
