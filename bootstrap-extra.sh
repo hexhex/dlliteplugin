@@ -5,6 +5,7 @@ LIBXML2V=2.9.0
 RAPTOR2V=2.0.8
 FACTPPV=1.6.2
 OWLCPPV=0.3.3
+ICONVV=1.9.2 # only for Windows
 if [ $# -gt 1 ]; then
 	boost_major_version=$2
 	BOOSTV="${boost_major_version:0:1}.${boost_major_version:1:2}.0"
@@ -80,6 +81,18 @@ then
 	fi
 fi
 
+if [ ! -f $OWLCPPMAINDIR/libiconv-$ICONVV-dev.zip ] || [ ! -f $OWLCPPMAINDIR/libiconv-$ICONVV-bin.zip ]
+then
+	echo "Downloading libiconv source version $ICONVV"
+	wget -O $OWLCPPMAINDIR/libiconv-$ICONVV-dev.zip http://downloads.sourceforge.net/project/gnuwin32/libiconv/$ICONVV-1/libiconv-$ICONVV-1-lib.zip
+	wget -O $OWLCPPMAINDIR/libiconv-$ICONVV-bin.zip http://downloads.sourceforge.net/project/gnuwin32/libiconv/$ICONVV-1/libiconv-$ICONVV-1-bin.zip
+	if [ $? -gt 0 ]
+	then
+		echo "Error while downloading libiconv; aborting"
+		exit 1
+	fi
+fi
+
 echo "Extracting archives"
 cd $OWLCPPMAINDIR
 if [ ! -d $OWLCPPMAINDIR/owlcpp-v$OWLCPPV ]; then
@@ -98,6 +111,20 @@ fi
 if [ ! -d $OWLCPPMAINDIR/FaCT++-$FACTPPV ]; then
 	tar -xzf $OWLCPPMAINDIR/FaCTpp-src-v$FACTPPV.tar.gz > /dev/null 2> /dev/null
 fi
+if [ ! -d $OWLCPPMAINDIR/libiconv-$ICONVV ]; then
+	unzip -d $OWLCPPMAINDIR/libiconv-$ICONVV $OWLCPPMAINDIR/libiconv-$ICONVV-dev.zip > /dev/null 2> /dev/null
+	unzip -d $OWLCPPMAINDIR/libiconv-$ICONVV $OWLCPPMAINDIR/libiconv-$ICONVV-bin.zip > /dev/null 2> /dev/null
+
+	# some files have the wrong names
+	cp $OWLCPPMAINDIR/libiconv-$ICONVV/bin/libiconv2.dll $OWLCPPMAINDIR/libiconv-$ICONVV/bin/iconv.dll
+	cp $OWLCPPMAINDIR/libiconv-$ICONVV/lib/libiconv.lib $OWLCPPMAINDIR/libiconv-$ICONVV/lib/iconv.lib
+	cp $OWLCPPMAINDIR/libiconv-$ICONVV/lib/libiconv.lib $OWLCPPMAINDIR/libiconv-$ICONVV/lib/iconv_a.lib
+fi
+
+echo "Bootstrapping libxml2"
+pushd libxml2-$LIBXML2V
+./autogen.sh
+popd
 
 echo "Generating user-config.jam"
 cd owlcpp-v$OWLCPPV
@@ -128,18 +155,28 @@ fi
 cd ..
 
 echo "	echo off
-	echo \"Bootstrapping boost\"
-	cd owlcpp\\\\boost_$BOOSTVU
-	bootstrap.bat
-	cd ..\\\\..
+	set OWLCPPMAIN=%CD%\\\\owlcpp
+
+	echo \"Bootstrapping boost build\"
+	cd %OWLCPPMAIN%\\\\boost_$BOOSTVU\\\\tools\\\\build\\\\v2
+	call bootstrap.bat
 
 	echo \"Building owlcpp (including other necessary libraries\"
-	cd owlcpp\\\\owlcpp-v$OWLCPPV
-	../boost_$BOOSTVU\\\\tools\\\\build\\\\v2\\\\b2.exe release
-	cd ..\\\\..
+	cd %OWLCPPMAIN%\\\\owlcpp-v$OWLCPPV
+	copy lib\\io\\jamfile_win32.jam lib\\io\\jamfile.jam
+	set OWLCPPMAIN_ESC=%OWLCPPMAIN:\\\\=/%
+	echo local utils = \"%OWLCPPMAIN_ESC%\" ; > %USERPROFILE%\\\\user-config.jam
+	type user-config_win32.jam >> %USERPROFILE%\\\\user-config.jam
+	set BOOST=%OWLCPPMAIN%\\\\boost_$BOOSTVU
+	set BOOST_ROOT=%OWLCPPMAIN%\\\\boost_$BOOSTVU
+	set BOOST_BUILD_PATH=%OWLCPPMAIN%\\\\boost_$BOOSTVU\\\\tools\\\\build\\\\v2
+	set BOOST_BUILD_PATH_ESC=%BOOST_BUILD_PATH:\\\\=/%
+	echo boost-build \"%BOOST_BUILD_PATH_ESC%\" ; > boost-build.jam
+	call %OWLCPPMAIN%\\\\boost_$BOOSTVU\\\\tools\\\\build\\\\v2\\\\b2.exe release
+	del %USERPROFILE%\\\\user-config.jam
 
 	echo \"Extracting files\"
-	cd owlcpp
+	cd %OWLCPPMAIN%
 	mkdir libs
 
 	echo \"   owlcpp libs\"
@@ -204,14 +241,13 @@ echo "	lib owlcpp_io
 	      <library>/owlcpp//rdf
 	      <library>/boost//filesystem
 	      <library>/owlcpp//raptor
-	;" > $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/lib/io/jamfile.jam
+	;" > $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/lib/io/jamfile_win32.jam
 
 echo "Writing user-config.jam"
 cp $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/doc/user-config.jam $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/
-echo "local utils = \"./\" ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
-echo " constant BOOST : \"\$(utils)/boost_1_55_0/\" 1.55.0 ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
-echo " constant ICONV : \"\$(utils)/libiconv-1.9.2\" 1.9.2 ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
-echo " constant RAPTOR : \"\$(utils)/raptor2-2.0.8\" 2.0.8 ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
-echo " constant FACTPP : \"\$(utils)/FaCT++-1.6.2\" 1.6.2 ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
-echo " constant OWLCPP : \"\$(utils)/owlcpp\" 0.2.0 ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
+echo " constant BOOST : \"\$(utils)/boost_$BOOSTVU/\" $BOOSTV ;" > $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config_win32.jam
+echo " constant ICONV : \"\$(utils)/libiconv-$ICONVV\" $ICONVV ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config_win32.jam
+echo " constant LIBXML2 : \"\$(utils)/libxml2-$LIBXML2V\" $LIBXML2V ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config_win32.jam
+echo " constant RAPTOR : \"\$(utils)/raptor2-$RAPTOR2V\" $RAPTOR2V ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config_win32.jam
+echo " constant FACTPP : \"\$(utils)/FaCT++-$FACTPPV\" $FACTPPV ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config_win32.jam
 

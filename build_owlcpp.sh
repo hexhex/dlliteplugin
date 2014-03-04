@@ -35,7 +35,7 @@ osx=$(uname -a | grep "Darwin" | wc -l)
 
 echo "Building owlcpp in $OWLCPPMAINDIR"
 if test $OWLCPPMAINDIR == $OWLCPP_ROOT; then
-	
+
 	if [ ! -f $OWLCPPMAINDIR/boost_$BOOSTVU/tools/build/v2/b2 ]; then
 		echo "Building boost.build"
 		pushd $OWLCPPMAINDIR/boost_$BOOSTVU/tools/build/v2 > /dev/null
@@ -51,7 +51,7 @@ if test $OWLCPPMAINDIR == $OWLCPP_ROOT; then
 	fi
 
 	if [ ! -f $OWLCPPMAINDIR/boost_$BOOSTVU/b2 ]; then
-		echo "Building boost"
+		echo "Bootstrapping boost"
 		pushd $OWLCPPMAINDIR/boost_$BOOSTVU > /dev/null
 		./bootstrap.sh > $OWLCPPMAINDIR/output.out 2>&1
 		if [ $? -gt 0 ]; then
@@ -60,6 +60,7 @@ if test $OWLCPPMAINDIR == $OWLCPP_ROOT; then
 			popd > /dev/null
 			exit 1
 		fi
+		echo "Building boost"
 		./b2 "$params" > $OWLCPPMAINDIR/output.out 2>&1
 		if [ $? -gt 0 ]; then
 			cat $OWLCPPMAINDIR/output.out
