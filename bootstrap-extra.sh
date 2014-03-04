@@ -224,7 +224,16 @@ echo "	echo off
 	" > build_owlcpp.bat
 
 echo "Fixing jam-file"
-echo "	lib owlcpp_io
+echo "	# owlcpp/lib/io/jamfile.jam
+	# part of owlcpp project.
+	# Distributed under the Boost Software License, Version 1.0; see doc/license.txt.
+	# Copyright Mikhail K Levin 2011
+
+	project lib/io
+	   : requirements
+	;
+
+	lib owlcpp_io
 	   :  #sources
 	      [ glob *.cpp ]
 	   :  #requirements
