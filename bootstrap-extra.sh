@@ -123,9 +123,8 @@ if [ ! -d $OWLCPPMAINDIR/libiconv-$ICONVV ]; then
 fi
 
 echo "Bootstrapping libxml2"
-pushd libxml2-$LIBXML2V
+cd $OWLCPPMAINDIR/libxml2-$LIBXML2V
 ./autogen.sh
-popd
 
 echo "Generating user-config.jam"
 cd owlcpp-$OWLCPPV
