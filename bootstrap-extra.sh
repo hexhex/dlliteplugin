@@ -279,7 +279,7 @@ echo "	# owlcpp/lib/io/jamfile.jam
 	;" > $OWLCPPMAINDIR/owlcpp-$OWLCPPV/lib/io/jamfile_win32.jam
 
 echo "Writing user-config.jam"
-cp $OWLCPPMAINDIR/owlcpp-$OWLCPPV/doc/user-config.jam $OWLCPPMAINDIR/owlcpp-$OWLCPPV/
+cp $OWLCPPMAINDIR/owlcpp-$OWLCPPV/doc/user-config.jam $OWLCPPMAINDIR/owlcpp-$OWLCPPV/user-config_win32.jam
 echo " constant BOOST : \"\$(utils)/boost_$BOOSTVU/\" $BOOSTV ;" > $OWLCPPMAINDIR/owlcpp-$OWLCPPV/user-config_win32.jam
 echo " constant ICONV : \"\$(utils)/libiconv-$ICONVV\" $ICONVV ;" >> $OWLCPPMAINDIR/owlcpp-$OWLCPPV/user-config_win32.jam
 echo " constant LIBXML2 : \"\$(utils)/libxml2-$LIBXML2V\" $LIBXML2V ;" >> $OWLCPPMAINDIR/owlcpp-$OWLCPPV/user-config_win32.jam
