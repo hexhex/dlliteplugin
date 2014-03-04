@@ -132,7 +132,7 @@ if [ $patchowlcpp -eq 1 ]; then
 	echo "Patching triple_index.hpp"
 	# make sure that we have Linux line endings
 	tripleindexhpp=$(cat $OWLCPPMAINDIR/owlcpp-$OWLCPPV/include/owlcpp/rdf/detail/triple_index.hpp | tr -d '\r')
-	echo -e "$tripleindexhpp" > $OWLCPPMAINDIR/owlcpp-$OWLCPPV/include/owlcpp/rdf/detail/triple_index.hpp
+	echo "$tripleindexhpp" > $OWLCPPMAINDIR/owlcpp-$OWLCPPV/include/owlcpp/rdf/detail/triple_index.hpp
 	# apply patch
 	echo "78c78
 <       ind.erase(boost::find(ind, t));
