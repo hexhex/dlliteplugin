@@ -53,6 +53,8 @@ AC_ARG_WITH([owlcpp],
 # check for dlvhex, sets various variables
 DLVHEX_REQUIRE([2.3.0])
 
+AC_DEFINE([POSIX], [1], [Defined on POSIX systems.])
+
 # check owlcpp support
 AM_CONDITIONAL([DO_BUILDOWLCPP],[test "x${with_owlcpp}" == xauto])
 if test "x$with_owlcpp" == xauto; then
