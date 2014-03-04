@@ -97,6 +97,7 @@ echo "Extracting archives"
 cd $OWLCPPMAINDIR
 if [ ! -d $OWLCPPMAINDIR/owlcpp-$OWLCPPV ]; then
 	unzip $OWLCPPMAINDIR/owlcpp-$OWLCPPV.zip > /dev/null 2> /dev/null
+	mv $OWLCPPMAINDIR/owlcpp-v$OWLCPPV $OWLCPPMAINDIR/owlcpp-$OWLCPPV
 fi
 OWLCPP_ROOT=$OWLCPPMAINDIR/owlcpp-$OWLCPPV
 if [ ! -d $OWLCPPMAINDIR/boost_$BOOSTVU ]; then
