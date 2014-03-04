@@ -98,6 +98,9 @@ cd $OWLCPPMAINDIR
 if [ ! -d $OWLCPPMAINDIR/owlcpp-$OWLCPPV ]; then
 	unzip $OWLCPPMAINDIR/owlcpp-$OWLCPPV.zip > /dev/null 2> /dev/null
 	mv $OWLCPPMAINDIR/owlcpp-v$OWLCPPV $OWLCPPMAINDIR/owlcpp-$OWLCPPV
+	patchowlcpp=1
+else
+	patchowlcpp=0
 fi
 OWLCPP_ROOT=$OWLCPPMAINDIR/owlcpp-$OWLCPPV
 if [ ! -d $OWLCPPMAINDIR/boost_$BOOSTVU ]; then
@@ -105,6 +108,9 @@ if [ ! -d $OWLCPPMAINDIR/boost_$BOOSTVU ]; then
 fi
 if [ ! -d $OWLCPPMAINDIR/libxml2-$LIBXML2V ]; then
 	unzip $OWLCPPMAINDIR/libxml2-$LIBXML2V.zip > /dev/null 2> /dev/null
+	bootstramlibxml2=1
+else
+	bootstramlibxml2=0
 fi
 if [ ! -d $OWLCPPMAINDIR/raptor2-$RAPTOR2V ]; then
 	tar -xzf $OWLCPPMAINDIR/raptor2-$RAPTOR2V.tar.gz > /dev/null 2> /dev/null
@@ -122,9 +128,27 @@ if [ ! -d $OWLCPPMAINDIR/libiconv-$ICONVV ]; then
 	cp $OWLCPPMAINDIR/libiconv-$ICONVV/lib/libiconv.lib $OWLCPPMAINDIR/libiconv-$ICONVV/lib/iconv_a.lib
 fi
 
-echo "Bootstrapping libxml2"
-cd $OWLCPPMAINDIR/libxml2-$LIBXML2V
-./autogen.sh
+if [ $patchowlcpp -eq 1 ]; then
+	echo "Patching triple_index.hpp"
+	# make sure that we have Linux line endings
+	tripleindexhpp=$(cat $OWLCPPMAINDIR/owlcpp-$OWLCPPV/include/owlcpp/rdf/detail/triple_index.hpp | tr -d '\r')
+	echo -e "$tripleindexhpp" > $OWLCPPMAINDIR/owlcpp-$OWLCPPV/include/owlcpp/rdf/detail/triple_index.hpp
+	# apply patch
+	echo "78c78
+<       ind.erase(boost::find(ind, t));
+---
+>       for (unsigned int i = 0; i < ind.size(); ++i) { if (ind[i] == t) { ind.erase(ind.begin() + i); break; } }
+107c107
+<       ind.erase(boost::find(ind, t));
+---
+>       for (unsigned int i = 0; i < ind.size(); ++i) { if (ind[i] == t) { ind.erase(ind.begin() + i); break; } }
+" | patch $OWLCPPMAINDIR/owlcpp-$OWLCPPV/include/owlcpp/rdf/detail/triple_index.hpp
+fi
+if [ $bootstramlibxml2 -eq 1 ]; then
+	echo "Bootstrapping libxml2"
+	cd $OWLCPPMAINDIR/libxml2-$LIBXML2V
+	./autogen.sh
+fi
 
 echo "Generating user-config.jam"
 cd owlcpp-$OWLCPPV
@@ -180,15 +204,17 @@ echo "	echo off
 	mkdir libs
 
 	echo \"   owlcpp libs\"
-	copy owlcpp-$OWLCPPV\\\\out\\\\bin\\\\io\\\\msvc-10.0\\\\release\\\\link-static\\\\threading-multi\\\\owlcpp_io.lib libs\\\\
-	copy owlcpp-$OWLCPPV\\\\out\\\\bin\\\\logic\\\\msvc-10.0\\\\release\\\\link-static\\\\threading-multi\\\\owlcpp_logic.lib libs\\\\
-	copy owlcpp-$OWLCPPV\\\\out\\\\bin\\\\rdf\\\\msvc-10.0\\\\release\\\\link-static\\\\threading-multi\\\\owlcpp_rdf.lib libs\\\\
+	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\bin\\\\io\\\\msvc-10.0\\\\release\\\\link-static\\\\threading-multi\\\\libowlcpp_io.lib libs\\\\
+	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\bin\\\\logic\\\\msvc-10.0\\\\release\\\\link-static\\\\libowlcpp_logic.lib libs\\\\
+	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\bin\\\\rdf\\\\msvc-10.0\\\\release\\\\link-static\\\\threading-multi\\\\libowlcpp_rdf.lib libs\\\\
+	echo \"   libiconv libs\"
+	copy %OWLCPPMAIN%\\\\libiconv-$ICONVV\\\\lib\\\\iconv.lib libs\\\\libiconv.lib
 	echo \"   factpp libs\"
-	copy owlcpp-$OWLCPPV\\\\out\\\\ext\\\\factpp\\\\factpp\\\\msvc-10.0\\\\release\\\\link-static\\\\threading-multi\\\\libfactpp_kernel-vc100-mt.lib libs\\\\
+	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\factpp\\\\factpp\\\\msvc-10.0\\\\release\\\\link-static\\\\libfactpp_kernel-vc100.lib libs\\\\libfactpp_kernel.lib
 	echo \"   libxml2 libs\"
-	copy owlcpp-$OWLCPPV\\\\out\\\\ext\\\\libxml2\\\\libxml2\\\\msvc-10.0\\\\release\\\\libxml2-version-2.9.0\\\\link-static\\\\threading-multi\\\\libxml2-vc100-mt-2_9.lib libs\\\\
+	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\libxml2\\\\libxml2\\\\msvc-10.0\\\\release\\\\libxml2-version-$LIBXML2V\\\\link-static\\\\threading-multi\\\\libxml2-vc100-mt-2_9.lib libs\\\\libxml2.lib
 	echo \"   libraptor libs\"
-	copy owlcpp-$OWLCPPV\\\\out\\\\ext\\\\raptor\\\\raptor\\\\msvc-10.0\\\\release\\\\link-static\\\\raptor-version-2.0.8\\\\threading-multi\\\\libraptor-vc100-mt-2_0.lib libs\\\\
+	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\raptor\\\\raptor\\\\msvc-10.0\\\\release\\\\link-static\\\\raptor-version-$RAPTOR2V\\\\threading-multi\\\\libraptor-vc100-mt-2_0.lib libs\\\\libraptor.lib
 
 	echo \"   owlcpp headers\"
 	mkdir include
@@ -202,25 +228,25 @@ echo "	echo off
 	mkdir include\\\\owlcpp\\\\rdf\\\\detail
 	mkdir include\\\\owlcpp\\\\terms
 	mkdir include\\\\owlcpp\\\\terms\\\\detail
-	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\*.h include\\\\owlcpp\\\\
-	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\detail\\\\*.h include\\\\owlcpp\\\\detail\\\\
-	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\io\\\\*.h include\\\\owlcpp\\\\io\\\\
-	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\io\\\\detail\\\\*.h include\\\\owlcpp\\\\io\\\\detail\\\\
-	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\logic\\\\*.h include\\\\owlcpp\\\\logic\\\\
-	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\logic\\\\detail\\\\*.h include\\\\owlcpp\\\\logic\\\\detail\\\\
-	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\rdf\\\\*.h include\\\\owlcpp\\\\rdf\\\\
-	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\rdf\\\\detail\\\\*.h include\\\\owlcpp\\\\rdf\\\\detail\\\\
-	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\terms\\\\*.h include\\\\owlcpp\\\\terms\\\\
-	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\terms\\\\detail\\\\*.h include\\\\owlcpp\\\\terms\\\\detail\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\*.h* include\\\\owlcpp\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\detail\\\\*.h* include\\\\owlcpp\\\\detail\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\io\\\\*.h* include\\\\owlcpp\\\\io\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\io\\\\detail\\\\*.h* include\\\\owlcpp\\\\io\\\\detail\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\logic\\\\*.h* include\\\\owlcpp\\\\logic\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\logic\\\\detail\\\\*.h* include\\\\owlcpp\\\\logic\\\\detail\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\rdf\\\\*.h* include\\\\owlcpp\\\\rdf\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\rdf\\\\detail\\\\*.h* include\\\\owlcpp\\\\rdf\\\\detail\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\terms\\\\*.h* include\\\\owlcpp\\\\terms\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\terms\\\\detail\\\\*.h* include\\\\owlcpp\\\\terms\\\\detail\\\\
 	echo \"   factpp headers\"
 	mkdir include\\\\factpp
-	copy owlcpp-$OWLCPPV\\\\out\\\\include\\\\factpp\\\\*.h include\\\\owlcpp\\\\factpp\\\\
+	copy owlcpp-$OWLCPPV\\\\out\\\\include\\\\factpp\\\\*.h* include\\\\factpp\\\\
 	echo \"   libxml2 headers\"
 	mkdir include\\\\libxml
-	copy owlcpp-$OWLCPPV\\\\out\\\\include\\\\libxml\\\\*.h include\\\\owlcpp\\\\libxml\\\\
+	copy owlcpp-$OWLCPPV\\\\out\\\\include\\\\libxml\\\\*.h* include\\\\libxml\\\\
 	echo \"   raptor headers\"
 	mkdir include\\\\raptor
-	copy owlcpp-$OWLCPPV\\\\out\\\\include\\\\raptor\\\\*.h include\\\\owlcpp\\\\raptor\\\\
+	copy owlcpp-$OWLCPPV\\\\out\\\\include\\\\raptor\\\\*.h* include\\\\raptor\\\\
 	" > build_owlcpp.bat
 
 echo "Fixing jam-file"
