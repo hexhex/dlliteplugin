@@ -127,7 +127,7 @@ if [ $osx -eq 1 ]; then
 fi
 cd ..
 
-echo "
+echo "	echo off
 	echo \"Bootstrapping boost\"
 	cd owlcpp\\\\boost_$BOOSTVU
 	bootstrap.bat

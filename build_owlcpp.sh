@@ -6,6 +6,23 @@ if [ $# -eq 0 ]; then
 	exit 1
 fi
 
+LIBXML2V=2.9.0
+RAPTOR2V=2.0.8
+FACTPPV=1.6.2
+OWLCPPV=0.3.3
+if [ $# -gt 1 ]; then
+	boost_major_version=$2
+	BOOSTV="${boost_major_version:0:1}.${boost_major_version:1:2}.0"
+	if [ $boost_major_version -lt 155 ]; then
+		echo -e "Warning: dlvhex was built with boost version $BOOSTV, but owlcpp needs at least 1.55.0.\nWill build owlcpp with boost 1.55.0, but it might be incompatible with dlvhex!"
+		BOOSTV="1.55.0"
+	fi
+else
+	# default
+	BOOSTV=1.55.0
+fi
+BOOSTVU=$(echo $BOOSTV | sed 's/\./_/g')
+
 OWLCPPMAINDIR=`cd ./$TOP_SRCDIR/owlcpp; pwd`
 OWLCPP_ROOT=$1
 
