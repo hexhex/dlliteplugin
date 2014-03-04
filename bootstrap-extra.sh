@@ -132,7 +132,7 @@ if [ $patchowlcpp -eq 1 ]; then
 	echo "Patching triple_index.hpp"
 	# make sure that we have Linux line endings
 	tripleindexhpp=$(cat $OWLCPPMAINDIR/owlcpp-$OWLCPPV/include/owlcpp/rdf/detail/triple_index.hpp | tr -d '\r')
-	echo -e "$tripleindexhpp" > $OWLCPPMAINDIR/owlcpp-$OWLCPPV/include/owlcpp/rdf/detail/triple_index.hpp
+	echo "$tripleindexhpp" > $OWLCPPMAINDIR/owlcpp-$OWLCPPV/include/owlcpp/rdf/detail/triple_index.hpp
 	# apply patch
 	echo "78c78
 <       ind.erase(boost::find(ind, t));
@@ -279,7 +279,7 @@ echo "	# owlcpp/lib/io/jamfile.jam
 	;" > $OWLCPPMAINDIR/owlcpp-$OWLCPPV/lib/io/jamfile_win32.jam
 
 echo "Writing user-config.jam"
-cp $OWLCPPMAINDIR/owlcpp-$OWLCPPV/doc/user-config.jam $OWLCPPMAINDIR/owlcpp-$OWLCPPV/
+cp $OWLCPPMAINDIR/owlcpp-$OWLCPPV/doc/user-config.jam $OWLCPPMAINDIR/owlcpp-$OWLCPPV/user-config_win32.jam
 echo " constant BOOST : \"\$(utils)/boost_$BOOSTVU/\" $BOOSTV ;" > $OWLCPPMAINDIR/owlcpp-$OWLCPPV/user-config_win32.jam
 echo " constant ICONV : \"\$(utils)/libiconv-$ICONVV\" $ICONVV ;" >> $OWLCPPMAINDIR/owlcpp-$OWLCPPV/user-config_win32.jam
 echo " constant LIBXML2 : \"\$(utils)/libxml2-$LIBXML2V\" $LIBXML2V ;" >> $OWLCPPMAINDIR/owlcpp-$OWLCPPV/user-config_win32.jam
