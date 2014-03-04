@@ -367,6 +367,6 @@
 /* Define to a type to use for `error_t' if it is not otherwise available. */
 /* #undef error_t */
 
-#define NESTEDHEXPLUGIN_VERSION_MAJOR 2
-#define NESTEDHEXPLUGIN_VERSION_MINOR 0
-#define NESTEDHEXPLUGIN_VERSION_MICRO 0
+#define DLLITEPLUGIN_VERSION_MAJOR 2
+#define DLLITEPLUGIN_VERSION_MINOR 0
+#define DLLITEPLUGIN_VERSION_MICRO 0
