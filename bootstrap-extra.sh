@@ -1,4 +1,4 @@
-OWLCPPMAINDIR=$(cd $(dirname $0)/owlcpp; pwd)
+OWLCPPMAINDIR=$(cd $(dirname $0)/owlcpp/; pwd)
 
 echo "Downloading  owlcpp to $OWLCPPMAINDIR"
 LIBXML2V=2.9.0
@@ -16,6 +16,8 @@ else
 	# default
 	BOOSTV=1.55.0
 fi
+
+osx=$(uname -a | grep "Darwin" | wc -l)
 
 if [ ! -f $OWLCPPMAINDIR/owlcpp-v$OWLCPPV.zip ]
 then
@@ -79,6 +81,7 @@ then
 fi
 
 echo "Extracting archives"
+cd $OWLCPPMAINDIR
 if [ ! -d $OWLCPPMAINDIR/owlcpp-v$OWLCPPV ]; then
 	unzip $OWLCPPMAINDIR/owlcpp-v$OWLCPPV.zip > /dev/null 2> /dev/null
 fi
@@ -116,7 +119,7 @@ do
 done
 cd ..
 
-if [ $osx == 1 ]; then
+if [ $osx -eq 1 ]; then
 	echo "Fixing libtool on OS X"
 	cp $OWLCPPMAINDIR/libxml2-$LIBXML2V/autogen.sh $OWLCPPMAINDIR/libxml2-$LIBXML2V/autogen.sh.bak
 	cat $OWLCPPMAINDIR/libxml2-$LIBXML2V/autogen.sh | sed 's/libtoolize --version/echo 0/' > $OWLCPPMAINDIR/libxml2-$LIBXML2V/autogen.sh.bak
@@ -187,7 +190,7 @@ echo "	lib owlcpp_io
 	   :  #sources
 	      [ glob *.cpp ]
 	   :  #requirements
-	      $(LIB_REQUIREMENTS)
+	      \$(LIB_REQUIREMENTS)
 	      <include>.
 	      <library>/owlcpp//rdf
 	      <library>/boost//filesystem
@@ -205,9 +208,9 @@ echo "	lib owlcpp_io
 echo "Writing user-config.jam"
 cp $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/doc/user-config.jam $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/
 echo "local utils = \"./\" ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
-echo " constant BOOST : \"$(utils)/boost_1_55_0/" 1.55.0 ;\" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
-echo " constant ICONV : \"$(utils)/libiconv-1.9.2" 1.9.2 ;\" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
-echo " constant RAPTOR : \"$(utils)/raptor2-2.0.8" 2.0.8 ;\" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
-echo " constant FACTPP : \"$(utils)/FaCT++-1.6.2" 1.6.2 ;\" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
-echo " constant OWLCPP : \"$(utils)/owlcpp" 0.2.0 ;\" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
+echo " constant BOOST : \"\$(utils)/boost_1_55_0/\" 1.55.0 ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
+echo " constant ICONV : \"\$(utils)/libiconv-1.9.2\" 1.9.2 ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
+echo " constant RAPTOR : \"\$(utils)/raptor2-2.0.8\" 2.0.8 ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
+echo " constant FACTPP : \"\$(utils)/FaCT++-1.6.2\" 1.6.2 ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
+echo " constant OWLCPP : \"\$(utils)/owlcpp\" 0.2.0 ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config.jam
 
