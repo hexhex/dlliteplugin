@@ -47,7 +47,7 @@ if test $OWLCPPMAINDIR == $OWLCPP_ROOT; then
 			exit 1
 		fi
 		popd > /dev/null
-		cp $OWLCPPMAINDIR/boost_$BOOSTVU/tools/build/v2/b2 $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/
+		cp $OWLCPPMAINDIR/boost_$BOOSTVU/tools/build/v2/b2 $OWLCPPMAINDIR/owlcpp-$OWLCPPV/
 	fi
 
 	if [ ! -f $OWLCPPMAINDIR/boost_$BOOSTVU/b2 ]; then
@@ -86,10 +86,10 @@ if test $OWLCPPMAINDIR == $OWLCPP_ROOT; then
 
 	echo "Building owlcpp"
 	REALHOME=$HOME
-	export HOME=$OWLCPPMAINDIR/owlcpp-v$OWLCPPV
+	export HOME=$OWLCPPMAINDIR/owlcpp-$OWLCPPV
 	export BOOST_ROOT=$OWLCPPMAINDIR/boost_$BOOSTVU
 	export BOOST_BUILD_PATH=$OWLCPPMAINDIR/boost_$BOOSTVU/tools/build/v2
-	pushd $OWLCPPMAINDIR/owlcpp-v$OWLCPPV > /dev/null
+	pushd $OWLCPPMAINDIR/owlcpp-$OWLCPPV > /dev/null
 	$BOOST_ROOT/tools/build/v2/b2 release cxxflags="-fpic -export-dynamic" cflags="-fpic -export-dynamic" "$params" > $OWLCPPMAINDIR/output.out 2>&1
 	ret=$?
 	export HOME=$REALHOME

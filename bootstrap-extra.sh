@@ -20,10 +20,10 @@ fi
 
 osx=$(uname -a | grep "Darwin" | wc -l)
 
-if [ ! -f $OWLCPPMAINDIR/owlcpp-v$OWLCPPV.zip ]
+if [ ! -f $OWLCPPMAINDIR/owlcpp-$OWLCPPV.zip ]
 then
 	echo "Downloading owlcpp source version $OWLCPPV"
-	wget -O $OWLCPPMAINDIR/owlcpp-v$OWLCPPV.zip http://downloads.sourceforge.net/project/owl-cpp/v0.3.3/owlcpp-v$OWLCPPV.zip
+	wget -O $OWLCPPMAINDIR/owlcpp-$OWLCPPV.zip http://downloads.sourceforge.net/project/owl-cpp/v0.3.3/owlcpp-$OWLCPPV.zip
 	if [ $? -gt 0 ]
 	then
 		echo "Error while downloading owlcpp; aborting"
@@ -95,10 +95,10 @@ fi
 
 echo "Extracting archives"
 cd $OWLCPPMAINDIR
-if [ ! -d $OWLCPPMAINDIR/owlcpp-v$OWLCPPV ]; then
-	unzip $OWLCPPMAINDIR/owlcpp-v$OWLCPPV.zip > /dev/null 2> /dev/null
+if [ ! -d $OWLCPPMAINDIR/owlcpp-$OWLCPPV ]; then
+	unzip $OWLCPPMAINDIR/owlcpp-$OWLCPPV.zip > /dev/null 2> /dev/null
 fi
-OWLCPP_ROOT=$OWLCPPMAINDIR/owlcpp-v$OWLCPPV
+OWLCPP_ROOT=$OWLCPPMAINDIR/owlcpp-$OWLCPPV
 if [ ! -d $OWLCPPMAINDIR/boost_$BOOSTVU ]; then
 	tar -xzf $OWLCPPMAINDIR/boost-$BOOSTV.tar.gz > /dev/null 2> /dev/null
 fi
@@ -127,7 +127,7 @@ pushd libxml2-$LIBXML2V
 popd
 
 echo "Generating user-config.jam"
-cd owlcpp-v$OWLCPPV
+cd owlcpp-$OWLCPPV
 cp doc/user-config.jam user-config.jam
 echo " constant BOOST : \"$OWLCPPMAINDIR/boost_$BOOSTVU/\" $BOOSTV ;" >> user-config.jam
 echo " constant LIBXML2 : \"$OWLCPPMAINDIR/libxml2-$LIBXML2V\" $LIBXML2V ;" >> user-config.jam
@@ -136,7 +136,7 @@ echo " constant FACTPP : \"$OWLCPPMAINDIR/FaCT++-$FACTPPV\" $FACTPPV ;" >> user-
 cd ..
 
 echo "Updating jam files"
-cd owlcpp-v$OWLCPPV
+cd owlcpp-$OWLCPPV
 cat jamroot.jam | sed 's/-fvisibility=hidden/-fvisibility=default/' | sed 's/-fvisibility-inlines-hidden//' > jamroot.jam.up
 mv jamroot.jam.up jamroot.jam
 for f in external/ext/*.jam
@@ -162,7 +162,7 @@ echo "	echo off
 	call bootstrap.bat
 
 	echo \"Building owlcpp (including other necessary libraries\"
-	cd %OWLCPPMAIN%\\\\owlcpp-v$OWLCPPV
+	cd %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV
 	copy lib\\io\\jamfile_win32.jam lib\\io\\jamfile.jam
 	set OWLCPPMAIN_ESC=%OWLCPPMAIN:\\\\=/%
 	echo local utils = \"%OWLCPPMAIN_ESC%\" ; > %USERPROFILE%\\\\user-config.jam
@@ -180,15 +180,15 @@ echo "	echo off
 	mkdir libs
 
 	echo \"   owlcpp libs\"
-	copy owlcpp-v$OWLCPPV\\\\out\\\\bin\\\\io\\\\msvc-10.0\\\\release\\\\link-static\\\\threading-multi\\\\owlcpp_io.lib libs\\\\
-	copy owlcpp-v$OWLCPPV\\\\out\\\\bin\\\\logic\\\\msvc-10.0\\\\release\\\\link-static\\\\threading-multi\\\\owlcpp_logic.lib libs\\\\
-	copy owlcpp-v$OWLCPPV\\\\out\\\\bin\\\\rdf\\\\msvc-10.0\\\\release\\\\link-static\\\\threading-multi\\\\owlcpp_rdf.lib libs\\\\
+	copy owlcpp-$OWLCPPV\\\\out\\\\bin\\\\io\\\\msvc-10.0\\\\release\\\\link-static\\\\threading-multi\\\\owlcpp_io.lib libs\\\\
+	copy owlcpp-$OWLCPPV\\\\out\\\\bin\\\\logic\\\\msvc-10.0\\\\release\\\\link-static\\\\threading-multi\\\\owlcpp_logic.lib libs\\\\
+	copy owlcpp-$OWLCPPV\\\\out\\\\bin\\\\rdf\\\\msvc-10.0\\\\release\\\\link-static\\\\threading-multi\\\\owlcpp_rdf.lib libs\\\\
 	echo \"   factpp libs\"
-	copy owlcpp-v$OWLCPPV\\\\out\\\\ext\\\\factpp\\\\factpp\\\\msvc-10.0\\\\release\\\\link-static\\\\threading-multi\\\\libfactpp_kernel-vc100-mt.lib libs\\\\
+	copy owlcpp-$OWLCPPV\\\\out\\\\ext\\\\factpp\\\\factpp\\\\msvc-10.0\\\\release\\\\link-static\\\\threading-multi\\\\libfactpp_kernel-vc100-mt.lib libs\\\\
 	echo \"   libxml2 libs\"
-	copy owlcpp-v$OWLCPPV\\\\out\\\\ext\\\\libxml2\\\\libxml2\\\\msvc-10.0\\\\release\\\\libxml2-version-2.9.0\\\\link-static\\\\threading-multi\\\\libxml2-vc100-mt-2_9.lib libs\\\\
+	copy owlcpp-$OWLCPPV\\\\out\\\\ext\\\\libxml2\\\\libxml2\\\\msvc-10.0\\\\release\\\\libxml2-version-2.9.0\\\\link-static\\\\threading-multi\\\\libxml2-vc100-mt-2_9.lib libs\\\\
 	echo \"   libraptor libs\"
-	copy owlcpp-v$OWLCPPV\\\\out\\\\ext\\\\raptor\\\\raptor\\\\msvc-10.0\\\\release\\\\link-static\\\\raptor-version-2.0.8\\\\threading-multi\\\\libraptor-vc100-mt-2_0.lib libs\\\\
+	copy owlcpp-$OWLCPPV\\\\out\\\\ext\\\\raptor\\\\raptor\\\\msvc-10.0\\\\release\\\\link-static\\\\raptor-version-2.0.8\\\\threading-multi\\\\libraptor-vc100-mt-2_0.lib libs\\\\
 
 	echo \"   owlcpp headers\"
 	mkdir include
@@ -202,25 +202,25 @@ echo "	echo off
 	mkdir include\\\\owlcpp\\\\rdf\\\\detail
 	mkdir include\\\\owlcpp\\\\terms
 	mkdir include\\\\owlcpp\\\\terms\\\\detail
-	copy owlcpp-v$OWLCPPV\\\\include\\\\owlcpp\\\\*.h include\\\\owlcpp\\\\
-	copy owlcpp-v$OWLCPPV\\\\include\\\\owlcpp\\\\detail\\\\*.h include\\\\owlcpp\\\\detail\\\\
-	copy owlcpp-v$OWLCPPV\\\\include\\\\owlcpp\\\\io\\\\*.h include\\\\owlcpp\\\\io\\\\
-	copy owlcpp-v$OWLCPPV\\\\include\\\\owlcpp\\\\io\\\\detail\\\\*.h include\\\\owlcpp\\\\io\\\\detail\\\\
-	copy owlcpp-v$OWLCPPV\\\\include\\\\owlcpp\\\\logic\\\\*.h include\\\\owlcpp\\\\logic\\\\
-	copy owlcpp-v$OWLCPPV\\\\include\\\\owlcpp\\\\logic\\\\detail\\\\*.h include\\\\owlcpp\\\\logic\\\\detail\\\\
-	copy owlcpp-v$OWLCPPV\\\\include\\\\owlcpp\\\\rdf\\\\*.h include\\\\owlcpp\\\\rdf\\\\
-	copy owlcpp-v$OWLCPPV\\\\include\\\\owlcpp\\\\rdf\\\\detail\\\\*.h include\\\\owlcpp\\\\rdf\\\\detail\\\\
-	copy owlcpp-v$OWLCPPV\\\\include\\\\owlcpp\\\\terms\\\\*.h include\\\\owlcpp\\\\terms\\\\
-	copy owlcpp-v$OWLCPPV\\\\include\\\\owlcpp\\\\terms\\\\detail\\\\*.h include\\\\owlcpp\\\\terms\\\\detail\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\*.h include\\\\owlcpp\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\detail\\\\*.h include\\\\owlcpp\\\\detail\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\io\\\\*.h include\\\\owlcpp\\\\io\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\io\\\\detail\\\\*.h include\\\\owlcpp\\\\io\\\\detail\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\logic\\\\*.h include\\\\owlcpp\\\\logic\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\logic\\\\detail\\\\*.h include\\\\owlcpp\\\\logic\\\\detail\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\rdf\\\\*.h include\\\\owlcpp\\\\rdf\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\rdf\\\\detail\\\\*.h include\\\\owlcpp\\\\rdf\\\\detail\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\terms\\\\*.h include\\\\owlcpp\\\\terms\\\\
+	copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\terms\\\\detail\\\\*.h include\\\\owlcpp\\\\terms\\\\detail\\\\
 	echo \"   factpp headers\"
 	mkdir include\\\\factpp
-	copy owlcpp-v$OWLCPPV\\\\out\\\\include\\\\factpp\\\\*.h include\\\\owlcpp\\\\factpp\\\\
+	copy owlcpp-$OWLCPPV\\\\out\\\\include\\\\factpp\\\\*.h include\\\\owlcpp\\\\factpp\\\\
 	echo \"   libxml2 headers\"
 	mkdir include\\\\libxml
-	copy owlcpp-v$OWLCPPV\\\\out\\\\include\\\\libxml\\\\*.h include\\\\owlcpp\\\\libxml\\\\
+	copy owlcpp-$OWLCPPV\\\\out\\\\include\\\\libxml\\\\*.h include\\\\owlcpp\\\\libxml\\\\
 	echo \"   raptor headers\"
 	mkdir include\\\\raptor
-	copy owlcpp-v$OWLCPPV\\\\out\\\\include\\\\raptor\\\\*.h include\\\\owlcpp\\\\raptor\\\\
+	copy owlcpp-$OWLCPPV\\\\out\\\\include\\\\raptor\\\\*.h include\\\\owlcpp\\\\raptor\\\\
 	" > build_owlcpp.bat
 
 echo "Fixing jam-file"
@@ -250,13 +250,13 @@ echo "	# owlcpp/lib/io/jamfile.jam
 	      <library>/owlcpp//rdf
 	      <library>/boost//filesystem
 	      <library>/owlcpp//raptor
-	;" > $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/lib/io/jamfile_win32.jam
+	;" > $OWLCPPMAINDIR/owlcpp-$OWLCPPV/lib/io/jamfile_win32.jam
 
 echo "Writing user-config.jam"
-cp $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/doc/user-config.jam $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/
-echo " constant BOOST : \"\$(utils)/boost_$BOOSTVU/\" $BOOSTV ;" > $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config_win32.jam
-echo " constant ICONV : \"\$(utils)/libiconv-$ICONVV\" $ICONVV ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config_win32.jam
-echo " constant LIBXML2 : \"\$(utils)/libxml2-$LIBXML2V\" $LIBXML2V ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config_win32.jam
-echo " constant RAPTOR : \"\$(utils)/raptor2-$RAPTOR2V\" $RAPTOR2V ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config_win32.jam
-echo " constant FACTPP : \"\$(utils)/FaCT++-$FACTPPV\" $FACTPPV ;" >> $OWLCPPMAINDIR/owlcpp-v$OWLCPPV/user-config_win32.jam
+cp $OWLCPPMAINDIR/owlcpp-$OWLCPPV/doc/user-config.jam $OWLCPPMAINDIR/owlcpp-$OWLCPPV/
+echo " constant BOOST : \"\$(utils)/boost_$BOOSTVU/\" $BOOSTV ;" > $OWLCPPMAINDIR/owlcpp-$OWLCPPV/user-config_win32.jam
+echo " constant ICONV : \"\$(utils)/libiconv-$ICONVV\" $ICONVV ;" >> $OWLCPPMAINDIR/owlcpp-$OWLCPPV/user-config_win32.jam
+echo " constant LIBXML2 : \"\$(utils)/libxml2-$LIBXML2V\" $LIBXML2V ;" >> $OWLCPPMAINDIR/owlcpp-$OWLCPPV/user-config_win32.jam
+echo " constant RAPTOR : \"\$(utils)/raptor2-$RAPTOR2V\" $RAPTOR2V ;" >> $OWLCPPMAINDIR/owlcpp-$OWLCPPV/user-config_win32.jam
+echo " constant FACTPP : \"\$(utils)/FaCT++-$FACTPPV\" $FACTPPV ;" >> $OWLCPPMAINDIR/owlcpp-$OWLCPPV/user-config_win32.jam
 
