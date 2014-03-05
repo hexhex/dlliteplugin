@@ -98,6 +98,7 @@ BOOST_REQUIRE([1.43.0])
 BOOST_SMART_PTR
 BOOST_STRING_ALGO
 BOOST_TOKENIZER
+BOOST_FILESYSTEM
 
 NESTED_BOOSTROOT=""
 if test "x$with_boost" != xno -a "x$with_boost" != xyes -a "x$with_boost" != x; then
