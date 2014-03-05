@@ -98,6 +98,8 @@ if test $OWLCPPMAINDIR == $OWLCPP_ROOT; then
 		echo "Building owlcpp failed; aborting"
 		exit 1
 	fi
+
+	OWLCPP_ROOT=$OWLCPPMAINDIR/owlcpp-$OWLCPPV
 fi
 
 # scan $(OWLCPP_ROOT) for .a and header files and create symbolic links in $OWLCPPMAINDIR/include and $OWLCPPMAINDIR/libs
