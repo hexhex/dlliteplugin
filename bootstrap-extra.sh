@@ -151,7 +151,7 @@ if [ $bootstramlibxml2 -eq 1 ]; then
 fi
 
 echo "Generating user-config.jam"
-cd owlcpp-$OWLCPPV
+cd $OWLCPPMAINDIR/owlcpp-$OWLCPPV
 cp doc/user-config.jam user-config.jam
 echo " constant BOOST : \"$OWLCPPMAINDIR/boost_$BOOSTVU/\" $BOOSTV ;" >> user-config.jam
 echo " constant LIBXML2 : \"$OWLCPPMAINDIR/libxml2-$LIBXML2V\" $LIBXML2V ;" >> user-config.jam
@@ -160,7 +160,7 @@ echo " constant FACTPP : \"$OWLCPPMAINDIR/FaCT++-$FACTPPV\" $FACTPPV ;" >> user-
 cd ..
 
 echo "Updating jam files"
-cd owlcpp-$OWLCPPV
+cd $OWLCPPMAINDIR/owlcpp-$OWLCPPV
 cat jamroot.jam | sed 's/-fvisibility=hidden/-fvisibility=default/' | sed 's/-fvisibility-inlines-hidden//' > jamroot.jam.up
 mv jamroot.jam.up jamroot.jam
 for f in external/ext/*.jam
