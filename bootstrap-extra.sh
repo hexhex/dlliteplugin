@@ -215,7 +215,7 @@ echo "	echo off
 	copy %OWLCPPMAIN%\\\\libiconv-$ICONVV\\\\lib\\\\iconv.lib libs\\\\libiconv.lib
 	echo \"   factpp libs\"
 	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\factpp\\\\factpp\\\\msvc-10.0\\\\release\\\\link-static\\\\libfactpp_kernel-vc100.lib libs\\\\libfactpp_kernel.lib
-	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\factpp\\\\factpp\\\\msvc-10.0\\\\debug\\\\link-static\\\\libfactpp_kernel-vc100.lib libs\\\\libfactpp_kernel-dbg.lib
+	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\factpp\\\\factpp\\\\msvc-10.0\\\\debug\\\\link-static\\\\libfactpp_kernel-vc100-gd.lib libs\\\\libfactpp_kernel-dbg.lib
 	echo \"   libxml2 libs\"
 	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\libxml2\\\\libxml2\\\\msvc-10.0\\\\release\\\\libxml2-version-$LIBXML2V\\\\link-static\\\\threading-multi\\\\libxml2-vc100-mt-2_9.lib libs\\\\libxml2.lib
 	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\libxml2\\\\libxml2\\\\msvc-10.0\\\\debug\\\\libxml2-version-$LIBXML2V\\\\link-static\\\\threading-multi\\\\libxml2-vc100-mt-2_9.lib libs\\\\libxml2-dbg.lib
