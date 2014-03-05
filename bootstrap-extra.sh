@@ -137,11 +137,11 @@ if [ $patchowlcpp -eq 1 ]; then
 	echo "78c78
 <       ind.erase(boost::find(ind, t));
 ---
->       for (unsigned int i = 0; i < ind.size(); ++i) { if (ind[i] == t) { ind.erase(ind.begin() + i); break; } }
+>       ind.erase(std::find(ind.begin(), ind.end(), t));
 107c107
 <       ind.erase(boost::find(ind, t));
 ---
->       for (unsigned int i = 0; i < ind.size(); ++i) { if (ind[i] == t) { ind.erase(ind.begin() + i); break; } }
+>       ind.erase(std::find(ind.begin(), ind.end(), t));
 " | patch $OWLCPPMAINDIR/owlcpp-$OWLCPPV/include/owlcpp/rdf/detail/triple_index.hpp
 fi
 if [ $bootstramlibxml2 -eq 1 ]; then
