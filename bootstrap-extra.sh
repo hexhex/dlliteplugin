@@ -218,10 +218,10 @@ echo "	echo off
 	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\factpp\\\\factpp\\\\msvc-10.0\\\\debug\\\\link-static\\\\libfactpp_kernel-vc100-gd.lib libs\\\\libfactpp_kernel-dbg.lib
 	echo \"   libxml2 libs\"
 	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\libxml2\\\\libxml2\\\\msvc-10.0\\\\release\\\\libxml2-version-$LIBXML2V\\\\link-static\\\\threading-multi\\\\libxml2-vc100-mt-2_9.lib libs\\\\libxml2.lib
-	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\libxml2\\\\libxml2\\\\msvc-10.0\\\\debug\\\\libxml2-version-$LIBXML2V\\\\link-static\\\\threading-multi\\\\libxml2-vc100-mt-2_9.lib libs\\\\libxml2-dbg.lib
+	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\libxml2\\\\libxml2\\\\msvc-10.0\\\\debug\\\\libxml2-version-$LIBXML2V\\\\link-static\\\\threading-multi\\\\libxml2-vc100-mt-gd-2_9.lib libs\\\\libxml2-dbg.lib
 	echo \"   libraptor libs\"
 	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\raptor\\\\raptor\\\\msvc-10.0\\\\release\\\\link-static\\\\raptor-version-$RAPTOR2V\\\\threading-multi\\\\libraptor-vc100-mt-2_0.lib libs\\\\libraptor.lib
-	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\raptor\\\\raptor\\\\msvc-10.0\\\\debug\\\\link-static\\\\raptor-version-$RAPTOR2V\\\\threading-multi\\\\libraptor-vc100-mt-2_0.lib libs\\\\libraptor-dbg.lib
+	copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\raptor\\\\raptor\\\\msvc-10.0\\\\debug\\\\link-static\\\\raptor-version-$RAPTOR2V\\\\threading-multi\\\\libraptor-vc100-mt-gd-2_0.lib libs\\\\libraptor-dbg.lib
 
 	echo \"   owlcpp headers\"
 	mkdir include
