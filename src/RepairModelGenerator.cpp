@@ -214,7 +214,7 @@ RepairModelGenerator::RepairModelGenerator(
     }
 
     // augment input with edb
-    WARNING("perhaps we can pass multiple partially preprocessed input edb's to the external solver and save a lot of processing here")
+    #warning perhaps we can pass multiple partially preprocessed input edb's to the external solver and save a lot of processing here
     postprocInput->add(*factory.ctx.edb);
 
     // remember which facts we must remove
@@ -242,8 +242,9 @@ RepairModelGenerator::RepairModelGenerator(
 
     // compute extensions of domain predicates and add it to the input
     if (factory.ctx.config.getOption("LiberalSafety")){
-      InterpretationConstPtr domPredictaesExtension = computeExtensionOfDomainPredicates(factory.ci, factory.ctx, postprocInput, factory.deidb, factory.deidbInnerEatoms);
-      postprocInput->add(*domPredictaesExtension);
+      InterpretationConstPtr domPredicatesExtension = computeExtensionOfDomainPredicates(factory.ci, factory.ctx, postprocInput, factory.deidb, factory.deidbInnerEatoms);
+      postprocInput->add(*domPredicatesExtension);
+      DBGLOG(DBG,"RMG: after parsing the liberal safety option");
     }
 
     // assign to const member -> this value must stay the same from here on!
@@ -261,14 +262,13 @@ RepairModelGenerator::RepairModelGenerator(
 	{
 		DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidhexground, "HEX grounder time");
 		grounder = GenuineGrounder::getInstance(factory.ctx, program);
-		DBGLOG(DBG,"RMG: before new line");
 //		annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.allEatoms);
 		annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.innerEatoms);
-		DBGLOG(DBG,"RMG: after new line");
 	}
 	solver = GenuineGroundSolver::getInstance(
 		factory.ctx, annotatedGroundProgram,
-		InterpretationConstPtr(),
+		// no interleaved threading because guess and check MG will likely not profit from it
+		false,
 		// do the UFS check for disjunctions only if we don't do
 		// a minimality check in this class;
 		// this will not find unfounded sets due to external sources,
@@ -415,7 +415,7 @@ void RepairModelGenerator::learnSupportSets(){
 //				DBGLOG(DBG, "RMG: evaluating external atom " << RawPrinter::toString(reg,factory.allEatoms[eaIndex]) << " for support set learning");
 				DBGLOG(DBG, "RMG: evaluating external atom " << RawPrinter::toString(reg,factory.innerEatoms[eaIndex]) << " for support set learning");
 				learnSupportSetsForExternalAtom(factory.ctx, eatom, supportSetsOfExternalAtom[eaIndex]);
-				DBGLOG(DBG, "RMG: Number of learnt support sets: "<<supportSetsOfExternalAtom[eaIndex]->getNogoodCount());
+				DBGLOG(DBG, "RMG: number of learnt support sets: "<<supportSetsOfExternalAtom[eaIndex]->getNogoodCount());
 			}
 
 
@@ -443,7 +443,7 @@ void RepairModelGenerator::learnSupportSets(){
 			// go through nogoods for current external atom
 			for (int i = 0; i < s; i++) {
 				const Nogood& ng = supportSetsOfExternalAtom[eaIndex]->getNogood(i);
-				DBGLOG(DBG, "RMG: Checking support set " << ng.getStringRepresentation(reg));
+				DBGLOG(DBG, "RMG: checking support set " << ng.getStringRepresentation(reg));
 
 				// create guard atom that will be used for rules
 				OrdinaryAtom guard(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
@@ -476,7 +476,7 @@ void RepairModelGenerator::learnSupportSets(){
 
 						// restore flags of ID
 						ID idOrig = (id.isOrdinaryGroundAtom() ? reg->ogatoms.getIDByAddress(id.address) : reg->onatoms.getIDByAddress(id.address));
-						DBGLOG(DBG, "RMG: Checking literal " << RawPrinter::toString(reg, idOrig));
+						DBGLOG(DBG, "RMG: checking literal " << RawPrinter::toString(reg, idOrig));
 
 						//keep current ordinary atom of ng in oatom
 						const OrdinaryAtom& oatom = (id.isOrdinaryGroundAtom() ? reg->ogatoms.getByAddress(id.address) : reg->onatoms.getByAddress(id.address));
@@ -489,7 +489,7 @@ void RepairModelGenerator::learnSupportSets(){
 						// current atom is a normal atom aux_p("D",Y)) {
 
 
-						DBGLOG(DBG, "RMG: Literal is a concept");
+						DBGLOG(DBG, "RMG: literal is a concept");
 						//				create rule:
 						//				*	bar_aux_o("C",X):-aux_p("D",Y), aux_o("C",X), n_e_a("Q",O). (neg. repl. of eatom)
 
@@ -542,12 +542,10 @@ void RepairModelGenerator::learnSupportSets(){
 						}
 
 						ID ruleID = reg->storeRule(rule);
-						DBGLOG(DBG, "RMG: RULE: Adding the following rule: " << RawPrinter::toString(reg, ruleID));
+						DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 						program.idb.push_back(ruleID);
 					}
 
-
-					//		*   supp_e_a("Q",O):-aux_p("D",Y), aux_o("C",X),e_a("Q",O), not bar_aux_o("C",X).
 								DBGLOG(DBG,"RMG: RULE:  supp_e_a(Q,O):-aux_p(D,Y), aux_o(C,X),e_a(Q,O), not bar_aux_o(C,X).");
 
 							{
@@ -558,7 +556,13 @@ void RepairModelGenerator::learnSupportSets(){
 //									headat.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.allEatoms[eaIndex]));
 									headat.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.innerEatoms[eaIndex]));
 
+									headat.tuple.push_back(eatom.inputs[0]);
+									headat.tuple.push_back(eatom.inputs[1]);
+									headat.tuple.push_back(eatom.inputs[2]);
+									headat.tuple.push_back(eatom.inputs[3]);
+									headat.tuple.push_back(eatom.inputs[4]);
 									if (cQID!=ID_FAIL){
+
 										headat.tuple.push_back(cQID);
 										headat.tuple.push_back(varoID);
 									}
@@ -571,13 +575,13 @@ void RepairModelGenerator::learnSupportSets(){
 									rule.head.push_back(reg->storeOrdinaryAtom(headat));
 								}
 
-								// aux_p("D",Y)
+								// BODY: aux_p("D",Y)
 								rule.body.push_back(ID::posLiteralFromAtom(idOrig));
 
-								// aux_o("C",X)
+								// BODY: aux_o("C",X)
 								rule.body.push_back(ID::posLiteralFromAtom(guardIDOrig));
 
-								// e_a("Q",O)
+								// BODY: e_a("Q",O)
 								{
 									OrdinaryAtom repl(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
 									repl.tuple.push_back(reg->getAuxiliaryConstantSymbol('r', eatom.predicate));
@@ -586,6 +590,7 @@ void RepairModelGenerator::learnSupportSets(){
 									repl.tuple.push_back(eatom.inputs[2]);
 									repl.tuple.push_back(eatom.inputs[3]);
 									repl.tuple.push_back(eatom.inputs[4]);
+
 									// distinct between concept and role queries
 									if (cQID!=ID_FAIL){
 										repl.tuple.push_back(cQID);
@@ -600,7 +605,7 @@ void RepairModelGenerator::learnSupportSets(){
 									rule.body.push_back(reg->storeOrdinaryAtom(repl));
 								}
 
-								// not bar_aux_o("C",X)
+								// BODY: not bar_aux_o("C",X)
 								{
 									OrdinaryAtom notbarat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
 									notbarat.tuple.push_back(guardbarPredicateID);
@@ -618,12 +623,11 @@ void RepairModelGenerator::learnSupportSets(){
 								}
 
 								ID ruleID = reg->storeRule(rule);
-								DBGLOG(DBG, "RMG: RULE: Adding the following rule: " << RawPrinter::toString(reg, ruleID));
+								DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 								program.idb.push_back(ruleID);
 							}
 
 
-							//     *    :-e_a(Q,O),not supp_e_a(Q,O).
 							DBGLOG(DBG, "RMG: RULE:	:-e_a(Q,O),not supp_e_a(Q,O).");
 							{
 								Rule rule(ID::MAINKIND_RULE | ID::SUBKIND_RULE_CONSTRAINT);
@@ -653,6 +657,11 @@ void RepairModelGenerator::learnSupportSets(){
 
 									//disctinct between concept and role queries
 
+									notsupp.tuple.push_back(eatom.inputs[0]);
+									notsupp.tuple.push_back(eatom.inputs[1]);
+									notsupp.tuple.push_back(eatom.inputs[2]);
+									notsupp.tuple.push_back(eatom.inputs[3]);
+									notsupp.tuple.push_back(eatom.inputs[4]);
 									if (cQID!=ID_FAIL){
 										notsupp.tuple.push_back(cQID);
 										notsupp.tuple.push_back(varoID);
@@ -666,7 +675,7 @@ void RepairModelGenerator::learnSupportSets(){
 									rule.body.push_back(ID::nafLiteralFromAtom(reg->storeOrdinaryAtom(notsupp)));
 								}
 								ID ruleID = reg->storeRule(rule);
-								DBGLOG(DBG, "RMG: RULE: Adding the following rule: " << RawPrinter::toString(reg, ruleID));
+								DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 								program.idb.push_back(ruleID);
 							}
 
@@ -680,7 +689,7 @@ void RepairModelGenerator::learnSupportSets(){
 				if (!foundOrdinaryAtom){
 
 					DBGLOG(DBG, "RMG: There is no ordinary atom in support set");
-					DBGLOG(DBG, "RMG: RULE:	bar_aux_o(C,X):-aux_o(C,X), n_e_a(Q,O). (neg. repl. of eatom)");
+					DBGLOG(DBG, "RMG: RULE:	bar_aux_o(C,X):-aux_o(C,X), n_e_a(Q,O). ");
 
 					// bar_aux_o(C,X):-aux_o(C,X), n_e_a(Q,O)
 					{
@@ -746,6 +755,7 @@ void RepairModelGenerator::learnSupportSets(){
 
 						program.idb.push_back(ruleID);
 
+						DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 					}
 
 
@@ -832,7 +842,7 @@ void RepairModelGenerator::learnSupportSets(){
 							rule.body.push_back(ID::nafLiteralFromAtom(reg->storeOrdinaryAtom(notbarat)));
 						}
 						ID ruleID = reg->storeRule(rule);
-						DBGLOG(DBG, "RMG: RULE: Adding the following rule: " << RawPrinter::toString(reg, ruleID));
+						DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 						program.idb.push_back(ruleID);
 					}
 
@@ -885,7 +895,7 @@ void RepairModelGenerator::learnSupportSets(){
 							rule.body.push_back(ID::nafLiteralFromAtom(reg->storeOrdinaryAtom(notsupp)));
 						}
 						ID ruleID = reg->storeRule(rule);
-						DBGLOG(DBG, "RMG: RULE: Adding the following rule: " << RawPrinter::toString(reg, ruleID));
+						DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 						program.idb.push_back(ruleID);
 					}
 
@@ -901,8 +911,8 @@ void RepairModelGenerator::learnSupportSets(){
 					if (oatom.tuple[0] == eatom.inputs[1]) {
 
 						// it is c+
-						//    create the following rules:
-						DBGLOG(DBG, "RMG::-aux_p(D,Y), n_e_a(Q,O).");
+						//    create rules:
+						DBGLOG(DBG, "RMG: RULE: :-aux_p(D,Y), n_e_a(Q,O).");
 
 						//    *   :-aux_p("D",Y), n_e_a("Q",O). (neg. repl. of eatom)
 					{
@@ -932,7 +942,7 @@ void RepairModelGenerator::learnSupportSets(){
 						}
 
 						ID ruleID = reg->storeRule(rule);
-						DBGLOG(DBG, "RMG: RULE: Adding the following rule: " << RawPrinter::toString(reg, ruleID));
+						DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 						program.idb.push_back(ruleID);
 					}
 
@@ -945,6 +955,12 @@ void RepairModelGenerator::learnSupportSets(){
 								OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
 //								headat.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.allEatoms[eaIndex]));
 								headat.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.innerEatoms[eaIndex]));
+								headat.tuple.push_back(eatom.inputs[0]);
+								headat.tuple.push_back(eatom.inputs[1]);
+								headat.tuple.push_back(eatom.inputs[2]);
+								headat.tuple.push_back(eatom.inputs[3]);
+								headat.tuple.push_back(eatom.inputs[4]);
+
 								if (cQID!=ID_FAIL){
 									headat.tuple.push_back(cQID);
 									headat.tuple.push_back(varoID);
@@ -974,10 +990,12 @@ void RepairModelGenerator::learnSupportSets(){
 									repl.tuple.push_back(varoID1);
 									repl.tuple.push_back(varoID2);
 								}else {assert(false);}
+								rule.body.push_back(ID::posLiteralFromAtom(reg->storeOrdinaryAtom(repl)));
+
 							}
 
 							ID ruleID = reg->storeRule(rule);
-							DBGLOG(DBG, "RMG: RULE: Adding the following rule: " << RawPrinter::toString(reg, ruleID));
+							DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 							program.idb.push_back(ruleID);
 						}
 
@@ -1009,6 +1027,12 @@ void RepairModelGenerator::learnSupportSets(){
 							//	notsupp.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.allEatoms[eaIndex]));
 								notsupp.tuple.push_back(reg->getAuxiliaryConstantSymbol('o', factory.innerEatoms[eaIndex]));
 								// distinct
+								notsupp.tuple.push_back(eatom.inputs[0]);
+								notsupp.tuple.push_back(eatom.inputs[1]);
+								notsupp.tuple.push_back(eatom.inputs[2]);
+								notsupp.tuple.push_back(eatom.inputs[3]);
+								notsupp.tuple.push_back(eatom.inputs[4]);
+
 								if (cQID!=ID_FAIL){
 									notsupp.tuple.push_back(cQID);
 									notsupp.tuple.push_back(varoID);
@@ -1021,7 +1045,7 @@ void RepairModelGenerator::learnSupportSets(){
 								rule.body.push_back(ID::nafLiteralFromAtom(reg->storeOrdinaryAtom(notsupp)));
 							}
 							ID ruleID = reg->storeRule(rule);
-							DBGLOG(DBG, "RMG: RULE: Adding the following rule: " << RawPrinter::toString(reg, ruleID));
+							DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 							program.idb.push_back(ruleID);
 						}
 
@@ -1072,7 +1096,8 @@ void RepairModelGenerator::learnSupportSets(){
 
 		solver = GenuineGroundSolver::getInstance(
 			factory.ctx, annotatedGroundProgram,
-			InterpretationConstPtr(),
+			// no interleaved threading because guess and check MG will likely not profit from it
+			false,
 			// do the UFS check for disjunctions only if we don't do
 			// a minimality check in this class;
 			// this will not find unfounded sets due to external sources,
@@ -1319,10 +1344,10 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate){
 						dneg->setFact(reg->swapExternalAtomAuxiliaryAtom(id).address);
 					}
 					else DBGLOG(DBG,"RMG: guessed false");
-					// the following assertion is not needed, but should be added to make the implementation more rebust
+					// assertion is not needed, but should be added to make the implementation more rebust
 					// (it might help to find programming errors later on)
 				}
-				//assert(reg->isNegativeExternalAtomAuxiliaryAtom(id) && "replacement atom is neither positive nor negative");
+				assert(reg->isNegativeExternalAtomAuxiliaryAtom(id) && "replacement atom is neither positive nor negative");
 			}
 			else //  it is not a replacement atom
 				DBGLOG(DBG,"nonreplacement");

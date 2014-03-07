@@ -487,7 +487,7 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				}
 			}
 		}else{
-			DBGLOG(DBG, "No");
+		//	DBGLOG(DBG, "No");
 		}
 		//DBGLOG(DBG, "Checking if this is description of domain restriction");
 		if (theDLLitePlugin.cmpOwlType(pred, "onProperty")) {
@@ -511,7 +511,7 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}else{
-			DBGLOG(DBG, "No");
+		//	DBGLOG(DBG, "No");
 		}
 
 		//DBGLOG(DBG, "Checking if this is a concept disjointness axiom");
@@ -543,13 +543,13 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}else{
-			DBGLOG(DBG, "No");
+			//DBGLOG(DBG, "No");
 		}
 
 		//DBGLOG(DBG, "Checking if this is a role disjointness axiom");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "propertyDisjointWith") && isOwlConstant(obj))
 		{
-			DBGLOG(DBG, "Yes");
+		//	DBGLOG(DBG, "Yes");
 			DBGLOG(DBG,"Construct facts of the form sub(Subj,Obj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -559,13 +559,13 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}else{
-			DBGLOG(DBG, "No");
+			//DBGLOG(DBG, "No");
 		}
 
 	//	DBGLOG(DBG, "Checking if this is a domain definition");
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "domain") && isOwlConstant(obj))
 		{
-			DBGLOG(DBG, "Yes");
+			//DBGLOG(DBG, "Yes");
 			DBGLOG(DBG,"Construct facts of the form sub(exSubj,Obj)");
 			{
 				OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
@@ -575,40 +575,11 @@ void DLLitePlugin::CachedOntology::computeClassification(ProgramCtx& ctx){
 				edb->setFact(reg->storeOrdinaryAtom(fact).address);
 			}
 		}else{
-			DBGLOG(DBG, "No");
+			//DBGLOG(DBG, "No");
 		}
 	}
 
 	DBGLOG(DBG,"Checking if there are any domain restrictions on properties");
-	/*std::map<std::string,std::string>::iterator p;
-
-	for(std::vector<owlcpp::Triple>::size_type i = 0; i != domainRestr.size(); i++) {
-		owlcpp::Triple const& t = domainRestr[i];
-		std::string subj1 = to_string(t.subj_);
-		DBGLOG(DBG, "subj1 is "<<subj1);
-		std::string obj1 = to_string(t.obj_);
-		DBGLOG(DBG, "obj1 is "<<obj1);
-		for(p = onProp.begin(); p != onProp.end(); p++) {
-			std::string subj2 = p->first;
-			DBGLOG(DBG, "subj2 is "<<subj2);
-			std::string obj2 = p->second;
-			DBGLOG(DBG, "obj2 is "<<obj2);
-			if (obj1==subj2) {
-					DBGLOG(DBG,"Yes");
-					DBGLOG(DBG,"Construct facts of the form sub(Subj,exObj)");
-					{
-						OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
-						fact.tuple.push_back(theDLLitePlugin.subID);
-						fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj1)));
-						fact.tuple.push_back(theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj2))));
-						edb->setFact(reg->storeOrdinaryAtom(fact).address);
-					}
-			DBGLOG(DBG,"Constructed fact: sub("<<theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj1))<<","<<theDLLitePlugin.dlEx(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj2))));
-			}
-			else	DBGLOG(DBG,"No");
-
-		}
-	}*/
 
 
 	std::map<std::string,std::string>::iterator p1;
@@ -1064,7 +1035,7 @@ void DLLitePlugin::prepareIDs(){
  
 // Check whether custom model generator is enabled 
 bool DLLitePlugin::providesCustomModelGeneratorFactory(ProgramCtx& ctx) const{
-DBGLOG(DBG, "*** Before starting repair model generator");
+DBGLOG(DBG, "Before starting repair model generator");
 	return ctx.getPluginData<DLLitePlugin>().repair;
 }
 
@@ -1081,7 +1052,6 @@ IMPLEMENT_PLUGINABIVERSIONFUNCTION
 
 // return plain C type s.t. all compilers and linkers will like this code
 extern "C"
-DLVHEX_PLUGINEXPORT
 void * PLUGINIMPORTFUNCTION()
 {
 	return reinterpret_cast<void*>(& dlvhex::dllite::theDLLitePlugin);
