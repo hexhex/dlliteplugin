@@ -268,7 +268,7 @@ RepairModelGenerator::RepairModelGenerator(
 	solver = GenuineGroundSolver::getInstance(
 		factory.ctx, annotatedGroundProgram,
 		// no interleaved threading because guess and check MG will likely not profit from it
-		false,
+		InterpretationConstPtr(),
 		// do the UFS check for disjunctions only if we don't do
 		// a minimality check in this class;
 		// this will not find unfounded sets due to external sources,
@@ -1097,7 +1097,7 @@ void RepairModelGenerator::learnSupportSets(){
 		solver = GenuineGroundSolver::getInstance(
 			factory.ctx, annotatedGroundProgram,
 			// no interleaved threading because guess and check MG will likely not profit from it
-			false,
+			InterpretationConstPtr(),
 			// do the UFS check for disjunctions only if we don't do
 			// a minimality check in this class;
 			// this will not find unfounded sets due to external sources,

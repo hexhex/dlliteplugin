@@ -13,7 +13,7 @@ fi
 			in=`printf "%03d" ${inst}`
 
 			# create ontology instances
-			./generate.sh ${concprop} > "instances/inst_prop_${rp}_inst_${in}.hex"
+			./generate_noguess.sh 70 ${concprop} > "instances/inst_prop_${rp}_inst_${in}.hex"
 			cp ontology.owl instances/inst_prop_${rp}_inst_${in}.owl
 
 			# instantiate the program
