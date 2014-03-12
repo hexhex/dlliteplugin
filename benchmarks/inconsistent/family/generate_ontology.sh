@@ -2,7 +2,7 @@
 
 cat ontology_header.owl # ontology_header.owl must contain the static part of the owl file which should come before the Abox assertions
 
-
+size=$1
 # add 50 children
 for (( i=1; i <= 50*$1; i++ ))
 do
@@ -31,7 +31,7 @@ done
 
 
 
-for (( i=41; i<=52*$1; i++))
+for (( i=41*$1; i<=52*$1; i++))
 do      
 
                 echo "<owl:Thing rdf:about=\"#p$i\"><rdf:type rdf:resource=\"#Male\"/></owl:Thing>"
@@ -54,7 +54,7 @@ do
                         echo "<owl:Thing rdf:about=\"#c$i\"><hasParent rdf:resource=\"#p$i\"/></owl:Thing>"     
                         echo "<owl:Thing rdf:about=\"#c$i\"><hasParent rdf:resource=\"#p$f\"/></owl:Thing>"             
                 fi      
-        elif [ $i -ge 29 ] && [ $i -le 43	 ]; then
+        elif [[ $i -ge 29*$1 ]] && [[ $i -le 43*$1 ]]; then
                 rem=$(( $(($i-28*$1)) % 2 ))       
                 if [[ $rem -eq 0 ]]; then
                         m=$(($i-27*$1))
