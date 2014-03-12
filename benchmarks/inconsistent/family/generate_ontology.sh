@@ -2,6 +2,7 @@
 
 cat ontology_header.owl # ontology_header.owl must contain the static part of the owl file which should come before the Abox assertions
 
+
 # add 50 children
 for (( i=1; i <= 50*$1; i++ ))
 do
