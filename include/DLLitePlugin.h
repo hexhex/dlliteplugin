@@ -180,7 +180,7 @@ protected:
 		return (reg->terms.getByID(id).getUnquotedString()[0] == '-');
 	}
 	
-	// creates for concept "C" the concept "exC", removes the prefix "ex", (the same for roles) resp. checks if the concept is of such a form
+	// creates for role "R" the concept "exR", removes the prefix "ex", if the concept is of such a form
 	inline ID dlEx(ID id){
 		return storeQuotedConstantTerm("Ex:" + reg->terms.getByID(id).getUnquotedString());
 	}
@@ -190,6 +190,20 @@ protected:
 		return storeQuotedConstantTerm(reg->terms.getByID(id).getUnquotedString().substr(3));
 	}
 	
+	inline bool isDlInv(ID id){
+		return (reg->terms.getByID(id).getUnquotedString().substr(0, 4).compare("Inv:") == 0);
+	}
+	// creates for concept "C" the concept "exC", removes the prefix "ex", (the same for roles) resp. checks if the concept is of such a form
+	inline ID dlInv(ID id){
+		return storeQuotedConstantTerm("Inv:" + reg->terms.getByID(id).getUnquotedString());
+	}
+
+	inline ID dlRemoveInv(ID id){
+		assert(isDlInv(id) && "tried to translate invC to C, but given term is not of form invC");
+		return storeQuotedConstantTerm(reg->terms.getByID(id).getUnquotedString().substr(4));
+	}
+
+
 	inline ID storeQuotedConstantTerm(std::string str){
 #ifndef NDEBUG
 		if (str[0] == '\"'){

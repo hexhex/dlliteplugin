@@ -926,6 +926,12 @@ void DLLitePlugin::processOptions(std::list<const char*>& pluginOptions, Program
 		}
 	}
 
+/*	if (ctx.config.getOption("SupportSets")) {
+		if (ctx.getPluginData<DLLitePlugin>().rewrite)||(ctx.getPluginData<DLLitePlugin>().repair = true) {
+			return false;
+		}
+	}
+*/
 	for(std::vector<std::list<const char*>::iterator>::const_iterator it = found.begin(); it != found.end(); ++it){
 		pluginOptions.erase(*it);
 	}

@@ -78,10 +78,10 @@ RepairModelGeneratorFactory::RepairModelGeneratorFactory(
   idb.insert(idb.end(), ci.innerConstraints.begin(), ci.innerConstraints.end());
 
   // create program for domain exploration
-  if (ctx.config.getOption("LiberalSafety")){
+ if (ctx.config.getOption("LiberalSafety")){
     // add domain predicates for all external atoms which are necessary to establish liberal domain-expansion safety
     // and extract the domain-exploration program from the IDB
-    addDomainPredicatesAndCreateDomainExplorationProgram(ci, ctx, idb, deidb, deidbInnerEatoms);
+   addDomainPredicatesAndCreateDomainExplorationProgram(ci, ctx, idb, deidb, deidbInnerEatoms);
   }
 
   innerEatoms = ci.innerEatoms;
@@ -241,11 +241,16 @@ RepairModelGenerator::RepairModelGenerator(
     }*/
 
     // compute extensions of domain predicates and add it to the input
-    if (factory.ctx.config.getOption("LiberalSafety")){
-      InterpretationConstPtr domPredicatesExtension = computeExtensionOfDomainPredicates(factory.ci, factory.ctx, postprocInput, factory.deidb, factory.deidbInnerEatoms);
-      postprocInput->add(*domPredicatesExtension);
-      DBGLOG(DBG,"RMG: after parsing the liberal safety option");
-    }
+
+
+
+
+
+ if (factory.ctx.config.getOption("LiberalSafety")) {
+     InterpretationConstPtr domPredicatesExtension = computeExtensionOfDomainPredicates(factory.ci, factory.ctx, postprocInput, factory.deidb, factory.deidbInnerEatoms);
+     postprocInput->add(*domPredicatesExtension);
+     DBGLOG(DBG,"RMG: after parsing the liberal safety option");
+   }
 
     // assign to const member -> this value must stay the same from here on!
     postprocessedInput = postprocInput;
@@ -1048,21 +1053,10 @@ void RepairModelGenerator::learnSupportSets(){
 							DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 							program.idb.push_back(ruleID);
 						}
-
-
-
-
-
 					}
-
-
 				}
-
-
 			}
-
 		}
-
 	}
 		
 
@@ -1086,7 +1080,24 @@ void RepairModelGenerator::learnSupportSets(){
 			edb->setFact(reg->storeOrdinaryAtom(roleAssertion).address);
 		}
 		DBGLOG(DBG, "RMG: Program edb after adding ABox "<<*edb);
+	//	DBGLOG(DBG, "RMG: program edb: ");
 
+
+		bm::bvector<>::enumerator enm;
+		bm::bvector<>::enumerator enm_end;
+		enm = edb->getStorage().first();
+		enm_end = edb->getStorage().end();
+
+		/*while (enm < enm_end){
+			ID id = reg->ogatoms.getIDByAddress(*enm);
+			DBGLOG(DBG,"RMG: "<<RawPrinter::toString(reg,id)<<".");
+			enm++;
+		}*/
+
+		DBGLOG(DBG, "RMG: program idb: ");
+		for (unsigned ruleIndex=0; ruleIndex<program.idb.size(); ruleIndex++){
+			DBGLOG(DBG, "RMG: "<<RawPrinter::toString(reg,program.idb[ruleIndex]));
+		}
 
 		// ground the program and evaluate it
 		// get the results, filter them out with respect to only relevant predicates (all apart from aux_o, replacement atoms)
