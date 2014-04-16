@@ -47,6 +47,10 @@
 #include "owlcpp/io/catalog.hpp"
 #include "owlcpp/terms/node_tags_owl.hpp"
 #include "factpp/Kernel.hpp"
+#include <algorithm>
+#include <iostream>
+#include <string>
+using namespace std;
 
 DLVHEX_NAMESPACE_BEGIN
 
@@ -119,16 +123,46 @@ public:
 		}
 		
 		inline std::string removeNamespaceFromString(std::string str) const{
-			if (!(str.substr(0, ontologyNamespace.length()) == ontologyNamespace || (str[0] == '-' && str.substr(1, ontologyNamespace.length()) == ontologyNamespace))){
+			if (!(str.substr(0, ontologyNamespace.length()) == ontologyNamespace || (str[0] == '-' && str.substr(1, ontologyNamespace.length()) == ontologyNamespace)||(str.substr(0, ontologyNamespace.length()-1) == ontologyNamespace.substr(0,ontologyNamespace.length()-1)))){
+				DBGLOG(DBG,"String " << str <<" does not contain a namespace" << ontologyNamespace);
 				DBGLOG(WARNING, "Constant \"" + str + "\" appears to be a constant of the ontology, but does not contain its namespace.");
 				return str;
 			}
 			if (str[0] == '-') return '-' + str.substr(ontologyNamespace.length() + 1 + 1); // +1 because of '-', +1 because of '#'
-			return str.substr(ontologyNamespace.length() + 1); // +1 because of '#'
+			else if (str[0]=='#')
+				return str.substr(ontologyNamespace.length() + 1); // +1 because of '#'
+			else return str.substr(ontologyNamespace.length());
 		}
 
 
-		CachedOntology(RegistryPtr reg);
+		inline bool isDot(char c) const{
+			switch(c) {
+			  case '.':
+			    return true;
+			  default:
+				return false;
+			}
+		}
+
+
+	/*inline std::string replaceChar(std::string str, char ch1, char ch2) {
+ 	 for (int i = 0; i < str.length(); ++i) {
+    		if (str[i] == ch1) str[i] = ch2;
+  	}
+	return str;
+	}*/
+
+	inline std::string removeUrlPartsFromString(std::string str) const{
+	 std::string s="";
+		if (str.substr(0, 11).compare("http://www.") == 0) {
+			s=str.substr(12,str.length());
+		}
+		else s=str;
+		replace(s.begin(), s.end(), '.','_');
+		return s;
+	}
+
+	CachedOntology(RegistryPtr reg);
 		virtual ~CachedOntology();
 
 		// loads the ontology

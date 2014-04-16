@@ -211,7 +211,9 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && isOwlConstant(obj)) {
 			//DBGLOG(DBG, "Yes");
 			ID conceptID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj));
+			DBGLOG(DBG, "NS: Subject is: " << subj);
 			ID individualID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj));
+			DBGLOG(DBG, "NS: After storage: " << subj);			
 			OrdinaryAtom guard = theDLLitePlugin.getNewGuardAtom(true /* ground! */ );
 			guard.tuple.push_back(conceptID);
 			guard.tuple.push_back(individualID);
@@ -224,8 +226,8 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 #ifndef NDEBUG
 			std::string individualStr = RawPrinter::toString(reg, individualID);
 			std::string conceptAssertionStr = theDLLitePlugin.printGuardAtom(guardAtomID);
-			DBGLOG(DBG, "Found individual: " << individualStr);
-			DBGLOG(DBG, "Found concept assertion: " << conceptAssertionStr);
+			DBGLOG(DBG, "NS: Found individual: " << individualStr);
+			DBGLOG(DBG, "NS: Found concept assertion: " << conceptAssertionStr);
 #endif
 			individuals->setFact(individualID.address);
 		}else{
@@ -259,7 +261,7 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 
 		// individual definition
 		//DBGLOG(DBG, "Checking if this is an individual definition");
-		if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(obj, "Thing") && theDLLitePlugin.cmpOwlType(pred, "type")) {
+		if (isOwlConstant(subj) && (theDLLitePlugin.cmpOwlType(obj, "Thing")||theDLLitePlugin.cmpOwlType(obj, "NamedIndividual")) && theDLLitePlugin.cmpOwlType(pred, "type"))  {
 		//	DBGLOG(DBG, "Yes");
 			individuals->setFact(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)).address);
 		}else{

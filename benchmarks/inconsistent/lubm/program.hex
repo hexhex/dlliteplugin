@@ -1,7 +1,10 @@
-domain("ta1").
-course("c1").
+ 
+% By default all teaching assistant are students
+stud(X):-not &cDL[OWLONTOLOGY,a,b,c,d,"-Student"](X), &cDL[OWLONTOLOGY,a,b,c,d,"TeachingAssistant"](X).
 
+% Teaching assistants of a certain course can not take exam in this course
+:-&rDL[OWLONTOLOGY,pstud,b,c,d,"teachingAssistantOf"](X,Y),takesExam(X,Y).
 
-ta(X,Y):-&rDL["ontology.owl",pcd,b,c,d,"teachingAssistantOfC"](X,Y), course(Y), domain(X).
+% Update information
+pstud("Student",X):-stud(X).
 
-pcd("Person",X):-domain(X).

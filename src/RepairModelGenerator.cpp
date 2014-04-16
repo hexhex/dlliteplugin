@@ -1063,7 +1063,7 @@ void RepairModelGenerator::learnSupportSets(){
 		DBGLOG(DBG, "RMG: Adding Abox");
 		InterpretationPtr edb(new Interpretation(reg));
 		edb->add(*program.edb);
-		DBGLOG(DBG, "RMG: Program edb before adding ABox "<<*edb);
+		DBGLOG(DBG, " Program edb before adding ABox "<<*edb);
 		program.edb = edb;
 		DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(factory.ctx, reg->storeConstantTerm(factory.ctx.getPluginData<DLLitePlugin>().repairOntology));
 
@@ -1102,9 +1102,10 @@ void RepairModelGenerator::learnSupportSets(){
 		// ground the program and evaluate it
 		// get the results, filter them out with respect to only relevant predicates (all apart from aux_o, replacement atoms)
 		grounder = GenuineGrounder::getInstance(factory.ctx, program);
+		DBGLOG(DBG, "RMG: after grounding");
 	//	annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.allEatoms);
 		annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.innerEatoms);
-
+		DBGLOG(DBG, "RMG: annotated ground program is constructed");
 		solver = GenuineGroundSolver::getInstance(
 			factory.ctx, annotatedGroundProgram,
 			// no interleaved threading because guess and check MG will likely not profit from it
@@ -1114,8 +1115,9 @@ void RepairModelGenerator::learnSupportSets(){
 			// this will not find unfounded sets due to external sources,
 			// but at least unfounded sets due to disjunctions
 			!factory.ctx.config.getOption("FLPCheck") && !factory.ctx.config.getOption("UFSCheck"));
+		DBGLOG(DBG, "RMG: after calling the solver");
 		nogoodGrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), learnedEANogoods, learnedEANogoods, annotatedGroundProgram));
-
+		DBGLOG(DBG, "RMG: after creating a nogood grounder");
 
 
 #if 0		// ground the support sets exhaustively
