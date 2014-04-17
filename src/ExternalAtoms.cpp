@@ -1177,7 +1177,7 @@ void RDLAtom::retrieve(const Query& query, Answer& answer,
 	TDLObjectRoleExpression* factppRole =
 			ontology->kernel->getExpressionManager()->ObjectRole(
 					ontology->addNamespaceToString(role));
-
+	DBGLOG(DBG, "Query is:" <<&factppRole);
 	DBGLOG(DBG, "Answering role query");
 	InterpretationPtr intr = ontology->getAllIndividuals(query);
 
@@ -1192,10 +1192,12 @@ void RDLAtom::retrieve(const Query& query, Answer& answer,
 				"Querying individuals related to " << RawPrinter::toString(reg, individual));
 		std::vector<const TNamedEntry*> relatedIndividuals;
 		try {
+			DBGLOG(DBG, "Entered try block"<< ontology->reg->terms.getByID(individual).getUnquotedString());
 			ontology->kernel->getRoleFillers(
 					ontology->kernel->getExpressionManager()->Individual(
 							ontology->addNamespaceToString(
 									reg->terms.getByID(individual).getUnquotedString())),
+				//			ontology->reg->terms.getByID(individual).getUnquotedString()),
 					factppRole, relatedIndividuals);
 		} catch (...) {
 			throw PluginError("DLLite reasoner failed during role query");

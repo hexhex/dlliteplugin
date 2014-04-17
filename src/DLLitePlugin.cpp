@@ -194,7 +194,7 @@ void DLLitePlugin::CachedOntology::analyzeTboxAndAbox(){
 
 		// role definition
 		//DBGLOG(DBG, "Checking if this is a role definition");
-		if (isOwlConstant(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "ObjectProperty")) {
+		if (isOwlConstant(to_string(t.subj_, store)) && theDLLitePlugin.cmpOwlType(pred, "type") && (theDLLitePlugin.cmpOwlType(obj, "ObjectProperty")||theDLLitePlugin.cmpOwlType(obj, "AnnotationProperty"))) {
 			//DBGLOG(DBG, "Yes");
 			ID roleID = theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj));
 #ifndef NDEBUG
