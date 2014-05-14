@@ -120,6 +120,7 @@ void DLLitePlugin::CachedOntology::load(ID ontologyName, bool includeAbox){
 		DBGLOG(DBG, "Submitting ontology " << (includeAbox ? "with" : "without") << " Abox to reasoning kernel");
 		if (includeAbox){
 			submit(store, *kernel, true);
+			DBGLOG(DBG, "After submition");
 		}else{
 			// submit all triples separately, but skip Abox assertions
 			owlcpp::logic::factpp::Adaptor_triple at(store, *kernel, true);
@@ -917,6 +918,10 @@ void DLLitePlugin::processOptions(std::list<const char*>& pluginOptions, Program
 			ctx.getPluginData<DLLitePlugin>().repairOntology = option.substr(9);
 			found.push_back(it);
 		}
+		if (option.find("--el") !=std::string::npos) {
+			ctx.getPluginData<DLLitePlugin>().el = true;
+			found.push_back(it);
+		}
 		if (option.find("--ontology=") != std::string::npos){
 			ctx.getPluginData<DLLitePlugin>().rewrite = true;
 			ctx.getPluginData<DLLitePlugin>().ontology = option.substr(11);
@@ -974,6 +979,7 @@ PluginRewriterPtr DLLitePlugin::createRewriter(ProgramCtx& ctx){
 
 void DLLitePlugin::printUsage(std::ostream& o) const{
 	o << "     --repair=[ontology name]    Activates the repair model generator" << std::endl;
+	o << "     --el                        Specifies that ontology expressivity is EL" << std::endl;
 	o << "     --ontology=[ontology name]  Specifies the ontology used by DL-atoms" << std::endl;
 	o << "     --optimize                  Rewrites default-negated consistency checking DL-atoms" << std::endl
 	  << "                                 to inconsistency checks (makes them monotonic)" << std::endl;

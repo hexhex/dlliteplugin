@@ -346,6 +346,9 @@ void DLPluginAtom::learnSupportSets(const Query& query,
 
 	SimpleNogoodContainerPtr potentialSupportSets = SimpleNogoodContainerPtr(
 			new SimpleNogoodContainer());
+
+
+	if (ctx.getPluginData<DLLitePlugin>().el) {DBGLOG(DBG, "EL: Learning support sets");}
 // make sure that the ontology is in the cache and retrieve its classification
 	DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(
 			ctx, query.input[0]);
@@ -375,7 +378,6 @@ void DLPluginAtom::learnSupportSets(const Query& query,
 	else if (query.eatom->predicate == rdlID) {
 		rQID = query.eatom->inputs[5];
 		DBGLOG(DBG,"LSS: query is a role");
-
 	}
 
 	else {
@@ -403,8 +405,7 @@ void DLPluginAtom::learnSupportSets(const Query& query,
 		assert(false);
 	}
 
-	ID outlit = NogoodContainer::createLiteral(
-			ExternalLearningHelper::getOutputAtom(query, outlist, false));
+	ID outlit = NogoodContainer::createLiteral(ExternalLearningHelper::getOutputAtom(query, outlist, false));
 #ifndef NDEBUG
 	std::string outlitStr = RawPrinter::toString(reg, outlit);
 	DBGLOG(DBG, "LSS: Output atom is " << outlitStr);

@@ -156,12 +156,13 @@ class CtxData : public PluginData
 public:
 std::vector<DLLitePlugin::CachedOntologyPtr> ontologies;
 bool repair;	// enable RepairModelGenerator?
+bool el; 		// is ontology in EL format?
 bool rewrite;	// automatically rewrite DL-atoms?
 bool optimize;	// automatically optimize rules with DL-atoms?
 std::string repairOntology;	// name of the ontology to repair (if repair=true)
 std::string ontology;	// name of the ontology for rewriting
 std::vector<DLExpression> dlexpressions;	// cache for DL-expressions
-CtxData() : repair(false), rewrite(false), optimize(false) {};
+CtxData() : repair(false), el(false), rewrite(false), optimize(false) {};
 virtual ~CtxData() {};
 };
 

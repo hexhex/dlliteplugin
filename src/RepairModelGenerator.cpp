@@ -289,7 +289,7 @@ RepairModelGenerator::RepairModelGenerator(
 
    // setHeuristics();
  DBGLOG(DBG,"RMG: before calling learnSupportSets method");
-    learnSupportSets();
+  learnSupportSets();
 // DBGLOG(DBG,"RMG: learnSupportSets method is finished, "<<  supportSets->getNogoodCount() << " support sets were learnt");
 
     // initialize UFS checker
