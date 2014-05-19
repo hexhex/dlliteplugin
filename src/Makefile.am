@@ -25,9 +25,13 @@ libdlvhexplugin_dllite_la_LIBADD = $(EXTSOLVER_LIBADD)
 
 libdlvhexplugin-dllite-static.la: $(libdlvhexplugin_dllite_la_OBJECTS)
 	$(CXXLINK) -avoid-version -module -rpath $(plugindir) $(libdlvhexplugin_dllite_la_OBJECTS)
+all-local:	
+	cp -r ../requiem $(DESTDIR)$(plugindir)
 
 install-static: libdlvhexplugin-dllite-static.la
 	$(LIBTOOL) --mode=install $(INSTALL) -s libdlvhexplugin-dllite-static.la $(DESTDIR)$(plugindir)/libdlvhexplugin-dllite-static.la
 
 uninstall-static:
 	$(LIBTOOL) --mode=uninstall rm -f $(DESTDIR)$(plugindir)/libdlvhexplugin-dllite-static.la
+clean-local:
+	rm -r $(DESTDIR)$(plugindir)/requiem

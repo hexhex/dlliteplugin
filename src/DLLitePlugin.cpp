@@ -119,8 +119,7 @@ void DLLitePlugin::CachedOntology::load(ID ontologyName, bool includeAbox){
 
 		DBGLOG(DBG, "Submitting ontology " << (includeAbox ? "with" : "without") << " Abox to reasoning kernel");
 		if (includeAbox){
-			submit(store, *kernel, true);
-			DBGLOG(DBG, "After submition");
+				submit(store, *kernel, true);
 		}else{
 			// submit all triples separately, but skip Abox assertions
 			owlcpp::logic::factpp::Adaptor_triple at(store, *kernel, true);

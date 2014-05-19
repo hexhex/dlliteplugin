@@ -120,6 +120,9 @@ if test "x$plugindir" == "x"; then
 	AC_MSG_ERROR([Cannot determine nonempty value for plugindir!])
 fi
 
+# new line for the plugin directory
+CPPFLAGS="$CPPFLAGS -DPLUGIN_DIR='\"$plugindir\"'"
+
 #
 # all needed makefiles
 #
