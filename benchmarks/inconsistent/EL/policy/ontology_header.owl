@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY policy "http://www.semanticweb.org/ontologies/2014/4/policy.owl#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/ontologies/2014/4/policy.owl#"
+     xml:base="http://www.semanticweb.org/ontologies/2014/4/policy.owl"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:policy="http://www.semanticweb.org/ontologies/2014/4/policy.owl#">
+    <owl:Ontology rdf:about=""/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/4/policy.owl#hasAction -->
+
+    <owl:ObjectProperty rdf:about="#hasAction"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/4/policy.owl#hasSubject -->
+
+    <owl:ObjectProperty rdf:about="#hasSubject"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/4/policy.owl#hasTarget -->
+
+    <owl:ObjectProperty rdf:about="#hasTarget"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/4/policy.owl#Action -->
+
+    <owl:Class rdf:about="#Action"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/4/policy.owl#Blacklisted -->
+
+    <owl:Class rdf:about="#Blacklisted">
+        <rdfs:subClassOf rdf:resource="#Staff"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/4/policy.owl#BlacklistedStaffRequest -->
+
+    <owl:Class rdf:about="#BlacklistedStaffRequest">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#StaffRequest"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#hasSubject"/>
+                        <owl:someValuesFrom rdf:resource="#Blacklisted"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/4/policy.owl#Project -->
+
+    <owl:Class rdf:about="#Project"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/4/policy.owl#Staff -->
+
+    <owl:Class rdf:about="#Staff"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/4/policy.owl#StaffRequest -->
+
+    <owl:Class rdf:about="#StaffRequest">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#hasAction"/>
+                        <owl:someValuesFrom rdf:resource="#Action"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#hasSubject"/>
+                        <owl:someValuesFrom rdf:resource="#Staff"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#hasTarget"/>
+                        <owl:someValuesFrom rdf:resource="#Project"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
