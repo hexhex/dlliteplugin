@@ -448,7 +448,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 			//	std::string call = "java -jar /home/dasha/Documents/dlliteplugin/requiem/dist/requiem-cli.jar \"Q(?0)  <-  "+std::string(querystr)+param+"\" "+opath+" F";
 				std::string call = "java -jar "+path+" \"Q(?0)  <-  "+std::string(querystr)+param+"\" "+opath+" F";
 
-				DBGLOG(DBG, "EL: sending call to Requim " << call);
+				DBGLOG(WARNING, "EL: sending call to Requim " << call);
 
 
 				if(!(in = popen(call.c_str(), "r"))) {
