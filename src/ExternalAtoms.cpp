@@ -442,7 +442,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 			FILE *in;
 			char buff[512];
 			std::string param = (cQID != ID_FAIL) ? std::string("(?0)") : std::string("(?0,?1)");
-			std::string path = std::string(PLUGIN_DIR)+std::string("/requiem/dist/requiem/dist/requiem-cli.jar");
+			std::string path = std::string(PLUGIN_DIR)+std::string("/requiem/dist/requiem-cli.jar");
 			DBGLOG(DBG, "EL: the path is: " <<path);
 			if (cQID != ID_FAIL) {
 			//	std::string call = "java -jar /home/dasha/Documents/dlliteplugin/requiem/dist/requiem-cli.jar \"Q(?0)  <-  "+std::string(querystr)+param+"\" "+opath+" F";
@@ -455,7 +455,9 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 				   assert(false&&"call to requiem failed");
 				}
 
-				while(fgets(buff, sizeof(buff), in)!=NULL) {
+
+				while((fgets(buff, sizeof(buff), in)!=NULL)) {
+
 					DBGLOG(DBG, "EL: got query rewriting from Requiem " << buff);
 					std::vector<std::string> strs;
 					boost::split(strs, buff, boost::is_any_of("\t "), boost::token_compress_on);
@@ -1220,17 +1222,15 @@ void DLPluginAtom::optimizeSupportSets(SimpleNogoodContainerPtr initial,
 		NogoodContainerPtr final) {
 
 	DBGLOG(DBG, "EL: LSSO: Filter out irrelevant ones:");
-	DBGLOG(DBG, "LSSO: Abox predicates are:");
+	DBGLOG(DBG, "EL: LSSO: Abox predicates are:");
 	std::vector<ID> abp;
 	RegistryPtr reg = getRegistry();
 	if (ctx.getPluginData<DLLitePlugin>().repair) {
-		abp =
-				theDLLitePlugin.prepareOntology(ctx,
+		abp = theDLLitePlugin.prepareOntology(ctx,
 						reg->storeConstantTerm(
 								ctx.getPluginData<DLLitePlugin>().repairOntology))->AboxPredicates;
 	} else if (ctx.getPluginData<DLLitePlugin>().rewrite) {
-		abp =
-				theDLLitePlugin.prepareOntology(ctx,
+		abp = theDLLitePlugin.prepareOntology(ctx,
 						reg->storeConstantTerm(
 								ctx.getPluginData<DLLitePlugin>().ontology))->AboxPredicates;
 	}
@@ -1238,9 +1238,9 @@ void DLPluginAtom::optimizeSupportSets(SimpleNogoodContainerPtr initial,
 		DBGLOG(DBG, RawPrinter::toString(reg,id)<<" with "<< id);
 	}
 
-	DBGLOG(DBG, "LSSO: Eliminate unneccessary nonground support sets ");
+	DBGLOG(DBG, "EL: LSSO: Eliminate unneccessary nonground support sets ");
 	int s = initial->getNogoodCount();
-	DBGLOG(DBG, "LSSO: Inintial number of nonground support sets:"<<s);
+	DBGLOG(DBG, "EL: LSSO: Inintial number of nonground support sets:"<<s);
 	int n = 0;
 	if (ctx.getPluginData<DLLitePlugin>().el) {
 		for (int i = 0; i < s; i++) {
@@ -1343,7 +1343,7 @@ CDLAtom::CDLAtom(ProgramCtx& ctx) :
 }
 
 // called from the core
-void CDLAtom::retrieve(const Query& query, Answer& answer,
+	void CDLAtom::retrieve(const Query& query, Answer& answer,
 		NogoodContainerPtr nogoods) {
 
 	DBGLOG(DBG, "CDLAtom::retrieve");

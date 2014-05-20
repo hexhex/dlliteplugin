@@ -46,12 +46,13 @@
 #include "dlvhex2/Printhelpers.h"
 #include "dlvhex2/Logger.h"
 #include "dlvhex2/ExternalLearningHelper.h"
-
+#include <sstream>
 #include <iostream>
 #include <string>
 #include <algorithm>
 #include <map>
 
+#include <boost/lexical_cast.hpp>
 #include "boost/program_options.hpp"
 #include "boost/range.hpp"
 #include "boost/foreach.hpp"
@@ -920,6 +921,51 @@ void DLLitePlugin::processOptions(std::list<const char*>& pluginOptions, Program
 		if (option.find("--el") !=std::string::npos) {
 			ctx.getPluginData<DLLitePlugin>().el = true;
 			found.push_back(it);
+
+
+
+		}
+		if (option.find("--supsize=") !=std::string::npos) {
+						std::string s = option.substr(10);
+					       ctx.getPluginData<DLLitePlugin>().incomplete=true;
+
+						try
+						    {
+						       int i = boost::lexical_cast<int>(s); //i == 123
+						       ctx.getPluginData<DLLitePlugin>().supsize=i;
+						    }
+						    catch(const boost::bad_lexical_cast&)
+						    {
+								assert(false && "Specified size of support sets is not a number");
+
+						    }
+
+
+					/*	istringstream buffer(s);
+						int a;
+						buffer >> a;
+						ctx.getPluginData<DLLitePlugin>().supsize=a;*/
+						found.push_back(it);
+				}
+
+		if (option.find("--supnumber=") !=std::string::npos) {
+			std::string s = option.substr(12);
+		       ctx.getPluginData<DLLitePlugin>().incomplete=true;
+		       DBGLOG(DBG, "supnumber block");
+			try
+				{
+				  int i = boost::lexical_cast<int>(s); //i == 123
+				  ctx.getPluginData<DLLitePlugin>().supnumber=i;
+				  DBGLOG(DBG, "supnumber is "<< i);
+
+				}
+			catch(const boost::bad_lexical_cast&)
+			   {
+					assert(false && "Specified number of support sets is not a number");
+
+			   }
+			found.push_back(it);
+
 		}
 		if (option.find("--ontology=") != std::string::npos){
 			ctx.getPluginData<DLLitePlugin>().rewrite = true;
@@ -979,6 +1025,8 @@ PluginRewriterPtr DLLitePlugin::createRewriter(ProgramCtx& ctx){
 void DLLitePlugin::printUsage(std::ostream& o) const{
 	o << "     --repair=[ontology name]    Activates the repair model generator" << std::endl;
 	o << "     --el                        Specifies that ontology expressivity is EL" << std::endl;
+	o << "     --supsize=[integer]         Specifies maximal size of support sets" << std::endl;
+	o << "     --supnumber=[integer]       Specifies maximal number of support sets per DL-atom" << std::endl;
 	o << "     --ontology=[ontology name]  Specifies the ontology used by DL-atoms" << std::endl;
 	o << "     --optimize                  Rewrites default-negated consistency checking DL-atoms" << std::endl
 	  << "                                 to inconsistency checks (makes them monotonic)" << std::endl;

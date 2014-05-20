@@ -169,6 +169,15 @@ protected:
 
    bool repairCheck(InterpretationConstPtr modelCandidate);
 
+   /**
+    * Peforms
+    * Depending on the eaVerificationMode, the compatibility is either directly checked in this function,
+    *   of previously recorded verfication results are used to compute the return value.
+    */
+
+   bool postCheck(InterpretationConstPtr modelCandidate);
+
+
   /**
    * Checks if a compatible set is a model, i.e., it does the FLP check.
    * The details depend on the selected semantics (well-justified FLP or FLP) and the selected algorithm (explicit or ufs-based)
