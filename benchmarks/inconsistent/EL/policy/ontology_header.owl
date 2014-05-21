@@ -72,25 +72,7 @@
     <!-- http://www.semanticweb.org/ontologies/2014/4/policy.owl#Blacklisted -->
 
     <owl:Class rdf:about="#Blacklisted">
-        <rdfs:subClassOf rdf:resource="#Staff"/>
-    </owl:Class>
-    
-
-
-    <!-- http://www.semanticweb.org/ontologies/2014/4/policy.owl#BlacklistedStaffRequest -->
-
-    <owl:Class rdf:about="#BlacklistedStaffRequest">
-        <owl:equivalentClass>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="#StaffRequest"/>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="#hasSubject"/>
-                        <owl:someValuesFrom rdf:resource="#Blacklisted"/>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Unauthorized"/>
     </owl:Class>
     
 
@@ -130,3 +112,35 @@
         </owl:equivalentClass>
     </owl:Class>
     
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/4/policy.owl#Unauthorized -->
+
+    <owl:Class rdf:about="#Unauthorized">
+        <rdfs:subClassOf rdf:resource="#Staff"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/4/policy.owl#UnauthorizedStaffRequest -->
+
+    <owl:Class rdf:about="#UnauthorizedStaffRequest">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#StaffRequest"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="#hasSubject"/>
+                        <owl:someValuesFrom rdf:resource="#UnauthorizedStaffRequest"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#StaffRequest"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2002/07/owl#Thing -->
+
+    <owl:Class rdf:about="&owl;Thing"/>
