@@ -336,13 +336,13 @@ namespace dllite {
 
 			LOG(DBG,"got guess model " << *modelCandidate);
 
-
-
-			postCheck(modelCandidate);
+			if (postCheck(modelCandidate)) {
+				return modelCandidate;
+			}
 
 			//go through elements of the model candidate and
 
-			return modelCandidate;
+
 			//LOG(DBG,"got guess model, will do repair check on " << *modelCandidate);
 			/*if (!repairCheck(modelCandidate))
 			 {
@@ -404,13 +404,13 @@ namespace dllite {
 				//	DBGLOG(DBG,"EL: RMG: there is no limit on support set size");
 				//}
 				if (factory.ctx.getPluginData<DLLitePlugin>().supnumber!=-1)
-					DBGLOG(DBG,"EL: RMG: support set number limit is: "<<factory.ctx.getPluginData<DLLitePlugin>().supnumber);
+				DBGLOG(DBG,"EL: RMG: support set number limit is: "<<factory.ctx.getPluginData<DLLitePlugin>().supnumber);
 				//else {
 				//	DBGLOG(DBG,"EL: RMG: there is no limit on the support set number");
 				//}
 
 				if (factory.ctx.getPluginData<DLLitePlugin>().incomplete)
-					DBGLOG(DBG,"EL: RMG: no support family is known to be complete");
+				DBGLOG(DBG,"EL: RMG: no support family is known to be complete");
 				//else {
 				//	DBGLOG(DBG,"EL: all support families are complete");
 				//}
@@ -422,12 +422,10 @@ namespace dllite {
 				ID varoID1 = reg->storeVariableTerm("O0");
 				ID varoID2 = reg->storeVariableTerm("O1	");
 
-
 				DBGLOG(DBG, "EL: RMG: program idb before support set learning and additional rule construction: ");
 				for (unsigned ruleIndex=0; ruleIndex<program.idb.size(); ruleIndex++) {
 					DBGLOG(DBG, "EL: RMG: "<<RawPrinter::toString(reg,program.idb[ruleIndex])<<"\n");
 				}
-
 
 				for(unsigned eaIndex = 0; eaIndex < factory.innerEatoms.size(); ++eaIndex) {
 					DBGLOG(DBG,"EL: RMG: consider atom "<< RawPrinter::toString(reg,factory.innerEatoms[eaIndex]));
@@ -520,14 +518,14 @@ namespace dllite {
 								{	DBGLOG(DBG,"EL: RMG: RULE: bar_aux_o(P_1,...) v bar_aux_o(P_n, ...):-aux_p(D,Y), aux_o(P_1,...), aux_o(P_n,...), n_e_a(Q,O). (neg. repl. of eatom)");
 
 									Rule choosingRule(ID::MAINKIND_RULE | ID::PROPERTY_RULE_DISJ);
-							//		DBGLOG(DBG, "EL: RMG: disjunctive rule is created");
+									//		DBGLOG(DBG, "EL: RMG: disjunctive rule is created");
 									// HEAD: bar_aux_o("P_1",...) v...v bar_aux_o("P_n",...):-
 									// BODY: aux_o("P_1",...),bar_zux_o("P_n",...)
 									{
 										std::vector<ID>::iterator it = ontopart.begin();
 										std::vector<ID>::iterator it_end = ontopart.end();
 										while (it < it_end) {
-										//	DBGLOG(DBG, "EL: RMG: go through ontology part" );
+											//	DBGLOG(DBG, "EL: RMG: go through ontology part" );
 											ID id = *it;
 											OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::PROPERTY_AUX | (id.isOrdinaryGroundAtom() ? ID::SUBKIND_ATOM_ORDINARYG : ID::SUBKIND_ATOM_ORDINARYN));
 											headat.tuple.push_back(guardbarPredicateID);
@@ -552,7 +550,7 @@ namespace dllite {
 											}
 											choosingRule.head.push_back(reg->storeOrdinaryAtom(headat));
 											choosingRule.body.push_back(reg->storeOrdinaryAtom(bodyat));
-										//	DBGLOG(DBG, "EL: RMG: went through ontology element "<< RawPrinter::toString(reg, id) );
+											//	DBGLOG(DBG, "EL: RMG: went through ontology element "<< RawPrinter::toString(reg, id) );
 
 											it++;
 										}
@@ -577,7 +575,7 @@ namespace dllite {
 										} else {assert(false);}
 
 										choosingRule.body.push_back(ID::posLiteralFromAtom(reg->storeOrdinaryAtom(repl)));
-									//DBGLOG(DBG, "EL: RMG: added negative replacement atom" );
+										//DBGLOG(DBG, "EL: RMG: added negative replacement atom" );
 
 									}
 
@@ -586,16 +584,16 @@ namespace dllite {
 										{
 											std::vector<ID>::iterator it = progpart.begin();
 											std::vector<ID>::iterator it_end = progpart.end();
-										//	DBGLOG(DBG, "EL: RMG: start going through logic program part" );
+											//	DBGLOG(DBG, "EL: RMG: start going through logic program part" );
 
 											while (it < it_end) {
-											//	DBGLOG(DBG, "EL: RMG: current logic program predicate is  "<< RawPrinter::toString(reg,*it));
+												//	DBGLOG(DBG, "EL: RMG: current logic program predicate is  "<< RawPrinter::toString(reg,*it));
 												ID id=*it;
 												ID idOrig = (id.isOrdinaryGroundAtom() ? reg->ogatoms.getIDByAddress(id.address) : reg->onatoms.getIDByAddress(id.address));
 
 												// add logic program predicates to the body
 												choosingRule.body.push_back(ID::posLiteralFromAtom(idOrig));
-											//	DBGLOG(DBG, "EL: RMG: added a predicate to the body ");
+												//	DBGLOG(DBG, "EL: RMG: added a predicate to the body ");
 
 												it++;
 											}
@@ -617,7 +615,7 @@ namespace dllite {
 								{
 									DBGLOG(DBG,"EL: RMG: RULE:  supp_e_a(Q,O):-aux_p(D,Y), aux_o(C,X),e_a(Q,O), not bar_aux_o(C,X).");
 									Rule rule(ID::MAINKIND_RULE);
-								//	DBGLOG(DBG, "EL: RMG: rule is created");
+									//	DBGLOG(DBG, "EL: RMG: rule is created");
 
 									// HEAD: supp_e_a("Q",O)
 									{
@@ -646,7 +644,7 @@ namespace dllite {
 										std::vector<ID>::iterator it = ontopart.begin();
 										std::vector<ID>::iterator it_end = ontopart.end();
 										while (it < it_end) {
-										//	DBGLOG(DBG, "EL: RMG: go through ontology part" );
+											//	DBGLOG(DBG, "EL: RMG: go through ontology part" );
 											ID id = *it;
 											OrdinaryAtom bodyatbar(ID::MAINKIND_ATOM | ID::PROPERTY_AUX | (id.isOrdinaryGroundAtom() ? ID::SUBKIND_ATOM_ORDINARYG : ID::SUBKIND_ATOM_ORDINARYN));
 
@@ -675,7 +673,7 @@ namespace dllite {
 
 											rule.body.push_back(ID::nafLiteralFromAtom(reg->storeOrdinaryAtom(bodyatbar)));
 											rule.body.push_back(ID::posLiteralFromAtom(reg->storeOrdinaryAtom(bodyat)));
-									//		DBGLOG(DBG, "EL: RMG: went through ontology element "<< RawPrinter::toString(reg, id) );
+											//		DBGLOG(DBG, "EL: RMG: went through ontology element "<< RawPrinter::toString(reg, id) );
 
 											it++;
 
@@ -716,7 +714,6 @@ namespace dllite {
 								}
 
 								if (!incomplete) {
-
 
 									DBGLOG(DBG, "EL: RMG: since support familiare complete, we add");
 									DBGLOG(DBG, "EL: RMG: RULE: :-e_a(Q,O),not supp_e_a(Q,O)");
@@ -782,7 +779,7 @@ namespace dllite {
 								{	DBGLOG(DBG,"EL: RMG: RULE: :- n_e_a(Q,O), aux_p(P,X)");
 
 									Rule rule(ID::MAINKIND_RULE | ID::SUBKIND_RULE_CONSTRAINT);
-								//	DBGLOG(DBG, "EL: RMG: rule is created");
+									//	DBGLOG(DBG, "EL: RMG: rule is created");
 
 									// BODY: n_e_a(Q,O)
 									{	OrdinaryAtom repl(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
@@ -803,7 +800,7 @@ namespace dllite {
 										} else {assert(false);}
 
 										rule.body.push_back(ID::posLiteralFromAtom(reg->storeOrdinaryAtom(repl)));
-									//	DBGLOG(DBG, "EL: RMG: added negative replacement atom" );
+										//	DBGLOG(DBG, "EL: RMG: added negative replacement atom" );
 
 									}
 									//BODY: aux_p(P,X)
@@ -813,12 +810,12 @@ namespace dllite {
 										//DBGLOG(DBG, "EL: RMG: start going through logic program part" );
 
 										while (it < it_end) {
-										//	DBGLOG(DBG, "EL: RMG: current logic program predicate is  "<< RawPrinter::toString(reg,*it));
+											//	DBGLOG(DBG, "EL: RMG: current logic program predicate is  "<< RawPrinter::toString(reg,*it));
 											ID id=*it;
 											ID idOrig = (id.isOrdinaryGroundAtom() ? reg->ogatoms.getIDByAddress(id.address) : reg->onatoms.getIDByAddress(id.address));
 											// add logic program predicates to the body
 											rule.body.push_back(ID::posLiteralFromAtom(idOrig));
-									//		DBGLOG(DBG, "EL: RMG: added a predicate to the body ");
+											//		DBGLOG(DBG, "EL: RMG: added a predicate to the body ");
 											it++;
 										}
 									}
@@ -840,7 +837,7 @@ namespace dllite {
 									DBGLOG(DBG, "EL: RMG: support families are incomplete, thus we add two rule with eval in heads");
 									DBGLOG(DBG,"EL: RMG: RULE:  eval_e_a(Q,O):- not supp_e_a(Q,O),e_a(Q,O), not comp_e_a(Q,O).");
 									Rule rule(ID::MAINKIND_RULE);
-								//	DBGLOG(DBG, "EL: RMG: rule is created");
+									//	DBGLOG(DBG, "EL: RMG: rule is created");
 
 									{
 										//HEAD: eval_e_a(Q,O)
@@ -941,7 +938,7 @@ namespace dllite {
 								{
 									DBGLOG(DBG,"EL: RMG: RULE:  eval_e_a(Q,O):- not supp_e_a(Q,O),e_a(Q,O), not comp_e_a(Q,O).");
 									Rule rule(ID::MAINKIND_RULE);
-								//	DBGLOG(DBG, "EL: RMG: rule is created");
+									//	DBGLOG(DBG, "EL: RMG: rule is created");
 
 									{
 										//HEAD: eval_e_a(Q,O)
@@ -1049,7 +1046,7 @@ namespace dllite {
 
 				DBGLOG(DBG, "EL: RMG: adding information about support set completeness ");
 				for(unsigned eaIndex = 0; eaIndex < factory.innerEatoms.size(); ++eaIndex) {
-				//	DBGLOG(DBG,"EL: RMG: adding completeness fact for atom "<< RawPrinter::toString(reg,factory.innerEatoms[eaIndex]));
+					//	DBGLOG(DBG,"EL: RMG: adding completeness fact for atom "<< RawPrinter::toString(reg,factory.innerEatoms[eaIndex]));
 					const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
 					ID cQID = ID_FAIL;
 					ID rQID = ID_FAIL;
@@ -1074,20 +1071,20 @@ namespace dllite {
 						DBGLOG(DBG, "EL: RMG: incomplete=false, i.e. support families are complete, add comp predicates ");
 
 						{
-						OrdinaryAtom comp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
-						comp.tuple.push_back(reg->getAuxiliaryConstantSymbol('c', factory.innerEatoms[eaIndex]));
-						comp.tuple.push_back(eatom.inputs[0]);
-						comp.tuple.push_back(eatom.inputs[1]);
-						comp.tuple.push_back(eatom.inputs[2]);
-						comp.tuple.push_back(eatom.inputs[3]);
-						comp.tuple.push_back(eatom.inputs[4]);
-						comp.tuple.push_back(eatom.inputs[5]);
-						if (cQID!=ID_FAIL)
-						comp.tuple.push_back(cQID);
-						else if (rQID!=ID_FAIL)
-						comp.tuple.push_back(rQID);
-						else {assert(false);}
-						edb->setFact(reg->storeOrdinaryAtom(comp).address);
+							OrdinaryAtom comp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
+							comp.tuple.push_back(reg->getAuxiliaryConstantSymbol('c', factory.innerEatoms[eaIndex]));
+							comp.tuple.push_back(eatom.inputs[0]);
+							comp.tuple.push_back(eatom.inputs[1]);
+							comp.tuple.push_back(eatom.inputs[2]);
+							comp.tuple.push_back(eatom.inputs[3]);
+							comp.tuple.push_back(eatom.inputs[4]);
+							comp.tuple.push_back(eatom.inputs[5]);
+							if (cQID!=ID_FAIL)
+							comp.tuple.push_back(cQID);
+							else if (rQID!=ID_FAIL)
+							comp.tuple.push_back(rQID);
+							else {assert(false);}
+							edb->setFact(reg->storeOrdinaryAtom(comp).address);
 						}
 					}
 				}
@@ -1107,7 +1104,7 @@ namespace dllite {
 				// ground the program and evaluate it
 				// get the results, filter them out with respect to only relevant predicates (all apart from aux_o, replacement atoms)
 				grounder = GenuineGrounder::getInstance(factory.ctx, program);
-			//	DBGLOG(DBG, "EL: RMG: after grounding");
+				//	DBGLOG(DBG, "EL: RMG: after grounding");
 				// annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.allEatoms);
 				annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.innerEatoms);
 				DBGLOG(DBG, "EL: RMG: annotated ground program is constructed");
@@ -1127,8 +1124,6 @@ namespace dllite {
 
 				ID guardPredicateID = reg->getAuxiliaryConstantSymbol('o', ID(0, 0));
 				ID guardbarPredicateID = reg->getAuxiliaryConstantSymbol('o', ID(0, 1));
-
-
 
 				ID varoID = reg->storeVariableTerm("O");
 				ID varoID1 = reg->storeVariableTerm("O1");
@@ -1994,95 +1989,172 @@ namespace dllite {
 
 	bool RepairModelGenerator::postCheck(InterpretationConstPtr modelCandidate) {
 
+		DBGLOG(DBG,"EL: RMG: PC: current model candidate is: "<< *modelCandidate);
 		DBGLOG(DBG,"EL: RMG: PC: evaluation post check is started:");
+		bool evalsucc=false;
 
-			 bm::bvector<>::enumerator enm = modelCandidate->getStorage().first();
-			 bm::bvector<>::enumerator enm_end = modelCandidate->getStorage().end();
+		bm::bvector<>::enumerator enm = modelCandidate->getStorage().first();
+		bm::bvector<>::enumerator enm_end = modelCandidate->getStorage().end();
 
+		DBGLOG(DBG,"EL: RMG: PC: going through facts of the current model candidate: ");
+		ID evid = reg->getAuxiliaryConstantSymbol('e', ID(0,0));
+		OrdinaryAtom ev(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
+		ev.tuple.push_back(evid);
 
-			 DBGLOG(DBG,"EL: RMG: PC: going through facts of the current model candidate: ");
-			 ID evid = reg->getAuxiliaryConstantSymbol('e', ID(0,0));
+		DBGLOG(DBG,"EL: RMG: PC: if " << RawPrinter::toString(reg,evid)<< " is present in the model then the corresponding external atom needs to be evaluated");
 
-			 DBGLOG(DBG,"EL: RMG: PC: if " << RawPrinter::toString(reg,evid)<< " is present in the model then the corresponding external atom needs to be evaluated");
+		std::vector<ID> evalatoms;
+		while (enm < enm_end) {
+			ID id = reg->ogatoms.getIDByAddress(*enm);
+			DBGLOG(DBG,"EL: RMG: PC: current atoms is: "<< RawPrinter::toString(reg,id)<<" with tuple "<<RawPrinter::toString(reg,reg->ogatoms.getByID(id).tuple[0]));
+			DBGLOG(DBG,"EL: RMG: PC: compare "<<RawPrinter::toString(reg,reg->ogatoms.getByID(id).tuple[0])<<" with "<< RawPrinter::toString(reg,evid));
+			DBGLOG(DBG,"EL: RMG: IDs are: "<<reg->ogatoms.getByID(id).tuple[0]<<" and "<< evid);
 
-			 std::vector<ID> evalatoms;
-			while (enm < enm_end) {
-				ID id = reg->ogatoms.getIDByAddress(*enm);
-				DBGLOG(DBG,"EL: RMG: PC: current atoms is: "<< RawPrinter::toString(reg,id));
-				if (evid==id) {
-					for (unsigned eaIndex=0; eaIndex<factory.innerEatoms.size();eaIndex++) {
-
-						if ((reg->eatoms.getByID(factory.innerEatoms[eaIndex]).tuple[1]==reg->ogatoms.getByID(id).tuple[1])&&
-							(reg->eatoms.getByID(factory.innerEatoms[eaIndex]).tuple[2]==reg->ogatoms.getByID(id).tuple[2])&&
-							(reg->eatoms.getByID(factory.innerEatoms[eaIndex]).tuple[3]==reg->ogatoms.getByID(id).tuple[3])&&
-							(reg->eatoms.getByID(factory.innerEatoms[eaIndex]).tuple[4]==reg->ogatoms.getByID(id).tuple[4])&&
-							(reg->eatoms.getByID(factory.innerEatoms[eaIndex]).tuple[5]==reg->ogatoms.getByID(id).tuple[5])&&
-							(reg->eatoms.getByID(factory.innerEatoms[eaIndex]).tuple[6]==reg->ogatoms.getByID(id).tuple[6]))
-						{
-
-							// the atom with index eaIndex has to be evaluated
-							// to fix the relevant input we create new auxiliary ontology predicates (for concepts and roles)
-							ID newauxIDun  = theDLLitePlugin.storeQuotedConstantTerm("000");
-							ID newauxIDbin  = theDLLitePlugin.storeQuotedConstantTerm("111");
-
-							if (reg->eatoms.getByID(factory.innerEatoms[eaIndex]).tuple.size()==8) {
-								DBGLOG(DBG,"EL: RMG: PC: current atom is a concept");
-								DBGLOG(DBG,"EL: RMG: PC: it needs to be evaluated for a constant "<<reg->ogatoms.getByID(id).tuple[7]);
-
-								// create a copy of interpretation for input
-								Interpretation::Ptr postcheckInput;
-								postcheckInput.reset(new Interpretation(*modelCandidate));
-
-								//create a copy of interpretation for output
-								Interpretation::Ptr postcheckOutput;
-								postcheckOutput.reset(new Interpretation(*modelCandidate));
-
-								// first create an auxiliary concept which will be used for specifying which constants are of interest for us
-								{
-									OrdinaryAtom relev(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
-									relev.tuple.push_back(reg->eatoms.getByID(factory.innerEatoms[eaIndex]).tuple[2]);
-									relev.tuple.push_back(newauxIDun);
-									relev.tuple.push_back(reg->eatoms.getByID(factory.innerEatoms[eaIndex]).tuple[7]);
-
-									// add concept auxiliary atom wth the relevant constant to the new interpretation
-									postcheckInput->setFact(reg->storeOrdinaryAtom(relev).address);
-								}
-
-								// evaluate current atom under the extended interpretation and anlyze
-								// the output values w.r.t. to the current model candidate
-
-								IntegrateExternalAnswerIntoInterpretationCB cb(postcheckOutput);
-								std::vector<ID> evat;
-								evat.push_back(factory.innerEatoms[eaIndex]);
-								evaluateExternalAtoms(factory.ctx, evat, postcheckInput, cb);
-
-								bm::bvector<>::enumerator e = postcheckOutput->getStorage().first();
-								bm::bvector<>::enumerator e_end = postcheckOutput->getStorage().end();
-
-
-								while (e < e_end) {
-									ID i = reg->ogatoms.getIDByAddress(*e);
-									DBGLOG(DBG,"EL: RMG: PC: current element of postcheck is: "<< RawPrinter::toString(reg,i));
-								}
-
-							}
-							else if (reg->eatoms.getByID(factory.innerEatoms[eaIndex]).tuple.size()==9){
-								DBGLOG(DBG,"EL: RMG: PC: current atom is a role");
-								DBGLOG(DBG,"EL: RMG: PC: it needs to be evaluated for a pair of constants  ("<<reg->ogatoms.getByID(id).tuple[7]<<","<<reg->ogatoms.getByID(id).tuple[8]<<")");
-
-							}
-
-							else assert(false&&"External atom is neither unary nor binary");
+			if (reg->ogatoms.getByID(id).tuple[0]==evid) {
+				DBGLOG(DBG,"EL: RMG: they are equal finally");
+				DBGLOG(DBG,"EL: RMG: number of external atoms: "<<factory.innerEatoms.size());
+				for (unsigned eaIndex=0; eaIndex<factory.innerEatoms.size();eaIndex++) {
+					const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
+					DBGLOG(DBG,"EL: RMG: consider atom "<< RawPrinter::toString(reg,factory.innerEatoms[eaIndex]));
+					bool ev=true;
+					for (int i=1; i<7;i++) {
+						ID idev = reg->ogatoms.getByID(id).tuple[i];
+						ID idea = reg->eatoms.getByID(factory.innerEatoms[eaIndex]).inputs[i-1];
+						if (idev!=idea) {
+							DBGLOG(DBG,"EL: RMG: eval.tuple["<<i<<"] = "<<RawPrinter::toString(reg, reg->ogatoms.getByID(id).tuple[i]));
+							DBGLOG(DBG,"EL: RMG: extatom.input["<<i-1<<"] = "<<RawPrinter::toString(reg, reg->eatoms.getByID(factory.innerEatoms[eaIndex]).inputs[i-1]));
+							ev=false;
 						}
 
-
 					}
-				}
-				enm++;
-			}
-			DBGLOG(DBG,"EL: RMG: PC: postcheck is finished");
 
-			return true;
+					ID cQID = ID_FAIL;
+					ID rQID = ID_FAIL;
+
+					ID cdlID = reg->storeConstantTerm("cDL");
+					ID rdlID = reg->storeConstantTerm("rDL");
+
+					if (eatom.predicate==cdlID) {
+						// query is a concept
+						cQID = eatom.inputs[5];
+					}
+
+					else if (eatom.predicate==rdlID) {
+						//query is a role
+						rQID = eatom.inputs[5];
+					}
+
+					else assert(false);
+
+					/*		for (int i=2; i<7;i++){
+					 DBGLOG(DBG,"replatom.tuple["<<i<<"] = "<<reg->eatoms.getByID(id).tuple[i]);
+					 DBGLOG(DBG,"string(replatom.tuple["<<i<<"]) = "<<RawPrinter::toString(reg,reg->eatoms.getByID(id).tuple[i]));
+
+					 }*/
+
+					if (ev)
+					{
+
+						// the atom with index eaIndex has to be evaluated
+						// to fix the relevant input we create new auxiliary ontology predicates (for concepts and roles)
+						ID newauxIDun = theDLLitePlugin.storeQuotedConstantTerm("000");
+						ID newauxIDbin = theDLLitePlugin.storeQuotedConstantTerm("111");
+
+						if (cQID!=ID_FAIL) {
+							DBGLOG(DBG,"EL: RMG: PC: current atom is a concept");
+							DBGLOG(DBG,"EL: RMG: PC: it needs to be evaluated for a constant "<<RawPrinter::toString(reg,reg->ogatoms.getByID(id).tuple[7]));
+
+							// create a copy of interpretation for input
+							Interpretation::Ptr postcheckInput;
+							postcheckInput.reset(new Interpretation(*modelCandidate));
+							DBGLOG(DBG,"EL: RMG: PC: copy of interpretation for input is created");
+
+							//create a copy of interpretation for output
+							Interpretation::Ptr postcheckOutput;
+							postcheckOutput.reset(new Interpretation(reg));
+							DBGLOG(DBG,"EL: RMG: PC: interpretation for output is created");
+
+							// first create an auxiliary concept which will be used for specifying which constants are of interest for us
+							OrdinaryAtom relev(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+							relev.tuple.push_back(eatom.inputs[1]);
+							//relev.tuple.push_back(newauxIDun);
+							//relev.tuple.push_back(reg->ogatoms.getByID(id).tuple[7]);
+
+							// add concept auxiliary atom wth the relevant constant to the new interpretation
+
+							//	DBGLOG(DBG,"EL: RMG: PC: relev atom is "<< RawPrinter::toString(reg,ID::posLiteralFromAtom(reg->storeOrdinaryAtom(relev))));
+							//									postcheckInput->setFact(reg->storeOrdinaryAtom(relev).address);
+
+							DBGLOG(DBG,"EL: RMG: PC: after creation of relev atom");
+
+							// evaluate current atom under the extended interpretation and anlyze
+							// the output values w.r.t. to the current model candidate
+							DBGLOG(DBG,"EL: RMG: Before evaluation");
+
+							IntegrateExternalAnswerIntoInterpretationCB cb(postcheckOutput);
+							std::vector<ID> evat;
+							evat.push_back(factory.innerEatoms[eaIndex]);
+							evaluateExternalAtoms(factory.ctx, evat, postcheckInput, cb);
+
+							DBGLOG(DBG,"EL: RMG: After evaluation");
+							evalsucc=false;
+							bm::bvector<>::enumerator e = postcheckOutput->getStorage().first();
+							bm::bvector<>::enumerator e_end = postcheckOutput->getStorage().end();
+
+							while (e < e_end) {
+								ID i = reg->ogatoms.getIDByAddress(*e);
+								DBGLOG(DBG,"EL: RMG: PC: current element of postcheck is: "<< RawPrinter::toString(reg,i));
+								bm::bvector<>::enumerator a = modelCandidate->getStorage().first();
+								bm::bvector<>::enumerator a_end = modelCandidate->getStorage().end();
+								DBGLOG(DBG,"EL: RMG: PC: go through elements of the model and check whether the id of the evaluated atom occurs in it");
+
+								while (a < a_end) {
+									ID i1 = reg->ogatoms.getIDByAddress(*a);
+									DBGLOG(DBG,"EL: RMG: PC: atom in the model: "<< RawPrinter::toString(reg, i1));
+									if (i==i1) {
+										evalsucc = true;
+										DBGLOG(DBG,"EL: RMG: PC: target atom "<< RawPrinter::toString(reg, i)<<" is found");
+									}
+									else {
+										DBGLOG(DBG,"EL: RMG: PC: search further");
+									}
+									a++;
+								}
+
+								e++;
+							}
+							if (evalsucc==false) {
+								DBGLOG(DBG,"EL: RMG: PC: evaluation showed that the model is not a repair answer set");
+								return false;}
+
+							else {
+								DBGLOG(DBG,"EL: RMG: PC: so far evaluation results coincide with the ones encoded in the model candidate");
+							}
+
+						}
+
+						else if (rQID!=ID_FAIL) {
+							DBGLOG(DBG,"EL: RMG: PC: current atom is a role");
+							DBGLOG(DBG,"EL: RMG: PC: it needs to be evaluated for a pair of constants  ("<<reg->ogatoms.getByID(id).tuple[7]<<","<<reg->ogatoms.getByID(id).tuple[8]<<")");
+
+							// check if query grounded by the relevant constant is in the ontology
+							// if not check whether positive atom is in the model candidate
+
+
+						}
+
+						else assert(false&&"External atom is neither unary nor binary");
+
+						eaIndex=factory.innerEatoms.size();
+					}
+
+				}
+			}
+			enm++;
+		}
+		DBGLOG(DBG,"EL: RMG: PC: postcheck is finished");
+
+		return true;
 
 	}
 
