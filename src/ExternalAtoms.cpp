@@ -343,7 +343,7 @@ void DLPluginAtom::retrieve(const Query& query, Answer& answer) {
 
 void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoods) {
 
-	DBGLOG(DBG, "EL: Learning support sets");
+	DBGLOG(DBG, "EL: LSS: Learning support sets");
 	std::string querystr;
 	SimpleNogoodContainerPtr potentialSupportSets = SimpleNogoodContainerPtr(
 	new SimpleNogoodContainer());
@@ -363,13 +363,13 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 		if (query.eatom->predicate == cdlID) {
 			cQID = query.eatom->inputs[5];
 			querystr= RawPrinter::toString(reg,cQID);
-			DBGLOG(DBG,"EL: query is a concept "<< querystr);
+			DBGLOG(DBG,"EL: LSS: query is a concept "<< querystr);
 		}
 
 		else if (query.eatom->predicate == rdlID) {
 			rQID = query.eatom->inputs[5];
 			querystr= RawPrinter::toString(reg,rQID);
-			DBGLOG(DBG,"EL: query is a role "<< querystr);
+			DBGLOG(DBG,"EL: LSS: query is a role "<< querystr);
 		}
 
 		else {
@@ -379,7 +379,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 
 
 		// prepare output variable, tuple and negative output atom
-			DBGLOG(DBG, "EL: storing output atom which will be part of any support set");
+			DBGLOG(DBG, "EL: LSS: storing output atom which will be part of any support set");
 			ID outvarID1 = reg->storeVariableTerm("O0");
 			ID outvarID2 = reg->storeVariableTerm("O1");
 			Tuple outlist;
@@ -401,10 +401,10 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 			ID outlit = NogoodContainer::createLiteral(ExternalLearningHelper::getOutputAtom(query, outlist, false));
 		#ifndef NDEBUG
 			std::string outlitStr = RawPrinter::toString(reg, outlit);
-			DBGLOG(DBG, "EL: output atom is " << outlitStr);
+			DBGLOG(DBG, "EL: LSS: output atom is " << outlitStr);
 		#endif
 
-			DBGLOG(DBG, "EL: Abox predicates are:");
+			DBGLOG(DBG, "EL: LSS: Abox predicates are:");
 			std::vector<ID> abp;
 			std::string opath;
 			if (ctx.getPluginData<DLLitePlugin>().repair) {
@@ -419,15 +419,16 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 				DBGLOG(DBG, "EL:" << RawPrinter::toString(reg,id)<<" with "<< id);
 			}
 
-			DBGLOG(DBG,"EL: map for storing maximal input ");
+
 			bm::bvector<>::enumerator en = query.interpretation->getStorage().first();
 			bm::bvector<>::enumerator en_end = query.interpretation->getStorage().end();
-			DBGLOG(DBG,"EL: going through the maximal input ");
+			DBGLOG(DBG,"EL: LSS: going through the maximal input ");
 			while (en < en_end) {
+
 				// check if it is c+, r+
 				#ifndef NDEBUG
 				std::string enStr = RawPrinter::toString(reg,reg->ogatoms.getIDByAddress(*en));
-				DBGLOG(DBG, "EL: current input atom: " << enStr);
+				DBGLOG(DBG, "EL: LSS: current input atom: " << enStr);
 				#endif
 				const OrdinaryAtom& oatom = reg->ogatoms.getByAddress(*en);
 				if ((oatom.tuple[0] == query.input[1])||(oatom.tuple[0] == query.input[3])) {
@@ -443,12 +444,11 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 			char buff[512];
 			std::string param = (cQID != ID_FAIL) ? std::string("(?0)") : std::string("(?0,?1)");
 			std::string path = std::string(PLUGIN_DIR)+std::string("/requiem/dist/requiem-cli.jar");
-			DBGLOG(DBG, "EL: the path is: " <<path);
+			DBGLOG(DBG, "EL: LSS: the path to requie is : " <<path);
 			if (cQID != ID_FAIL) {
-			//	std::string call = "java -jar /home/dasha/Documents/dlliteplugin/requiem/dist/requiem-cli.jar \"Q(?0)  <-  "+std::string(querystr)+param+"\" "+opath+" F";
 				std::string call = "java -jar "+path+" \"Q(?0)  <-  "+std::string(querystr)+param+"\" "+opath+" F";
 
-				DBGLOG(WARNING, "EL: sending call to Requim " << call);
+				DBGLOG(DBG, "EL: LSS: sending call to Requim " << call);
 
 
 				if(!(in = popen(call.c_str(), "r"))) {
@@ -458,17 +458,18 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 
 				while((fgets(buff, sizeof(buff), in)!=NULL)) {
 
-					DBGLOG(DBG, "EL: got query rewriting from Requiem " << buff);
+					DBGLOG(DBG, "EL: LSS: got query rewriting from Requiem " << buff);
 					std::vector<std::string> strs;
 					boost::split(strs, buff, boost::is_any_of("\t "), boost::token_compress_on);
 					std::vector<std::string>::iterator row_it = strs.begin();
 					std::vector<std::string>::iterator row_end = strs.end();
-					DBGLOG(DBG, "EL: start parsing the rewriting");
+
+					DBGLOG(DBG, "EL: LSS: start parsing the rewriting");
 					bool sup=true;
 					Nogood supportset;
 					while (row_it<row_end){
 						std::string str (*row_it);
-						DBGLOG(DBG, "EL: current atom is " << *row_it);
+						DBGLOG(DBG, "EL: LSS: current atom is " << *row_it);
 						std::size_t varb = str.find("(");
 						std::size_t vare = str.find(")");
 						std::size_t varm = str.find(",");
@@ -490,10 +491,10 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 						//DBGLOG(DBG, "EL: quoted predicate name is " << pred);
 						ID opID = reg->terms.getIDByString(pred);
 						//DBGLOG(DBG, "EL: we compare "<<opID);
-						DBGLOG(DBG, "EL: check whether "<<pred<<" it occurs in the ABox ");
+					//	DBGLOG(DBG, "EL: check whether "<<pred<<" occurs in the ABox ");
 
 						if ((std::find(abp.begin(), abp.end(), opID) != abp.end())||(maxinput.find(reg->terms.getIDByString(pred))!=maxinput.end())) {
-					  	DBGLOG(DBG, "EL: yes, it does");
+					  	DBGLOG(DBG, "EL: LSS: predicate "<<pred<<" occurs in ABox");
 					  	sup=true;
 
 					  	OrdinaryAtom gatom = theDLLitePlugin.getNewGuardAtom();
@@ -502,11 +503,11 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 					  		r=true;
 					  		std::string var1 = str.substr (varb+1,varm-varb-1);
 					  		std::string var2 = str.substr (varm+1,vare-varm-1);
-					  		DBGLOG(DBG, "EL: this is a role predicate ");
-					  		DBGLOG(DBG, "EL: its first variable is "<<var1);
+					  		//DBGLOG(DBG, "EL: this is a role predicate ");
+					  		//DBGLOG(DBG, "EL: its first variable is "<<var1);
 					  		ID var1ID = reg->terms.getIDByString(var1);
 					  		if (var1ID==ID_FAIL) var1ID = reg->storeVariableTerm(var1);
-					  		DBGLOG(DBG, "EL: its second variable is "<<var2);
+					  		//DBGLOG(DBG, "EL: its second variable is "<<var2);
 					  		ID var2ID = reg->terms.getIDByString(var2);
 					  		if (var2ID==ID_FAIL) var2ID = reg->storeVariableTerm(var2);
 					  		gatom.tuple.push_back(opID);
@@ -516,8 +517,8 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 					  	}
 					  	else {
 					  				std::string var1 = str.substr (varb+1,vare-varb-1);
-					  				DBGLOG(DBG,  "EL: this is a concept predicate");
-					  				DBGLOG(DBG,  "EL: its variable is  "<<var1<< '\n');
+					  				//DBGLOG(DBG,  "EL: this is a concept predicate");
+					  				//DBGLOG(DBG,  "EL: its variable is  "<<var1<< '\n');
 					  				ID var1ID = reg->terms.getIDByString(var1);
 					  				if (var1ID==ID_FAIL) var1ID = reg->storeVariableTerm(var1);
 					  				gatom.tuple.push_back(opID);
@@ -527,19 +528,18 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 			  			  }
 
 					  	  else {
-					  		  DBGLOG(DBG,  "EL: no, it does not");
+					  		  DBGLOG(DBG,  "EL: LSS: predicate does not occur in ABox, skip the rewriting");
 					  		  sup = false;
 					  		  break;
 					  	  }
-					  //	  DBGLOG(DBG,  "EL: finished analyzing the current atom of the rewriting");
+					  //	  DBGLOG(DBG,  "EL: LSS: finished analyzing the current atom of the rewriting");
 					  	  row_it++;
 					  }
 
 		    		if (sup) {
-		    			DBGLOG(DBG,  "EL: adding support set to the set");
 		    			supportset.insert(outlit);
 		    			potentialSupportSets->addNogood(supportset);
-		    			DBGLOG(DBG, "EL: " << supportset.getStringRepresentation(reg));
+		    			DBGLOG(DBG,  "EL: LSS: adding support set to the set"<< supportset.getStringRepresentation(reg));
 		    		}
 
 		    }
@@ -547,7 +547,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 
 	}
 			else if (rQID != ID_FAIL){
-				DBGLOG(DBG,  "EL: the query is a role, thus we do not call Requeim");
+				DBGLOG(DBG,  "EL: LSS: the query is a role, thus we do not call Requeim");
 				if (std::find(abp.begin(), abp.end(), rQID) != abp.end()) {
 					Nogood s;
 					OrdinaryAtom gatom = theDLLitePlugin.getNewGuardAtom();
@@ -557,16 +557,15 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 					s.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(gatom)));
 	    			s.insert(outlit);
 	    			potentialSupportSets->addNogood(s);
-	    			DBGLOG(DBG,  "EL: adding support set to the set");
-	    			DBGLOG(DBG, "EL: " << s.getStringRepresentation(reg));
+	    			DBGLOG(DBG,  "EL: LSS: adding support set "<< s.getStringRepresentation(reg));
 
 
 				}
 
+
                if (maxinput.find(rQID)!=maxinput.end()) {
-            	   DBGLOG(DBG, "EL: there are "<<maxinput[rQID].size()<<" relevant atoms ");
+            	   DBGLOG(DBG, "EL: LSS: create support sets for input atoms, there are "<<maxinput[rQID].size()<<" relevant atoms ");
             	   BOOST_FOREACH(ID id1,maxinput[rQID]) {
-            	   	  DBGLOG(DBG, "EL: we create additional support sets");
             	   	  Nogood s1;
             	   	  OrdinaryAtom newa = theDLLitePlugin.getNewAtom(rQID);
             	   	  newa.tuple.push_back(outvarID1);
@@ -574,29 +573,27 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
             	   	  s1.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(newa)));
             	   	  s1.insert(outlit);
             	   	  potentialSupportSets->addNogood(s1);
-  	    			  DBGLOG(DBG,  "EL: adding support set to the set");
-  	    			  DBGLOG(DBG, "EL: " << s1.getStringRepresentation(reg));
+  	    			  DBGLOG(DBG,  "EL: LSS: adding support set "<< s1.getStringRepresentation(reg)<<"\n");
             	   }
                }
 
 			}
 			else assert(false);
 
-		    DBGLOG(DBG,  "EL: finished support set extraction ");
-		    DBGLOG(DBG, "EL: start construction of support sets which were missed");
+		    DBGLOG(DBG, "EL: LSS: construct missing support sets, if there are any");
 			SimpleNogoodContainerPtr additionalSupportSets = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
 			for (int i = 0; i<potentialSupportSets->getNogoodCount();i++) {
-				DBGLOG(DBG,"EL: consider support set number "<< i <<": " << potentialSupportSets->getNogood(i).getStringRepresentation(reg));
+				DBGLOG(DBG,"EL: LSS: consider support set number "<< i <<": " << potentialSupportSets->getNogood(i).getStringRepresentation(reg));
 				const Nogood& ng = potentialSupportSets->getNogood(i);
-				DBGLOG(DBG,"EL: go through its elements");
+				DBGLOG(DBG,"EL: LSS: check maximal input");
 
 				BOOST_FOREACH (ID id, ng){
-					DBGLOG(DBG,"EL: current element: "<<RawPrinter::toString(reg,id));
+				//	DBGLOG(DBG,"EL: current element: "<<RawPrinter::toString(reg,id));
 					const OrdinaryAtom& oa = reg->onatoms.getByAddress(id.address);
-					DBGLOG(DBG,"EL: does "<<RawPrinter::toString(reg,oa.tuple[1])<<" occur in the maximal innput?");
+					//DBGLOG(DBG,"EL: does "<<RawPrinter::toString(reg,oa.tuple[1])<<" occur in the maximal innput?");
 
 					if (maxinput.find(oa.tuple[1])!=maxinput.end()){
-						DBGLOG(DBG,"EL: yes, it does, we create "<< maxinput[oa.tuple[1]].size()<<" new support and add it");
+						DBGLOG(DBG,"EL: LSS: "<<RawPrinter::toString(reg,oa.tuple[1])<<" occurs in maximal input "<< maxinput[oa.tuple[1]].size()<<" new support and add it");
 						//go through elements of maxinput[oa.tuple[0]] and for each of them add a new support set
 
 						BOOST_FOREACH(ID id1,maxinput[oa.tuple[1]]) {
@@ -606,7 +603,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 							newa.tuple.push_back(oa.tuple[2]);
 							if (oa.tuple.size()==4)
 								newa.tuple.push_back(oa.tuple[3]);
-							DBGLOG(DBG, "EL: atom is created"<<RawPrinter::toString(reg,newa.tuple[0])<<" "<<RawPrinter::toString(reg,newa.tuple[1])<<" "<<RawPrinter::toString(reg,newa.tuple[2]));
+							//DBGLOG(DBG, "EL: atom is created"<<RawPrinter::toString(reg,newa.tuple[0])<<" "<<RawPrinter::toString(reg,newa.tuple[1])<<" "<<RawPrinter::toString(reg,newa.tuple[2]));
 							BOOST_FOREACH (ID id2, ng){
 								if (id2!=id) {
 									//DBGLOG(DBG, "EL: add the existing element");
@@ -618,7 +615,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 								}
 							}
 							additionalSupportSets->addNogood(sup);
-		  	    			DBGLOG(DBG, "EL: additional support set is: " << sup.getStringRepresentation(reg));
+		  	    			DBGLOG(DBG, "EL: LSS: adding support set with input elements: " << sup.getStringRepresentation(reg));
 
 						}
 
@@ -634,10 +631,10 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 
 
 
-			DBGLOG(DBG, "EL: "<<potentialSupportSets->getNogoodCount()<<" support sets were learnt and they are: ");
+			DBGLOG(DBG, "EL: LSS: "<<potentialSupportSets->getNogoodCount()<<" support sets learnt");
 			for (int i = 0; i < potentialSupportSets->getNogoodCount(); i++) {
 				const Nogood& ng = potentialSupportSets->getNogood(i);
-				DBGLOG(DBG, "EL: " << ng.getStringRepresentation(reg));
+				DBGLOG(DBG, "EL: LSS: " << ng.getStringRepresentation(reg));
 			}
 	}
 
@@ -1221,7 +1218,7 @@ void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoo
 void DLPluginAtom::optimizeSupportSets(SimpleNogoodContainerPtr initial,
 		NogoodContainerPtr final) {
 
-	DBGLOG(DBG, "EL: LSSO: Filter out irrelevant ones:");
+	DBGLOG(DBG, "EL: LSSO: Filter out irrelevant support sets");
 	DBGLOG(DBG, "EL: LSSO: Abox predicates are:");
 	std::vector<ID> abp;
 	RegistryPtr reg = getRegistry();
@@ -1238,42 +1235,40 @@ void DLPluginAtom::optimizeSupportSets(SimpleNogoodContainerPtr initial,
 		DBGLOG(DBG, RawPrinter::toString(reg,id)<<" with "<< id);
 	}
 
-	DBGLOG(DBG, "EL: LSSO: Eliminate unneccessary nonground support sets ");
 	int s = initial->getNogoodCount();
-	DBGLOG(DBG, "EL: LSSO: Inintial number of nonground support sets:"<<s);
+	//DBGLOG(DBG, "EL: LSSO: Inintial number of nonground support sets:"<<s);
 	int n = 0;
 	if (ctx.getPluginData<DLLitePlugin>().el) {
 		for (int i = 0; i < s; i++) {
 			bool elim = false;
 			const Nogood& ng = initial->getNogood(i);
-			DBGLOG(DBG,
-					"EL: consider support set: "<<ng.getStringRepresentation(reg));
+			//DBGLOG(DBG,"EL: consider support set: "<<ng.getStringRepresentation(reg));
 
 				BOOST_FOREACH(ID litid, ng) {
 					ID newid = reg->onatoms.getIDByAddress(litid.address);
 					const OrdinaryAtom& oa = reg->onatoms.getByAddress(litid.address);
-					DBGLOG(DBG,"EL: is " <<RawPrinter::toString(reg,newid)<<" a guard with predicate not occurring in ABox?");
-					DBGLOG(DBG,"EL: check for " <<RawPrinter::toString(reg,oa.tuple[1])<<" with "<<oa.tuple[1]);
+				//	DBGLOG(DBG,"EL: is " <<RawPrinter::toString(reg,newid)<<" a guard with predicate not occurring in ABox?");
+				//	DBGLOG(DBG,"EL: check for " <<RawPrinter::toString(reg,oa.tuple[1])<<" with "<<oa.tuple[1]);
 					if ((newid.isGuardAuxiliary())&& (std::find(abp.begin(), abp.end(), oa.tuple[1])== abp.end())) {
-						DBGLOG(DBG, "EL: yes, it is");
+						DBGLOG(DBG, "EL: LSS: "<< RawPrinter::toString(reg,newid)<<" is a guard predicate not occurring in ABox");
 						elim = true;
-						DBGLOG(DBG, "EL: support set is marked for elimination");
+					//	DBGLOG(DBG, "EL: LSS: support set is marked for elimination");
 						break;
 					} else {
-						DBGLOG(DBG, "EL: no, it is not");
+						DBGLOG(DBG, "EL: LSS: "<<RawPrinter::toString(reg,newid)<<" occurs in the ABox");
 					}
 				}
 
 			if (elim) {
-				DBGLOG(DBG, "EL: eliminate current support set");
+				DBGLOG(DBG, "EL: LSS: eliminate current support set");
 				initial->removeNogood(ng);
 			} else {
 				final->addNogood(ng);
-				DBGLOG(DBG, "EL: leave current support set");
+				DBGLOG(DBG, "EL: LSS: leave current support set");
 				n++;
 			}
 		}
-		DBGLOG(DBG, "EL: Number of support sets after elimination: "<<n);
+		DBGLOG(DBG, "EL: LSS: Number of support sets after elimination: "<<n);
 		}
 	else{
 	for (int i = 0; i < s; i++) {
