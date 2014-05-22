@@ -130,6 +130,8 @@ namespace dllite {
 			if ((a.tuple[0] == query.input[1]) || (a.tuple[0] == query.input[2])
 					|| (a.tuple[0] == query.input[3])
 					|| (a.tuple[0] == query.input[4])) {
+				DBGLOG(DBG,"ignore the original ABox");
+
 				return true;
 			}
 			enext++;
@@ -212,7 +214,7 @@ namespace dllite {
 
 	std::vector<TDLAxiom*> DLPluginAtom::expandAbox(const Query& query,
 			bool useExistingAbox) {
-
+		DBGLOG(DBG,"Expand Abox is started with useAbox = "<<useExistingAbox);
 		RegistryPtr reg = getRegistry();
 
 		DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(
@@ -233,6 +235,7 @@ namespace dllite {
 			// determine type of additional assertion
 			if (ogatom.tuple[0] == query.input[1]
 					|| ogatom.tuple[0] == query.input[2]) {
+				if (useExistingAbox||(ogatom.tuple.size() == 3)) {
 				// c+ or c-
 				assert(
 						((ogatom.tuple.size() == 3)
@@ -241,7 +244,8 @@ namespace dllite {
 										&& (ogatom.tuple[3].isIntegerTerm())))
 						&& "Second parameter must be a binary predicate");
 				ID concept = ogatom.tuple[1];
-				if (!ontology->concepts->getFact(concept.address)) {
+				ID newauxIDun = theDLLitePlugin.storeQuotedConstantTerm("000");
+				if ((!ontology->concepts->getFact(concept.address))&&(concept!=newauxIDun)) {
 					throw PluginError(
 							"Tried to expand concept "
 							+ RawPrinter::toString(reg, concept)
@@ -269,7 +273,7 @@ namespace dllite {
 								ontology->kernel->getExpressionManager()->Individual(
 										ontology->addNamespaceToString(
 												reg->terms.getByID(individual).getUnquotedString())),
-								factppConcept));
+								factppConcept));}
 			} else if (ogatom.tuple[0] == query.input[3]
 					|| ogatom.tuple[0] == query.input[4]) {
 				// r+ or r-
@@ -1334,8 +1338,12 @@ namespace dllite {
 				&& (!query.input[6].isIntegerTerm() || query.input[6].address >= 2))
 		throw PluginError("Last parameter of cDL must be 0 or 1");
 		// TODO: add useAbox to other DL-atoms
-		bool useAbox = !changeABox(query)
-		&& (query.input.size() < 7 || query.input[6].address == 1);
+
+		bool useAbox = !changeABox(query);
+
+		//bool useAbox = !changeABox(query)&& (query.input.size() < 7 || query.input[6].address == 1);
+
+		DBGLOG(DBG,"useABox = "<<useAbox);
 		DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(
 				ctx, query.input[0], useAbox);
 		std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox);

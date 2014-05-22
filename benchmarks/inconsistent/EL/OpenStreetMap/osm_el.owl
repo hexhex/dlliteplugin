@@ -98,7 +98,6 @@
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasAtmosphere">
         <rdfs:range rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Atmosphere"/>
         <rdfs:domain rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Restaurant"/>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasQualitativeValue"/>
     </owl:ObjectProperty>
     
 
@@ -108,7 +107,6 @@
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasBakeryOperator">
         <rdfs:domain rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Bakery"/>
         <rdfs:range rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BakeryOp"/>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasOperator"/>
     </owl:ObjectProperty>
     
 
@@ -118,7 +116,6 @@
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasBankOperator">
         <rdfs:domain rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Bank"/>
         <rdfs:range rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BankOp"/>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasOperator"/>
     </owl:ObjectProperty>
     
 
@@ -138,7 +135,6 @@
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasChemistOperator">
         <rdfs:domain rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Chemist"/>
         <rdfs:range rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ChemistOp"/>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasOperator"/>
     </owl:ObjectProperty>
     
 
@@ -148,7 +144,6 @@
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasClothesOperator">
         <rdfs:domain rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Clothes"/>
         <rdfs:range rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ClothesOp"/>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasOperator"/>
     </owl:ObjectProperty>
     
 
@@ -159,7 +154,6 @@
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">hat Küche</rdfs:label>
         <rdfs:range rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Cuisine"/>
         <rdfs:domain rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Restaurant"/>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasQualitativeValue"/>
     </owl:ObjectProperty>
     
 
@@ -169,7 +163,6 @@
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasEvent">
         <rdfs:domain rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BuildingFeature"/>
         <rdfs:range rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Event"/>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasQualitativeValue"/>
     </owl:ObjectProperty>
     
 
@@ -179,7 +172,6 @@
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasEventMarket">
         <rdfs:domain rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Market"/>
         <rdfs:range rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#MarketEvent"/>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasEvent"/>
     </owl:ObjectProperty>
     
 
@@ -189,7 +181,6 @@
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasExit">
         <rdfs:range rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Exit"/>
         <rdfs:domain rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Stop"/>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasPart"/>
     </owl:ObjectProperty>
     
 
@@ -199,7 +190,6 @@
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasFastFoodOperator">
         <rdfs:range rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BurgersOp"/>
         <rdfs:domain rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#FastFood"/>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasOperator"/>
     </owl:ObjectProperty>
     
 
@@ -226,7 +216,6 @@
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">betrieben von</rdfs:label>
         <rdfs:range rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Operator"/>
         <rdfs:domain rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Shop"/>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasQualitativeValue"/>
     </owl:ObjectProperty>
     
 
@@ -260,7 +249,6 @@
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasRecycling">
         <rdfs:domain rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Recycling"/>
         <rdfs:range rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#RecyclingFeature"/>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasQualitativeValue"/>
     </owl:ObjectProperty>
     
 
@@ -279,7 +267,6 @@
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">bietet</rdfs:label>
         <rdfs:range rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SpecialFeature"/>
         <rdfs:domain rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Sustenance"/>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasQualitativeValue"/>
     </owl:ObjectProperty>
     
 
@@ -289,7 +276,6 @@
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasSupermarketOperator">
         <rdfs:domain rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Supermarket"/>
         <rdfs:range rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SupermarketOp"/>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasOperator"/>
     </owl:ObjectProperty>
     
 
@@ -297,7 +283,7 @@
     <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasWikipediaLink -->
 
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasWikipediaLink">
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasLink"/>
+
     </owl:ObjectProperty>
     
 
@@ -317,7 +303,7 @@
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isExitOf">
         <rdfs:domain rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Exit"/>
         <rdfs:range rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Stop"/>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isPartOf"/>
+
     </owl:ObjectProperty>
     
 
@@ -332,7 +318,7 @@
 
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocatedAlong">
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">entlang</rdfs:label>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocated"/>
+
     </owl:ObjectProperty>
     
 
@@ -341,7 +327,6 @@
 
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocatedContain">
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">enthält</rdfs:label>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocated"/>
     </owl:ObjectProperty>
     
 
@@ -351,7 +336,6 @@
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocatedDisjoint">
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ausserhalb</rdfs:label>
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">außerhalb</rdfs:label>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocated"/>
     </owl:ObjectProperty>
     
 
@@ -362,7 +346,6 @@
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">im</rdfs:label>
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">in</rdfs:label>
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">innerhalb</rdfs:label>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocated"/>
     </owl:ObjectProperty>
     
 
@@ -372,7 +355,6 @@
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocatedIntersect">
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">kreuzt</rdfs:label>
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">überschneidet</rdfs:label>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocated"/>
     </owl:ObjectProperty>
     
 
@@ -382,7 +364,6 @@
     <owl:ObjectProperty rdf:about="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocatedNext">
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">neben</rdfs:label>
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">nähe</rdfs:label>
-        <rdfs:subPropertyOf rdf:resource="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocated"/>
     </owl:ObjectProperty>
     
 
