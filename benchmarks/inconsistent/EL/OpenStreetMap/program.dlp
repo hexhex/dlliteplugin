@@ -1,0 +1,8 @@
+
+% covered bus stops which are not private, are public stations
+
+publicstation(X):-DL["BusStop"+=busstop;"CoveredBusStop"](X), not DL[;"Private"](X).
+
+% public station can not be without public access
+:-DL["BuildingFeature"+=publicstation";"NoPublicAccess"](X), publicstation(X).
+

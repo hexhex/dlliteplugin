@@ -3,7 +3,7 @@ if [[ $# -lt 5 ]]; then
 	exit 1;
 fi
 
-./generate_ontology $5 >ontology.owl
+./generate_ontology.sh $5 >ontology.owl
 
 for (( prop=$1; prop <= $2; prop+=$3 ))
 do

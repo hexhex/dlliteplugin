@@ -389,6 +389,8 @@ namespace dllite {
 		DBGLOG(DBG,"EL: RMG: learning support sets is started");
 		DBGLOG(DBG,"EL: RMG: Number of all eatoms: "<<factory.innerEatoms.size());
 		std::vector<SimpleNogoodContainerPtr> supportSetsOfExternalAtom;
+		std::vector<ID> complext;
+
 		if (factory.ctx.config.getOption("SupportSets")) {
 			OrdinaryASPProgram program(reg, factory.xidb, postprocessedInput, factory.ctx.maxint);
 			program.idb.insert(program.idb.end(), factory.gidb.begin(), factory.gidb.end());
@@ -472,6 +474,7 @@ namespace dllite {
 						const Nogood& ng = supportSetsOfExternalAtom[eaIndex]->getNogood(i);
 						if ((supnumberlimit!=-1)&&(i>supnumberlimit)) {
 							DBGLOG(DBG, "EL: RMG: the limit on number of support sets is reached ");
+							complext.push_back(factory.innerEatoms[eaIndex]);
 							break;
 						}
 
@@ -1045,6 +1048,8 @@ namespace dllite {
 				DBGLOG(DBG, "EL: RMG: program edb after adding ABox "<<*edb);
 
 				DBGLOG(DBG, "EL: RMG: adding information about support set completeness ");
+
+
 				for(unsigned eaIndex = 0; eaIndex < factory.innerEatoms.size(); ++eaIndex) {
 					//	DBGLOG(DBG,"EL: RMG: adding completeness fact for atom "<< RawPrinter::toString(reg,factory.innerEatoms[eaIndex]));
 					const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
@@ -1085,6 +1090,27 @@ namespace dllite {
 							comp.tuple.push_back(rQID);
 							else {assert(false);}
 							edb->setFact(reg->storeOrdinaryAtom(comp).address);
+						}
+					}
+
+					else if (factory.ctx.getPluginData<DLLitePlugin>().supnumber!=-1) {
+						if (std::find(complext.begin(), complext.end(), factory.innerEatoms[eaIndex]) != complext.end()){
+							{
+								OrdinaryAtom comp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
+								comp.tuple.push_back(reg->getAuxiliaryConstantSymbol('c', factory.innerEatoms[eaIndex]));
+								comp.tuple.push_back(eatom.inputs[0]);
+								comp.tuple.push_back(eatom.inputs[1]);
+								comp.tuple.push_back(eatom.inputs[2]);
+								comp.tuple.push_back(eatom.inputs[3]);
+								comp.tuple.push_back(eatom.inputs[4]);
+								comp.tuple.push_back(eatom.inputs[5]);
+								if (cQID!=ID_FAIL)
+								comp.tuple.push_back(cQID);
+								else if (rQID!=ID_FAIL)
+								comp.tuple.push_back(rQID);
+								else {assert(false);}
+								edb->setFact(reg->storeOrdinaryAtom(comp).address);
+							}
 						}
 					}
 				}
@@ -2318,7 +2344,7 @@ namespace dllite {
 								repl.tuple.push_back(reg->ogatoms.getByID(id).tuple[8]);
 
 								if (!modelCandidate->getFact(reg->ogatoms.getIDByStorage(repl))) {
-									DBGLOG(DBG,"EL: RMG: PC: evaluation of a current atom succeded");
+									DBGLOG(DBG,"EL: RMG: PC: evaluation of a current atom dod not succed");
 									return false;
 								}
 							}
@@ -2337,7 +2363,7 @@ namespace dllite {
 								repl.tuple.push_back(reg->ogatoms.getByID(id).tuple[8]);
 
 								if (!modelCandidate->getFact(reg->ogatoms.getIDByStorage(repl))) {
-									DBGLOG(DBG,"EL: RMG: PC: evaluation of a current atom succeded");
+									DBGLOG(DBG,"EL: RMG: PC: evaluation of a current atom did not succed");
 									return false;
 								}
 
