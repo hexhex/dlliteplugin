@@ -443,7 +443,7 @@ namespace dllite {
 			std::string path = std::string(PLUGIN_DIR)+std::string("/requiem/dist/requiem-cli.jar");
 			DBGLOG(DBG, "EL: LSS: the path to requie is : " <<path);
 			if (cQID != ID_FAIL) {
-				std::string call = "java -jar "+path+" \"Q(?0)  <-  "+std::string(querystr)+param+"\" "+opath+" F";
+				std::string call = "java -Xmx1000M -jar "+path+" \"Q(?0)  <-  "+std::string(querystr)+param+"\" "+opath+" F";
 
 				DBGLOG(DBG, "EL: LSS: sending call to Requim " << call);
 
