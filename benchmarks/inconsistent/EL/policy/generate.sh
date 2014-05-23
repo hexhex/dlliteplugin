@@ -10,19 +10,19 @@ for (( i=1; i <= 4*$1; i++ ))
 do
 	if [[ $RANDOM -le $prop ]]; then 
 
-		if [[ $i -le 7*$1 ]]; then 
+		if [[ $i -le 1*$1 ]]; then 
 			echo "hasowner(\"p1\",\"s$i\")."
 			echo "project(\"p1\")."
 		
-		elif [[ $i -le 12*$1 ]]; then 	
+		elif [[ $i -le 2*$1 ]]; then 	
 			echo "hasowner(\"p2\",\"s$i\")."	
 			echo "project(\"p2\")."
 
-		elif [[ $i -le 24*$1 ]]; then 	 
+		elif [[ $i -le 3*$1 ]]; then 	 
 			echo "hasowner(\"p3\",\"s$i\")."		
 			echo "project(\"p3\")."		
 
-		elif [[ $i -le 31*$1 ]]; then
+		elif [[ $i -le 4*$1 ]]; then
 			echo "hasowner(\"p4\",\"s$i\")."		 	
 			echo "project(\"p4\")."
 
