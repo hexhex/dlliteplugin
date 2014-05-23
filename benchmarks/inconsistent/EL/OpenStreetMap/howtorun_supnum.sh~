@@ -1,2 +1,0 @@
-dlvhex2 --supportsets --el --heuristics=monolithic --repair=test.owl --flpcheck=none test.hex --verbose=1 --liberalsafety -n=1 --supnumber=2 2>out.txt
-
