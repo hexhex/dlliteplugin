@@ -24,8 +24,8 @@ This is dlvhex-dlliteplugin, a plugin for `dlvhex'.
     $ ./configure --with-boost=/path/to/boost-prefix
 
 *** owlcpp
-    This library is necessary for repair answer set computation
-    (option --repair). To link the library, use one of the
+    This library is necessary for evaluation of DL-programs using support sets (option --supportsets)
+    as well as the repair answer set computation (option --repair). To link the library, use one of the
     following options:
 
     1.
