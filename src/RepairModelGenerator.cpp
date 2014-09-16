@@ -80,7 +80,7 @@ namespace dllite {
 		if (ctx.config.getOption("LiberalSafety")) {
 			// add domain predicates for all external atoms which are necessary to establish liberal domain-expansion safety
 			// and extract the domain-exploration program from the IDB
-			addDomainPredicatesAndCreateDomainExplorationProgram(ci, ctx, idb, deidb, deidbInnerEatoms);
+			addDomainPredicatesAndCreateDomainExplorationProgram(ci, ctx, idb, deidb, deidbInnerEatoms, outerEatoms);
 		}
 
 		innerEatoms = ci.innerEatoms;
@@ -2946,3 +2946,4 @@ void RepairModelGenerator::propagate(InterpretationConstPtr partialInterpretatio
 DLVHEX_NAMESPACE_END
 
 // vi:ts=8:noexpandtab:
+
