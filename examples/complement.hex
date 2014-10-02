@@ -1,6 +1,0 @@
-% This is a minimal example which demonstrates that complement concepts in the Abox are not interpreted correctly.
-resas(X) :- &cDL["complement.owl", a, b, c, d, "ResearchAssistant"](X).
-neg_student(X) :- resas(X), &cDL["complement.owl", a, b, c, d, "-Student"](X).
-omit(Z1,Z2):- &cDL["complement.owl",a, b, c, d,"PostDoc"](Z1), &cDL["complement.owl",a, b, c, d,"PostDoc"](Z2).
-
-
