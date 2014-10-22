@@ -1,8 +1,0 @@
-
-
-hasfather(X,Y):-&cDL[OWLONTOLOGY,pcm,b,c,d,"Male"](Y), &rDL[OWLONTOLOGY,pcc,b,c,d,"hasParent"](X,Y), domain(X), domain(Y).
-
-:-not &cDL[OWLONTOLOGY,pcc,b,c,d,"Adopted"](X),hasfather(X,Y1),ischildof(X,Y2),Y1!=Y2,not &cDL[OWLONTOLOGY,pcm,b,c,d,"-Male"](Y2).
-
-pcm("Male",X):-boy(X).
-pcc("Child",X):-boy(X).
