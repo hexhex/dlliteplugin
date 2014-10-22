@@ -1,0 +1,49 @@
+boy("c1").
+ischildof("c1","p54").
+boy("c2").
+ischildof("c2","p53").
+boy("c4").
+ischildof("c4","p55").
+boy("c9").
+ischildof("c9","p55").
+boy("c10").
+ischildof("c10","p55").
+boy("c12").
+ischildof("c12","p47").
+boy("c15").
+ischildof("c15","p47").
+boy("c22").
+ischildof("c22","p50").
+boy("c24").
+ischildof("c24","p45").
+boy("c25").
+ischildof("c25","p45").
+boy("c26").
+ischildof("c26","p54").
+boy("c31").
+ischildof("c31","p48").
+boy("c33").
+ischildof("c33","p47").
+boy("c38").
+ischildof("c38","p54").
+boy("c40").
+ischildof("c40","p50").
+boy("c41").
+ischildof("c41","p45").
+boy("c44").
+ischildof("c44","p50").
+boy("c48").
+ischildof("c48","p49").
+boy("c49").
+ischildof("c49","p49").
+
+hasfather(X,Y):-&cDL["inst_size_010_inst_001.owl",pcm,b,c,d,"Male"](Y), &rDL["inst_size_010_inst_001.owl",pcc,b,c,d,"hasParent"](X,Y).
+
+:-not &cDL["inst_size_010_inst_001.owl",pcc,b,c,d,"Adopted"](X),hasfather(X,Y1),ischildof(X,Y2),Y1!=Y2,not &cDL["inst_size_010_inst_001.owl",pcm,b,c,d,"-Male"](Y2), boy(X).
+
+contact(X,Y):- &rDL["inst_size_010_inst_001.owl",a,b,c,d,"hasParent"](X,Y), not omit(X,Y).
+omit(X,Y):- &cDL["inst_size_010_inst_001.owl",a,b,c,d,"Adopted"](X), Z!=Y, hasfather(X,Y), contact(X,Z).
+
+
+pcm("Male",X):-boy(X).
+pcc("Child",X):-boy(X).

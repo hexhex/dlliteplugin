@@ -1,0 +1,15 @@
+For generation of instances with varying size of the rules one needs to run the following command:
+
+./generateset_rules.sh p1 p2 p3 p4 
+
+where p1 is the starting probability, p2 final probability, p3 step between probabilities, p4 number of instancess to be generated for each probability.
+
+Example:
+./generateset_rules.sh 5 60 5 10
+
+The ontology data part is fixed in this case to 50 children (male, female and parent relations are proportional).
+The datapart of the program is fixed, it has been randomly generated apriori. For each hasParent(X,Y) with Male(Y) present in the ontology it contains a conflicting fact ischildOf(X,Z), s.t. \neg Male(Z) is not known by the ontology with probability 0.35.
+
+
+  
+

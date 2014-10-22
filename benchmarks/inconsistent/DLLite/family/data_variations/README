@@ -1,0 +1,13 @@
+For generation of instances with varying size of the data part one needs to run the following command:
+
+./generateset_data.sh p1 p2 p3 p4 p5 p6
+
+where p1 is the starting probability, p2 final probability, p3 step between probabilities, p4 number of instancess to be generated for each probability, p5 difficulty of an instance (if 1 then 50 children are generate and the rest of the facts involving MAle, Female and hasParent predicates are proportional), p6 domain presence (if 1 (resp. 0), then the domain restriction is present (resp. absent) in the program) 
+
+Example:
+./generateset_data.sh 5 60 5 10 1 0
+
+
+
+  
+
