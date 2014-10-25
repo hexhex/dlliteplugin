@@ -1,0 +1,27 @@
+% collect all customers into customer predicate
+customer(X):- isIn(X,Z), not &cDL[OWLONTOLOGY,custcp,custcm,custrp,custrm,"-Customer"](X).
+
+% collect all drivers into driver predicate
+driver(X):-isIn(X,Z), not customer(X).
+
+% condition on which customers are assigned to drivers
+nassign(X,Y) v assign(X,Y):-driver(X),customer(Y),isIn(X,Z),isIn(Y,Z), not omit(X,Y).
+
+% condition which omits assignments
+omit(X,Y):-needsTo(Y,Z1), assign(X,Y), &cDL[OWLONTOLOGY,omitcp,omitcm,omitrp,omitrm,"EDriver"](X),
+not &rDL[OWLONTOLOGY,cp,cm,rp,rm,"worksIn"](X,Z1).
+
+% if there are two drivers assigned to the same customer, then pick randomly one of the assignments
+drives(X1,Y1) v drives(X2,Y1):-assign(X1,Y1),assign(X2,Y1).
+
+% constraint that forbids customers not to be assigned to any drivers
+ok(Y):-driver(X), customer(Y), drives(X,Y).
+fail:-customer(Y), not ok(Y).
+:-fail.
+
+% constraint that forbids a driver to serve needs more then 4 customers
+:- drives(X,Y1),drives(X,Y1),drives(X,Y1),drives(X,Y1),Y1!=Y2,Y1!=Y3,Y1!=Y4,Y2!=Y3,Y2!=Y4,Y3!=Y4.
+
+% extention of ontological predicates
+custrp("worksIn",X,X1):-goTo(X,X1).
+omitcp("Driver",X):-driver(X).

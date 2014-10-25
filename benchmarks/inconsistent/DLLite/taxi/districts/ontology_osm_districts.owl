@@ -1,0 +1,4948 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE Ontology [
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     ontologyIRI="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms">
+    <Prefix name="" IRI="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Prefix name="terms" IRI="http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#"/>
+    <Prefix name="terms2" IRI="http://purl.org/dc/terms/"/>
+    <Prefix name="owl2xml" IRI="http://www.w3.org/2006/12/owl2-xml#"/>
+    <Prefix name="geoconcepts" IRI="http://www.kr.tuwien.ac.at/myits/geoconcepts/"/>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">The KBS GeoConcept ontology provides the vocabulary for the MyITS system</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">KBS GeoConcept Ontology</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="owl:versionInfo"/>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">V 1.1, Release 2013-01-31</Literal>
+    </Annotation>
+    <Declaration>
+        <Class IRI="#ATM"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Accomodation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AdministrativeDivision1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AdministrativeDivision2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AdministrativeDivision3"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AdministrativeDivision4"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AdministrativeFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AfricanCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Amenity"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AmericanCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AnimalFriendly"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ArabicCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Architect"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AreaFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Art"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ArtMarketEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ArtsCentre"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AsianCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Atelier"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Atmosphere"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Attraction"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Attributes"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AustrianCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AuthenticCuisineFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Bakery"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BakeryOp"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BalkanCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Bank"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BankLargOp"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BankMediumOp"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BankOp"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BankSmallOp"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Bar"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BavarianCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BeautySalon"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Bench"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BicycleMarketEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BicycleParking"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BicycleRoute"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BicycleShop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BioProductsFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BioSupermarket"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BohemianCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Books"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BrazilianCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BuildingFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BulgarianCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Burgenland"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Burgers"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BurgersOp"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BusRoute"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BusStation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BusStop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Butcher"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Cafe"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Canal"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CarRepair"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Castle"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CellarFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CentroidedPolygon"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Chemist"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ChemistOp"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ChildrenFriendly"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ChineseCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ChristmasMarketEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Church"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Cinema"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CitybikeStand"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CivicCentre"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ClassicMusicEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ClassicMusicFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ClimbingCentre"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Clothes"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ClothesOp"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Club"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#College"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CommercialEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Company"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ComprehensiveSchool"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ComputerShop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CopyShop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Country"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CoveredBusStop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CreoleCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CroatianCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Cuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CulturalEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Culture"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Customer"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DBpediaArticle"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DJMusicEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DJMusicFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DataSource"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Deli"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DeliveryService"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Dentist"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DepartmentStore"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DiningMorningFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DiningNightFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DiningOutdoorsFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DiningSundaysFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DiningWaterFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DoItYourself"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Doctors"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DrinkingWater"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Driver"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#EDriver"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Education"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#EducationalEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Electronics"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Embassy"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#EnglishCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#EnglishPub"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Envelope"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Event"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Exchange"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ExhibitionEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Exit"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FairTradeProductsFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FalterCheapFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FalterRecomFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FalterTheBestFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FastFood"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Financial"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FleaMarketEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Florist"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FlowerMarketEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FoodMarketEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FrenchCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Fuel"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Furniture"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FusionCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Gallery"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GamesFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Garden"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GardenFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GeoConceptFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GermanCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GiftShop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Government"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GrammarSchool"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GreekCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GuestGardenFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GuestHouse"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Hairdresser"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HappyHourFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Healthcare"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Heurige"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Hospital"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Hostel"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Hotel"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HungarianCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HydrographicFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HypsographicFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#IceCreamParlor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#IndianCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#IntermediateSchool"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#InternationalCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#IrishPub"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ItalianCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#JapaneseCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#JewelryShop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Kebab"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Kindergarten"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Kiosk"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#KoreanCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#KosherCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Kärnten"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Lake"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LateBreakfastFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LatinAmericanCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Laundry"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LebaneseCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Leisure"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LeisureEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LesbianGayFriendly"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LevantineCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Library"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Line"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LineString"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LinearRing"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Link"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LiveMusicEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LiveMusicFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Market"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MarketEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Mensa"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MexicanCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MobilePhoneShop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MoroccanCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Mosque"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MovieEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Museum"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MusicEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MusicFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MusicMarket"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NGO"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NepaleseCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Newsagent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Niederoesterreich"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Nightlife"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NoPublicAccess"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NoSmokingFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Oberösterreich"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Office"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OperaHouse"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Operator"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Optician"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Organic"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OrientalCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Other"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Palace"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Park"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ParkAndRide"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Parking"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PartyEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Person"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Pharmacy"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PizzeriaCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PlaceOfWorship"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Playground"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Point"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Police"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Polygon"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PopulationFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PortugueseCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PostBox"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PostOffice"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PrimaryRoute"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PrimarySchool"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Private"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PrivateAccess"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ProductFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Pub"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PubCulture"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#QualitativeValue"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#QuantitativeValue"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RailwayExit"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RailwayHalt"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RailwayRoute"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RailwayStation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RecommendationFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Recycling"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RecyclingFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ResidentialRoute"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Restaurant"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#River"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Road"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RoadFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Roofed"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RoofedBusStop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Route"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RussianCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Salzburg"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ScandinavianCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#School"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SecondHandShop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SecondaryRoute"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SecondarySchool"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Service"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ShoeShop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Shop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SidewalkGardenFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SmokingFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Snack"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SpanishCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SpecialFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SpecialFeatureDining"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SportEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SportsCentre"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SportsShop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SriLankanCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Stadium"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Stationery"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Steiermark"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Stop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#StyrianCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SubwayExit"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SubwayRoute"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SubwayStation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Supermarket"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SupermarketOp"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SushiCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Sustenance"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Swimming"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SwimmingArea"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SwimmingPool"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Synagog"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Szene"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TableFootballFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Taxi"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TaxiStand"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Teahouse"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Temple"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TertiaryRoute"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ThaiCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Theatre"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TheatreEvent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TibetanCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Tirol"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Toilets"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ToiletsDisabled"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ToiletsUrinal"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Tourism"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TramRoute"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TramStop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Transportation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TravelAgency"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TurkishCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TypedFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#U1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#U2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#U3"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#U4"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#U6"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#UnderseaFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#University"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#UniversityOfAppliedSciences"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#VeganCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#VegetarianCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#VegetationFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#VienneseCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#VietnameseCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#VocationalSchool"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Vorarlberg"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#VorarlbergCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#WLANFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#WaldviertelCuisine"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Waterway"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#WheelChairAccessFeature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Wien"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#WikipediaArticle"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#WineShop"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#WurstStand"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Zoo"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#_Feature"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#_FeatureCode"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#_Geometry"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#adjoint"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#connected"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#disjoint"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#exterior"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasAtmosphere"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasBakeryOperator"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasBankOperator"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasBorderWith"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasCentroid"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasChemistOperator"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasClothesOperator"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasCuisine"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasEvent"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasEventMarket"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasExit"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasFastFoodOperator"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasFeatureCode"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasLink"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasOperator"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasPart"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasPoint"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasQualitativeValue"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasRecycling"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasSource"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasSpecialFeature"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasSupermarketOperator"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasWikipediaLink"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isCentroidOf"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isExitOf"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isLocated"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isLocatedAlong"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isLocatedContain"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isLocatedDisjoint"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isLocatedInside"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isLocatedIntersect"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isLocatedNext"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isOriginated"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isPartOf"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#where"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#worksIn"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI="terms2:license"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r1"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r10"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r11"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r12"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r13"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r14"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r15"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r16"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r17"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r18"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r19"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r2"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r20"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r21"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r22"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r23"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r3"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r4"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r5"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r6"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r7"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r8"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#r9"/>
+    </Declaration>
+    <EquivalentClasses>
+        <Class IRI="#PrivateAccess"/>
+        <ObjectIntersectionOf>
+            <Class IRI="#BuildingFeature"/>
+            <ObjectSomeValuesFrom>
+                <ObjectProperty IRI="#isLocatedInside"/>
+                <Class IRI="#Private"/>
+            </ObjectSomeValuesFrom>
+        </ObjectIntersectionOf>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="#RoofedBusStop"/>
+        <ObjectIntersectionOf>
+            <Class IRI="#BusStop"/>
+            <Class IRI="#Roofed"/>
+        </ObjectIntersectionOf>
+    </EquivalentClasses>
+    <SubClassOf>
+        <Class IRI="#ATM"/>
+        <Class IRI="#Financial"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Accomodation"/>
+        <Class IRI="#Tourism"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AdministrativeDivision1"/>
+        <Class IRI="#AdministrativeFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AdministrativeDivision2"/>
+        <Class IRI="#AdministrativeFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AdministrativeDivision3"/>
+        <Class IRI="#AdministrativeFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AdministrativeDivision4"/>
+        <Class IRI="#AdministrativeFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AdministrativeFeature"/>
+        <Class IRI="#TypedFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AfricanCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Amenity"/>
+        <Class IRI="#BuildingFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AmericanCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AnimalFriendly"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ArabicCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Architect"/>
+        <Class IRI="#Office"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AreaFeature"/>
+        <Class IRI="#TypedFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Art"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ArtMarketEvent"/>
+        <Class IRI="#MarketEvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ArtsCentre"/>
+        <Class IRI="#Culture"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AsianCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Atelier"/>
+        <Class IRI="#Art"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Atmosphere"/>
+        <Class IRI="#QualitativeValue"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Attraction"/>
+        <Class IRI="#Tourism"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AustrianCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AuthenticCuisineFeature"/>
+        <Class IRI="#RecommendationFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Bakery"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BakeryOp"/>
+        <Class IRI="#Operator"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BalkanCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Bank"/>
+        <Class IRI="#Financial"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Bank"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#hasBankOperator"/>
+            <Class abbreviatedIRI="owl:Thing"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BankLargOp"/>
+        <Class IRI="#BankOp"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BankMediumOp"/>
+        <Class IRI="#BankOp"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BankOp"/>
+        <Class IRI="#Operator"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BankSmallOp"/>
+        <Class IRI="#BankOp"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Bar"/>
+        <Class IRI="#Nightlife"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BavarianCuisine"/>
+        <Class IRI="#GermanCuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BeautySalon"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Bench"/>
+        <Class IRI="#Other"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BicycleMarketEvent"/>
+        <Class IRI="#MarketEvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BicycleParking"/>
+        <Class IRI="#Transportation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BicycleRoute"/>
+        <Class IRI="#Route"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BicycleShop"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BioProductsFeature"/>
+        <Class IRI="#ProductFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BioSupermarket"/>
+        <Class IRI="#Supermarket"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BohemianCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Books"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BrazilianCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BuildingFeature"/>
+        <Class IRI="#TypedFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BulgarianCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Burgenland"/>
+        <Class IRI="#AdministrativeDivision1"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Burgers"/>
+        <Class IRI="#FastFood"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BurgersOp"/>
+        <Class IRI="#Operator"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BusRoute"/>
+        <Class IRI="#Route"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BusStation"/>
+        <Class IRI="#Stop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BusStop"/>
+        <Class IRI="#Stop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Butcher"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Cafe"/>
+        <Class IRI="#Sustenance"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Canal"/>
+        <Class IRI="#Waterway"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CarRepair"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Castle"/>
+        <Class IRI="#Attraction"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CellarFeature"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CentroidedPolygon"/>
+        <Class IRI="#Polygon"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CentroidedPolygon"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#hasCentroid"/>
+            <Class IRI="#Point"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Chemist"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ChemistOp"/>
+        <Class IRI="#Operator"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ChildrenFriendly"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ChineseCuisine"/>
+        <Class IRI="#AsianCuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ChristmasMarketEvent"/>
+        <Class IRI="#MarketEvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Church"/>
+        <Class IRI="#PlaceOfWorship"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Cinema"/>
+        <Class IRI="#Culture"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CitybikeStand"/>
+        <Class IRI="#Transportation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CivicCentre"/>
+        <Class IRI="#Government"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ClassicMusicEvent"/>
+        <Class IRI="#MusicEvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ClassicMusicFeature"/>
+        <Class IRI="#MusicFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ClimbingCentre"/>
+        <Class IRI="#SportsCentre"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Clothes"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ClothesOp"/>
+        <Class IRI="#Operator"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Club"/>
+        <Class IRI="#Nightlife"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#College"/>
+        <Class IRI="#Education"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CommercialEvent"/>
+        <Class IRI="#Event"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Company"/>
+        <Class IRI="#Office"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ComprehensiveSchool"/>
+        <Class IRI="#School"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ComputerShop"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CopyShop"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Country"/>
+        <Class IRI="#AdministrativeFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CoveredBusStop"/>
+        <Class IRI="#BuildingFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CreoleCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CroatianCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Cuisine"/>
+        <Class IRI="#QualitativeValue"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CulturalEvent"/>
+        <Class IRI="#Event"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Culture"/>
+        <Class IRI="#Amenity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Customer"/>
+        <Class IRI="#Person"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DBpediaArticle"/>
+        <Class IRI="#Link"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DJMusicEvent"/>
+        <Class IRI="#PartyEvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DJMusicFeature"/>
+        <Class IRI="#MusicFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DataSource"/>
+        <Class IRI="#Attributes"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Deli"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DeliveryService"/>
+        <Class IRI="#Sustenance"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Dentist"/>
+        <Class IRI="#Healthcare"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DepartmentStore"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DiningMorningFeature"/>
+        <Class IRI="#SpecialFeatureDining"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DiningNightFeature"/>
+        <Class IRI="#SpecialFeatureDining"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DiningOutdoorsFeature"/>
+        <Class IRI="#SpecialFeatureDining"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DiningSundaysFeature"/>
+        <Class IRI="#SpecialFeatureDining"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DiningWaterFeature"/>
+        <Class IRI="#SpecialFeatureDining"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DoItYourself"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Doctors"/>
+        <Class IRI="#Healthcare"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DrinkingWater"/>
+        <Class IRI="#Other"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Driver"/>
+        <Class IRI="#Person"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#EDriver"/>
+        <Class IRI="#Driver"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Education"/>
+        <Class IRI="#BuildingFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#EducationalEvent"/>
+        <Class IRI="#Event"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Electronics"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Embassy"/>
+        <Class IRI="#Other"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#EnglishCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#EnglishPub"/>
+        <Class IRI="#Pub"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Envelope"/>
+        <Class IRI="#_Geometry"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Exchange"/>
+        <Class IRI="#Financial"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ExhibitionEvent"/>
+        <Class IRI="#CulturalEvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Exit"/>
+        <Class IRI="#RoadFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FairTradeProductsFeature"/>
+        <Class IRI="#ProductFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FalterCheapFeature"/>
+        <Class IRI="#RecommendationFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FalterRecomFeature"/>
+        <Class IRI="#RecommendationFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FalterTheBestFeature"/>
+        <Class IRI="#RecommendationFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FastFood"/>
+        <Class IRI="#Sustenance"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Financial"/>
+        <Class IRI="#Amenity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Financial"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#hasOperator"/>
+            <Class IRI="#Operator"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FleaMarketEvent"/>
+        <Class IRI="#MarketEvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Florist"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FlowerMarketEvent"/>
+        <Class IRI="#MarketEvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FoodMarketEvent"/>
+        <Class IRI="#MarketEvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FrenchCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Fuel"/>
+        <Class IRI="#Transportation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Furniture"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FusionCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Gallery"/>
+        <Class IRI="#Art"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GamesFeature"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Garden"/>
+        <Class IRI="#Leisure"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GardenFeature"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GeoConceptFeature"/>
+        <Class IRI="#TypedFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GermanCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GiftShop"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Government"/>
+        <Class IRI="#Office"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GrammarSchool"/>
+        <Class IRI="#School"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GreekCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GuestGardenFeature"/>
+        <Class IRI="#GardenFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GuestHouse"/>
+        <Class IRI="#Accomodation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Hairdresser"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HappyHourFeature"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Healthcare"/>
+        <Class IRI="#Amenity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Heurige"/>
+        <Class IRI="#Sustenance"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Hospital"/>
+        <Class IRI="#Healthcare"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Hostel"/>
+        <Class IRI="#Accomodation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Hotel"/>
+        <Class IRI="#Accomodation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HungarianCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HydrographicFeature"/>
+        <Class IRI="#TypedFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HypsographicFeature"/>
+        <Class IRI="#TypedFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#IceCreamParlor"/>
+        <Class IRI="#Sustenance"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#IndianCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#IntermediateSchool"/>
+        <Class IRI="#School"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#InternationalCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#IrishPub"/>
+        <Class IRI="#Pub"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ItalianCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#JapaneseCuisine"/>
+        <Class IRI="#AsianCuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#JewelryShop"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Kebab"/>
+        <Class IRI="#FastFood"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Kindergarten"/>
+        <Class IRI="#Education"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Kiosk"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#KoreanCuisine"/>
+        <Class IRI="#AsianCuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#KosherCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Kärnten"/>
+        <Class IRI="#AdministrativeDivision1"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Lake"/>
+        <Class IRI="#HydrographicFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LateBreakfastFeature"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LatinAmericanCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Laundry"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LebaneseCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Leisure"/>
+        <Class IRI="#AreaFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LeisureEvent"/>
+        <Class IRI="#Event"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LesbianGayFriendly"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LevantineCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Library"/>
+        <Class IRI="#Education"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Line"/>
+        <Class IRI="#_Geometry"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LineString"/>
+        <Class IRI="#_Geometry"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LinearRing"/>
+        <Class IRI="#_Geometry"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Link"/>
+        <Class IRI="#Attributes"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LiveMusicEvent"/>
+        <Class IRI="#MusicEvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LiveMusicFeature"/>
+        <Class IRI="#MusicFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Market"/>
+        <Class IRI="#Other"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MarketEvent"/>
+        <Class IRI="#Event"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Mensa"/>
+        <Class IRI="#Sustenance"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MexicanCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MobilePhoneShop"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MoroccanCuisine"/>
+        <Class IRI="#LevantineCuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Mosque"/>
+        <Class IRI="#PlaceOfWorship"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MovieEvent"/>
+        <Class IRI="#CulturalEvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Museum"/>
+        <Class IRI="#Tourism"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MusicEvent"/>
+        <Class IRI="#Event"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MusicFeature"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MusicMarket"/>
+        <Class IRI="#MarketEvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NGO"/>
+        <Class IRI="#Office"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NepaleseCuisine"/>
+        <Class IRI="#AsianCuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Newsagent"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Niederoesterreich"/>
+        <Class IRI="#AdministrativeDivision1"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Nightlife"/>
+        <Class IRI="#Sustenance"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NoSmokingFeature"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Oberösterreich"/>
+        <Class IRI="#AdministrativeDivision1"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Office"/>
+        <Class IRI="#BuildingFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OperaHouse"/>
+        <Class IRI="#Culture"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Operator"/>
+        <Class IRI="#QualitativeValue"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Optician"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Organic"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OrientalCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Other"/>
+        <Class IRI="#Amenity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Palace"/>
+        <Class IRI="#Attraction"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Park"/>
+        <Class IRI="#Leisure"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ParkAndRide"/>
+        <Class IRI="#Transportation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Parking"/>
+        <Class IRI="#Transportation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PartyEvent"/>
+        <Class IRI="#Event"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Pharmacy"/>
+        <Class IRI="#Healthcare"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PizzeriaCuisine"/>
+        <Class IRI="#ItalianCuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PlaceOfWorship"/>
+        <Class IRI="#Other"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Playground"/>
+        <Class IRI="#Leisure"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Point"/>
+        <Class IRI="#_Geometry"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Police"/>
+        <Class IRI="#Other"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Polygon"/>
+        <Class IRI="#_Geometry"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Polygon"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#exterior"/>
+            <Class IRI="#LinearRing"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PopulationFeature"/>
+        <Class IRI="#TypedFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PortugueseCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PostBox"/>
+        <Class IRI="#Other"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PostOffice"/>
+        <Class IRI="#Other"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PrimaryRoute"/>
+        <Class IRI="#Road"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PrimarySchool"/>
+        <Class IRI="#School"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PrivateAccess"/>
+        <Class IRI="#NoPublicAccess"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ProductFeature"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Pub"/>
+        <Class IRI="#Nightlife"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PubCulture"/>
+        <Class IRI="#QualitativeValue"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#QualitativeValue"/>
+        <Class IRI="#Attributes"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#QuantitativeValue"/>
+        <Class IRI="#Attributes"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RailwayExit"/>
+        <Class IRI="#Exit"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RailwayHalt"/>
+        <Class IRI="#Stop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RailwayRoute"/>
+        <Class IRI="#Route"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RailwayStation"/>
+        <Class IRI="#Stop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RecommendationFeature"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Recycling"/>
+        <Class IRI="#Other"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RecyclingFeature"/>
+        <Class IRI="#QualitativeValue"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ResidentialRoute"/>
+        <Class IRI="#Road"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Restaurant"/>
+        <Class IRI="#Sustenance"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Restaurant"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#hasCuisine"/>
+            <Class IRI="#Cuisine"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#River"/>
+        <Class IRI="#Waterway"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Road"/>
+        <Class IRI="#Route"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RoadFeature"/>
+        <Class IRI="#TypedFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RoofedBusStop"/>
+        <Class IRI="#CoveredBusStop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Route"/>
+        <Class IRI="#RoadFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RussianCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Salzburg"/>
+        <Class IRI="#AdministrativeDivision1"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ScandinavianCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#School"/>
+        <Class IRI="#Education"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SecondHandShop"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SecondaryRoute"/>
+        <Class IRI="#Road"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SecondarySchool"/>
+        <Class IRI="#School"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ShoeShop"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Shop"/>
+        <Class IRI="#BuildingFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Shop"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#hasOperator"/>
+            <Class IRI="#Operator"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SidewalkGardenFeature"/>
+        <Class IRI="#GardenFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SmokingFeature"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Snack"/>
+        <Class IRI="#FastFood"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SpanishCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SpecialFeature"/>
+        <Class IRI="#QualitativeValue"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SpecialFeatureDining"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SportEvent"/>
+        <Class IRI="#LeisureEvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SportsCentre"/>
+        <Class IRI="#Leisure"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SportsShop"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SriLankanCuisine"/>
+        <Class IRI="#IndianCuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Stadium"/>
+        <Class IRI="#SportsCentre"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Stationery"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Steiermark"/>
+        <Class IRI="#AdministrativeDivision1"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Stop"/>
+        <Class IRI="#RoadFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#StyrianCuisine"/>
+        <Class IRI="#AustrianCuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SubwayExit"/>
+        <Class IRI="#Exit"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SubwayRoute"/>
+        <Class IRI="#Route"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SubwayStation"/>
+        <Class IRI="#Stop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Supermarket"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SupermarketOp"/>
+        <Class IRI="#Operator"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SushiCuisine"/>
+        <Class IRI="#JapaneseCuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Sustenance"/>
+        <Class IRI="#Amenity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Sustenance"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#hasSpecialFeature"/>
+            <Class IRI="#SpecialFeature"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Swimming"/>
+        <Class IRI="#Leisure"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SwimmingArea"/>
+        <Class IRI="#Swimming"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SwimmingPool"/>
+        <Class IRI="#Swimming"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Synagog"/>
+        <Class IRI="#PlaceOfWorship"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Szene"/>
+        <Class IRI="#Sustenance"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TableFootballFeature"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Taxi"/>
+        <Class IRI="#Service"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TaxiStand"/>
+        <Class IRI="#Transportation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Teahouse"/>
+        <Class IRI="#Sustenance"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Temple"/>
+        <Class IRI="#PlaceOfWorship"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TertiaryRoute"/>
+        <Class IRI="#Road"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ThaiCuisine"/>
+        <Class IRI="#AsianCuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Theatre"/>
+        <Class IRI="#Culture"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TheatreEvent"/>
+        <Class IRI="#CulturalEvent"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TibetanCuisine"/>
+        <Class IRI="#AsianCuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Tirol"/>
+        <Class IRI="#AdministrativeDivision1"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Toilets"/>
+        <Class IRI="#Other"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ToiletsDisabled"/>
+        <Class IRI="#Toilets"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ToiletsUrinal"/>
+        <Class IRI="#Toilets"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Tourism"/>
+        <Class IRI="#BuildingFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TramRoute"/>
+        <Class IRI="#Route"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TramStop"/>
+        <Class IRI="#Stop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Transportation"/>
+        <Class IRI="#BuildingFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TravelAgency"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TurkishCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TypedFeature"/>
+        <Class IRI="#_Feature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TypedFeature"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#hasFeatureCode"/>
+            <Class IRI="#_FeatureCode"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TypedFeature"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#isLocated"/>
+            <Class IRI="#TypedFeature"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#U1"/>
+        <Class IRI="#SubwayRoute"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#U2"/>
+        <Class IRI="#SubwayRoute"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#U3"/>
+        <Class IRI="#SubwayRoute"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#U4"/>
+        <Class IRI="#SubwayRoute"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#U6"/>
+        <Class IRI="#SubwayRoute"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#UnderseaFeature"/>
+        <Class IRI="#TypedFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#University"/>
+        <Class IRI="#Education"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#UniversityOfAppliedSciences"/>
+        <Class IRI="#Education"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#VeganCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#VegetarianCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#VegetationFeature"/>
+        <Class IRI="#TypedFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#VienneseCuisine"/>
+        <Class IRI="#AustrianCuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#VietnameseCuisine"/>
+        <Class IRI="#AsianCuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#VocationalSchool"/>
+        <Class IRI="#School"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Vorarlberg"/>
+        <Class IRI="#AdministrativeDivision1"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#VorarlbergCuisine"/>
+        <Class IRI="#AustrianCuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#WLANFeature"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#WaldviertelCuisine"/>
+        <Class IRI="#AustrianCuisine"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Waterway"/>
+        <Class IRI="#HydrographicFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#WheelChairAccessFeature"/>
+        <Class IRI="#SpecialFeature"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Wien"/>
+        <Class IRI="#AdministrativeDivision1"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#WikipediaArticle"/>
+        <Class IRI="#Link"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#WineShop"/>
+        <Class IRI="#Shop"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#WurstStand"/>
+        <Class IRI="#FastFood"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Zoo"/>
+        <Class IRI="#Leisure"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#_FeatureCode"/>
+        <Class IRI="#Attributes"/>
+    </SubClassOf>
+    <DisjointClasses>
+        <Class IRI="#Customer"/>
+        <Class IRI="#Driver"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#NoSmokingFeature"/>
+        <Class IRI="#SmokingFeature"/>
+    </DisjointClasses>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r1"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r10"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r11"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r12"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r13"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r14"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r15"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r16"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r17"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r18"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r19"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r2"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r20"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r21"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r22"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r23"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r3"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r4"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r5"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r6"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r7"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r8"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#AdministrativeDivision3"/>
+        <NamedIndividual IRI="#r9"/>
+    </ClassAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r1"/>
+        <NamedIndividual IRI="#r5"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r1"/>
+        <NamedIndividual IRI="#r4"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r1"/>
+        <NamedIndividual IRI="#r3"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r1"/>
+        <NamedIndividual IRI="#r2"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r1"/>
+        <NamedIndividual IRI="#r9"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r1"/>
+        <NamedIndividual IRI="#r8"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r1"/>
+        <NamedIndividual IRI="#r7"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r1"/>
+        <NamedIndividual IRI="#r6"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r10"/>
+        <NamedIndividual IRI="#r11"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r10"/>
+        <NamedIndividual IRI="#r12"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r10"/>
+        <NamedIndividual IRI="#r4"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r10"/>
+        <NamedIndividual IRI="#r3"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r10"/>
+        <NamedIndividual IRI="#r5"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r10"/>
+        <NamedIndividual IRI="#r23"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r11"/>
+        <NamedIndividual IRI="#r10"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r11"/>
+        <NamedIndividual IRI="#r22"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r11"/>
+        <NamedIndividual IRI="#r3"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r11"/>
+        <NamedIndividual IRI="#r2"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r12"/>
+        <NamedIndividual IRI="#r13"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r12"/>
+        <NamedIndividual IRI="#r15"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r12"/>
+        <NamedIndividual IRI="#r14"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r12"/>
+        <NamedIndividual IRI="#r10"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r12"/>
+        <NamedIndividual IRI="#r6"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r12"/>
+        <NamedIndividual IRI="#r5"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r12"/>
+        <NamedIndividual IRI="#r23"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r13"/>
+        <NamedIndividual IRI="#r12"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r13"/>
+        <NamedIndividual IRI="#r15"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r13"/>
+        <NamedIndividual IRI="#r14"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r13"/>
+        <NamedIndividual IRI="#r23"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r14"/>
+        <NamedIndividual IRI="#r12"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r14"/>
+        <NamedIndividual IRI="#r13"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r14"/>
+        <NamedIndividual IRI="#r16"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r14"/>
+        <NamedIndividual IRI="#r17"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r14"/>
+        <NamedIndividual IRI="#r15"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r15"/>
+        <NamedIndividual IRI="#r16"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r15"/>
+        <NamedIndividual IRI="#r14"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r15"/>
+        <NamedIndividual IRI="#r13"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r15"/>
+        <NamedIndividual IRI="#r12"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r15"/>
+        <NamedIndividual IRI="#r7"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r15"/>
+        <NamedIndividual IRI="#r6"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r15"/>
+        <NamedIndividual IRI="#r5"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r16"/>
+        <NamedIndividual IRI="#r14"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r16"/>
+        <NamedIndividual IRI="#r15"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r16"/>
+        <NamedIndividual IRI="#r7"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r16"/>
+        <NamedIndividual IRI="#r17"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r16"/>
+        <NamedIndividual IRI="#r8"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r17"/>
+        <NamedIndividual IRI="#r16"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r17"/>
+        <NamedIndividual IRI="#r14"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r17"/>
+        <NamedIndividual IRI="#r9"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r17"/>
+        <NamedIndividual IRI="#r8"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r17"/>
+        <NamedIndividual IRI="#r18"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r18"/>
+        <NamedIndividual IRI="#r9"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r18"/>
+        <NamedIndividual IRI="#r19"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r18"/>
+        <NamedIndividual IRI="#r17"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r19"/>
+        <NamedIndividual IRI="#r17"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r19"/>
+        <NamedIndividual IRI="#r18"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r19"/>
+        <NamedIndividual IRI="#r21"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r19"/>
+        <NamedIndividual IRI="#r20"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r2"/>
+        <NamedIndividual IRI="#r9"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r2"/>
+        <NamedIndividual IRI="#r22"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r2"/>
+        <NamedIndividual IRI="#r1"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r2"/>
+        <NamedIndividual IRI="#r3"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r2"/>
+        <NamedIndividual IRI="#r20"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r2"/>
+        <NamedIndividual IRI="#r11"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r20"/>
+        <NamedIndividual IRI="#r9"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r20"/>
+        <NamedIndividual IRI="#r2"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r20"/>
+        <NamedIndividual IRI="#r19"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r20"/>
+        <NamedIndividual IRI="#r21"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r20"/>
+        <NamedIndividual IRI="#r22"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r21"/>
+        <NamedIndividual IRI="#r2"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r21"/>
+        <NamedIndividual IRI="#r20"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r21"/>
+        <NamedIndividual IRI="#r22"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r21"/>
+        <NamedIndividual IRI="#r19"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r22"/>
+        <NamedIndividual IRI="#r21"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r22"/>
+        <NamedIndividual IRI="#r2"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r22"/>
+        <NamedIndividual IRI="#r20"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r23"/>
+        <NamedIndividual IRI="#r12"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r23"/>
+        <NamedIndividual IRI="#r13"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r23"/>
+        <NamedIndividual IRI="#r10"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r3"/>
+        <NamedIndividual IRI="#r1"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r3"/>
+        <NamedIndividual IRI="#r2"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r3"/>
+        <NamedIndividual IRI="#r11"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r3"/>
+        <NamedIndividual IRI="#r10"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r3"/>
+        <NamedIndividual IRI="#r4"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r4"/>
+        <NamedIndividual IRI="#r10"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r4"/>
+        <NamedIndividual IRI="#r1"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r4"/>
+        <NamedIndividual IRI="#r5"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r4"/>
+        <NamedIndividual IRI="#r6"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r4"/>
+        <NamedIndividual IRI="#r3"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r5"/>
+        <NamedIndividual IRI="#r12"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r5"/>
+        <NamedIndividual IRI="#r10"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r5"/>
+        <NamedIndividual IRI="#r15"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r5"/>
+        <NamedIndividual IRI="#r6"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r5"/>
+        <NamedIndividual IRI="#r4"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r6"/>
+        <NamedIndividual IRI="#r12"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r6"/>
+        <NamedIndividual IRI="#r15"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r6"/>
+        <NamedIndividual IRI="#r1"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r6"/>
+        <NamedIndividual IRI="#r7"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r6"/>
+        <NamedIndividual IRI="#r4"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r6"/>
+        <NamedIndividual IRI="#r5"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r7"/>
+        <NamedIndividual IRI="#r1"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r7"/>
+        <NamedIndividual IRI="#r15"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r7"/>
+        <NamedIndividual IRI="#r6"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r7"/>
+        <NamedIndividual IRI="#r8"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r7"/>
+        <NamedIndividual IRI="#r17"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r7"/>
+        <NamedIndividual IRI="#r16"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r8"/>
+        <NamedIndividual IRI="#r16"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r8"/>
+        <NamedIndividual IRI="#r17"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r8"/>
+        <NamedIndividual IRI="#r1"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r8"/>
+        <NamedIndividual IRI="#r9"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r8"/>
+        <NamedIndividual IRI="#r7"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r9"/>
+        <NamedIndividual IRI="#r18"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r9"/>
+        <NamedIndividual IRI="#r17"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r9"/>
+        <NamedIndividual IRI="#r20"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r9"/>
+        <NamedIndividual IRI="#r19"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r9"/>
+        <NamedIndividual IRI="#r8"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r9"/>
+        <NamedIndividual IRI="#r1"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#adjoint"/>
+        <NamedIndividual IRI="#r9"/>
+        <NamedIndividual IRI="#r2"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#exterior"/>
+        <Class IRI="#Polygon"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasAtmosphere"/>
+        <Class IRI="#Restaurant"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasBakeryOperator"/>
+        <Class IRI="#Bakery"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasBankOperator"/>
+        <Class IRI="#Bank"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasCentroid"/>
+        <Class IRI="#_Geometry"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasChemistOperator"/>
+        <Class IRI="#Chemist"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasClothesOperator"/>
+        <Class IRI="#Clothes"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasCuisine"/>
+        <Class IRI="#Restaurant"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasEvent"/>
+        <Class IRI="#BuildingFeature"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasEventMarket"/>
+        <Class IRI="#Market"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasExit"/>
+        <Class IRI="#Stop"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasFastFoodOperator"/>
+        <Class IRI="#FastFood"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasFeatureCode"/>
+        <Class IRI="#TypedFeature"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasOperator"/>
+        <Class IRI="#Shop"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasPoint"/>
+        <Class IRI="#Line"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasQualitativeValue"/>
+        <Class IRI="#BuildingFeature"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasRecycling"/>
+        <Class IRI="#Recycling"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasSpecialFeature"/>
+        <Class IRI="#Sustenance"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasSupermarketOperator"/>
+        <Class IRI="#Supermarket"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#isCentroidOf"/>
+        <Class IRI="#Point"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#isExitOf"/>
+        <Class IRI="#Exit"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#isOriginated"/>
+        <Class IRI="#Cuisine"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#worksIn"/>
+        <Class IRI="#Driver"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#exterior"/>
+        <Class IRI="#LinearRing"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasAtmosphere"/>
+        <Class IRI="#Atmosphere"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasBakeryOperator"/>
+        <Class IRI="#BakeryOp"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasBankOperator"/>
+        <Class IRI="#BankOp"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasCentroid"/>
+        <Class IRI="#Point"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasChemistOperator"/>
+        <Class IRI="#ChemistOp"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasClothesOperator"/>
+        <Class IRI="#ClothesOp"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasCuisine"/>
+        <Class IRI="#Cuisine"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasEvent"/>
+        <Class IRI="#Event"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasEventMarket"/>
+        <Class IRI="#MarketEvent"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasExit"/>
+        <Class IRI="#Exit"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasFastFoodOperator"/>
+        <Class IRI="#BurgersOp"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasFeatureCode"/>
+        <Class IRI="#_FeatureCode"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasOperator"/>
+        <Class IRI="#Operator"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasPoint"/>
+        <Class IRI="#Point"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasQualitativeValue"/>
+        <Class IRI="#QualitativeValue"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasRecycling"/>
+        <Class IRI="#RecyclingFeature"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasSource"/>
+        <Class IRI="#DataSource"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasSpecialFeature"/>
+        <Class IRI="#SpecialFeature"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasSupermarketOperator"/>
+        <Class IRI="#SupermarketOp"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#isCentroidOf"/>
+        <Class IRI="#_Geometry"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#isExitOf"/>
+        <Class IRI="#Stop"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#isOriginated"/>
+        <Class IRI="#Country"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#where"/>
+        <Class IRI="#_Geometry"/>
+    </ObjectPropertyRange>
+    <DisjointObjectProperties>
+        <ObjectProperty IRI="#adjoint"/>
+        <ObjectProperty IRI="#disjoint"/>
+    </DisjointObjectProperties>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ATM</IRI>
+        <Literal datatypeIRI="&xsd;string">Geldautomat</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Accomodation</IRI>
+        <Literal datatypeIRI="&xsd;string">Unterkunft</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#AdministrativeDivision3</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">At this time, districts are coded as concepts, 
+where the annotator assigns one individual 
+from OSM (which represents the geometry) to it.
+Should be improved to move districts to 
+ABox and define Equality to OSM individiual.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#AfricanCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Afrikanische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Amenity</IRI>
+        <Literal datatypeIRI="&xsd;string">Annehmlichkeit</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#AmericanCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Amerikanische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#AnimalFriendly</IRI>
+        <Literal datatypeIRI="&xsd;string">tierfreundlich</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ArabicCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Arabische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ArtMarketEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Kunstmarkt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ArtsCentre</IRI>
+        <Literal datatypeIRI="&xsd;string">Kunstzentrum</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#AsianCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Asiatische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Attraction</IRI>
+        <Literal datatypeIRI="&xsd;string">Attraktion</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Attraction</IRI>
+        <Literal datatypeIRI="&xsd;string">Sehensürdigkeit</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#AustrianCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Österreichische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#AuthenticCuisineFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Authentisch Essen</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Bakery</IRI>
+        <Literal datatypeIRI="&xsd;string">Backstube</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Bakery</IRI>
+        <Literal datatypeIRI="&xsd;string">Bäckerei</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BalkanCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Balkan Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BalkanCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Südosteuropäische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Bank</IRI>
+        <Literal datatypeIRI="&xsd;string">Bank</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Bar</IRI>
+        <Literal datatypeIRI="&xsd;string">Bar</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Bar</IRI>
+        <Literal datatypeIRI="&xsd;string">Kneipe</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BavarianCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Bayrische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BeautySalon</IRI>
+        <Literal datatypeIRI="&xsd;string">Kosmetiksalon</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Bench</IRI>
+        <Literal datatypeIRI="&xsd;string">Sitzbank</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BicycleMarketEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Fahrrad-Markt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BicycleMarketEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Radsport-Markt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BicycleParking</IRI>
+        <Literal datatypeIRI="&xsd;string">Fahrradabstellplatz</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BicycleShop</IRI>
+        <Literal datatypeIRI="&xsd;string">Fahrradgeschäft</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BioProductsFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Bioprodukte</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BioSupermarket</IRI>
+        <Literal datatypeIRI="&xsd;string">Biosupermarkt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BohemianCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Böhmische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Books</IRI>
+        <Literal datatypeIRI="&xsd;string">Buchladen</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Books</IRI>
+        <Literal datatypeIRI="&xsd;string">Bücher</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BrazilianCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Brasilianische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BuildingFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Gebäude</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BulgarianCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Bulgarische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Burgenland</IRI>
+        <Literal datatypeIRI="&xsd;string">Burgenland</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#BusStop</IRI>
+        <Literal datatypeIRI="&xsd;string">Bus-Haltestelle</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Butcher</IRI>
+        <Literal datatypeIRI="&xsd;string">Fleischerei</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Butcher</IRI>
+        <Literal datatypeIRI="&xsd;string">Metzgerei</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Cafe</IRI>
+        <Literal datatypeIRI="&xsd;string">Cafe</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Cafe</IRI>
+        <Literal datatypeIRI="&xsd;string">Kaffeehaus</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Canal</IRI>
+        <Literal datatypeIRI="&xsd;string">Kanal</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#CarRepair</IRI>
+        <Literal datatypeIRI="&xsd;string">Autowerkstatt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#CarRepair</IRI>
+        <Literal datatypeIRI="&xsd;string">Werkstatt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Castle</IRI>
+        <Literal datatypeIRI="&xsd;string">Schloss</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#CellarFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Keller</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Chemist</IRI>
+        <Literal datatypeIRI="&xsd;string">Drogerie</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ChildrenFriendly</IRI>
+        <Literal datatypeIRI="&xsd;string">kinderfreundlich</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ChineseCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Chinesische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ChristmasMarketEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Weihnachts-Markt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Church</IRI>
+        <Literal datatypeIRI="&xsd;string">This should also be part of Tourism</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Church</IRI>
+        <Literal datatypeIRI="&xsd;string">Kirche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Cinema</IRI>
+        <Literal datatypeIRI="&xsd;string">Kino</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#CitybikeStand</IRI>
+        <Literal datatypeIRI="&xsd;string">Citybike</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#CivicCentre</IRI>
+        <Literal datatypeIRI="&xsd;string">Bürgerdienststellen</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#CivicCentre</IRI>
+        <Literal datatypeIRI="&xsd;string">Gemeindezentrum</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ClimbingCentre</IRI>
+        <Literal datatypeIRI="&xsd;string">Kletteranlage</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Clothes</IRI>
+        <Literal datatypeIRI="&xsd;string">Fashion-Store</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Clothes</IRI>
+        <Literal datatypeIRI="&xsd;string">Kleidergeschäft</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Clothes</IRI>
+        <Literal datatypeIRI="&xsd;string">Modegeschäft</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Club</IRI>
+        <Literal datatypeIRI="&xsd;string">Club</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Club</IRI>
+        <Literal datatypeIRI="&xsd;string">Disco</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Club</IRI>
+        <Literal datatypeIRI="&xsd;string">Disko</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#College</IRI>
+        <Literal datatypeIRI="&xsd;string">Kolleg</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ComputerShop</IRI>
+        <Literal datatypeIRI="&xsd;string">Computergeschäft</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#CopyShop</IRI>
+        <Literal datatypeIRI="&xsd;string">Copy Shop</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#CreoleCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Kreolische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#CroatianCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Kroatische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Culture</IRI>
+        <Literal datatypeIRI="&xsd;string">Kultur-Einrichtung</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Deli</IRI>
+        <Literal datatypeIRI="&xsd;string">Deli</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Deli</IRI>
+        <Literal datatypeIRI="&xsd;string">Feinkost</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#DeliveryService</IRI>
+        <Literal datatypeIRI="&xsd;string">Zustelldienst</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Dentist</IRI>
+        <Literal datatypeIRI="&xsd;string">Zahnarzt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#DepartmentStore</IRI>
+        <Literal datatypeIRI="&xsd;string">Kaufhaus</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#DiningMorningFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Essen am-Morgen</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#DiningNightFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Essen nachts</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#DiningOutdoorsFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Essen Draußen</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#DiningSundaysFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Essen am-Sonntag</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#DoItYourself</IRI>
+        <Literal datatypeIRI="&xsd;string">Baumarkt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#DoItYourself</IRI>
+        <Literal datatypeIRI="&xsd;string">Heimwerkerbedarf</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Doctors</IRI>
+        <Literal datatypeIRI="&xsd;string">Doktor</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#DrinkingWater</IRI>
+        <Literal datatypeIRI="&xsd;string">Trinkwasserbrunner</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Education</IRI>
+        <Literal datatypeIRI="&xsd;string">Bildungseinrichtung</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Electronics</IRI>
+        <Literal datatypeIRI="&xsd;string">Elektronikgeschäft</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Embassy</IRI>
+        <Literal datatypeIRI="&xsd;string">Botschaft</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#EnglishCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Englische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Event</IRI>
+        <Literal datatypeIRI="&xsd;string">Event</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Event</IRI>
+        <Literal datatypeIRI="&xsd;string">Veranstaltung</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Exchange</IRI>
+        <Literal datatypeIRI="&xsd;string">Wechsel-Büro</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ExhibitionEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Ausstellung</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ExhibitionEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Finissage</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ExhibitionEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Vernissage</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FairTradeProductsFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Fair-Trade Produkte</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FalterCheapFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Falter Preisgünstig-Essen</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FalterRecomFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Falter Empfehlungen</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FalterTheBestFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Falter Die-Besten</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FastFood</IRI>
+        <Literal datatypeIRI="&xsd;string">Fast Food</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Financial</IRI>
+        <Literal datatypeIRI="&xsd;string">Finanz-Einrichtung</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FleaMarketEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Antiquitätenmarkt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FleaMarketEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Benefiz-Flohmarkt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FleaMarketEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Flohmarkt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Florist</IRI>
+        <Literal datatypeIRI="&xsd;string">Blumengeschäft</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FlowerMarketEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Blumenmarkt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FoodMarketEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Bauernmarkt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FoodMarketEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Kulinarischer-Markt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FoodMarketEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Lebensmittel-Markt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FrenchCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Französische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Fuel</IRI>
+        <Literal datatypeIRI="&xsd;string">Tankstelle</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Furniture</IRI>
+        <Literal datatypeIRI="&xsd;string">Möbelgeschäft</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FusionCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Fusion Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Gallery</IRI>
+        <Literal datatypeIRI="&xsd;string">Galerie</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Gallery</IRI>
+        <Literal datatypeIRI="&xsd;string">Kunsgalerie</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Garden</IRI>
+        <Literal datatypeIRI="&xsd;string">Garten</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#GermanCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Deutsche Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#GiftShop</IRI>
+        <Literal datatypeIRI="&xsd;string">Geschenke</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Government</IRI>
+        <Literal datatypeIRI="&xsd;string">Verwaltung</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#GrammarSchool</IRI>
+        <Literal datatypeIRI="&xsd;string">Gymnasium</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#GreekCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Griechische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#GuestGardenFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Biergarten</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#GuestGardenFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Gastgarten</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#GuestHouse</IRI>
+        <Literal datatypeIRI="&xsd;string">Gästehaus</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Hairdresser</IRI>
+        <Literal datatypeIRI="&xsd;string">Friseur</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#HappyHourFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Happy Hour</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Healthcare</IRI>
+        <Literal datatypeIRI="&xsd;string">Gesundheits-Einrichtung</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Heurige</IRI>
+        <Literal datatypeIRI="&xsd;string">Heuriger</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Hospital</IRI>
+        <Literal datatypeIRI="&xsd;string">Krankenhaus</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Hospital</IRI>
+        <Literal datatypeIRI="&xsd;string">Spital</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Hostel</IRI>
+        <Literal datatypeIRI="&xsd;string">Hostel</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Hotel</IRI>
+        <Literal datatypeIRI="&xsd;string">Hotel</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#HydrographicFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Wasser</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#IceCreamParlor</IRI>
+        <Literal datatypeIRI="&xsd;string">Eisdiele</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#IndianCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Indische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#IntermediateSchool</IRI>
+        <Literal datatypeIRI="&xsd;string">Mittelschule</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#InternationalCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Internationale Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ItalianCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Italienische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#JapaneseCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Japanische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#JewelryShop</IRI>
+        <Literal datatypeIRI="&xsd;string">Bijouterie</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#JewelryShop</IRI>
+        <Literal datatypeIRI="&xsd;string">Schmuckgeschäft</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Kindergarten</IRI>
+        <Literal datatypeIRI="&xsd;string">Kindergarten</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Kiosk</IRI>
+        <Literal datatypeIRI="&xsd;string">Kiosk</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Kiosk</IRI>
+        <Literal datatypeIRI="&xsd;string">Trafik</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#KoreanCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Koreanische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Kärnten</IRI>
+        <Literal datatypeIRI="&xsd;string">Kärnten</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Lake</IRI>
+        <Literal datatypeIRI="&xsd;string">See</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#LateBreakfastFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">spät frühstücken</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#LatinAmericanCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Lateinamerikanische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Laundry</IRI>
+        <Literal datatypeIRI="&xsd;string">Wäscherei</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#LevantineCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Levantische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Library</IRI>
+        <Literal datatypeIRI="&xsd;string">Bibliothek</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Market</IRI>
+        <Literal datatypeIRI="&xsd;string">Market itself should have 
+no label, as it would be confused 
+with the Event &quot;Market&quot;</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#MarketEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Bazar</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#MarketEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Markt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Mensa</IRI>
+        <Literal datatypeIRI="&xsd;string">Mensa</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#MexicanCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Mexikanische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#MobilePhoneShop</IRI>
+        <Literal datatypeIRI="&xsd;string">Handyanbieter</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#MoroccanCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Marokkanische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Mosque</IRI>
+        <Literal datatypeIRI="&xsd;string">Moschee</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Museum</IRI>
+        <Literal datatypeIRI="&xsd;string">Museum</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#MusicEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Konzert</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#MusicEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Musik-Event</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#MusicMarket</IRI>
+        <Literal datatypeIRI="&xsd;string">Musikmarkt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#NepaleseCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Nepalesische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Niederoesterreich</IRI>
+        <Literal datatypeIRI="&xsd;string">Niederösterreich</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Nightlife</IRI>
+        <Literal datatypeIRI="&xsd;string">Ausgehmöglichkeit</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#NoSmokingFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">nicht-rauchen</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Oberösterreich</IRI>
+        <Literal datatypeIRI="&xsd;string">Oberösterreich</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Office</IRI>
+        <Literal datatypeIRI="&xsd;string">Büro</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#OperaHouse</IRI>
+        <Literal datatypeIRI="&xsd;string">Oper</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Optician</IRI>
+        <Literal datatypeIRI="&xsd;string">Optiker</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Palace</IRI>
+        <Literal datatypeIRI="&xsd;string">Palast</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Park</IRI>
+        <Literal datatypeIRI="&xsd;string">Park</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ParkAndRide</IRI>
+        <Literal datatypeIRI="&xsd;string">Park&amp;Ride</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#PartyEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Clubbing</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#PartyEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">DJ-Line</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#PartyEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Party</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Pharmacy</IRI>
+        <Literal datatypeIRI="&xsd;string">Apotheke</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#PizzeriaCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Pizza</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#PizzeriaCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Pizzeria</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#PlaceOfWorship</IRI>
+        <Literal datatypeIRI="&xsd;string">Gotteshaus</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Playground</IRI>
+        <Literal datatypeIRI="&xsd;string">Spielplatz</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Police</IRI>
+        <Literal datatypeIRI="&xsd;string">Polizeiwache</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#PostBox</IRI>
+        <Literal datatypeIRI="&xsd;string">Briefkasten</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#PostOffice</IRI>
+        <Literal datatypeIRI="&xsd;string">Post</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#PrimarySchool</IRI>
+        <Literal datatypeIRI="&xsd;string">Primarschule</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#PrimarySchool</IRI>
+        <Literal datatypeIRI="&xsd;string">Volksschule</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Pub</IRI>
+        <Literal datatypeIRI="&xsd;string">Pub</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#RailwayStation</IRI>
+        <Literal datatypeIRI="&xsd;string">Bahnhof</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Recycling</IRI>
+        <Literal datatypeIRI="&xsd;string">Altstoffsammelstelle</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Recycling</IRI>
+        <Literal datatypeIRI="&xsd;string">Recycling</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Restaurant</IRI>
+        <Literal datatypeIRI="&xsd;string">Beisl</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Restaurant</IRI>
+        <Literal datatypeIRI="&xsd;string">Gasthaus</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Restaurant</IRI>
+        <Literal datatypeIRI="&xsd;string">Restaurant</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Restaurant</IRI>
+        <Literal datatypeIRI="&xsd;string">Wirtshaus</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#River</IRI>
+        <Literal datatypeIRI="&xsd;string">Fluss</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Salzburg</IRI>
+        <Literal datatypeIRI="&xsd;string">Salzburg</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#School</IRI>
+        <Literal datatypeIRI="&xsd;string">Schule</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SecondarySchool</IRI>
+        <Literal datatypeIRI="&xsd;string">Hauptschule</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SecondarySchool</IRI>
+        <Literal datatypeIRI="&xsd;string">Sekundarschule</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ShoeShop</IRI>
+        <Literal datatypeIRI="&xsd;string">Schuhgeschäft</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Shop</IRI>
+        <Literal datatypeIRI="&xsd;string">Shopping</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SidewalkGardenFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Schanigarten</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SidewalkGardenFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Straßencafé</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SmokingFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">rauchen</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SportsCentre</IRI>
+        <Literal datatypeIRI="&xsd;string">Sport-Zentrum</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SportsShop</IRI>
+        <Literal datatypeIRI="&xsd;string">Sportgeschäft</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SriLankanCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Srilankische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Stadium</IRI>
+        <Literal datatypeIRI="&xsd;string">Stadium</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Stationery</IRI>
+        <Literal datatypeIRI="&xsd;string">Bürobedarf</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Stationery</IRI>
+        <Literal datatypeIRI="&xsd;string">Schreibwaren</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Steiermark</IRI>
+        <Literal datatypeIRI="&xsd;string">Steiermark</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Stop</IRI>
+        <Literal datatypeIRI="&xsd;string">Haltestelle</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#StyrianCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Steirische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SubwayStation</IRI>
+        <Literal datatypeIRI="&xsd;string">UBahn-Haltestelle</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Supermarket</IRI>
+        <Literal datatypeIRI="&xsd;string">Supermarkt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SushiCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Sushi</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Sustenance</IRI>
+        <Literal datatypeIRI="&xsd;string">Gastronomie</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Swimming</IRI>
+        <Literal datatypeIRI="&xsd;string">Schwimmen</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SwimmingArea</IRI>
+        <Literal datatypeIRI="&xsd;string">Schwimm-Bereich</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SwimmingPool</IRI>
+        <Literal datatypeIRI="&xsd;string">Bad</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#SwimmingPool</IRI>
+        <Literal datatypeIRI="&xsd;string">Schwimmbad</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Synagog</IRI>
+        <Literal datatypeIRI="&xsd;string">Synagoge</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Szene</IRI>
+        <Literal datatypeIRI="&xsd;string">Szene</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#TaxiStand</IRI>
+        <Literal datatypeIRI="&xsd;string">Taxi</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Teahouse</IRI>
+        <Literal datatypeIRI="&xsd;string">Teehaus</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Temple</IRI>
+        <Literal datatypeIRI="&xsd;string">Tempel</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ThaiCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Thai Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Theatre</IRI>
+        <Literal datatypeIRI="&xsd;string">Theater</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#TheatreEvent</IRI>
+        <Literal datatypeIRI="&xsd;string">Theatervorstellung</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#TibetanCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Tibetische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Tirol</IRI>
+        <Literal datatypeIRI="&xsd;string">Tirol</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Toilets</IRI>
+        <Literal datatypeIRI="&xsd;string">Toilette</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Toilets</IRI>
+        <Literal datatypeIRI="&xsd;string">WC</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Tourism</IRI>
+        <Literal datatypeIRI="&xsd;string">Tourismus</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#TramStop</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Tram-Haltestelle</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#TramStop</IRI>
+        <Literal datatypeIRI="&xsd;string">Straßenbahn-Haltestelle</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Transportation</IRI>
+        <Literal datatypeIRI="&xsd;string">Transport</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#TurkishCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Türkische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#U1</IRI>
+        <Literal datatypeIRI="&xsd;string">U1</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#U2</IRI>
+        <Literal datatypeIRI="&xsd;string">U2</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#U3</IRI>
+        <Literal datatypeIRI="&xsd;string">U3</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#U4</IRI>
+        <Literal datatypeIRI="&xsd;string">U4</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#U6</IRI>
+        <Literal datatypeIRI="&xsd;string">U6</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#University</IRI>
+        <Literal datatypeIRI="&xsd;string">Universität</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#UniversityOfAppliedSciences</IRI>
+        <Literal datatypeIRI="&xsd;string">Fachhochschule</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#VeganCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Vegane Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#VegetarianCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Vegetarische Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#VienneseCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Wiener Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#VocationalSchool</IRI>
+        <Literal datatypeIRI="&xsd;string">Berufsschule</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Vorarlberg</IRI>
+        <Literal datatypeIRI="&xsd;string">Vorarlberg</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#VorarlbergCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Vorarlberger Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#WLANFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">WLAN</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#WLANFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">Wireless LAN</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#WaldviertelCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">Waldviertler Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Waterway</IRI>
+        <Literal datatypeIRI="&xsd;string">Wasserstraße</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#WheelChairAccessFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">behindertengerecht</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#WheelChairAccessFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">rollstuhlgerecht</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Wien</IRI>
+        <Literal datatypeIRI="&xsd;string">Wien</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#WineShop</IRI>
+        <Literal datatypeIRI="&xsd;string">Weinhandlung</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#WurstStand</IRI>
+        <Literal datatypeIRI="&xsd;string">Würstelstand</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Zoo</IRI>
+        <Literal datatypeIRI="&xsd;string">Zoo</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#_Geometry</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">posList as String should be a DataProperty</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasCentroid</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">PS: Functional commented out</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasCuisine</IRI>
+        <Literal datatypeIRI="&xsd;string">hat Küche</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasFeatureCode</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">PS: Functional commented out</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasOperator</IRI>
+        <Literal datatypeIRI="&xsd;string">betrieben von</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasSpecialFeature</IRI>
+        <Literal datatypeIRI="&xsd;string">bietet</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#isCentroidOf</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">PS: Inv. functional commented out</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#isLocatedAlong</IRI>
+        <Literal datatypeIRI="&xsd;string">entlang</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#isLocatedContain</IRI>
+        <Literal datatypeIRI="&xsd;string">enthält</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#isLocatedDisjoint</IRI>
+        <Literal datatypeIRI="&xsd;string">ausserhalb</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#isLocatedDisjoint</IRI>
+        <Literal datatypeIRI="&xsd;string">außerhalb</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#isLocatedInside</IRI>
+        <Literal datatypeIRI="&xsd;string">im</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#isLocatedInside</IRI>
+        <Literal datatypeIRI="&xsd;string">in</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#isLocatedInside</IRI>
+        <Literal datatypeIRI="&xsd;string">innerhalb</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#isLocatedIntersect</IRI>
+        <Literal datatypeIRI="&xsd;string">kreuzt</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#isLocatedIntersect</IRI>
+        <Literal datatypeIRI="&xsd;string">überschneidet</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#isLocatedNext</IRI>
+        <Literal datatypeIRI="&xsd;string">neben</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#isLocatedNext</IRI>
+        <Literal datatypeIRI="&xsd;string">nähe</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#isOriginated</IRI>
+        <Literal datatypeIRI="&xsd;string">stammt aus</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#isPartOf</IRI>
+        <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">PS: Should be transitive</Literal>
+    </AnnotationAssertion>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

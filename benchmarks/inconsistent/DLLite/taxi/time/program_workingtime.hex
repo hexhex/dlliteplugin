@@ -1,0 +1,29 @@
+% collect all customers into customer predicate
+customer(X):- isIn(X,Z), not &cDL[OWLONTOLOGY,custcp,custcm,custrp,custrm,"-Customer"](X).
+
+% collect all drivers to the driver predicate
+driver(X):-isIn(X,Z), not customer(X).
+
+% condition on which customers are assigned to drivers
+drives(X,Y):-driver(X),customer(Y),isIn(X,Z),isIn(Y,Z), not omit(X,Y).
+
+% condition which omits assignments
+omit(X,Y):-needsTo(Y,Z1,T), drives(X,Y), &cDL[OWLONTOLOGY,omitcp,omitcm,omitrp,omitrm,"EDriver"](X),
+not &rDL[OWLONTOLOGY,cp,cm,rp,rm,"worksIn"](X,Z1).
+
+% constraint that forbids customers not to be assigned to any drivers
+ok(Y):-driver(X),customer(Y),drives(X,Y).
+fail:-customer(Y), not ok(Y).
+:-fail.
+
+% identify whether the time point is a day or night
+dat(T):-needsTo(X,Y,T),T>21,T<9.
+night(T):-needsTo(X,Y,T),T<=21,T>=9.
+
+% contraint forbids a customer to be assigned to a driver if the former needs to be served at the time, when the latter does not work
+:- drives(X,Y),needsTo(X,Y,T),day(T), &cDL[OWLONTOLOGY,omitcp,cm,rm,"-WorksDay"](X).
+:- drives(X,Y),needsTo(X,Y,T),night(T), &cDL[OWLONTOLOGY,omitcp,cm,rm,"-WorksNight"](X).
+
+% extention of ontological predicates
+custrp("worksIn",X,X1):-goTo(X,X1).
+omitcp("Driver",X):-driver(X).

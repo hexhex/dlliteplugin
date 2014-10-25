@@ -1,0 +1,111 @@
+ # $1: number of nodes
+ # $2: probability of a fact
+
+
+
+
+
+
+unavail=( 10 12 14 15 16 18 19 20 21 24 25 34 35 38 41 48 55 56 57 60 61 63 65 66 59 11 47 18 )
+
+array1=( 1 2 3 9 8 5 6 7 10 47 48 49 60 61 51 52 53 55 )
+
+array2=( 54 34 62 63 11 65 64 66 67 68 69 56 57 36 35 )
+
+array3=( 16 46 45 15 12 16 17 43 44 42 37 38  39 40 22 )
+
+array4=( 22 21 18 19 20 25 26 59 58 14 32 31 27 28 29 )
+
+
+
+
+prop=$((32768 * $2 / 100)) 
+
+
+r=$((RANDOM%4+1))
+ 
+if [[ r -eq 1 ]]; then
+
+	for i in "${array1[@]}"
+	do
+		if [[ "${unavail2[*]}" !=~ i ]]; then
+			if [[ $RANDOM -le $prop ]] ; then
+				echo "in(\"c$i\")."
+			fi
+		fi
+	done
+
+	for (i in "${array2[@]}")
+	do
+		if [[ "${unavail[*]}" !=~ i ]]; then
+                        if [[ $RANDOM -le $prop ]] ; then
+                                echo "out(\"c$i\")."
+                        fi
+                fi
+	done
+
+elif [[r -eq 2]]; then 
+	
+	for (i in "${array2[@]}")
+        do
+                if [[ "${unavail[*]}" !=~ i ]]; then
+                        if [[ $RANDOM -le $prop ]] ; then
+                                echo "in(\"c$i\")."
+                        fi
+                fi
+        done
+
+        for (i in "${array3[@]}")
+        do
+                if [[ ${array2[*]} !=~ i ]]; then
+                        if [[ $RANDOM -le $prop ]] ; then
+                                echo "out(\"c$i\")."
+                        fi
+                fi
+        done
+
+elif [[r -eq 3]]; then
+
+        for (i in "${array3[@]}")
+        do
+                if [[ "${unavail[*]}" !=~ i ]]; then
+                        if [[ $RANDOM -le $prop ]] ; then
+                                echo "in(\"c$i\")."
+                        fi
+                fi
+        done
+        for (i in "${array4[@]}")
+        do
+                if [[ ${unavail[*]} !=~ i ]]; then
+                        if [[ $RANDOM -le $prop ]] ; then
+                                echo "in(\"c$i\")."
+                        fi
+                fi
+        done
+
+
+else if [[r -eq 4]]; then
+
+        for (i in "${array4[@]}")
+        do
+                if [[ ${unavail[*]} !=~ i ]]; then
+                        if [[ $RANDOM -le $prop ]] ; then
+                                echo "in(\"c$i\")."
+                        fi
+                fi
+        done
+
+        for (i in ${array1[@]}$")
+        do
+                if [[ ${unavail[*]} !=~ i ]]; then
+                        if [[ $RANDOM -le $prop ]] ; then
+                                echo "in(\"c$i\")."
+                        fi
+                fi
+        done
+
+
+fi
+
+
+

@@ -1,0 +1,760 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY network "http://www.semanticweb.org/ontologies/2014/1/network.owl#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/ontologies/2014/1/network.owl#"
+     xml:base="http://www.semanticweb.org/ontologies/2014/1/network.owl"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:network="http://www.semanticweb.org/ontologies/2014/1/network.owl#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/ontologies/2014/1/network.owl"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#edge -->
+
+    <owl:ObjectProperty rdf:about="&network;edge"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#forbid -->
+
+    <owl:ObjectProperty rdf:about="&network;forbid">
+        <rdfs:domain rdf:resource="&network;Block"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#Avail -->
+
+    <owl:Class rdf:about="&network;Avail">
+        <owl:disjointWith rdf:resource="&network;Block"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#Block -->
+
+    <owl:Class rdf:about="&network;Block"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#Broken -->
+
+    <owl:Class rdf:about="&network;Broken">
+        <rdfs:subClassOf rdf:resource="&network;Block"/>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c1 -->
+
+    <owl:Thing rdf:about="&network;c1">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c2"/>
+        <edge rdf:resource="&network;c70"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c10 -->
+
+    <owl:Thing rdf:about="&network;c10">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c12 -->
+
+    <owl:Thing rdf:about="&network;c12">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c13"/>
+        <edge rdf:resource="&network;c14"/>
+        <forbid rdf:resource="&network;c14"/>
+        <edge rdf:resource="&network;c15"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c13 -->
+
+    <owl:Thing rdf:about="&network;c13">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c14 -->
+
+    <owl:Thing rdf:about="&network;c14">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c15 -->
+
+    <owl:Thing rdf:about="&network;c15">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c16 -->
+
+    <owl:Thing rdf:about="&network;c16">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c17"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c17 -->
+
+    <owl:Thing rdf:about="&network;c17">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c43"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c18 -->
+
+    <owl:Thing rdf:about="&network;c18">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <forbid rdf:resource="&network;c21"/>
+        <edge rdf:resource="&network;c21"/>
+        <edge rdf:resource="&network;c23"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c19 -->
+
+    <owl:Thing rdf:about="&network;c19">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c18"/>
+        <edge rdf:resource="&network;c20"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c2 -->
+
+    <owl:Thing rdf:about="&network;c2">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c61"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c20 -->
+
+    <owl:Thing rdf:about="&network;c20">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c21 -->
+
+    <owl:Thing rdf:about="&network;c21">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c22"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c22 -->
+
+    <owl:Thing rdf:about="&network;c22">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c23 -->
+
+    <owl:Thing rdf:about="&network;c23">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c24"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c24 -->
+
+    <owl:Thing rdf:about="&network;c24">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c25 -->
+
+    <owl:Thing rdf:about="&network;c25">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c26"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c26 -->
+
+    <owl:Thing rdf:about="&network;c26">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c27 -->
+
+    <owl:Thing rdf:about="&network;c27">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c28 -->
+
+    <owl:Thing rdf:about="&network;c28">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c27"/>
+        <edge rdf:resource="&network;c29"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c29 -->
+
+    <owl:Thing rdf:about="&network;c29">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c3 -->
+
+    <owl:Thing rdf:about="&network;c3">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c30 -->
+
+    <owl:Thing rdf:about="&network;c30">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c28"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c31 -->
+
+    <owl:Thing rdf:about="&network;c31">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c32 -->
+
+    <owl:Thing rdf:about="&network;c32">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c31"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c33 -->
+
+    <owl:Thing rdf:about="&network;c33">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c54"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c34 -->
+
+    <owl:Thing rdf:about="&network;c34">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c33"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c35 -->
+
+    <owl:Thing rdf:about="&network;c35">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c36 -->
+
+    <owl:Thing rdf:about="&network;c36">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c35"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c37 -->
+
+    <owl:Thing rdf:about="&network;c37">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c38 -->
+
+    <owl:Thing rdf:about="&network;c38">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c39 -->
+
+    <owl:Thing rdf:about="&network;c39">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c4 -->
+
+    <owl:Thing rdf:about="&network;c4">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c1"/>
+        <edge rdf:resource="&network;c3"/>
+        <edge rdf:resource="&network;c5"/>
+        <edge rdf:resource="&network;c6"/>
+        <edge rdf:resource="&network;c7"/>
+        <edge rdf:resource="&network;c8"/>
+        <edge rdf:resource="&network;c9"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c40 -->
+
+    <owl:Thing rdf:about="&network;c40">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c41 -->
+
+    <owl:Thing rdf:about="&network;c41">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c42 -->
+
+    <owl:Thing rdf:about="&network;c42">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c43 -->
+
+    <owl:Thing rdf:about="&network;c43">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c44"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c44 -->
+
+    <owl:Thing rdf:about="&network;c44">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c37"/>
+        <edge rdf:resource="&network;c38"/>
+        <edge rdf:resource="&network;c39"/>
+        <edge rdf:resource="&network;c40"/>
+        <edge rdf:resource="&network;c41"/>
+        <edge rdf:resource="&network;c42"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c45 -->
+
+    <owl:Thing rdf:about="&network;c45">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c16"/>
+        <edge rdf:resource="&network;c46"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c46 -->
+
+    <owl:Thing rdf:about="&network;c46">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c48 -->
+
+    <owl:Thing rdf:about="&network;c48">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c49 -->
+
+    <owl:Thing rdf:about="&network;c49">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c12"/>
+        <edge rdf:resource="&network;c50"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c5 -->
+
+    <owl:Thing rdf:about="&network;c5">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c50 -->
+
+    <owl:Thing rdf:about="&network;c50">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c51 -->
+
+    <owl:Thing rdf:about="&network;c51">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c60"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c52 -->
+
+    <owl:Thing rdf:about="&network;c52">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c51"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c53 -->
+
+    <owl:Thing rdf:about="&network;c53">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c52"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c54 -->
+
+    <owl:Thing rdf:about="&network;c54">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c55"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c55 -->
+
+    <owl:Thing rdf:about="&network;c55">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c53"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c56 -->
+
+    <owl:Thing rdf:about="&network;c56">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c57"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c57 -->
+
+    <owl:Thing rdf:about="&network;c57">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c58 -->
+
+    <owl:Thing rdf:about="&network;c58">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c32"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c6 -->
+
+    <owl:Thing rdf:about="&network;c6">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c60 -->
+
+    <owl:Thing rdf:about="&network;c60">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c61"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c61 -->
+
+    <owl:Thing rdf:about="&network;c61">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c62 -->
+
+    <owl:Thing rdf:about="&network;c62">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c34"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c63 -->
+
+    <owl:Thing rdf:about="&network;c63">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c62"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c64 -->
+
+    <owl:Thing rdf:about="&network;c64">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c65 -->
+
+    <owl:Thing rdf:about="&network;c65">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c64"/>
+        <edge rdf:resource="&network;c66"/>
+        <edge rdf:resource="&network;c67"/>
+        <edge rdf:resource="&network;c68"/>
+        <edge rdf:resource="&network;c69"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c66 -->
+
+    <owl:Thing rdf:about="&network;c66">
+        <rdf:type rdf:resource="&network;Broken"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c67 -->
+
+    <owl:Thing rdf:about="&network;c67">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c68 -->
+
+    <owl:Thing rdf:about="&network;c68">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c69 -->
+
+    <owl:Thing rdf:about="&network;c69">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c7 -->
+
+    <owl:Thing rdf:about="&network;c7">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c70 -->
+
+    <owl:Thing rdf:about="&network;c70">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c7"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c8 -->
+
+    <owl:Thing rdf:about="&network;c8">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+    </owl:Thing>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#c9 -->
+
+    <owl:Thing rdf:about="&network;c9">
+        <rdf:type rdf:resource="&network;Avail"/>
+        <rdf:type rdf:resource="&owl;NamedIndividual"/>
+        <edge rdf:resource="&network;c53"/>
+        <edge rdf:resource="&network;c60"/>
+    </owl:Thing>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

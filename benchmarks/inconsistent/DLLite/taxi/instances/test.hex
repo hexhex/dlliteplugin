@@ -1,0 +1,40 @@
+needsTo("c20","r4").
+isIn("c20","r3").
+needsTo("c21","r4").
+isIn("c21","r3").
+needsTo("c22","r4").
+isIn("c22","r3").
+needsTo("c23","r4").
+isIn("c23","r3").
+isIn("d1","r3").
+goTo("d1","r5").
+isIn("d2","r3").
+goTo("d2","r5").
+
+% collect all customers into customer predicate
+customer(X):- isIn(X,Z), not &cDL["test.owl",custcp,custcm,custrp,custrm,"-Customer"](X).
+
+% collect all drivers to the driver predicate
+driver(X):-isIn(X,Z), not customer(X).
+
+% condition on which customers are assigned to drivers
+nassign(X,Y) v assign(X,Y):-driver(X),customer(Y),isIn(X,Z),isIn(Y,Z), not omit(X,Y).
+
+% condition which omits assignments
+omit(X,Y):-needsTo(Y,Z1), assign(X,Y), &cDL["test.owl",omitcp,omitcm,omitrp,omitrm,"EDriver"](X),
+not &rDL["test.owl",cp,cm,rp,rm,"worksIn"](X,Z1).
+
+% if there are two drivers assigned to the same customer, then pick randomly one of the assignments
+drives(X1,Y1) v drives(X2,Y1):-assign(X1,Y1),assign(X2,Y1).
+
+% constraint that forbids customers not to be assigned to any drivers
+ok(Y):-customer(Y),drives(X,Y).
+fail:-customer(Y), not ok(Y).
+:-fail.
+
+% constraint that forbids a driver to serve needs more then 4 customers
+:- drives(X,Y1),drives(X,Y2),drives(X,Y3),drives(X,Y4),drives(X,Y5),drives(X,Y6),drives(X,Y7),Y1!=Y2,Y1!=Y3,Y1!=Y4,Y1!=Y5,Y1!=Y6,Y1!=Y7,Y2!=Y3,Y2!=Y4,Y2!=Y5,Y2!=Y6,Y2!=Y7,Y3!=Y4,Y3!=Y5,Y3!=Y6,Y3!=Y7,Y4!=Y5,Y1!=Y6,Y4!=Y7,Y5!=Y6,Y5!=Y7,Y6!=Y7.
+
+% extention of ontological predicates
+custrp("worksIn",X,X1):-goTo(X,X1).
+omitcp("Driver",X):-driver(X).

@@ -1,0 +1,41 @@
+in("c12").
+node("c12").
+in("c15").
+node("c15").
+in("c16").
+node("c16").
+out("c18").
+node("c18").
+in("c19").
+node("c19").
+in("c28").
+node("c28").
+out("c29").
+node("c29").
+in("c35").
+node("c35").
+in("c37").
+node("c37").
+in("c40").
+node("c40").
+in("c44").
+node("c44").
+in("c54").
+node("c54").
+out("c57").
+node("c57").
+in("c62").
+node("c62").
+
+
+go(X,Y):-open(X), open(Y), &rDL["inst_prop_020_inst_020.owl",a,b,c,d,"edge"](X,Y).
+
+route(X,Z):-route(X,Y), route(Y,Z).
+
+route(X,Y):-go(X,Y), not &rDL["inst_prop_020_inst_020.owl",a,b,c,d,"forbid"](X,Y).
+
+open(X) :-not &cDL["inst_prop_020_inst_020.owl",pc,b,c,d,"-Avail"](X), node(X). 
+
+:-in(X),out(Y), not route(X,Y).
+
+pc("Avail",X):-open(X).

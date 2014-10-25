@@ -1,0 +1,2 @@
+c("a").
+:-&cDL["simple.owl",cp, cn, rp, rn,"A"](X),c(X).
