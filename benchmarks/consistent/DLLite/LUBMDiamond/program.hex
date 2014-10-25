@@ -1,9 +1,14 @@
-pcinemployee("Employee",X):-inemployee(X).
-mcinemployee("Employee",X):-innegemployee(X).
-
+% By default research assistants are employees
 inemployee(X):-&cDL["inst_concprop_020_inst_009.owl",a,b,c,d,"ResearchAssistant"](X),
 		not &cDL["inst_concprop_020_inst_009.owl",pcinemployee,mcinemployee,c,d,"-Employee"](X), domain(X).
+
+% By default students are not employees
 innegemployee(X):-&cDL["inst_concprop_020_inst_009.owl",a,b,c,d,"Student"](X),
 		not &cDL["inst_concprop_020_inst_009.owl",pcinemployee,mcinemployee,c,d,"Employee"](X), domain(X).
 
+% A person can not be employee and not employee at the same time
 :-inemployee(X),innegemployee(X).
+
+% rules specifying DL-atoms updates
+pcinemployee("Employee",X):-inemployee(X).
+mcinemployee("Employee",X):-innegemployee(X).

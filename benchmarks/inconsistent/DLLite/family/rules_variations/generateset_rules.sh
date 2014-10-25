@@ -12,6 +12,11 @@ if [[ $# -lt 4 ]]; then
         exit 1;
 fi
 
+# create a directory for storing benchmark instances
+
+mkdir -p instances
+
+
 # instantiate the ontology
 
 s=$5

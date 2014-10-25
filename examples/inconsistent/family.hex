@@ -1,14 +1,9 @@
 boy("c48").
-domain("c48").
-domain("p48").
-domain("p49").
-domain("p50").
 ischildof("c48","p52").
-domain("p52").
 
-hasfather(X,Y):-&cDL["family.owl",pcm,b,c,d,"Male"](Y), &rDL["family.owl",pcc,b,c,d,"hasParent"](X,Y), boy(X), domain(Y).
+hasfather(X,Y):-&cDL["family.owl",pcm,b,c,d,"Male"](Y), &rDL["family.owl",pcc,b,c,d,"hasParent"](X,Y), boy(X).
 
-:-not &cDL["family.owl",pcc,b,c,d,"Adopted"](X),hasfather(X,Y1),ischildof(X,Y2),Y1!=Y2,not &cDL["family.owl",pcm,b,c,d,"-Male"](Y2), boy(X), domain(Y1), domain(Y2).
+:-not &cDL["family.owl",pcc,b,c,d,"Adopted"](X),hasfather(X,Y1),ischildof(X,Y2),Y1!=Y2,not &cDL["family.owl",pcm,b,c,d,"-Male"](Y2), boy(X).
 
 pcm("Male",X):-boy(X).
 pcc("Child",X):-boy(X).

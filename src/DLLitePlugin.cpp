@@ -67,6 +67,8 @@
 #include "owlcpp/terms/node_tags_owl.hpp"
 
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/split.hpp>
+ #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
 DLVHEX_NAMESPACE_BEGIN
@@ -149,7 +151,7 @@ namespace dllite {
 
 			DBGLOG(DBG, "Consistency of KB: " << kernel->isKBConsistent());
 		} catch(...) {
-			throw PluginError("DLLite reasoner failed while loading file \"" + reg->terms.getByID(ontologyName).getUnquotedString() + "\", ensure that it is a valid ontology");
+			throw PluginError("DLLite reasoner failed while loading file \"" + reg->terms.getByID(ontologyName).getUnquotedString() + "\", ensure that it is a consistent valid ontology");
 		}
 
 		// now compute some meta-information
@@ -576,6 +578,39 @@ namespace dllite {
 			} else {
 				//DBGLOG(DBG, "No");
 			}
+
+			//checking if this is role functionality
+			if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "type") && theDLLitePlugin.cmpOwlType(obj, "FunctionalProperty"))
+			{
+				//DBGLOG(DBG, "Yes");
+				DBGLOG(DBG,"Construct facts of the form funct(subj)");
+				{
+					OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+					fact.tuple.push_back(theDLLitePlugin.functID);
+					fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
+					edb->setFact(reg->storeOrdinaryAtom(fact).address);
+				}
+			} else {
+				//DBGLOG(DBG, "No");
+			}
+
+			//checking if this is role inverse definition
+			if (isOwlConstant(subj) && theDLLitePlugin.cmpOwlType(pred, "inverseOf") && isOwlConstant(obj))
+			{
+				//DBGLOG(DBG, "Yes");
+				DBGLOG(DBG,"Construct facts of the form funct(subj)");
+				{
+					OrdinaryAtom fact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+					fact.tuple.push_back(theDLLitePlugin.invID);
+					fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(subj)));
+					fact.tuple.push_back(theDLLitePlugin.storeQuotedConstantTerm(removeNamespaceFromString(obj)));
+					edb->setFact(reg->storeOrdinaryAtom(fact).address);
+				}
+			} else {
+				//DBGLOG(DBG, "No");
+			}
+
+
 		}
 
 		DBGLOG(DBG,"Checking if there are any domain restrictions on properties");
@@ -605,7 +640,7 @@ namespace dllite {
 				else DBGLOG(DBG,"No");
 			}
 		}
-		DBGLOG(DBG, "EDB of classification program: " << *edb);
+		DBGLOG(DBG, "CLP: EDB of classification program: " << *edb);
 
 		// evaluate the subprogram and return its unique answer set
 #ifndef NDEBUG
@@ -782,6 +817,30 @@ namespace dllite {
 		opyx.tuple.push_back(xID);
 		ID opyxID = reg->storeOrdinaryAtom(opyx);
 
+
+		OrdinaryAtom invxy(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+		invxy.tuple.push_back(invID);
+		invxy.tuple.push_back(xID);
+		invxy.tuple.push_back(yID);
+		ID invxyID = reg->storeOrdinaryAtom(invxy);
+
+		OrdinaryAtom invxy1(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+		invxy1.tuple.push_back(invID);
+		invxy1.tuple.push_back(xID);
+		invxy1.tuple.push_back(y1ID);
+		ID invxy1ID = reg->storeOrdinaryAtom(invxy1);
+
+		OrdinaryAtom invyx(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+		invyx.tuple.push_back(invID);
+		invyx.tuple.push_back(yID);
+		invyx.tuple.push_back(xID);
+		ID invyxID = reg->storeOrdinaryAtom(invyx);
+
+		OrdinaryAtom confrefx(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
+		confrefx.tuple.push_back(confrefID);
+		confrefx.tuple.push_back(xID);
+		ID confrefxID = reg->storeOrdinaryAtom(confrefx);
+
 		OrdinaryAtom opyy1(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN);
 		opyy1.tuple.push_back(opID);
 		opyy1.tuple.push_back(yID);
@@ -823,14 +882,35 @@ namespace dllite {
 		refop.head.push_back(opyxID);
 		ID refopID = reg->storeRule(refop);
 
+		// Rule for reflexivity of inverse predicate: inv(Y,X) :- inv(X,Y)
+		Rule refinv(ID::MAINKIND_RULE);
+		refinv.body.push_back(ID::posLiteralFromAtom(invxyID));
+		refinv.head.push_back(invyxID);
+		ID refinvID = reg->storeRule(refinv);
+
+
+		// Conflict rule3: confref(X):-conf(X,Y),inv(X,Y).
+		Rule conflict3(ID::MAINKIND_RULE);
+		conflict3.body.push_back(ID::posLiteralFromAtom(confxyID));
+		conflict3.body.push_back(ID::posLiteralFromAtom(invxyID));
+		conflict3.head.push_back(confrefxID);
+		ID conflict3ID = reg->storeRule(conflict3);
+
+
 		// assemble program
 		classificationIDB.push_back(transID);
 		classificationIDB.push_back(contraID);
 		classificationIDB.push_back(conflictID);
 		classificationIDB.push_back(conflict2ID);
+		classificationIDB.push_back(conflict3ID);
 		classificationIDB.push_back(refopID);
+		classificationIDB.push_back(refinvID);
+
 
 		DBGLOG(DBG, "Constructed classification program");
+		for (unsigned ruleIndex=0; ruleIndex<classificationIDB.size(); ruleIndex++) {
+			DBGLOG(DBG, "CLP: "<<RawPrinter::toString(reg,classificationIDB[ruleIndex])<<"\n");
+		}
 	}
 
 	DLLitePlugin::CachedOntologyPtr DLLitePlugin::prepareOntology(ProgramCtx& ctx, ID ontologyNameID, bool includeAbox) {
@@ -959,6 +1039,46 @@ namespace dllite {
 				found.push_back(it);
 
 			}
+			if (option.find("--replim=") !=std::string::npos) {
+				std::string s = option.substr(9);
+				//ctx.getPluginData<DLLitePlugin>().incomplete=true;
+				DBGLOG(DBG, "repair limit block ");
+				try
+				{
+					int i = boost::lexical_cast<int>(s);
+					ctx.getPluginData<DLLitePlugin>().replim=i;
+					DBGLOG(DBG, "replim is "<< i);
+				}
+				catch(const boost::bad_lexical_cast&)
+				{
+					assert(false && "Specified number of support sets is not a number");
+				}
+				found.push_back(it);
+			}
+
+			if (option.find("--repdel=") != std::string::npos) {
+				ctx.getPluginData<DLLitePlugin>().repdelflag=true;
+				std::string s = option.substr(9);
+				boost::algorithm::split(ctx.getPluginData<DLLitePlugin>().repdel, s, boost::is_any_of(","));
+				DBGLOG(DBG, "predicates for deletion are ");
+				BOOST_FOREACH (std::string sub, ctx.getPluginData<DLLitePlugin>().repdel) {
+					DBGLOG(DBG, sub);
+				}
+				found.push_back(it);
+			}
+
+			if (option.find("--repleave=") != std::string::npos) {
+				ctx.getPluginData<DLLitePlugin>().repleaveflag=true;
+				std::string s = option.substr(11);
+				boost::algorithm::split(ctx.getPluginData<DLLitePlugin>().repleave, s, boost::is_any_of(","));
+				DBGLOG(DBG, "predicates that need to be left are ");
+				BOOST_FOREACH (std::string sub, ctx.getPluginData<DLLitePlugin>().repleave) {
+					DBGLOG(DBG, sub);
+				}
+				found.push_back(it);
+			}
+
+
 			if (option.find("--ontology=") != std::string::npos) {
 				ctx.getPluginData<DLLitePlugin>().rewrite = true;
 				ctx.getPluginData<DLLitePlugin>().ontology = option.substr(11);
@@ -1078,6 +1198,9 @@ namespace dllite {
 		subID = reg->storeConstantTerm("sub");
 		opID = reg->storeConstantTerm("op");
 		confID = reg->storeConstantTerm("conf");
+		functID = reg->storeConstantTerm("funct");
+		invID = reg->storeConstantTerm("inv");
+		confrefID = reg->storeConstantTerm("confref");
 		xID = reg->storeVariableTerm("X");
 		yID = reg->storeVariableTerm("Y");
 		zID = reg->storeVariableTerm("Z");
@@ -1112,3 +1235,4 @@ extern "C" void * PLUGINIMPORTFUNCTION() {
 // Local Variables:
 // mode: C++
 // End:
+

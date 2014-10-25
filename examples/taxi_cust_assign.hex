@@ -10,10 +10,10 @@ needsTo("c2","r4").
 % driving agent's target destination
 drivesTo("d3","r2").
 
-% collect all customers iinto customer predicate
+% collect all customers into customer predicate
 customer(X):- isIn(X,Z), not &cDL["taxi_cust_assign.owl",custcp,custcm,custrp,custrm,"-Customer"](X), needsTo(X,Z2).
 
-% collect all drivers to the driver predicate
+% collect all drivers into the driver predicate
 driver(X):-isIn(X,Z), not customer(X).
 
 % condition on which customers are assigned to drivers
@@ -22,10 +22,6 @@ drives(X,Y):-driver(X),customer(Y),isIn(X,Z),isIn(Y,Z), not omit(X,Y).
 % condition which omits assignments
 omit(X,Y):-needsTo(Y,Z1), customer(Y), driver(X),&cDL["taxi_cust_assign.owl",omitcp,omitcm,omitrp,omitrm,"Electromob"](X),
 not &rDL["taxi_cust_assign.owl",cp,cm,rp,rm,"worksIn"](X,Z1).
-
-
-% electromob("d3"):-&cDL["taxi_cust_assign.owl",omitcp,omitcm,omitrp,omitrm,"Electromob"]("d3").
-% ok:-&cDL["taxi_cust_assign.owl",omitcp,omitcm,omitrp,omitrm,"Electromob"]("d2").
 
 % extention of ontological predicates
  custrp("worksIn",X,X1):-drivesTo(X,X1).

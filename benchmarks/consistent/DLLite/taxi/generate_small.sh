@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # $1: number of drivers
 # $2: number of regions
 # $3: number of customers

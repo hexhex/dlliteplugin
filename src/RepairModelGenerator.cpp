@@ -194,7 +194,7 @@ namespace dllite {
 	factory(factory),
 	reg(factory.reg)
 	{
-		DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidconstruct, "Repair model generator constructor");
+		DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidconstruct, "RMG: Repair model generator constructor");
 		DBGLOG(DBG, "RMG: Repair model generator is instantiated for a " << (factory.ci.disjunctiveHeads ? "" : "non-") << "disjunctive component");
 
 		RegistryPtr reg = factory.reg;
@@ -213,6 +213,7 @@ namespace dllite {
 		}
 
 		// augment input with edb
+
 #warning perhaps we can pass multiple partially preprocessed input edb's to the external solver and save a lot of processing here
 		postprocInput->add(*factory.ctx.edb);
 
@@ -245,7 +246,6 @@ namespace dllite {
 		if (factory.ctx.config.getOption("LiberalSafety")) {
 			InterpretationConstPtr domPredicatesExtension = computeExtensionOfDomainPredicates(factory.ci, factory.ctx, postprocInput, factory.deidb, factory.deidbInnerEatoms);
 			postprocInput->add(*domPredicatesExtension);
-			DBGLOG(DBG,"RMG: after parsing the liberal safety option");
 		}
 
 		// assign to const member -> this value must stay the same from here on!
@@ -253,17 +253,17 @@ namespace dllite {
 
 		// evaluate edb+xidb+gidb
 		{
-			DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid,"genuine g&c init guessprog");
+			DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid,"RMG: genuine g&c init guessprog");
 			DBGLOG(DBG,"RMG: evaluating guessing program");
-			// no mask
 			OrdinaryASPProgram program(reg, factory.xidb, postprocessedInput, factory.ctx.maxint);
+
 			// append gidb to xidb
 			program.idb.insert(program.idb.end(), factory.gidb.begin(), factory.gidb.end());
 
 			{
 				DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidhexground, "HEX grounder time");
 				grounder = GenuineGrounder::getInstance(factory.ctx, program);
-				//		annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.allEatoms);
+				// annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.allEatoms);
 				annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.innerEatoms);
 			}
 			solver = GenuineGroundSolver::getInstance(
@@ -284,7 +284,8 @@ namespace dllite {
 		}
 
 		// setHeuristics();
-		DBGLOG(DBG,"RMG: before calling learnSupportSets method");
+		// start learning support sets
+
 		learnSupportSets();
 		// DBGLOG(DBG,"RMG: learnSupportSets method is finished, "<<  supportSets->getNogoodCount() << " support sets were learnt");
 
@@ -320,21 +321,21 @@ namespace dllite {
 		InterpretationPtr modelCandidate;
 		do
 		{
-			LOG(DBG,"asking for next model");
+			LOG(DBG,"RMG: asking for next model");
 			modelCandidate = solver->getNextModel();
 			//	DBGLOG(DBG,"a model candidate is obtained: " << *modelCandidate);
 			// getnextmodel calls propogate method
 			// model is returned
-			DBGLOG(DBG, "Statistics:" << std::endl << solver->getStatistics());
+			DBGLOG(DBG, "RMG: Statistics:" << std::endl << solver->getStatistics());
 			if( !modelCandidate )
 			{
-				LOG(DBG,"unsatisfiable -> returning no model");
+				LOG(DBG,"RMG: unsatisfiable -> returning no model");
 				return InterpretationPtr();
 			}
 			DLVHEX_BENCHMARK_REGISTER_AND_COUNT(ssidmodelcandidates, "Candidate compatible sets", 1);
 			LOG_SCOPE(DBG,"gM", false);
 
-			LOG(DBG,"got guess model " << *modelCandidate);
+			LOG(DBG,"RMG: got guess model " << *modelCandidate);
 
 			if (postCheck(modelCandidate)) {
 				return modelCandidate;
@@ -386,59 +387,80 @@ namespace dllite {
 	}
 
 	void RepairModelGenerator::learnSupportSets() {
-		DBGLOG(DBG,"EL: RMG: learning support sets is started");
-		DBGLOG(DBG,"EL: RMG: Number of all eatoms: "<<factory.innerEatoms.size());
+		DBGLOG(DBG,"RMG: start support set learning");
+		DBGLOG(DBG,"RMG: number of all eatoms: "<<factory.innerEatoms.size());
+		bool rep_del_set_given = false;
+		bool rep_leave_set_given = false;
 		std::vector<SimpleNogoodContainerPtr> supportSetsOfExternalAtom;
 		std::vector<ID> complext;
 
+		// support set option is enabled
 		if (factory.ctx.config.getOption("SupportSets")) {
+			DBGLOG(DBG,"RMG: support set learning option is enabled");
 			OrdinaryASPProgram program(reg, factory.xidb, postprocessedInput, factory.ctx.maxint);
 			program.idb.insert(program.idb.end(), factory.gidb.begin(), factory.gidb.end());
-			if (factory.ctx.getPluginData<DLLitePlugin>().el) {
-				//OrdinaryASPProgram program(reg, factory.xidb, postprocessedInput, factory.ctx.maxint);
-				//program.idb.insert(program.idb.end(), factory.gidb.begin(), factory.gidb.end());
 
-				// information about limit of the support sets:
-				if (factory.ctx.getPluginData<DLLitePlugin>().supsize!=-1) {
-					DBGLOG(DBG,"EL: RMG: support set size limit is: "<<factory.ctx.getPluginData<DLLitePlugin>().supsize);
-				}
-				//else {
-				//	DBGLOG(DBG,"EL: RMG: there is no limit on support set size");
-				//}
-				if (factory.ctx.getPluginData<DLLitePlugin>().supnumber!=-1)
-				DBGLOG(DBG,"EL: RMG: support set number limit is: "<<factory.ctx.getPluginData<DLLitePlugin>().supnumber);
-				//else {
-				//	DBGLOG(DBG,"EL: RMG: there is no limit on the support set number");
-				//}
+			// set the respective flags if the set of protected predicates/predicates allowed for deletion is given
+			if (factory.ctx.getPluginData<DLLitePlugin>().repleaveflag!=false)
+					rep_leave_set_given=true;
+
+			if (factory.ctx.getPluginData<DLLitePlugin>().repdelflag!=false)
+					rep_del_set_given=true;
+
+			// distiguish cases depending on the ontology expressivity
+			// case when ontology is in el
+
+			if (factory.ctx.getPluginData<DLLitePlugin>().el) {
+
+				// variables for storing maximal support set size and number if they are available
+				int supsizelimit = factory.ctx.getPluginData<DLLitePlugin>().supsize;
+				int supnumberlimit = factory.ctx.getPluginData<DLLitePlugin>().supnumber;
+
+
+				// print out limit information into the debug output
+				if (supsizelimit!=-1)
+					DBGLOG(DBG,"EL: RMG: support set size limit is: "<<supsizelimit);
+
+				if (supnumberlimit!=-1)
+					DBGLOG(DBG,"EL: RMG: support set number limit is: "<<supnumberlimit);
 
 				if (factory.ctx.getPluginData<DLLitePlugin>().incomplete)
-				DBGLOG(DBG,"EL: RMG: no support family is known to be complete");
-				//else {
-				//	DBGLOG(DBG,"EL: all support families are complete");
-				//}
+					DBGLOG(DBG,"EL: RMG: support family not known to be complete");
 
+				// prepare predicates ids
+
+				// guardpredicate
 				ID guardPredicateID = reg->getAuxiliaryConstantSymbol('o', ID(0, 0));
+				// guard bar predicate for storing ABox facts that are to be removed
 				ID guardbarPredicateID = reg->getAuxiliaryConstantSymbol('o', ID(0, 1));
+				// predicate for storing DL-atoms that require postcheck evalution
 				ID evalPredicateID = reg->getAuxiliaryConstantSymbol('e', ID(0, 0));
+				// predicate for stoding information about completeness of support families
 				ID complPredicateID = reg->getAuxiliaryConstantSymbol('c', ID(0, 0));
+				// variables used in support set construction
 				ID varoID1 = reg->storeVariableTerm("O0");
 				ID varoID2 = reg->storeVariableTerm("O1	");
 
-				DBGLOG(DBG, "EL: RMG: program idb before support set learning and additional rule construction: ");
-				for (unsigned ruleIndex=0; ruleIndex<program.idb.size(); ruleIndex++) {
-					DBGLOG(DBG, "EL: RMG: "<<RawPrinter::toString(reg,program.idb[ruleIndex])<<"\n");
-				}
+				// pront out program idb before support set learning
+				DBGLOG(DBG, "EL: RMG: program idb before support set learning and before additional rule construction: ");
 
+				for (unsigned ruleIndex=0; ruleIndex<program.idb.size(); ruleIndex++) {
+					DBGLOG(DBG, "RMG: "<<RawPrinter::toString(reg,program.idb[ruleIndex])<<"\n");
+				}
+				// go through external atoms
 				for(unsigned eaIndex = 0; eaIndex < factory.innerEatoms.size(); ++eaIndex) {
-					DBGLOG(DBG,"EL: RMG: consider atom "<< RawPrinter::toString(reg,factory.innerEatoms[eaIndex]));
+					DBGLOG(DBG,"RMG: consider atom "<< RawPrinter::toString(reg,factory.innerEatoms[eaIndex]));
 					const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
 
 					supportSetsOfExternalAtom.push_back(SimpleNogoodContainerPtr(new SimpleNogoodContainer()));
+
+					// if the external atom provides support sets then proceed with their learning
 					if (eatom.getExtSourceProperties().providesSupportSets()) {
-						//DBGLOG(DBG, "RMG: evaluating external atom " << RawPrinter::toString(reg,factory.allEatoms[eaIndex]) << " for support set learning");
-						DBGLOG(DBG, "EL: RMG: evaluating external atom " << RawPrinter::toString(reg,factory.innerEatoms[eaIndex]) << " for support set learning");
+						DBGLOG(DBG, "RMG: evaluating external atom " << RawPrinter::toString(reg,factory.innerEatoms[eaIndex]) << " for support set learning");
+						DBGLOG(DBG, "RMG: call learnSupportSetsForExternalAtom");
+
 						learnSupportSetsForExternalAtom(factory.ctx, eatom, supportSetsOfExternalAtom[eaIndex]);
-						DBGLOG(DBG, "EL: RMG: number of learnt support sets: "<<supportSetsOfExternalAtom[eaIndex]->getNogoodCount());
+						DBGLOG(DBG, "RMG: number of learned support sets: "<<supportSetsOfExternalAtom[eaIndex]->getNogoodCount());
 					}
 
 					// prepare for rewriting
@@ -553,8 +575,6 @@ namespace dllite {
 											}
 											choosingRule.head.push_back(reg->storeOrdinaryAtom(headat));
 											choosingRule.body.push_back(reg->storeOrdinaryAtom(bodyat));
-											//	DBGLOG(DBG, "EL: RMG: went through ontology element "<< RawPrinter::toString(reg, id) );
-
 											it++;
 										}
 									}
@@ -1029,7 +1049,6 @@ namespace dllite {
 				DBGLOG(DBG, "EL: RMG: adding Abox");
 				InterpretationPtr edb(new Interpretation(reg));
 				edb->add(*program.edb);
-				//DBGLOG(DBG, "EL: RMG: program edb before adding ABox "<<*edb);
 				program.edb = edb;
 				DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(factory.ctx, reg->storeConstantTerm(factory.ctx.getPluginData<DLLitePlugin>().repairOntology));
 
@@ -1045,9 +1064,8 @@ namespace dllite {
 					roleAssertion.tuple.push_back(ra.second.second);
 					edb->setFact(reg->storeOrdinaryAtom(roleAssertion).address);
 				}
-				DBGLOG(DBG, "EL: RMG: program edb after adding ABox "<<*edb);
-
-				DBGLOG(DBG, "EL: RMG: adding information about support set completeness ");
+				DBGLOG(DBG, "RMG: program edb after adding ABox "<<*edb);
+				DBGLOG(DBG, "RMG: adding information about support set completeness ");
 
 
 				for(unsigned eaIndex = 0; eaIndex < factory.innerEatoms.size(); ++eaIndex) {
@@ -1130,7 +1148,6 @@ namespace dllite {
 				// ground the program and evaluate it
 				// get the results, filter them out with respect to only relevant predicates (all apart from aux_o, replacement atoms)
 				grounder = GenuineGrounder::getInstance(factory.ctx, program);
-				//	DBGLOG(DBG, "EL: RMG: after grounding");
 				// annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.allEatoms);
 				annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.innerEatoms);
 				DBGLOG(DBG, "EL: RMG: annotated ground program is constructed");
@@ -1138,11 +1155,10 @@ namespace dllite {
 						factory.ctx, annotatedGroundProgram,
 						InterpretationConstPtr(),
 						!factory.ctx.config.getOption("FLPCheck") && !factory.ctx.config.getOption("UFSCheck"));
-				//DBGLOG(DBG, "EL: RMG: after calling the solver");
 				nogoodGrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), learnedEANogoods, learnedEANogoods, annotatedGroundProgram));
-				//DBGLOG(DBG, "EL: RMG: after creating a nogood grounder");
-
 			}
+			// case when ontology is in DLLite
+
 			else {
 
 				OrdinaryASPProgram program(reg, factory.xidb, postprocessedInput, factory.ctx.maxint);
@@ -1437,10 +1453,75 @@ namespace dllite {
 
 							if (!foundOrdinaryAtom) {
 
-								DBGLOG(DBG, "RMG: There are no ordinary atoms in support set");
-								DBGLOG(DBG, "RMG: RULE: bar_aux_o(C,X):-aux_o(C,X), n_e_a(Q,O). ");
+								DBGLOG(DBG, "RMG: There are no ordinary atoms in support set ");
+								DBGLOG(DBG, "RMG: RULE: (bar_aux_o(C,X)):-aux_o(C,X), n_e_a(Q,O). ");
 
-								// bar_aux_o(C,X):-aux_o(C,X), n_e_a(Q,O)
+
+								// check if the ontology part of the support set is allowed for deletion
+								// delpred is a string variable for storing the set of all predicates that are allowed for deletion
+								std::string delpred="";
+								std::string cidstr=RawPrinter::toString(reg, cID).substr(1,RawPrinter::toString(reg, cID).length()-2);
+
+
+								DBGLOG(DBG, "RMG: Check whether there any reasons for not deleting " <<cidstr);
+								if (std::find(factory.ctx.getPluginData<DLLitePlugin>().repdel.begin(), factory.ctx.getPluginData<DLLitePlugin>().repdel.end(),cidstr)!=factory.ctx.getPluginData<DLLitePlugin>().repdel.end())
+								{
+									DBGLOG(DBG,"RMG: the predicate "<<cidstr<< " is in "<< delpred);
+								}
+								if ((rep_del_set_given && (std::find(factory.ctx.getPluginData<DLLitePlugin>().repdel.begin(), factory.ctx.getPluginData<DLLitePlugin>().repdel.end(),cidstr)==factory.ctx.getPluginData<DLLitePlugin>().repdel.end()))) {
+									DBGLOG(DBG, "RMG: the ontology predicate "<<cidstr<< " is forbidden for deletion");
+									DBGLOG(DBG, "RMG: RULE: "<< ":-aux_o(C,X), n_e_a(Q,O). ");
+									{
+										Rule rule(ID::MAINKIND_RULE | ID::SUBKIND_RULE_CONSTRAINT);
+										// aux_o(C,X)
+										{
+											OrdinaryAtom boa(ID::MAINKIND_ATOM | ID::PROPERTY_AUX | (guardIDOrig.isOrdinaryGroundAtom() ? ID::SUBKIND_ATOM_ORDINARYG : ID::SUBKIND_ATOM_ORDINARYN));
+											boa.tuple.push_back(guardPredicateID);
+											//distinct r and c
+											boa.tuple.push_back(cID);
+											if (reg->lookupOrdinaryAtom(guardIDOrig).tuple.size()==3) {
+												boa.tuple.push_back(reg->lookupOrdinaryAtom(guardIDOrig).tuple[2]);
+											}
+											else if (reg->lookupOrdinaryAtom(guardIDOrig).tuple.size()==4) {
+												boa.tuple.push_back(reg->lookupOrdinaryAtom(guardIDOrig).tuple[2]);
+												boa.tuple.push_back(reg->lookupOrdinaryAtom(guardIDOrig).tuple[3]);
+											} else assert(false);
+
+											rule.body.push_back(reg->storeOrdinaryAtom(boa));
+										}
+
+										// n_e_a(Q,O)
+										{
+											OrdinaryAtom repl(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+											repl.tuple.push_back(reg->getAuxiliaryConstantSymbol('n', eatom.predicate));
+											repl.tuple.push_back(eatom.inputs[0]);
+											repl.tuple.push_back(eatom.inputs[1]);
+											repl.tuple.push_back(eatom.inputs[2]);
+											repl.tuple.push_back(eatom.inputs[3]);
+											repl.tuple.push_back(eatom.inputs[4]);
+											if (cQID!=ID_FAIL) {
+												repl.tuple.push_back(cQID);
+												repl.tuple.push_back(varoID);
+											}
+											else if (rQID!=ID_FAIL) {
+												repl.tuple.push_back(rQID);
+												repl.tuple.push_back(varoID1);
+												repl.tuple.push_back(varoID2);
+											} else {assert(false);}
+
+											rule.body.push_back(ID::posLiteralFromAtom(reg->storeOrdinaryAtom(repl)));
+										}
+
+										ID ruleID = reg->storeRule(rule);
+
+										program.idb.push_back(ruleID);
+										DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
+										}
+									}
+								else {
+									DBGLOG(DBG, "RMG: the ontology predicate "<< RawPrinter::toString(reg, cID)<<" is allowed for deletion");
+									DBGLOG(DBG, "RMG: RULE: bar_aux_o(C,X):-aux_o(C,X), n_e_a(Q,O). ");
+
 								{
 									Rule rule(ID::MAINKIND_RULE);
 
@@ -1500,12 +1581,15 @@ namespace dllite {
 
 										rule.body.push_back(ID::posLiteralFromAtom(reg->storeOrdinaryAtom(repl)));
 									}
+
 									ID ruleID = reg->storeRule(rule);
 
 									program.idb.push_back(ruleID);
 
 									DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 								}
+								}
+
 
 								DBGLOG(DBG, "RMG: RULE: supp_e_a(Q,O):-aux_o(C,X),e_a(Q,O), not bar_aux_o(C,X).");
 								// * supp_e_a("Q",O):-aux_o("C",X),e_a("Q",O), not bar_aux_o("C",X).
@@ -1840,6 +1924,7 @@ namespace dllite {
 
 				// ground the program and evaluate it
 				// get the results, filter them out with respect to only relevant predicates (all apart from aux_o, replacement atoms)
+
 				grounder = GenuineGrounder::getInstance(factory.ctx, program);
 				DBGLOG(DBG, "RMG: after grounding");
 				// annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.allEatoms);
@@ -1854,7 +1939,6 @@ namespace dllite {
 						// this will not find unfounded sets due to external sources,
 						// but at least unfounded sets due to disjunctions
 						!factory.ctx.config.getOption("FLPCheck") && !factory.ctx.config.getOption("UFSCheck"));
-				DBGLOG(DBG, "RMG: after calling the solver");
 				nogoodGrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), learnedEANogoods, learnedEANogoods, annotatedGroundProgram));
 				DBGLOG(DBG, "RMG: after creating a nogood grounder");
 
@@ -2013,16 +2097,17 @@ namespace dllite {
 		learnedEANogoodsTransferredIndex = learnedEANogoods->getNogoodCount();
 	}
 
-	bool RepairModelGenerator::postCheck(InterpretationConstPtr modelCandidate) {
-		DBGLOG(DBG,"EL: RMG: PC: evaluation post check is started:");
 
-		DBGLOG(DBG,"EL: RMG: PC: current model candidate is: "<< *modelCandidate);
+
+	bool RepairModelGenerator::postCheck(InterpretationConstPtr modelCandidate) {
+
+		DBGLOG(DBG,"RMG: PC: evaluation post check is started:");
+		DBGLOG(DBG,"RMG: PC: current model candidate is: "<< *modelCandidate);
 
 		// boolean variable which stores the evaluation result
 		bool evalsucc=true;
 
 		// extract repair ABox candidate from the model
-
 
 		// vector for storing IDs of original ABox assertions
 		std::vector<ID> ab;
@@ -2036,27 +2121,25 @@ namespace dllite {
 		ID guardPredicateID = reg->getAuxiliaryConstantSymbol('o', ID(0, 0));
 		ID guardbarPredicateID = reg->getAuxiliaryConstantSymbol('o', ID(0, 1));
 
-
-
 		bm::bvector<>::enumerator nea = modelCandidate->getStorage().first();
 		bm::bvector<>::enumerator nea_end = modelCandidate->getStorage().end();
 
+
+		// collect facts that are to be removed into the removal vector and those that were in the original ABox into the ab vector
 
 		while (nea < nea_end) {
 			ID id = reg->ogatoms.getIDByAddress(*nea);
 			if (reg->ogatoms.getByID(id).tuple[0]==guardbarPredicateID) {
 				removal.push_back(id);
-				//DBGLOG(DBG,"EL: RMG: PC: remove "<< RawPrinter::toString(reg,id));
 			}
 
 			else if (reg->ogatoms.getByID(id).tuple[0]==guardPredicateID) {
 				ab.push_back(id);
-				//DBGLOG(DBG,"EL: RMG: abox assertion "<< RawPrinter::toString(reg,id));
 			}
 			nea++;
 		}
 
-		// go through facts in ab and remove all those that have the same parameters in removal
+		// go through facts in ab and remove all those that are also in the removal vector
 
 		std::vector<ID>::iterator it = ab.begin();
 		std::vector<ID>::iterator it_end = ab.end();
@@ -2065,9 +2148,6 @@ namespace dllite {
 		while (it<it_end) {
 			ID idab = ID(*it);
 			OrdinaryAtom aboxfact = reg->ogatoms.getByID(idab);
-
-			//DBGLOG(DBG,"EL: RMG: abox fact is "<<RawPrinter::toString(reg,idab));
-
 			OrdinaryAtom a(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
 			a.tuple.push_back(guardbarPredicateID);
 
@@ -2079,68 +2159,80 @@ namespace dllite {
 			ID delID = reg->storeOrdinaryGAtom(a);
 
 			if ((std::find(removal.begin(), removal.end(), delID) != removal.end())) {
-				//DBGLOG(DBG,"EL: RMG: PC: do not add "<<RawPrinter::toString(reg,idab)<<" to new ABox");
 			}
 			else {
-				//DBGLOG(DBG,"EL: RMG: PC: add "<<RawPrinter::toString(reg,idab)<<" to new ABox");
 				newab.push_back(idab);
 			}
 			it++;
 		}
 
 
-
-		DBGLOG(DBG,"EL: RMG: final ABox is:");
+		// final abox is now stored in the vector newab
 
 		std::vector<ID>::iterator newa = newab.begin();
 		std::vector<ID>::iterator newa_end = newab.end();
 
+		if (newa>=newa_end) {
+			DBGLOG(DBG,"RMG: PC: final ABox is empty ");
+		}
+		else {
+			DBGLOG(DBG,"RMG: PC: final ABox is: {");
 		while (newa<newa_end) {
 			ID idab = ID(*newa);
-			DBGLOG(DBG,"EL: RMG: "<<RawPrinter::toString(reg,idab));
+			DBGLOG(DBG,"RMG: PC: "<<RawPrinter::toString(reg,idab));
 			newa++;
+		}
+		DBGLOG(DBG,"RMG: PC:}");
+		}
+
+		if (factory.ctx.getPluginData<DLLitePlugin>().replim!=-1) {
+			if (ab.size()-newab.size()>factory.ctx.getPluginData<DLLitePlugin>().replim) {
+				evalsucc=false;
+				DBGLOG(DBG, "RMG: PC: evaluation postcheck failed, as the number of deleted assertions exceeded the limit "<<factory.ctx.getPluginData<DLLitePlugin>().replim);
+			}
 		}
 
 
 
+		// the case when ontology is in EL
+
+		if (factory.ctx.getPluginData<DLLitePlugin>().el) {
+
 		bm::bvector<>::enumerator enm = modelCandidate->getStorage().first();
 		bm::bvector<>::enumerator enm_end = modelCandidate->getStorage().end();
 
-		DBGLOG(DBG,"EL: RMG: PC: going through facts of the current model candidate: ");
+		DBGLOG(DBG,"RMG: PC: going through facts of the current model candidate: ");
 
 		ID evid = reg->getAuxiliaryConstantSymbol('e', ID(0,0));
 		OrdinaryAtom ev(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
 		ev.tuple.push_back(evid);
 
 
-		DBGLOG(DBG,"EL: RMG: PC: if " << RawPrinter::toString(reg,evid)<< " is present in the model then the corresponding external atom needs to be evaluated");
+		DBGLOG(DBG,"RMG: PC: if " << RawPrinter::toString(reg,evid)<< " is present in the model then the corresponding external atom needs to be evaluated");
 
 		std::vector<ID> evalatoms;
 		while (enm < enm_end) {
 			ID id = reg->ogatoms.getIDByAddress(*enm);
-			DBGLOG(DBG,"EL: RMG: PC: current atoms is: "<< RawPrinter::toString(reg,id)<<" with tuple "<<RawPrinter::toString(reg,reg->ogatoms.getByID(id).tuple[0]));
-			//DBGLOG(DBG,"EL: RMG: PC: compare "<<RawPrinter::toString(reg,reg->ogatoms.getByID(id).tuple[0])<<" with "<< RawPrinter::toString(reg,evid));
-			//DBGLOG(DBG,"EL: RMG: PC: IDs are: "<<reg->ogatoms.getByID(id).tuple[0]<<" and "<< evid);
+			DBGLOG(DBG,"RMG: PC: current atoms is: "<< RawPrinter::toString(reg,id)<<" with tuple "<<RawPrinter::toString(reg,reg->ogatoms.getByID(id).tuple[0]));
 
 			if (reg->ogatoms.getByID(id).tuple[0]==evid) {
-				DBGLOG(DBG,"EL: RMG: this is eval atom, search for its twin among external ones");
+				DBGLOG(DBG,"RMG: this is eval atom, search for its twin among external ones");
 
-				DBGLOG(DBG,"EL: RMG: number of external atoms: "<<factory.innerEatoms.size());
+				DBGLOG(DBG,"RMG: number of external atoms: "<<factory.innerEatoms.size());
 				for (unsigned eaIndex=0; eaIndex<factory.innerEatoms.size();eaIndex++) {
 					const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
 
 					ID eatID = factory.innerEatoms[eaIndex];
-					DBGLOG(DBG,"EL: RMG: consider atom "<< RawPrinter::toString(reg,eatID));
+					DBGLOG(DBG,"RMG: consider atom "<< RawPrinter::toString(reg,eatID));
 					bool ev=true;
 					for (int i=1; i<7;i++) {
 						ID idev = reg->ogatoms.getByID(id).tuple[i];
 						ID idea = reg->eatoms.getByID(eatID).inputs[i-1];
 						if (idev!=idea) {
-							DBGLOG(DBG,"EL: RMG: eval.tuple["<<i<<"] = "<<RawPrinter::toString(reg, reg->ogatoms.getByID(id).tuple[i]));
-							DBGLOG(DBG,"EL: RMG: extatom.input["<<i-1<<"] = "<<RawPrinter::toString(reg, reg->eatoms.getByID(factory.innerEatoms[eaIndex]).inputs[i-1]));
+							DBGLOG(DBG,"RMG: eval.tuple["<<i<<"] = "<<RawPrinter::toString(reg, reg->ogatoms.getByID(id).tuple[i]));
+							DBGLOG(DBG,"RMG: extatom.input["<<i-1<<"] = "<<RawPrinter::toString(reg, reg->eatoms.getByID(factory.innerEatoms[eaIndex]).inputs[i-1]));
 							ev=false;
 						}
-
 					}
 
 					ID cQID = ID_FAIL;
@@ -2220,7 +2312,7 @@ namespace dllite {
 								OrdinaryAtom addat=reg->ogatoms.getByID(idadd);
 
 								int size = addat.tuple.size();
-								DBGLOG(DBG,"EL: size ofthe atom is "<<size);
+								DBGLOG(DBG,"EL: size of the atom is "<<size);
 
 
 
@@ -2265,9 +2357,8 @@ namespace dllite {
 
 							DBGLOG(DBG,"EL: RMG: PC: after creation of relev atom");
 
-							// evaluate current atom under the extended interpretation and anlyze
+							// evaluate current atom under the extended interpretation and analyze
 							// the output values w.r.t. to the current model candidate
-							DBGLOG(DBG,"EL: RMG: Before evaluation");
 
 							IntegrateExternalAnswerIntoInterpretationCB cb(postcheckOutput);
 							std::vector<ID> evat;
@@ -2281,7 +2372,7 @@ namespace dllite {
 
 							while (e < e_end) {
 								ID i = reg->ogatoms.getIDByAddress(*e);
-								DBGLOG(DBG,"EL: RMG: PC: current element of postcheck is: "<< RawPrinter::toString(reg,i));
+								DBGLOG(DBG,"EL: RMG: PC: current element to be checked is: "<< RawPrinter::toString(reg,i));
 								bm::bvector<>::enumerator a = modelCandidate->getStorage().first();
 								bm::bvector<>::enumerator a_end = modelCandidate->getStorage().end();
 								DBGLOG(DBG,"EL: RMG: PC: go through elements of the model and check whether the id of the evaluated atom occurs in it");
@@ -2303,7 +2394,8 @@ namespace dllite {
 							}
 							if (evalsucc==false) {
 								DBGLOG(DBG,"EL: RMG: PC: evaluation showed that the model is not a repair answer set");
-								return false;}
+								return false;
+							}
 
 							else {
 								DBGLOG(DBG,"EL: RMG: PC: so far evaluation results coincide with the ones encoded in the model candidate");
@@ -2381,7 +2473,12 @@ namespace dllite {
 		}
 		enm++;
 	}
-	DBGLOG(DBG,"EL: RMG: PC: postcheck is finished");
+	DBGLOG(DBG,"EL: RMG: PC: evaluation postcheck is finished");
+
+	}
+	// start with the minimality check
+
+
 
 	return true;
 
@@ -2847,8 +2944,15 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate) {
 
 bool RepairModelGenerator::isModel(InterpretationConstPtr compatibleSet) {
 
+	DBGLOG(DBG,"RMG: FLP check is started..");
+	// TODO: incorporate unfounded set check with respect to the repaired ABox
+
 	// which semantics?
+
+
 	if (factory.ctx.config.getOption("WellJustified")) {
+
+		DBGLOG(DBG,"RMG: the welljustified semantics is used ");
 
 		// well-justified FLP: fixpoint iteration
 		InterpretationPtr fixpoint = welljustifiedSemanticsGetFixpoint(factory.ctx, compatibleSet, grounder->getGroundProgram());
@@ -2858,26 +2962,28 @@ bool RepairModelGenerator::isModel(InterpretationConstPtr compatibleSet) {
 		reference->getStorage() -= factory.gpMask.mask()->getStorage();
 		reference->getStorage() -= factory.gnMask.mask()->getStorage();
 
-		DBGLOG(DBG, "Comparing fixpoint " << *fixpoint << " to reference " << *reference);
+		DBGLOG(DBG, "RMG: Comparing fixpoint " << *fixpoint << " to reference " << *reference);
 		if ((fixpoint->getStorage() & reference->getStorage()).count() == reference->getStorage().count()) {
-			DBGLOG(DBG, "Well-Justified FLP Semantics: Pass fixpoint test");
+			DBGLOG(DBG, "RMG: Well-Justified FLP Semantics: Pass fixpoint test");
 			return true;
 		} else {
-			DBGLOG(DBG, "Well-Justified FLP Semantics: Fail fixpoint test");
+			DBGLOG(DBG, "RMG: Well-Justified FLP Semantics: Fail fixpoint test");
 			return false;
 		}
 	} else {
 
+		DBGLOG(DBG,"RMG: the flp semantics is used ");
+
 		// FLP: ensure minimality of the compatible set wrt. the reduct (if necessary)
 		if (annotatedGroundProgram.hasHeadCycles() == 0 && annotatedGroundProgram.hasECycles() == 0 && factory.ctx.config.getOption("FLPDecisionCriterionHead") && factory.ctx.config.getOption("FLPDecisionCriterionE")) {
-			DBGLOG(DBG, "No head- or e-cycles --> No FLP/UFS check necessary");
+			DBGLOG(DBG, "RMG: No head- or e-cycles --> No FLP/UFS check is needed");
 			return true;
 		} else {
-			DBGLOG(DBG, "Head- or e-cycles --> FLP/UFS check necessary");
+			DBGLOG(DBG, "RMG: Head- or e-cycles --> FLP/UFS check necessary");
 
 			// Explicit FLP check
 			if (factory.ctx.config.getOption("FLPCheck")) {
-				DBGLOG(DBG, "FLP Check");
+				DBGLOG(DBG, "RMG: explicit FLP Check");
 
 				// do FLP check (possibly with nogood learning) and add the learned nogoods to the main search
 				bool result = isSubsetMinimalFLPModel<GenuineSolver>(compatibleSet, postprocessedInput, factory.ctx, factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : SimpleNogoodContainerPtr());
@@ -2888,12 +2994,12 @@ bool RepairModelGenerator::isModel(InterpretationConstPtr compatibleSet) {
 
 			// UFS check
 			if (factory.ctx.config.getOption("UFSCheck")) {
-				DBGLOG(DBG, "UFS Check");
+				DBGLOG(DBG, "RMG: UFS Check");
 				std::vector<IDAddress> ufs = ufscm->getUnfoundedSet(compatibleSet, std::set<ID>(), factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : SimpleNogoodContainerPtr());
 
 				//updateEANogoods(compatibleSet);
 				if (ufs.size() > 0) {
-					DBGLOG(DBG, "Got a UFS");
+					DBGLOG(DBG, "RMG: Got a UFS");
 					if (factory.ctx.config.getOption("UFSLearning")) {
 						DBGLOG(DBG, "Learn from UFS");
 						Nogood ufsng = ufscm->getLastUFSNogood();
@@ -2946,4 +3052,5 @@ void RepairModelGenerator::propagate(InterpretationConstPtr partialInterpretatio
 DLVHEX_NAMESPACE_END
 
 // vi:ts=8:noexpandtab:
+
 

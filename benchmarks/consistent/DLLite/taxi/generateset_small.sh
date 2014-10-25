@@ -1,3 +1,11 @@
+#!/bin/bash
+
+#1 : starting proability
+#2 : final probability
+#3 : probability step
+#4 : number of instances
+
+
 if [[ $# -lt 4 ]]; then
 	echo "Error: Script expects 4 parameters"
 	exit 1;
@@ -14,10 +22,8 @@ do
 		cp ontology_small.owl instances/inst_size_${propf}_inst_${in}.owl
 
 		# instantiate the program
-		./generate_small.sh 20 5 50 $prop > "instances/inst_size_${propf}_inst_${in}.dlp"
-		cp instances/inst_size_${propf}_inst_${in}.dlp instances/inst_size_${propf}_inst_${in}.hex
+		./generate_small.sh 20 5 50 $prop > "instances/inst_size_${propf}_inst_${in}.hex"
 
 		cat program.hex | sed "s/OWLONTOLOGY/\"inst_size_${propf}_inst_${in}.owl\"/g" >> "instances/inst_size_${propf}_inst_${in}.hex"
-		cat program.dlp >> "instances/inst_size_${propf}_inst_${in}.dlp"
 	done
 done
