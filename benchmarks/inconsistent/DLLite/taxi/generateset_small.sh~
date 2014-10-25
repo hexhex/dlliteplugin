@@ -3,6 +3,12 @@ if [[ $# -lt 4 ]]; then
 	exit 1;
 fi
 
+
+
+# create a directory for storing benchmark instances
+
+mkdir -p instances
+
 for (( prop=$1; prop <= $2; prop+=$3 ))
 do
 	for (( inst=0; inst < $4; inst++ ))

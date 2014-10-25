@@ -8,7 +8,13 @@
 
 
 if [[ $# -lt 6 ]]; then
-        echo "Error: Script expects 6 parameters"
+        echo "Error: Script expects 6 parameters: 
+		1: starting probability
+		2: finishing probability
+		3: step
+		4: number of instances
+		5: parameter for the instance difficulty (x: x*50 children, the rest of parameters are proportional) 
+		6: parameter for presence or absence of domain predicate"
         exit 1;
 fi
 

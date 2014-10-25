@@ -7,7 +7,11 @@
 
 
 if [[ $# -lt 4 ]]; then
-        echo "Error: Script expects 4 parameters"
+        echo "Error: Script expects 4 parameters
+		1: starting probability 
+		2: finishing probability
+		3: step	
+		4: number of instances"
         exit 1;
 fi
 

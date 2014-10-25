@@ -8,7 +8,12 @@
 
 
 if [[ $# -lt 4 ]]; then
-        echo "Error: Script expects 6 parameters"
+        echo "Error: Script expects 6 parameters
+		1: starting probability
+		2: finishing probability
+		3: step	
+		4: number of instances
+		5: parameter for the instance difficulty with respect to the data (x: x*50 children, the rest of parameters are proportional)"
         exit 1;
 fi
 
