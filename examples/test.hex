@@ -1,0 +1,4 @@
+:-&cDL["test.owl",a,b,c,d,"A"]("e"), domain("e").
+domain("e").
+
+
