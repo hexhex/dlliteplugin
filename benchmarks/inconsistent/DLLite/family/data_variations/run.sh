@@ -119,6 +119,6 @@ else
 
 	# run single instance
 	owlfile="${instance%%.hex}.owl"
-	confstr="--supportsets;--supportsets --repair=$owlfile;--supportsets -n=1;--supportsets -n=1 --repair=$owlfile" # (2)
-	$bmscripts/runconfigs.sh "dlvhex2 --plugindir=../../../../../src INST CONF" "$confstr" "$instance" "$to" # (3)
+	confstr="-n=1;--repair=$owlfile -n=1" # (2)
+	$bmscripts/runconfigs.sh "dlvhex2 --plugindir=../../../../../src --supportsets --liberalsafety --heuristics=monolithic INST CONF" "$confstr" "$instance" "$to" # (3)
 fi
