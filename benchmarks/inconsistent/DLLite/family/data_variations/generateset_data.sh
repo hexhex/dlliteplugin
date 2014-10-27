@@ -20,7 +20,11 @@ fi
 
 # create a directory for storing benchmark instances
 
-mkdir -p instances
+if [ -d "instances" ]; then 
+	rm instances/*.*
+else 
+	mkdir -p instances
+fi
 
 # instantiate the ontology
 
@@ -46,10 +50,11 @@ do
 
 		
 		if [[ $6 -eq 1 ]]; then 
-                	cat program_domain.hex | sed "s/OWLONTOLOGY/\"inst_size_${propf}_inst_${in}.owl\"/g" >> "instances/inst_size_${propf}_inst_${in}.hex"
+                	cat program_domain.hex | sed "s/OWLONTOLOGY/\"instances\/inst_size_${propf}_inst_${in}.owl\"/g" >> "instances/inst_size_${propf}_inst_${in}.hex"
 		else 
-		 	cat program.hex | sed "s/OWLONTOLOGY/\"inst_size_${propf}_inst_${in}.owl\"/g" >> "instances/inst_size_${propf}_inst_${in}.hex"
+		 	cat program.hex | sed "s/OWLONTOLOGY/\"instances\/inst_size_${propf}_inst_${in}.owl\"/g" >> "instances/inst_size_${propf}_inst_${in}.hex"
 		fi
         done
 done
+rm ontology_${size}.owl
 
