@@ -52,7 +52,7 @@ do
 
                 # instantiate the progra
 
-		cat program_${size}.hex | sed "s/OWLONTOLOGY/\"inst_size_${propf}_inst_${in}.owl\"/g" > "instances/inst_size_${propf}_inst_${in}.hex"  
+		cat program_${size}.hex | sed "s/OWLONTOLOGY/\"instances\/inst_size_${propf}_inst_${in}.owl\"/g" > "instances/inst_size_${propf}_inst_${in}.hex"  
         done
 done
 

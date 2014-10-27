@@ -7,7 +7,7 @@ cat ontology_header.owl # ontology_header.owl must contain the static part of th
 prop=$((32768 * $1 / 100)) 
 
 
-for (( i=1; i <= 50; i++ ))
+for (( i=1; i <= 500; i++ ))
 do
 	
 	if [[ $RANDOM -le $prop ]]; then 

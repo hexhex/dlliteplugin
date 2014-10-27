@@ -5,7 +5,7 @@
 
 if [[ $# -lt 4 ]]; then
 	echo "Error: Script expects 4 parameters
-		1: startin probability
+		1: starting probability
 		2: ending probability
 		3: step
 		4: number of instances"
@@ -15,7 +15,12 @@ fi
 
 # create a directory for storing benchmark instances
 
-mkdir -p instances
+if [ -d "instances" ]; then
+	rm instances/*.*
+else
+	mkdir -p instances
+fi
+
 
 	for (( concprop=$1; concprop <= $2; concprop+=$3 ))
 	do
@@ -29,7 +34,10 @@ mkdir -p instances
 			cp ontology.owl instances/inst_prop_${rp}_inst_${in}.owl
 
 			# instantiate the program
-			cat program.hex | sed "s/OWLONTOLOGY/\"inst_prop_${rp}_inst_${in}.owl\"/g" >> "instances/inst_prop_${rp}_inst_${in}.hex"
+			#cat program.hex | sed "s/OWLONTOLOGY/\"instances/inst_prop_${rp}_inst_${in}.owl\"/g" >> "instances/inst_prop_${rp}_inst_${in}.hex"
+			cat program.hex | sed "s/OWLONTOLOGY/\"instances\/inst_size_${rp}_inst_${in}.owl\"/g" >> "instances/inst_size_${rp}_inst_${in}.hex"
+
+			
 		done
 
 	done
