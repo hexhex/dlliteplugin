@@ -83,8 +83,6 @@ namespace dllite {
 			addDomainPredicatesAndCreateDomainExplorationProgram(ci, ctx, idb, deidb, deidbInnerEatoms, outerEatoms);
 		}
 
-		innerEatoms = ci.innerEatoms;
-		innerEatoms.insert(innerEatoms.end(), outerEatoms.begin(), outerEatoms.end());
 
 		//allEatoms.insert(allEatoms.end(), innerEatoms.begin(), innerEatoms.end());
 		//allEatoms.insert(allEatoms.end(), outerEatoms.begin(), outerEatoms.end());
@@ -92,6 +90,9 @@ namespace dllite {
 
 		// create guessing rules "gidb" for innerEatoms in all inner rules and constraints
 		createEatomGuessingRules(ctx);
+
+		innerEatoms = ci.innerEatoms;
+		innerEatoms.insert(innerEatoms.end(), outerEatoms.begin(), outerEatoms.end());
 
 		// transform original innerRules and innerConstraints to xidb with only auxiliaries
 		xidb.reserve(idb.size());
