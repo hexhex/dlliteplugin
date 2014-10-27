@@ -1,0 +1,193 @@
+boy("c2").
+ischildof("c2","p45").
+boy("c3").
+ischildof("c3","p53").
+boy("c7").
+ischildof("c7","p50").
+boy("c8").
+ischildof("c8","p46").
+boy("c12").
+ischildof("c12","p52").
+boy("c14").
+ischildof("c14","p48").
+boy("c16").
+ischildof("c16","p50").
+boy("c23").
+ischildof("c23","p52").
+boy("c33").
+ischildof("c33","p45").
+boy("c34").
+ischildof("c34","p48").
+boy("c37").
+ischildof("c37","p51").
+boy("c42").
+ischildof("c42","p47").
+boy("c45").
+ischildof("c45","p47").
+hasfather(X,Y):-&cDL["inst_size_035_inst_097.owl",pcm,b,c,d,"Male"](Y), &rDL["inst_size_035_inst_097.owl",pcc,b,c,d,"hasParent"](X,Y).
+:-not &cDL["inst_size_035_inst_097.owl",pcc,b,c,d,"Adopted"](X),hasfather(X,Y1),ischildof(X,Y2),Y1!=Y2,not &cDL["inst_size_035_inst_097.owl",pcm,b,c,d,"-Male"](Y2), boy(X).
+contact(X,Y):- &rDL["inst_size_035_inst_097.owl",a,b,c,d,"hasParent"](X,Y), not omit(X,Y).
+omit(X,Y):- &cDL["inst_size_035_inst_097.owl",a,b,c,d,"Adopted"](X), Z!=Y, hasfather(X,Y), contact(X,Z).
+
+pcm("Male",X):-boy(X).
+pcc("Child",X):-boy(X).
+contact1(X,Y):-contact(X,Y), not omit(X,Y).
+omit1(X,Y):-omit(X,Y).
+contact2(X,Y):-contact1(X,Y), not omit1(X,Y).
+omit2(X,Y):-omit1(X,Y).
+contact2(X,Y):-contact(X,Y), not omit(X,Y).
+omit2(X,Y):-omit(X,Y).
+contact3(X,Y):-contact2(X,Y), not omit2(X,Y).
+omit3(X,Y):-omit2(X,Y).
+contact4(X,Y):-contact(X,Y), not omit(X,Y).
+omit4(X,Y):-omit(X,Y).
+contact5(X,Y):-contact4(X,Y), not omit4(X,Y).
+omit5(X,Y):-omit4(X,Y).
+contact6(X,Y):-contact(X,Y), not omit(X,Y).
+omit6(X,Y):-omit(X,Y).
+contact7(X,Y):-contact6(X,Y), not omit6(X,Y).
+omit7(X,Y):-omit6(X,Y).
+contact9(X,Y):-contact(X,Y), not omit(X,Y).
+omit9(X,Y):-omit(X,Y).
+contact10(X,Y):-contact9(X,Y), not omit9(X,Y).
+omit10(X,Y):-omit9(X,Y).
+contact17(X,Y):-contact(X,Y), not omit(X,Y).
+omit17(X,Y):-omit(X,Y).
+contact18(X,Y):-contact17(X,Y), not omit17(X,Y).
+omit18(X,Y):-omit17(X,Y).
+contact19(X,Y):-contact(X,Y), not omit(X,Y).
+omit19(X,Y):-omit(X,Y).
+contact20(X,Y):-contact19(X,Y), not omit19(X,Y).
+omit20(X,Y):-omit19(X,Y).
+contact22(X,Y):-contact(X,Y), not omit(X,Y).
+omit22(X,Y):-omit(X,Y).
+contact23(X,Y):-contact22(X,Y), not omit22(X,Y).
+omit23(X,Y):-omit22(X,Y).
+contact24(X,Y):-contact(X,Y), not omit(X,Y).
+omit24(X,Y):-omit(X,Y).
+contact25(X,Y):-contact24(X,Y), not omit24(X,Y).
+omit25(X,Y):-omit24(X,Y).
+contact25(X,Y):-contact(X,Y), not omit(X,Y).
+omit25(X,Y):-omit(X,Y).
+contact26(X,Y):-contact25(X,Y), not omit25(X,Y).
+omit26(X,Y):-omit25(X,Y).
+contact29(X,Y):-contact(X,Y), not omit(X,Y).
+omit29(X,Y):-omit(X,Y).
+contact30(X,Y):-contact29(X,Y), not omit29(X,Y).
+omit30(X,Y):-omit29(X,Y).
+contact32(X,Y):-contact(X,Y), not omit(X,Y).
+omit32(X,Y):-omit(X,Y).
+contact33(X,Y):-contact32(X,Y), not omit32(X,Y).
+omit33(X,Y):-omit32(X,Y).
+contact34(X,Y):-contact(X,Y), not omit(X,Y).
+omit34(X,Y):-omit(X,Y).
+contact35(X,Y):-contact34(X,Y), not omit34(X,Y).
+omit35(X,Y):-omit34(X,Y).
+contact35(X,Y):-contact(X,Y), not omit(X,Y).
+omit35(X,Y):-omit(X,Y).
+contact36(X,Y):-contact35(X,Y), not omit35(X,Y).
+omit36(X,Y):-omit35(X,Y).
+contact37(X,Y):-contact(X,Y), not omit(X,Y).
+omit37(X,Y):-omit(X,Y).
+contact38(X,Y):-contact37(X,Y), not omit37(X,Y).
+omit38(X,Y):-omit37(X,Y).
+contact39(X,Y):-contact(X,Y), not omit(X,Y).
+omit39(X,Y):-omit(X,Y).
+contact40(X,Y):-contact39(X,Y), not omit39(X,Y).
+omit40(X,Y):-omit39(X,Y).
+contact40(X,Y):-contact(X,Y), not omit(X,Y).
+omit40(X,Y):-omit(X,Y).
+contact41(X,Y):-contact40(X,Y), not omit40(X,Y).
+omit41(X,Y):-omit40(X,Y).
+contact41(X,Y):-contact(X,Y), not omit(X,Y).
+omit41(X,Y):-omit(X,Y).
+contact42(X,Y):-contact41(X,Y), not omit41(X,Y).
+omit42(X,Y):-omit41(X,Y).
+contact43(X,Y):-contact(X,Y), not omit(X,Y).
+omit43(X,Y):-omit(X,Y).
+contact44(X,Y):-contact43(X,Y), not omit43(X,Y).
+omit44(X,Y):-omit43(X,Y).
+contact48(X,Y):-contact(X,Y), not omit(X,Y).
+omit48(X,Y):-omit(X,Y).
+contact49(X,Y):-contact48(X,Y), not omit48(X,Y).
+omit49(X,Y):-omit48(X,Y).
+contact55(X,Y):-contact(X,Y), not omit(X,Y).
+omit55(X,Y):-omit(X,Y).
+contact56(X,Y):-contact55(X,Y), not omit55(X,Y).
+omit56(X,Y):-omit55(X,Y).
+contact56(X,Y):-contact(X,Y), not omit(X,Y).
+omit56(X,Y):-omit(X,Y).
+contact57(X,Y):-contact56(X,Y), not omit56(X,Y).
+omit57(X,Y):-omit56(X,Y).
+contact59(X,Y):-contact(X,Y), not omit(X,Y).
+omit59(X,Y):-omit(X,Y).
+contact60(X,Y):-contact59(X,Y), not omit59(X,Y).
+omit60(X,Y):-omit59(X,Y).
+contact61(X,Y):-contact(X,Y), not omit(X,Y).
+omit61(X,Y):-omit(X,Y).
+contact62(X,Y):-contact61(X,Y), not omit61(X,Y).
+omit62(X,Y):-omit61(X,Y).
+contact64(X,Y):-contact(X,Y), not omit(X,Y).
+omit64(X,Y):-omit(X,Y).
+contact65(X,Y):-contact64(X,Y), not omit64(X,Y).
+omit65(X,Y):-omit64(X,Y).
+contact66(X,Y):-contact(X,Y), not omit(X,Y).
+omit66(X,Y):-omit(X,Y).
+contact67(X,Y):-contact66(X,Y), not omit66(X,Y).
+omit67(X,Y):-omit66(X,Y).
+contact68(X,Y):-contact(X,Y), not omit(X,Y).
+omit68(X,Y):-omit(X,Y).
+contact69(X,Y):-contact68(X,Y), not omit68(X,Y).
+omit69(X,Y):-omit68(X,Y).
+contact73(X,Y):-contact(X,Y), not omit(X,Y).
+omit73(X,Y):-omit(X,Y).
+contact74(X,Y):-contact73(X,Y), not omit73(X,Y).
+omit74(X,Y):-omit73(X,Y).
+contact75(X,Y):-contact(X,Y), not omit(X,Y).
+omit75(X,Y):-omit(X,Y).
+contact76(X,Y):-contact75(X,Y), not omit75(X,Y).
+omit76(X,Y):-omit75(X,Y).
+contact76(X,Y):-contact(X,Y), not omit(X,Y).
+omit76(X,Y):-omit(X,Y).
+contact77(X,Y):-contact76(X,Y), not omit76(X,Y).
+omit77(X,Y):-omit76(X,Y).
+contact78(X,Y):-contact(X,Y), not omit(X,Y).
+omit78(X,Y):-omit(X,Y).
+contact79(X,Y):-contact78(X,Y), not omit78(X,Y).
+omit79(X,Y):-omit78(X,Y).
+contact81(X,Y):-contact(X,Y), not omit(X,Y).
+omit81(X,Y):-omit(X,Y).
+contact82(X,Y):-contact81(X,Y), not omit81(X,Y).
+omit82(X,Y):-omit81(X,Y).
+contact82(X,Y):-contact(X,Y), not omit(X,Y).
+omit82(X,Y):-omit(X,Y).
+contact83(X,Y):-contact82(X,Y), not omit82(X,Y).
+omit83(X,Y):-omit82(X,Y).
+contact85(X,Y):-contact(X,Y), not omit(X,Y).
+omit85(X,Y):-omit(X,Y).
+contact86(X,Y):-contact85(X,Y), not omit85(X,Y).
+omit86(X,Y):-omit85(X,Y).
+contact87(X,Y):-contact(X,Y), not omit(X,Y).
+omit87(X,Y):-omit(X,Y).
+contact88(X,Y):-contact87(X,Y), not omit87(X,Y).
+omit88(X,Y):-omit87(X,Y).
+contact91(X,Y):-contact(X,Y), not omit(X,Y).
+omit91(X,Y):-omit(X,Y).
+contact92(X,Y):-contact91(X,Y), not omit91(X,Y).
+omit92(X,Y):-omit91(X,Y).
+contact92(X,Y):-contact(X,Y), not omit(X,Y).
+omit92(X,Y):-omit(X,Y).
+contact93(X,Y):-contact92(X,Y), not omit92(X,Y).
+omit93(X,Y):-omit92(X,Y).
+contact95(X,Y):-contact(X,Y), not omit(X,Y).
+omit95(X,Y):-omit(X,Y).
+contact96(X,Y):-contact95(X,Y), not omit95(X,Y).
+omit96(X,Y):-omit95(X,Y).
+contact97(X,Y):-contact(X,Y), not omit(X,Y).
+omit97(X,Y):-omit(X,Y).
+contact98(X,Y):-contact97(X,Y), not omit97(X,Y).
+omit98(X,Y):-omit97(X,Y).
+contact99(X,Y):-contact(X,Y), not omit(X,Y).
+omit99(X,Y):-omit(X,Y).
+contact100(X,Y):-contact99(X,Y), not omit99(X,Y).
+omit100(X,Y):-omit99(X,Y).

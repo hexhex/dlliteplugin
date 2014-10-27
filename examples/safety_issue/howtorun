@@ -1,0 +1,1 @@
+dlvhex2 --plugindir=../../src --supportsets --liberalsafety --heuristics=monolithic inst_size_035_inst_097.hex -n=1 --verbose=1 --repair=inst_size_035_inst_097.owl 
