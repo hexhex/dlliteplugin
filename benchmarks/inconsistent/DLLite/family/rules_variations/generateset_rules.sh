@@ -2,24 +2,29 @@
 # $2 finishing probability
 # $3 step
 # $4 number of instances
-## $5 parameter for the instance difficulty with respect to the data (x: x*50 children, the rest of parameters are proportional) 
+# $5 parameter for the instance difficulty with respect to the data (x: x*50 children, the rest of parameters are proportional) 
 
 
 
 
-if [[ $# -lt 4 ]]; then
-        echo "Error: Script expects 6 parameters
-		1: starting probability
-		2: finishing probability
-		3: step	
-		4: number of instances
-		5: parameter for the instance difficulty with respect to the data (x: x*50 children, the rest of parameters are proportional)"
+if [[ $# -lt 5 ]]; then
+        echo "Error: Script expects 5 parameters" 1>&2
+	echo "1: starting probability" 1>&2
+	echo "2: final probability" 1>&2
+	echo "3: step"	1>&2
+	echo "4: number of instances" 1>&2
+	echo "5: parameter for instance difficulty with respect to the data (x*50 children)" 1>&2
         exit 1;
 fi
 
-# create a directory for storing benchmark instances
+# prepare a directory for storing benchmark instances
 
-mkdir -p instances
+if [ -d "instances" ]; then
+        rm instances/*.*
+else 
+        mkdir -p instances
+fi
+
 
 
 # instantiate the ontology
@@ -28,7 +33,8 @@ s=$5
 
 size=`printf "%03d" ${s}`
 
-#./generate_ontology.sh $5 > "ontology_${size}.owl"
+./generate_ontology.sh $5 > "ontology_${size}.owl"
+./generate_data.sh $5 >"program_${size}.hex"
 
 for (( prop=$1; prop <= $2; prop+=$3 ))
 do
@@ -39,18 +45,17 @@ do
 
                 # create ontology instances
 
-                # cp ontology_${size}.owl instances/inst_size_${propf}_inst_${in}.owl
-
-		cp ontology_001.owl instances/inst_size_${propf}_inst_${in}.owl
+               	cp ontology_${size}.owl instances/inst_size_${propf}_inst_${in}.owl
 
                 # instantiate the program
 
-		cat program_001.hex | sed "s/OWLONTOLOGY/\"inst_size_${propf}_inst_${in}.owl\"/g" > "instances/inst_size_${propf}_inst_${in}.hex"                
-
-		./generate_rules.sh $5 $prop >> "instances/inst_size_${propf}_inst_${in}.hex"
+		cat program_${size}.hex | sed "s/OWLONTOLOGY/\"inst_size_${propf}_inst_${in}.owl\"/g" > "instances/inst_size_${propf}_inst_${in}.hex"                
+		./generate_rules.sh $prop >> "instances/inst_size_${propf}_inst_${in}.hex"
 
 		
 
         done
 done
 
+rm -f ontology_${size}.owl
+rm -f program_${size}.hex

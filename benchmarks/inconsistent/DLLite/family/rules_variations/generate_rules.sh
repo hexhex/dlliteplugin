@@ -1,5 +1,5 @@
 # $1: rule probability
-# 50 is the maximum number of rules
+# 50 is the maximal number of rules
 
 prop=$((32768 * $1 / 100)) 
 
