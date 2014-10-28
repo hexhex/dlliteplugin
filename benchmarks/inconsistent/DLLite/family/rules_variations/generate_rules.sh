@@ -1,10 +1,10 @@
 # $1: rule probability
-# 50 is the maximal number of rules
+# $2: maximal number of rules for addition
 
 prop=$((32768 * $1 / 100)) 
 
 
-for (( i=1; i <= 100; i++ ))
+for (( i=1; i <= $2; i++ ))
 do
 	
 	if [[ $RANDOM -le $prop ]]; then

@@ -3,7 +3,7 @@
 # $3 step
 # $4 number of instances
 # $5 parameter for the instance difficulty with respect to the data (x: x*50 children, the rest of parameters are proportional) 
-
+# $6 maximum number of rules that can be present in an instance
 
 
 
@@ -50,7 +50,7 @@ do
                 # instantiate the program
 
 		cat program_${size}.hex | sed "s/OWLONTOLOGY/\"instances\/inst_size_${propf}_inst_${in}.owl\"/g" > "instances/inst_size_${propf}_inst_${in}.hex"                
-		./generate_rules.sh $prop >> "instances/inst_size_${propf}_inst_${in}.hex"
+		./generate_rules.sh $prop $6 >> "instances/inst_size_${propf}_inst_${in}.hex"
 
 		
 
