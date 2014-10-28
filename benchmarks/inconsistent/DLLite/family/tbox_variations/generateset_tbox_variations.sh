@@ -3,7 +3,7 @@
 # $3 step
 # $4 number of instances
 # $5 size of the data part (generated data part is the same for all instances)
-
+# $6 size of ontology TBox part (maximal number of axioms that can be added) 
 
 
 
@@ -21,8 +21,9 @@ fi
 # create a directory for storing benchmark instances
 
 if [ -d "instances" ]; then
-rm instances/*.*
-else mkdir -p instances
+	rm instances/*.*
+else 
+	mkdir -p instances
 fi
 
 
@@ -48,7 +49,7 @@ do
 
                 # create ontology instances
 
-                ./generate_ontology.sh $prop "abox_${size}.owl" > instances/inst_size_${propf}_inst_${in}.owl
+                ./generate_ontology.sh $prop $6 $"abox_${size}.owl" > instances/inst_size_${propf}_inst_${in}.owl
 
                 # instantiate the progra
 
