@@ -1,0 +1,30 @@
+% collect all customers into customer predicate
+customer(X):- isIn(X,Z), not &cDL[OWLONTOLOGY,cp,cn,rp,worksrp,"-Customer"](X).
+
+% collect all drivers into driver predicate
+driver(X):-isIn(X,Z), not customer(X).
+
+% if a customer and a driver are in the same region, then assign them to one another unless the omission condition is satisfied
+nassign(X,Y) v assign(X,Y):-driver(X),customer(Y),isIn(X,Z),isIn(Y,Z), not omit(X,Y).
+
+% if a customer is assigned to an Edriver and the former needs to the region, where the latter does not work, then omit the assignment
+omit(X,Y):-needsTo(Y,Z1), assign(X,Y), &cDL[OWLONTOLOGY,drivcp,cn,rp,rn,"EDriver"](X),
+not &rDL[OWLONTOLOGY,cp,cn,rp,rn,"worksIn"](X,Z1).
+
+% assign a driver to a customer if they are currently in the regions that are not disjoint and the driver is not an EDriver
+nassign(X,Y) v assign(X,Y):-driver(X),customer(Y),not &cDL[OWLONTOLOGY,drivcp,cm,rp,rn,"EDriver"],isIn(X,Z1),isIn(Y,Z2), &rDL[OWLONTOLOGY,cp,cn,rp,rn,"-disjoint"].
+
+% if there are two drivers assigned to the same customer, then pick randomly one of the assignments
+drives(X1,Y1) v drives(X2,Y1):-assign(X1,Y1),assign(X2,Y1).
+
+% each customer must be assigned to at least one driver
+ok(Y):-driver(X), customer(Y), drives(X,Y).
+fail:-customer(Y), not ok(Y).
+:-fail.
+
+% constraint that forbids a driver to serve needs of more then 4 customers
+:- drives(X,Y1),drives(X,Y1),drives(X,Y1),drives(X,Y1),Y1!=Y2,Y1!=Y3,Y1!=Y4,Y2!=Y3,Y2!=Y4,Y3!=Y4.
+
+% extention of ontological predicates
+worksrp("worksIn",X,X1):-goTo(X,X1).
+drivcp("Driver",X):-driver(X).
