@@ -17,4 +17,4 @@ drives(X,Y):-driver(X),customer(Y),isIn(X,Z),isIn(Y,Z), not omit(X,Y).
  :-fail.
 
 % extention of ontological predicates
-omitcp("Driver",X):-driver(X).
+%omitcp("Driver",X):-driver(X).
