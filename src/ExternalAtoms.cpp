@@ -873,13 +873,28 @@ namespace dllite {
 			ID outlit = NogoodContainer::createLiteral(ExternalLearningHelper::getOutputAtom(query, outlist, false));
 #ifndef NDEBUG
 			std::string outlitStr = RawPrinter::toString(reg, outlit);
-			DBGLOG(DBG, "LSS: Output atom is " << outlitStr);
+			DBGLOG(DBG, "LSS: IPM: Output atom is " << outlitStr);
 #endif
+
+
+		/*	bm::bvector<>::enumerator ens = query.eatom->getPredicateInputMask()->getStorage().first();
+			bm::bvector<>::enumerator ens_end = query.eatom->getPredicateInputMask()->getStorage().end();
+
+			while (ens < ens_end){
+				std::string enStr = RawPrinter::toString(reg,reg->ogatoms.getIDByAddress(*ens));
+				DBGLOG(DBG,"LSS: IPM "<<enStr);
+				ens++;
+			}*/
 
 			// iterate over the maximum input
 			DBGLOG(DBG, "LSS: Analyzing input to the external atom");
-			bm::bvector<>::enumerator en = query.interpretation->getStorage().first();
-			bm::bvector<>::enumerator en_end = query.interpretation->getStorage().end();
+			//bm::bvector<>::enumerator en = query.interpretation->getStorage().first();
+			//bm::bvector<>::enumerator en_end = query.interpretation->getStorage().end();
+
+			bm::bvector<>::enumerator en = query.eatom->getPredicateInputMask()->getStorage().first();
+			bm::bvector<>::enumerator en_end = query.eatom->getPredicateInputMask()->getStorage().end();
+
+
 
 			ID qID = query.input[5];
 
