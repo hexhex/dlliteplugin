@@ -1,5 +1,0 @@
-dlvhex2 --plugindir=../../src --supportsets --liberalsafety --heuristics=monolithic --repair=test1.owl test1.hex --verbose=1 2>out
-
-To see what annotated program contains: search for "annonated" in the file out
-
-To see what the inputPredicate mask contains: cat out | grep "LSS: IMP:"
