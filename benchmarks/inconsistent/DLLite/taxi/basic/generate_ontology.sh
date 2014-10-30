@@ -4,9 +4,9 @@ cat ontology_header.owl # ontology_header.owl must contain the static part of th
 
 
 size=$1
-customers=5*$size
-drivers=2*$size
-regions=1*$size
+customers=$((50*$size))
+drivers=$((20*$size))
+regions=$((5*$size))
 
 # add 50*$1 customers
 echo $regions
@@ -25,7 +25,7 @@ do
         echo "<owl:Thing rdf:about=\"#d$i\"><rdf:type rdf:resource=\"#Driver\"/></owl:Thing>"
 	
 	# with probability 0.75 driver is EDriver
-	if [[ $RANDOM -le $edrivprop ]]; then 
+	if [[ $RANDOM -le $edrivprob ]]; then 
 		echo "<owl:Thing rdf:about=\"#d$i\"><rdf:type rdf:resource=\"#EDriver\"/></owl:Thing>"
 	fi
 

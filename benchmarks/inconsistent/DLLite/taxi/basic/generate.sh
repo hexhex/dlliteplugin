@@ -13,10 +13,10 @@ prob=$((32768 * $2 / 100))
 for (( i=1; i <= $customers; i++ ))
 do
 	if [[ $RANDOM -le $prob ]]; then 
-		r=$((RANDOM%$regions+1))
+		#r=$((RANDOM%$regions+1))
+		echo "isIn(\"c$i\",\"r$((RANDOM%$regions+1))\")."
 		echo "needsTo(\"c$i\",\"r$((RANDOM%$regions+1))\")."
-		r=$((RANDOM%$regions+1))
-		echo "isIn(\"c$i\",\"r$r\")."
+
 	fi
 done
 
