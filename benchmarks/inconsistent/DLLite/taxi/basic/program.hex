@@ -12,7 +12,7 @@ omit(X,Y):-needsTo(Y,Z1), drives(X,Y), &cDL[OWLONTOLOGY,omitcp,omitcm,omitrp,omi
 &rDL[OWLONTOLOGY,cp,cm,rp,rm,"notworksIn"](X,Z1).
 
 % each customer must be assigned to at least one driver
-ok(Y):-driver(X), customer(Y), drives(X,Y).
+ok(Y):- customer(Y), drives(X,Y).
 fail:-customer(Y), not ok(Y).
 :-fail.
 
