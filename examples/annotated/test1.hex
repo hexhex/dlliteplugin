@@ -1,0 +1,6 @@
+b("c").
+d(X):-&cDL["test1.owl",cp1,cn1,rp1,rn1,"D"](X).
+:- &cDL["test1.owl",cp, cn,rp,rm,"C"](X).
+cp("B",X):-b(X).
+cp("D",X):-d(X). 
+
