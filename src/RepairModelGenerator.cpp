@@ -222,6 +222,21 @@ namespace dllite {
 		mask.reset(new Interpretation(*postprocInput));
 
 		// manage outer external atoms
+		if( !factory.outerEatoms.empty() )
+		{
+			DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidhexground, "HEX grounder time");
+	
+			// augment input with result of external atom evaluation
+			// use newint as input and as output interpretation
+			IntegrateExternalAnswerIntoInterpretationCB cb(postprocInput);
+			evaluateExternalAtoms(factory.ctx,
+			  factory.outerEatoms, postprocInput, cb);
+			DLVHEX_BENCHMARK_REGISTER(sidcountexternalatomcomps,
+			  "outer eatom computations");
+			DLVHEX_BENCHMARK_COUNT(sidcountexternalatomcomps,1);
+		}
+
+		// manage outer external atoms
 		/*if( !factory.outerEatoms.empty() )
 		 {
 		 DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidhexground, "HEX grounder time");
