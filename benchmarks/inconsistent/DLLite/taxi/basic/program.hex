@@ -1,5 +1,5 @@
 % collect all customers into customer predicate
-customer(X):- isIn(X,Z), not &cDL["t.owl",a,b,c,d,"-Customer"](X).
+customer(X):- isIn(X,Z), not &cDL["t.owl",custcp,custcn,custrp,custrn,"-Customer"](X).
 
 % collect all drivers into driver predicate
 driver(X):-isIn(X,Z), not customer(X), goTo(X,Y).
@@ -8,8 +8,7 @@ driver(X):-isIn(X,Z), not customer(X), goTo(X,Y).
 drives(X,Y):-driver(X),customer(Y),isIn(X,Z),isIn(Y,Z), not omit(X,Y).
 
 % if a customer is assigned to an Edriver and the former needs to the region, where the latter does not work, then omit the assignment
- omit(X,Y):-needsTo(Y,Z1), drives(X,Y), &cDL["t.owl",omitcp,omitcm,omitrp,omitrm,"EDriver"](X),
- &rDL["t.owl",cp,cm,rp,rm,"notworksIn"](X,Z1).
+ omit(X,Y):-needsTo(Y,Z1), &cDL["t.owl",omitcp,omitcm,omitrp,omitrm,"EDriver"](X), &rDL["t.owl",cp,cm,rp,rm,"notworksIn"](X,Z1).
 
 % each customer must be assigned to at least one driver
  ok(Y):- customer(Y), drives(X,Y).
@@ -17,4 +16,5 @@ drives(X,Y):-driver(X),customer(Y),isIn(X,Z),isIn(Y,Z), not omit(X,Y).
  :-fail.
 
 % extention of ontological predicates
-%omitcp("Driver",X):-driver(X).
+ omitcp("Driver",X):-driver(X).
+ cust("worksIn",X,Y):-goTo(X,Y).
