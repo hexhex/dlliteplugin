@@ -6,45 +6,42 @@
 
 
 if [[ $# -lt 4 ]]; then
-	echo "Error: Script expects 5 parameters"
-	exit 1;
+        echo "Error: Script expects 4 parameters
+		1: starting probability 
+		2: finishing probability
+		3: step	
+		4: number of instances
+		5: instance size"
+        exit 1;
 fi
-
 
 
 # create a directory for storing benchmark instances
 
-
-
-# prepaer the directory for storing benchmark instances
-
 if [ -d "instances" ]; then
 	rm instances/*.*
-else
+else 
 	mkdir -p instances
 fi
 
+#./generate_ontology.sh $5 > ontology.owl
 
 
-for (( prop=$1; prop <= $2; prop+=$3 ))
+for (( prob=$1; prob <= $2; prob+=$3 ))
 do
 	for (( inst=0; inst < $4; inst++ ))
 	do
-		propf=`printf "%03d" ${prop}`
+		probf=`printf "%03d" ${prob}`
 		in=`printf "%03d" ${inst}`
 
 		# create ontology instances
-		cp ontology_small.owl instances/inst_size_${propf}_inst_${in}.owl
+		cp ontology.owl instances/inst_size_${probf}_inst_${in}.owl
 
 		# instantiate the program
-		drivers=20*$5
-		regions=5*$5
-		customers=50*$5
-      		./generate.sh $drivers $regions $customers $prop > "instances/inst_size_${propf}_inst_${in}.hex"
-		#cp instances/inst_size_${propf}_inst_${in}.dlp instances/inst_size_${propf}_inst_${in}.hex
+      		./generate.sh $5 $prob > "instances/inst_size_${probf}_inst_${in}.hex"
 
-		cat program.hex | sed "s/OWLONTOLOGY/\"instances\/inst_size_${propf}_inst_${in}.owl\"/g" >> "instances/inst_size_${propf}_inst_${in}.hex"
-		# cat program.hex | sed "s/OWLONTOLOGY/\"inst_size_${propf}_inst_${in}.owl\"/g" >> "instances/inst_size_${propf}_inst_${in}.hex"
-		# cat program.dlp >> "instances/inst_size_${propf}_inst_${in}.dlp"
+
+		cat program.hex | sed "s/OWLONTOLOGY/\"instances\/inst_size_${probf}_inst_${in}.owl\"/g" >> "instances/inst_size_${probf}_inst_${in}.hex"
+	
 	done
 done
