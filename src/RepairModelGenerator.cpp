@@ -78,21 +78,46 @@ namespace dllite {
 
 		// create program for domain exploration
 		if (ctx.config.getOption("LiberalSafety")) {
+			DBGLOG(DBG, "RMG: LS: 1. liberal safety option is enabled" );
 			// add domain predicates for all external atoms which are necessary to establish liberal domain-expansion safety
 			// and extract the domain-exploration program from the IDB
 			addDomainPredicatesAndCreateDomainExplorationProgram(ci, ctx, idb, deidb, deidbInnerEatoms, outerEatoms);
+			DBGLOG(DBG, "RMG: added domain predicates and created domain exploitation program" );
 		}
 
 
-		//allEatoms.insert(allEatoms.end(), innerEatoms.begin(), innerEatoms.end());
-		//allEatoms.insert(allEatoms.end(), outerEatoms.begin(), outerEatoms.end());
+		// add outer eatoms to the set of inner ones
+		innerEatoms = ci.innerEatoms;
+		innerEatoms.insert(innerEatoms.end(), outerEatoms.begin(), outerEatoms.end());
+
+		DBGLOG(DBG,"RMG: number of inner Eatoms after addition of outer ones: "<<innerEatoms.size());
+
+		// construct an additional vector in which the outer atoms are stored
+		std::vector<dlvhex::ID> outer;
+
+		if( !outerEatoms.empty() )
+		{
+			DBGLOG(DBG,"RMG: number of outer atoms: "<<outerEatoms.size());
+
+			DBGLOG(DBG,"RMG: There are outer external atoms, we store them in a separate set");
+			for(unsigned eaIndex = 0; eaIndex < outerEatoms.size(); ++eaIndex) {
+					DBGLOG(DBG,"RMG: atom: "<< RawPrinter::toString(reg,outerEatoms[eaIndex])<<" is outer, store it");
+					outer.push_back(outerEatoms[eaIndex]);
+			}
+
+		}
+
+
+		// clear outer atoms from the set
+		outerEatoms.clear();
+
+		DBGLOG(DBG,"RMG: number of outer Eatoms after eliminating them: "<<outerEatoms.size());
 
 
 		// create guessing rules "gidb" for innerEatoms in all inner rules and constraints
+		DBGLOG(DBG, "RMG: Create eatoms guessing rules");
 		createEatomGuessingRules(ctx);
-
-		innerEatoms = ci.innerEatoms;
-		innerEatoms.insert(innerEatoms.end(), outerEatoms.begin(), outerEatoms.end());
+		DBGLOG(DBG, "RMG: After creating the guessing rules");
 
 		// transform original innerRules and innerConstraints to xidb with only auxiliaries
 		xidb.reserve(idb.size());
@@ -224,44 +249,31 @@ namespace dllite {
 		// manage outer external atoms
 		if( !factory.outerEatoms.empty() )
 		{
+			DBGLOG(DBG,"RMG: factory.outerEatoms is not empty");
 			DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidhexground, "HEX grounder time");
-	
+
 			// augment input with result of external atom evaluation
 			// use newint as input and as output interpretation
 			IntegrateExternalAnswerIntoInterpretationCB cb(postprocInput);
-			evaluateExternalAtoms(factory.ctx,
-			  factory.outerEatoms, postprocInput, cb);
-			DLVHEX_BENCHMARK_REGISTER(sidcountexternalatomcomps,
-			  "outer eatom computations");
+		//	evaluateExternalAtoms(factory.ctx,factory.outerEatoms, postprocInput, cb);
+			DLVHEX_BENCHMARK_REGISTER(sidcountexternalatomcomps, "outer eatom computations");
 			DLVHEX_BENCHMARK_COUNT(sidcountexternalatomcomps,1);
 		}
 
-		// manage outer external atoms
-		/*if( !factory.outerEatoms.empty() )
-		 {
-		 DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidhexground, "HEX grounder time");
+		else {
 
-		 // augment input with result of external atom evaluation
-		 // use newint as input and as output interpretation
-		 IntegrateExternalAnswerIntoInterpretationCB cb(postprocInput);
-		 evaluateExternalAtoms(factory.ctx,
-		 factory.outerEatoms, postprocInput, cb);
-		 DLVHEX_BENCHMARK_REGISTER(sidcountexternalatomcomps,
-		 "outer eatom computations");
-		 DLVHEX_BENCHMARK_COUNT(sidcountexternalatomcomps,1);
-
-		 //	We might still want to use G&C model generator even if it is not required (e.g. if support sets are used)
-		 //      assert(!factory.xidb.empty() &&
-		 //          "the guess and check model generator is not required for "
-		 //          "non-idb components! (use plain)");
-		 }*/
+			DBGLOG(DBG,"RMG: factory.outerEatoms is empty");
+		}
 
 		// compute extensions of domain predicates and add it to the input
 
 
 		if (factory.ctx.config.getOption("LiberalSafety")) {
+			DBGLOG(DBG,"RMG: LS: 2. Liberal safety option is enabled");
 			InterpretationConstPtr domPredicatesExtension = computeExtensionOfDomainPredicates(factory.ci, factory.ctx, postprocInput, factory.deidb, factory.deidbInnerEatoms);
+			DBGLOG(DBG,"RMG: computed domain predicate extension");
 			postprocInput->add(*domPredicatesExtension);
+			DBGLOG(DBG,"RMG: added domain predicate extension to the postprocinput");
 		}
 
 		// assign to const member -> this value must stay the same from here on!
@@ -295,6 +307,7 @@ namespace dllite {
 			learnedEANogoodsTransferredIndex = 0;
 			nogoodGrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), learnedEANogoods, learnedEANogoods, annotatedGroundProgram));
 
+			DBGLOG(DBG,"RMG: Finished evaluation of a guessing program");
 			//if( factory.ctx.config.getOption("NoPropagator") == 0 )
 			//  solver->addPropagator(this);
 		}
@@ -1173,6 +1186,7 @@ namespace dllite {
 						!factory.ctx.config.getOption("FLPCheck") && !factory.ctx.config.getOption("UFSCheck"));
 				nogoodGrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), learnedEANogoods, learnedEANogoods, annotatedGroundProgram));
 			}
+
 			// case when ontology is in DLLite
 
 			else {
@@ -1917,9 +1931,6 @@ namespace dllite {
 					edb->setFact(reg->storeOrdinaryAtom(roleAssertion).address);
 				}
 				DBGLOG(DBG, "RMG: Program edb after adding ABox "<<*edb);
-				// DBGLOG(DBG, "RMG: program edb: ");
-
-				// add atoms for the case when support sets are complete
 
 
 				bm::bvector<>::enumerator enm;
@@ -1941,6 +1952,7 @@ namespace dllite {
 				// ground the program and evaluate it
 				// get the results, filter them out with respect to only relevant predicates (all apart from aux_o, replacement atoms)
 
+				DBGLOG(DBG, "RMG: before grounding");
 				grounder = GenuineGrounder::getInstance(factory.ctx, program);
 				DBGLOG(DBG, "RMG: after grounding");
 				// annotatedGroundProgram = AnnotatedGroundProgram(factory.ctx, grounder->getGroundProgram(), factory.allEatoms);
