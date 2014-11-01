@@ -1250,7 +1250,7 @@ namespace dllite {
 						guard.tuple.push_back(guardPredicateID);
 						guard.tuple.push_back(eatom.tuple[5]);
 
-						// create variables for identifying whether guard is present in support set and for distincting role and concept guards
+						// create variables for identifying whether guard is present in support set and for distinguishing role and concept guards
 						ID guardID = ID_FAIL;
 						ID cID = ID_FAIL;
 
@@ -1762,6 +1762,7 @@ namespace dllite {
 						}
 						// no guard just predicate update
 						else if (guardID == ID_FAIL) {
+							DBGLOG(DBG,"RMG: there are no guards, just the predicate update in the current support set");
 							BOOST_FOREACH (ID id, ng) {
 
 								ID idOrig = (id.isOrdinaryGroundAtom() ? reg->ogatoms.getIDByAddress(id.address) : reg->onatoms.getIDByAddress(id.address));
