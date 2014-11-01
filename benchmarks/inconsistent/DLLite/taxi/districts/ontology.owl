@@ -1,547 +1,3766 @@
-<owl:Thing rdf:about="#c1"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c2"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c3"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c4"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c5"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c6"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c7"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c8"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c9"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c10"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c11"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c12"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c13"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c14"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c15"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c16"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c17"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c18"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c19"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c20"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c21"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c22"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c23"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c24"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c25"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c26"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c27"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c28"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c29"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c30"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c31"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c32"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c33"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c34"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c35"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c36"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c37"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c38"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c39"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c40"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c41"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c42"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c43"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c44"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c45"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c46"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c47"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c48"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c49"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#c50"><rdf:type rdf:resource="#Customer"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><worksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><notworksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><notworksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><worksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><notworksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><worksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><notworksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><notworksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><worksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><worksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><worksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><worksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><notworksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><notworksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><worksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><worksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><notworksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><notworksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><worksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><worksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><worksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><worksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d1"><notworksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><worksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><notworksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><worksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><notworksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><worksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><worksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><notworksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><worksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><worksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><worksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><notworksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><worksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><worksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><notworksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><worksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><worksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><worksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><worksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><notworksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><notworksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><notworksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><worksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d2"><worksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><worksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><worksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><notworksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><notworksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><worksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><notworksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><worksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><worksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><worksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><worksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><notworksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><worksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><worksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><notworksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><worksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><worksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><worksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><worksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><notworksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><worksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><worksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><notworksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d3"><notworksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><worksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><worksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><worksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><worksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><notworksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><worksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><notworksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><worksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><notworksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><worksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><notworksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><worksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><worksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><notworksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><worksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><worksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><notworksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><worksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><notworksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><notworksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><worksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><notworksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d4"><notworksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><notworksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><worksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><worksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><worksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><notworksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><worksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><notworksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><worksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><notworksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><notworksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><worksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><notworksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><worksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><notworksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><worksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><notworksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><worksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><worksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><notworksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><notworksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><notworksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><notworksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d5"><notworksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><notworksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><worksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><worksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><worksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><worksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><worksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><worksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><worksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><worksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><notworksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><worksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><notworksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><worksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><worksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><worksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><worksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><worksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><notworksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><worksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><notworksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><notworksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><notworksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d6"><worksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><notworksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><worksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><worksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><notworksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><worksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><worksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><notworksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><worksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><worksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><notworksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><worksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><worksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><notworksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><worksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><worksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><worksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><notworksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><notworksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><worksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><worksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><notworksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><notworksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d7"><worksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><notworksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><notworksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><notworksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><notworksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><notworksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><notworksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><notworksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><worksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><worksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><worksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><worksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><worksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><worksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><notworksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><worksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><worksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><notworksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><notworksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><notworksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><worksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><worksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><notworksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d8"><notworksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><worksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><notworksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><worksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><worksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><notworksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><worksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><notworksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><notworksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><worksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><worksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><worksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><worksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><notworksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><worksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><notworksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><worksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><notworksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><worksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><worksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><worksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><notworksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><worksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d9"><notworksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><worksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><notworksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><worksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><worksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><notworksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><worksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><worksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><worksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><worksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><notworksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><worksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><worksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><notworksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><worksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><worksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><notworksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><worksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><notworksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><notworksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><notworksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><worksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><notworksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d10"><worksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><worksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><notworksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><notworksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><worksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><worksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><notworksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><worksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><notworksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><worksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><notworksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><notworksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><worksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><notworksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><worksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><worksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><worksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><notworksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><worksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><notworksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><notworksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><worksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><worksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d11"><worksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><worksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><worksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><notworksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><notworksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><worksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><notworksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><notworksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><notworksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><worksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><notworksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><worksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><worksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><notworksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><notworksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><worksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><worksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><worksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><notworksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><notworksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><notworksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><worksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><notworksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d12"><worksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><worksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><worksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><worksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><notworksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><notworksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><notworksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><worksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><notworksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><notworksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><worksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><worksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><notworksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><worksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><notworksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><notworksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><notworksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><worksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><notworksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><worksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><notworksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><worksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><worksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d13"><worksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><worksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><notworksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><notworksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><notworksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><notworksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><notworksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><worksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><worksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><worksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><worksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><notworksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><notworksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><worksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><notworksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><worksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><worksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><worksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><notworksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><worksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><worksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><notworksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><worksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d14"><worksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><worksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><notworksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><notworksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><worksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><notworksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><worksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><worksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><worksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><worksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><worksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><notworksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><notworksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><worksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><notworksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><notworksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><worksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><worksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><worksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><worksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><notworksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><notworksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><notworksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d15"><worksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><worksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><worksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><notworksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><worksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><notworksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><worksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><worksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><worksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><notworksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><worksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><worksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><worksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><worksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><worksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><worksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><worksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><worksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><notworksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><notworksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><worksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><notworksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><notworksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d16"><notworksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><worksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><worksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><worksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><notworksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><worksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><worksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><notworksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><worksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><worksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><worksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><worksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><notworksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><worksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><notworksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><worksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><notworksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><worksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><notworksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><notworksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><worksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><worksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><notworksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d17"><worksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><notworksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><notworksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><notworksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><notworksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><notworksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><notworksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d18"><worksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><worksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><notworksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><worksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><notworksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><notworksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><worksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><worksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><worksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><notworksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><notworksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><worksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><worksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><worksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><worksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><worksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><worksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><worksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><notworksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><notworksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><worksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><worksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><worksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d19"><worksIn rdf:resource="#r23"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><rdf:type rdf:resource="#Driver"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><rdf:type rdf:resource="#EDriver"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r1"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r2"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r3"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><notworksIn rdf:resource="#r4"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r5"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><notworksIn rdf:resource="#r6"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r7"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r8"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><notworksIn rdf:resource="#r9"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r10"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r11"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r12"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r13"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><notworksIn rdf:resource="#r14"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><notworksIn rdf:resource="#r15"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><notworksIn rdf:resource="#r16"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><notworksIn rdf:resource="#r17"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r18"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r19"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r20"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r21"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r22"/></owl:Thing>
-<owl:Thing rdf:about="#d20"><worksIn rdf:resource="#r23"/></owl:Thing>
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY terms2 "http://purl.org/dc/terms/" >
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY geoconcepts "http://www.kr.tuwien.ac.at/myits/geoconcepts/" >
+    <!ENTITY terms "http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#" >
+]>
+
+
+<rdf:RDF xmlns="&geoconcepts;terms#"
+     xml:base="&geoconcepts;terms"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
+     xmlns:terms="&geoconcepts;terms#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:terms2="http://purl.org/dc/terms/"
+     xmlns:geoconcepts="http://www.kr.tuwien.ac.at/myits/geoconcepts/">
+    <owl:Ontology rdf:about="&geoconcepts;terms">
+        <rdfs:label xml:lang="en">KBS GeoConcept Ontology</rdfs:label>
+        <rdfs:comment xml:lang="en">The KBS GeoConcept ontology provides the vocabulary for the MyITS system</rdfs:comment>
+        <owl:versionInfo xml:lang="en">V 1.1, Release 2013-01-31</owl:versionInfo>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#adjoint -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#adjoint">
+        <owl:propertyDisjointWith rdf:resource="&geoconcepts;terms#disjoint"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#connected -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#connected"/>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#disjoint -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#disjoint"/>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#exterior -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#exterior">
+        <rdfs:range rdf:resource="&geoconcepts;terms#LinearRing"/>
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Polygon"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasAtmosphere -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasAtmosphere">
+        <rdfs:range rdf:resource="&geoconcepts;terms#Atmosphere"/>
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Restaurant"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasBakeryOperator -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasBakeryOperator">
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Bakery"/>
+        <rdfs:range rdf:resource="&geoconcepts;terms#BakeryOp"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasBankOperator -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasBankOperator">
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Bank"/>
+        <rdfs:range rdf:resource="&geoconcepts;terms#BankOp"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasBorderWith -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasBorderWith"/>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasCentroid -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasCentroid">
+        <rdfs:comment xml:lang="en">PS: Functional commented out</rdfs:comment>
+        <rdfs:range rdf:resource="&geoconcepts;terms#Point"/>
+        <rdfs:domain rdf:resource="&geoconcepts;terms#_Geometry"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasChemistOperator -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasChemistOperator">
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Chemist"/>
+        <rdfs:range rdf:resource="&geoconcepts;terms#ChemistOp"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasClothesOperator -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasClothesOperator">
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Clothes"/>
+        <rdfs:range rdf:resource="&geoconcepts;terms#ClothesOp"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasCuisine -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">hat Küche</rdfs:label>
+        <rdfs:range rdf:resource="&geoconcepts;terms#Cuisine"/>
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Restaurant"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasEvent -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasEvent">
+        <rdfs:domain rdf:resource="&geoconcepts;terms#BuildingFeature"/>
+        <rdfs:range rdf:resource="&geoconcepts;terms#Event"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasEventMarket -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasEventMarket">
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Market"/>
+        <rdfs:range rdf:resource="&geoconcepts;terms#MarketEvent"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasExit -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasExit">
+        <rdfs:range rdf:resource="&geoconcepts;terms#Exit"/>
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Stop"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasFastFoodOperator -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasFastFoodOperator">
+        <rdfs:range rdf:resource="&geoconcepts;terms#BurgersOp"/>
+        <rdfs:domain rdf:resource="&geoconcepts;terms#FastFood"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasFeatureCode -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasFeatureCode">
+        <rdfs:comment xml:lang="en">PS: Functional commented out</rdfs:comment>
+        <rdfs:domain rdf:resource="&geoconcepts;terms#TypedFeature"/>
+        <rdfs:range rdf:resource="&geoconcepts;terms#_FeatureCode"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasLink -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasLink"/>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasOperator -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasOperator">
+        <rdfs:label rdf:datatype="&xsd;string">betrieben von</rdfs:label>
+        <rdfs:range rdf:resource="&geoconcepts;terms#Operator"/>
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasPart -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasPart"/>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasPoint -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasPoint">
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Line"/>
+        <rdfs:range rdf:resource="&geoconcepts;terms#Point"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasQualitativeValue -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasQualitativeValue">
+        <rdfs:domain rdf:resource="&geoconcepts;terms#BuildingFeature"/>
+        <rdfs:range rdf:resource="&geoconcepts;terms#QualitativeValue"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasRecycling -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasRecycling">
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Recycling"/>
+        <rdfs:range rdf:resource="&geoconcepts;terms#RecyclingFeature"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasSource -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasSource">
+        <rdfs:range rdf:resource="&geoconcepts;terms#DataSource"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasSpecialFeature -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasSpecialFeature">
+        <rdfs:label rdf:datatype="&xsd;string">bietet</rdfs:label>
+        <rdfs:range rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Sustenance"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasSupermarketOperator -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasSupermarketOperator">
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Supermarket"/>
+        <rdfs:range rdf:resource="&geoconcepts;terms#SupermarketOp"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#hasWikipediaLink -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#hasWikipediaLink"/>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isCentroidOf -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#isCentroidOf">
+        <rdfs:comment xml:lang="en">PS: Inv. functional commented out</rdfs:comment>
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Point"/>
+        <rdfs:range rdf:resource="&geoconcepts;terms#_Geometry"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isExitOf -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#isExitOf">
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Exit"/>
+        <rdfs:range rdf:resource="&geoconcepts;terms#Stop"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocated -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#isLocated"/>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocatedAlong -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#isLocatedAlong">
+        <rdfs:label rdf:datatype="&xsd;string">entlang</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocatedContain -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#isLocatedContain">
+        <rdfs:label rdf:datatype="&xsd;string">enthält</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocatedDisjoint -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#isLocatedDisjoint">
+        <rdfs:label rdf:datatype="&xsd;string">ausserhalb</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">außerhalb</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocatedInside -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#isLocatedInside">
+        <rdfs:label rdf:datatype="&xsd;string">im</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">in</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">innerhalb</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocatedIntersect -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#isLocatedIntersect">
+        <rdfs:label rdf:datatype="&xsd;string">kreuzt</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">überschneidet</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isLocatedNext -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#isLocatedNext">
+        <rdfs:label rdf:datatype="&xsd;string">neben</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">nähe</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isOriginated -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#isOriginated">
+        <rdfs:label rdf:datatype="&xsd;string">stammt aus</rdfs:label>
+        <rdfs:range rdf:resource="&geoconcepts;terms#Country"/>
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#isPartOf -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#isPartOf">
+        <rdfs:comment xml:lang="en">PS: Should be transitive</rdfs:comment>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#where -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#where">
+        <rdfs:range rdf:resource="&geoconcepts;terms#_Geometry"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#worksIn -->
+
+    <owl:ObjectProperty rdf:about="&geoconcepts;terms#worksIn">
+        <rdfs:domain rdf:resource="&geoconcepts;terms#Driver"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://purl.org/dc/terms/license -->
+
+    <owl:DatatypeProperty rdf:about="&terms2;license"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ATM -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ATM">
+        <rdfs:label rdf:datatype="&xsd;string">Geldautomat</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Financial"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Accomodation -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Accomodation">
+        <rdfs:label rdf:datatype="&xsd;string">Unterkunft</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Tourism"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#AdministrativeDivision1 -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#AdministrativeDivision1">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AdministrativeFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#AdministrativeDivision2 -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#AdministrativeDivision2">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AdministrativeFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#AdministrativeDivision3 -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#AdministrativeDivision3">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AdministrativeFeature"/>
+        <rdfs:comment>At this time, districts are coded as concepts, 
+where the annotator assigns one individual 
+from OSM (which represents the geometry) to it.
+Should be improved to move districts to 
+ABox and define Equality to OSM individiual.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#AdministrativeDivision4 -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#AdministrativeDivision4">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AdministrativeFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#AdministrativeFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#AdministrativeFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#TypedFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#AfricanCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#AfricanCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Afrikanische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Amenity -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Amenity">
+        <rdfs:label rdf:datatype="&xsd;string">Annehmlichkeit</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#BuildingFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#AmericanCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#AmericanCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Amerikanische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#AnimalFriendly -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#AnimalFriendly">
+        <rdfs:label rdf:datatype="&xsd;string">tierfreundlich</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ArabicCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ArabicCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Arabische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Architect -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Architect">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Office"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#AreaFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#AreaFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#TypedFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Art -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Art">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ArtMarketEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ArtMarketEvent">
+        <rdfs:label rdf:datatype="&xsd;string">Kunstmarkt</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#MarketEvent"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ArtsCentre -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ArtsCentre">
+        <rdfs:label rdf:datatype="&xsd;string">Kunstzentrum</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Culture"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#AsianCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#AsianCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Asiatische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Atelier -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Atelier">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Art"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Atmosphere -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Atmosphere">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#QualitativeValue"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Attraction -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Attraction">
+        <rdfs:label rdf:datatype="&xsd;string">Attraktion</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Sehensürdigkeit</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Tourism"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Attributes -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Attributes"/>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#AustrianCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#AustrianCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Österreichische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#AuthenticCuisineFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#AuthenticCuisineFeature">
+        <rdfs:label rdf:datatype="&xsd;string">Authentisch Essen</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#RecommendationFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Bakery -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Bakery">
+        <rdfs:label rdf:datatype="&xsd;string">Backstube</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Bäckerei</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BakeryOp -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BakeryOp">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Operator"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BalkanCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BalkanCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Balkan Küche</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Südosteuropäische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Bank -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Bank">
+        <rdfs:label rdf:datatype="&xsd;string">Bank</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Financial"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&geoconcepts;terms#hasBankOperator"/>
+                <owl:someValuesFrom rdf:resource="&owl;Thing"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BankLargOp -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BankLargOp">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#BankOp"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BankMediumOp -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BankMediumOp">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#BankOp"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BankOp -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BankOp">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Operator"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BankSmallOp -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BankSmallOp">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#BankOp"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Bar -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Bar">
+        <rdfs:label rdf:datatype="&xsd;string">Bar</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Kneipe</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Nightlife"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BavarianCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BavarianCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Bayrische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#GermanCuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BeautySalon -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BeautySalon">
+        <rdfs:label rdf:datatype="&xsd;string">Kosmetiksalon</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Bench -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Bench">
+        <rdfs:label rdf:datatype="&xsd;string">Sitzbank</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Other"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BicycleMarketEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BicycleMarketEvent">
+        <rdfs:label rdf:datatype="&xsd;string">Fahrrad-Markt</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Radsport-Markt</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#MarketEvent"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BicycleParking -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BicycleParking">
+        <rdfs:label rdf:datatype="&xsd;string">Fahrradabstellplatz</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Transportation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BicycleRoute -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BicycleRoute">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Route"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BicycleShop -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BicycleShop">
+        <rdfs:label rdf:datatype="&xsd;string">Fahrradgeschäft</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BioProductsFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BioProductsFeature">
+        <rdfs:label rdf:datatype="&xsd;string">Bioprodukte</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#ProductFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BioSupermarket -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BioSupermarket">
+        <rdfs:label rdf:datatype="&xsd;string">Biosupermarkt</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Supermarket"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BohemianCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BohemianCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Böhmische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Books -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Books">
+        <rdfs:label rdf:datatype="&xsd;string">Buchladen</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Bücher</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BrazilianCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BrazilianCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Brasilianische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BuildingFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BuildingFeature">
+        <rdfs:label rdf:datatype="&xsd;string">Gebäude</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#TypedFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BulgarianCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BulgarianCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Bulgarische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Burgenland -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Burgenland">
+        <rdfs:label rdf:datatype="&xsd;string">Burgenland</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AdministrativeDivision1"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Burgers -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Burgers">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#FastFood"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BurgersOp -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BurgersOp">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Operator"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BusRoute -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BusRoute">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Route"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BusStation -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BusStation">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Stop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#BusStop -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#BusStop">
+        <rdfs:label rdf:datatype="&xsd;string">Bus-Haltestelle</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Stop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Butcher -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Butcher">
+        <rdfs:label rdf:datatype="&xsd;string">Fleischerei</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Metzgerei</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Cafe -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Cafe">
+        <rdfs:label rdf:datatype="&xsd;string">Cafe</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Kaffeehaus</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Sustenance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Canal -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Canal">
+        <rdfs:label rdf:datatype="&xsd;string">Kanal</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Waterway"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#CarRepair -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#CarRepair">
+        <rdfs:label rdf:datatype="&xsd;string">Autowerkstatt</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Werkstatt</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Castle -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Castle">
+        <rdfs:label rdf:datatype="&xsd;string">Schloss</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Attraction"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#CellarFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#CellarFeature">
+        <rdfs:label rdf:datatype="&xsd;string">Keller</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#CentroidedPolygon -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#CentroidedPolygon">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Polygon"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&geoconcepts;terms#hasCentroid"/>
+                <owl:someValuesFrom rdf:resource="&geoconcepts;terms#Point"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Chemist -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Chemist">
+        <rdfs:label rdf:datatype="&xsd;string">Drogerie</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ChemistOp -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ChemistOp">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Operator"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ChildrenFriendly -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ChildrenFriendly">
+        <rdfs:label rdf:datatype="&xsd;string">kinderfreundlich</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ChineseCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ChineseCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Chinesische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AsianCuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ChristmasMarketEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ChristmasMarketEvent">
+        <rdfs:label rdf:datatype="&xsd;string">Weihnachts-Markt</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#MarketEvent"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Church -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Church">
+        <rdfs:label rdf:datatype="&xsd;string">Kirche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#PlaceOfWorship"/>
+        <rdfs:comment rdf:datatype="&xsd;string">This should also be part of Tourism</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Cinema -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Cinema">
+        <rdfs:label rdf:datatype="&xsd;string">Kino</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Culture"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#CitybikeStand -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#CitybikeStand">
+        <rdfs:label rdf:datatype="&xsd;string">Citybike</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Transportation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#CivicCentre -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#CivicCentre">
+        <rdfs:label rdf:datatype="&xsd;string">Bürgerdienststellen</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Gemeindezentrum</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Government"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ClassicMusicEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ClassicMusicEvent">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#MusicEvent"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ClassicMusicFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ClassicMusicFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#MusicFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ClimbingCentre -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ClimbingCentre">
+        <rdfs:label rdf:datatype="&xsd;string">Kletteranlage</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SportsCentre"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Clothes -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Clothes">
+        <rdfs:label rdf:datatype="&xsd;string">Fashion-Store</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Kleidergeschäft</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Modegeschäft</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ClothesOp -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ClothesOp">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Operator"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Club -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Club">
+        <rdfs:label rdf:datatype="&xsd;string">Club</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Disco</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Disko</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Nightlife"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#College -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#College">
+        <rdfs:label rdf:datatype="&xsd;string">Kolleg</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Education"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#CommercialEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#CommercialEvent">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Event"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Company -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Company">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Office"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ComprehensiveSchool -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ComprehensiveSchool">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#School"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ComputerShop -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ComputerShop">
+        <rdfs:label rdf:datatype="&xsd;string">Computergeschäft</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#CopyShop -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#CopyShop">
+        <rdfs:label rdf:datatype="&xsd;string">Copy Shop</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Country -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Country">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AdministrativeFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#CoveredBusStop -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#CoveredBusStop">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#BuildingFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#CreoleCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#CreoleCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Kreolische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#CroatianCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#CroatianCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Kroatische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Cuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Cuisine">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#QualitativeValue"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#CulturalEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#CulturalEvent">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Event"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Culture -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Culture">
+        <rdfs:label rdf:datatype="&xsd;string">Kultur-Einrichtung</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Amenity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Customer -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Customer">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Person"/>
+        <owl:disjointWith rdf:resource="&geoconcepts;terms#Driver"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#DBpediaArticle -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#DBpediaArticle">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Link"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#DJMusicEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#DJMusicEvent">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#PartyEvent"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#DJMusicFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#DJMusicFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#MusicFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#DataSource -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#DataSource">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Attributes"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Deli -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Deli">
+        <rdfs:label rdf:datatype="&xsd;string">Deli</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Feinkost</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#DeliveryService -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#DeliveryService">
+        <rdfs:label rdf:datatype="&xsd;string">Zustelldienst</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Sustenance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Dentist -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Dentist">
+        <rdfs:label rdf:datatype="&xsd;string">Zahnarzt</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Healthcare"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#DepartmentStore -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#DepartmentStore">
+        <rdfs:label rdf:datatype="&xsd;string">Kaufhaus</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#DiningMorningFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#DiningMorningFeature">
+        <rdfs:label rdf:datatype="&xsd;string">Essen am-Morgen</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeatureDining"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#DiningNightFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#DiningNightFeature">
+        <rdfs:label rdf:datatype="&xsd;string">Essen nachts</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeatureDining"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#DiningOutdoorsFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#DiningOutdoorsFeature">
+        <rdfs:label rdf:datatype="&xsd;string">Essen Draußen</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeatureDining"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#DiningSundaysFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#DiningSundaysFeature">
+        <rdfs:label rdf:datatype="&xsd;string">Essen am-Sonntag</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeatureDining"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#DiningWaterFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#DiningWaterFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeatureDining"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#DoItYourself -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#DoItYourself">
+        <rdfs:label rdf:datatype="&xsd;string">Baumarkt</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Heimwerkerbedarf</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Doctors -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Doctors">
+        <rdfs:label rdf:datatype="&xsd;string">Doktor</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Healthcare"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#DrinkingWater -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#DrinkingWater">
+        <rdfs:label rdf:datatype="&xsd;string">Trinkwasserbrunner</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Other"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Driver -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Driver">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Person"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#EDriver -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#EDriver">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Driver"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Education -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Education">
+        <rdfs:label rdf:datatype="&xsd;string">Bildungseinrichtung</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#BuildingFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#EducationalEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#EducationalEvent">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Event"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Electronics -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Electronics">
+        <rdfs:label rdf:datatype="&xsd;string">Elektronikgeschäft</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Embassy -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Embassy">
+        <rdfs:label rdf:datatype="&xsd;string">Botschaft</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Other"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#EnglishCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#EnglishCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Englische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#EnglishPub -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#EnglishPub">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Pub"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Envelope -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Envelope">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#_Geometry"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Event -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Event">
+        <rdfs:label rdf:datatype="&xsd;string">Event</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Veranstaltung</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Exchange -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Exchange">
+        <rdfs:label rdf:datatype="&xsd;string">Wechsel-Büro</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Financial"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ExhibitionEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ExhibitionEvent">
+        <rdfs:label rdf:datatype="&xsd;string">Ausstellung</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Finissage</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Vernissage</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#CulturalEvent"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Exit -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Exit">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#RoadFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#FairTradeProductsFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#FairTradeProductsFeature">
+        <rdfs:label rdf:datatype="&xsd;string">Fair-Trade Produkte</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#ProductFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#FalterCheapFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#FalterCheapFeature">
+        <rdfs:label rdf:datatype="&xsd;string">Falter Preisgünstig-Essen</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#RecommendationFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#FalterRecomFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#FalterRecomFeature">
+        <rdfs:label rdf:datatype="&xsd;string">Falter Empfehlungen</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#RecommendationFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#FalterTheBestFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#FalterTheBestFeature">
+        <rdfs:label rdf:datatype="&xsd;string">Falter Die-Besten</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#RecommendationFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#FastFood -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#FastFood">
+        <rdfs:label rdf:datatype="&xsd;string">Fast Food</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Sustenance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Financial -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Financial">
+        <rdfs:label rdf:datatype="&xsd;string">Finanz-Einrichtung</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Amenity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&geoconcepts;terms#hasOperator"/>
+                <owl:someValuesFrom rdf:resource="&geoconcepts;terms#Operator"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#FleaMarketEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#FleaMarketEvent">
+        <rdfs:label rdf:datatype="&xsd;string">Antiquitätenmarkt</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Benefiz-Flohmarkt</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Flohmarkt</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#MarketEvent"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Florist -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Florist">
+        <rdfs:label rdf:datatype="&xsd;string">Blumengeschäft</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#FlowerMarketEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#FlowerMarketEvent">
+        <rdfs:label rdf:datatype="&xsd;string">Blumenmarkt</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#MarketEvent"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#FoodMarketEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#FoodMarketEvent">
+        <rdfs:label rdf:datatype="&xsd;string">Bauernmarkt</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Kulinarischer-Markt</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Lebensmittel-Markt</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#MarketEvent"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#FrenchCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#FrenchCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Französische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Fuel -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Fuel">
+        <rdfs:label rdf:datatype="&xsd;string">Tankstelle</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Transportation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Furniture -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Furniture">
+        <rdfs:label rdf:datatype="&xsd;string">Möbelgeschäft</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#FusionCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#FusionCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Fusion Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Gallery -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Gallery">
+        <rdfs:label rdf:datatype="&xsd;string">Galerie</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Kunsgalerie</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Art"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#GamesFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#GamesFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Garden -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Garden">
+        <rdfs:label rdf:datatype="&xsd;string">Garten</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Leisure"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#GardenFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#GardenFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#GeoConceptFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#GeoConceptFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#TypedFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#GermanCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#GermanCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Deutsche Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#GiftShop -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#GiftShop">
+        <rdfs:label rdf:datatype="&xsd;string">Geschenke</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Government -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Government">
+        <rdfs:label rdf:datatype="&xsd;string">Verwaltung</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Office"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#GrammarSchool -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#GrammarSchool">
+        <rdfs:label rdf:datatype="&xsd;string">Gymnasium</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#School"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#GreekCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#GreekCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Griechische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#GuestGardenFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#GuestGardenFeature">
+        <rdfs:label rdf:datatype="&xsd;string">Biergarten</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Gastgarten</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#GardenFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#GuestHouse -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#GuestHouse">
+        <rdfs:label rdf:datatype="&xsd;string">Gästehaus</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Accomodation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Hairdresser -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Hairdresser">
+        <rdfs:label rdf:datatype="&xsd;string">Friseur</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#HappyHourFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#HappyHourFeature">
+        <rdfs:label rdf:datatype="&xsd;string">Happy Hour</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Healthcare -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Healthcare">
+        <rdfs:label rdf:datatype="&xsd;string">Gesundheits-Einrichtung</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Amenity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Heurige -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Heurige">
+        <rdfs:label rdf:datatype="&xsd;string">Heuriger</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Sustenance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Hospital -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Hospital">
+        <rdfs:label rdf:datatype="&xsd;string">Krankenhaus</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Spital</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Healthcare"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Hostel -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Hostel">
+        <rdfs:label rdf:datatype="&xsd;string">Hostel</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Accomodation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Hotel -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Hotel">
+        <rdfs:label rdf:datatype="&xsd;string">Hotel</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Accomodation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#HungarianCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#HungarianCuisine">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#HydrographicFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#HydrographicFeature">
+        <rdfs:label rdf:datatype="&xsd;string">Wasser</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#TypedFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#HypsographicFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#HypsographicFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#TypedFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#IceCreamParlor -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#IceCreamParlor">
+        <rdfs:label rdf:datatype="&xsd;string">Eisdiele</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Sustenance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#IndianCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#IndianCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Indische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#IntermediateSchool -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#IntermediateSchool">
+        <rdfs:label rdf:datatype="&xsd;string">Mittelschule</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#School"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#InternationalCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#InternationalCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Internationale Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#IrishPub -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#IrishPub">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Pub"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ItalianCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ItalianCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Italienische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#JapaneseCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#JapaneseCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Japanische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AsianCuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#JewelryShop -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#JewelryShop">
+        <rdfs:label rdf:datatype="&xsd;string">Bijouterie</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Schmuckgeschäft</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Kebab -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Kebab">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#FastFood"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Kindergarten -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Kindergarten">
+        <rdfs:label rdf:datatype="&xsd;string">Kindergarten</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Education"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Kiosk -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Kiosk">
+        <rdfs:label rdf:datatype="&xsd;string">Kiosk</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Trafik</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#KoreanCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#KoreanCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Koreanische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AsianCuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#KosherCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#KosherCuisine">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Kärnten -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Kärnten">
+        <rdfs:label rdf:datatype="&xsd;string">Kärnten</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AdministrativeDivision1"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Lake -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Lake">
+        <rdfs:label rdf:datatype="&xsd;string">See</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#HydrographicFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#LateBreakfastFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#LateBreakfastFeature">
+        <rdfs:label rdf:datatype="&xsd;string">spät frühstücken</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#LatinAmericanCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#LatinAmericanCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Lateinamerikanische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Laundry -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Laundry">
+        <rdfs:label rdf:datatype="&xsd;string">Wäscherei</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#LebaneseCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#LebaneseCuisine">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Leisure -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Leisure">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AreaFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#LeisureEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#LeisureEvent">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Event"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#LesbianGayFriendly -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#LesbianGayFriendly">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#LevantineCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#LevantineCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Levantische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Library -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Library">
+        <rdfs:label rdf:datatype="&xsd;string">Bibliothek</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Education"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Line -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Line">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#_Geometry"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#LineString -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#LineString">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#_Geometry"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#LinearRing -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#LinearRing">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#_Geometry"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Link -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Link">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Attributes"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#LiveMusicEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#LiveMusicEvent">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#MusicEvent"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#LiveMusicFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#LiveMusicFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#MusicFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Market -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Market">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Other"/>
+        <rdfs:comment rdf:datatype="&xsd;string">Market itself should have 
+no label, as it would be confused 
+with the Event &quot;Market&quot;</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#MarketEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#MarketEvent">
+        <rdfs:label rdf:datatype="&xsd;string">Bazar</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Markt</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Event"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Mensa -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Mensa">
+        <rdfs:label rdf:datatype="&xsd;string">Mensa</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Sustenance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#MexicanCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#MexicanCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Mexikanische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#MobilePhoneShop -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#MobilePhoneShop">
+        <rdfs:label rdf:datatype="&xsd;string">Handyanbieter</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#MoroccanCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#MoroccanCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Marokkanische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#LevantineCuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Mosque -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Mosque">
+        <rdfs:label rdf:datatype="&xsd;string">Moschee</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#PlaceOfWorship"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#MovieEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#MovieEvent">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#CulturalEvent"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Museum -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Museum">
+        <rdfs:label rdf:datatype="&xsd;string">Museum</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Tourism"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#MusicEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#MusicEvent">
+        <rdfs:label rdf:datatype="&xsd;string">Konzert</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Musik-Event</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Event"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#MusicFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#MusicFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#MusicMarket -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#MusicMarket">
+        <rdfs:label rdf:datatype="&xsd;string">Musikmarkt</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#MarketEvent"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#NGO -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#NGO">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Office"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#NepaleseCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#NepaleseCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Nepalesische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AsianCuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Newsagent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Newsagent">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Niederoesterreich -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Niederoesterreich">
+        <rdfs:label rdf:datatype="&xsd;string">Niederösterreich</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AdministrativeDivision1"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Nightlife -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Nightlife">
+        <rdfs:label rdf:datatype="&xsd;string">Ausgehmöglichkeit</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Sustenance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#NoPublicAccess -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#NoPublicAccess"/>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#NoSmokingFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#NoSmokingFeature">
+        <rdfs:label rdf:datatype="&xsd;string">nicht-rauchen</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+        <owl:disjointWith rdf:resource="&geoconcepts;terms#SmokingFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Oberösterreich -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Oberösterreich">
+        <rdfs:label rdf:datatype="&xsd;string">Oberösterreich</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AdministrativeDivision1"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Office -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Office">
+        <rdfs:label rdf:datatype="&xsd;string">Büro</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#BuildingFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#OperaHouse -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#OperaHouse">
+        <rdfs:label rdf:datatype="&xsd;string">Oper</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Culture"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Operator -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Operator">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#QualitativeValue"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Optician -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Optician">
+        <rdfs:label rdf:datatype="&xsd;string">Optiker</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Organic -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Organic">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#OrientalCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#OrientalCuisine">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Other -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Other">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Amenity"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Palace -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Palace">
+        <rdfs:label rdf:datatype="&xsd;string">Palast</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Attraction"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Park -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Park">
+        <rdfs:label rdf:datatype="&xsd;string">Park</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Leisure"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ParkAndRide -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ParkAndRide">
+        <rdfs:label rdf:datatype="&xsd;string">Park&amp;Ride</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Transportation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Parking -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Parking">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Transportation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#PartyEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#PartyEvent">
+        <rdfs:label rdf:datatype="&xsd;string">Clubbing</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">DJ-Line</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Party</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Event"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Person -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Person"/>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Pharmacy -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Pharmacy">
+        <rdfs:label rdf:datatype="&xsd;string">Apotheke</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Healthcare"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#PizzeriaCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#PizzeriaCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Pizza</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Pizzeria</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#ItalianCuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#PlaceOfWorship -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#PlaceOfWorship">
+        <rdfs:label rdf:datatype="&xsd;string">Gotteshaus</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Other"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Playground -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Playground">
+        <rdfs:label rdf:datatype="&xsd;string">Spielplatz</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Leisure"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Point -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Point">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#_Geometry"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Police -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Police">
+        <rdfs:label rdf:datatype="&xsd;string">Polizeiwache</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Other"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Polygon -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Polygon">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#_Geometry"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&geoconcepts;terms#exterior"/>
+                <owl:someValuesFrom rdf:resource="&geoconcepts;terms#LinearRing"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#PopulationFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#PopulationFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#TypedFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#PortugueseCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#PortugueseCuisine">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#PostBox -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#PostBox">
+        <rdfs:label rdf:datatype="&xsd;string">Briefkasten</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Other"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#PostOffice -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#PostOffice">
+        <rdfs:label rdf:datatype="&xsd;string">Post</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Other"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#PrimaryRoute -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#PrimaryRoute">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Road"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#PrimarySchool -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#PrimarySchool">
+        <rdfs:label rdf:datatype="&xsd;string">Primarschule</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Volksschule</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#School"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Private -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Private"/>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#PrivateAccess -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#PrivateAccess">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#NoPublicAccess"/>
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&geoconcepts;terms#BuildingFeature"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&geoconcepts;terms#isLocatedInside"/>
+                        <owl:someValuesFrom rdf:resource="&geoconcepts;terms#Private"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ProductFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ProductFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Pub -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Pub">
+        <rdfs:label rdf:datatype="&xsd;string">Pub</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Nightlife"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#PubCulture -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#PubCulture">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#QualitativeValue"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#QualitativeValue -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#QualitativeValue">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Attributes"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#QuantitativeValue -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#QuantitativeValue">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Attributes"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#RailwayExit -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#RailwayExit">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Exit"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#RailwayHalt -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#RailwayHalt">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Stop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#RailwayRoute -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#RailwayRoute">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Route"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#RailwayStation -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#RailwayStation">
+        <rdfs:label rdf:datatype="&xsd;string">Bahnhof</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Stop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#RecommendationFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#RecommendationFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Recycling -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Recycling">
+        <rdfs:label rdf:datatype="&xsd;string">Altstoffsammelstelle</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Recycling</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Other"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#RecyclingFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#RecyclingFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#QualitativeValue"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ResidentialRoute -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ResidentialRoute">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Road"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Restaurant -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Restaurant">
+        <rdfs:label rdf:datatype="&xsd;string">Beisl</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Gasthaus</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Restaurant</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Wirtshaus</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Sustenance"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&geoconcepts;terms#hasCuisine"/>
+                <owl:someValuesFrom rdf:resource="&geoconcepts;terms#Cuisine"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#River -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#River">
+        <rdfs:label rdf:datatype="&xsd;string">Fluss</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Waterway"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Road -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Road">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Route"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#RoadFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#RoadFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#TypedFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Roofed -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Roofed"/>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#RoofedBusStop -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#RoofedBusStop">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#CoveredBusStop"/>
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&geoconcepts;terms#BusStop"/>
+                    <rdf:Description rdf:about="&geoconcepts;terms#Roofed"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Route -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Route">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#RoadFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#RussianCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#RussianCuisine">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Salzburg -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Salzburg">
+        <rdfs:label rdf:datatype="&xsd;string">Salzburg</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AdministrativeDivision1"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ScandinavianCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ScandinavianCuisine">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#School -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#School">
+        <rdfs:label rdf:datatype="&xsd;string">Schule</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Education"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SecondHandShop -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SecondHandShop">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SecondaryRoute -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SecondaryRoute">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Road"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SecondarySchool -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SecondarySchool">
+        <rdfs:label rdf:datatype="&xsd;string">Hauptschule</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Sekundarschule</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#School"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Service -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Service"/>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ShoeShop -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ShoeShop">
+        <rdfs:label rdf:datatype="&xsd;string">Schuhgeschäft</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Shop -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Shop">
+        <rdfs:label rdf:datatype="&xsd;string">Shopping</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#BuildingFeature"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&geoconcepts;terms#hasOperator"/>
+                <owl:someValuesFrom rdf:resource="&geoconcepts;terms#Operator"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SidewalkGardenFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SidewalkGardenFeature">
+        <rdfs:label rdf:datatype="&xsd;string">Schanigarten</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Straßencafé</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#GardenFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SmokingFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SmokingFeature">
+        <rdfs:label rdf:datatype="&xsd;string">rauchen</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Snack -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Snack">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#FastFood"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SpanishCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SpanishCuisine">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SpecialFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SpecialFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#QualitativeValue"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SpecialFeatureDining -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SpecialFeatureDining">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SportEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SportEvent">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#LeisureEvent"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SportsCentre -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SportsCentre">
+        <rdfs:label rdf:datatype="&xsd;string">Sport-Zentrum</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Leisure"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SportsShop -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SportsShop">
+        <rdfs:label rdf:datatype="&xsd;string">Sportgeschäft</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SriLankanCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SriLankanCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Srilankische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#IndianCuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Stadium -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Stadium">
+        <rdfs:label rdf:datatype="&xsd;string">Stadium</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SportsCentre"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Stationery -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Stationery">
+        <rdfs:label rdf:datatype="&xsd;string">Bürobedarf</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Schreibwaren</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Steiermark -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Steiermark">
+        <rdfs:label rdf:datatype="&xsd;string">Steiermark</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AdministrativeDivision1"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Stop -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Stop">
+        <rdfs:label rdf:datatype="&xsd;string">Haltestelle</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#RoadFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#StyrianCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#StyrianCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Steirische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AustrianCuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SubwayExit -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SubwayExit">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Exit"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SubwayRoute -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SubwayRoute">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Route"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SubwayStation -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SubwayStation">
+        <rdfs:label rdf:datatype="&xsd;string">UBahn-Haltestelle</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Stop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Supermarket -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Supermarket">
+        <rdfs:label rdf:datatype="&xsd;string">Supermarkt</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SupermarketOp -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SupermarketOp">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Operator"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SushiCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SushiCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Sushi</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#JapaneseCuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Sustenance -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Sustenance">
+        <rdfs:label rdf:datatype="&xsd;string">Gastronomie</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Amenity"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&geoconcepts;terms#hasSpecialFeature"/>
+                <owl:someValuesFrom rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Swimming -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Swimming">
+        <rdfs:label rdf:datatype="&xsd;string">Schwimmen</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Leisure"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SwimmingArea -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SwimmingArea">
+        <rdfs:label rdf:datatype="&xsd;string">Schwimm-Bereich</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Swimming"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#SwimmingPool -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#SwimmingPool">
+        <rdfs:label rdf:datatype="&xsd;string">Bad</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Schwimmbad</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Swimming"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Synagog -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Synagog">
+        <rdfs:label rdf:datatype="&xsd;string">Synagoge</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#PlaceOfWorship"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Szene -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Szene">
+        <rdfs:label rdf:datatype="&xsd;string">Szene</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Sustenance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#TableFootballFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#TableFootballFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Taxi -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Taxi">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Service"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#TaxiStand -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#TaxiStand">
+        <rdfs:label rdf:datatype="&xsd;string">Taxi</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Transportation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Teahouse -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Teahouse">
+        <rdfs:label rdf:datatype="&xsd;string">Teehaus</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Sustenance"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Temple -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Temple">
+        <rdfs:label rdf:datatype="&xsd;string">Tempel</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#PlaceOfWorship"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#TertiaryRoute -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#TertiaryRoute">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Road"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ThaiCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ThaiCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Thai Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AsianCuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Theatre -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Theatre">
+        <rdfs:label rdf:datatype="&xsd;string">Theater</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Culture"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#TheatreEvent -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#TheatreEvent">
+        <rdfs:label rdf:datatype="&xsd;string">Theatervorstellung</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#CulturalEvent"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#TibetanCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#TibetanCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Tibetische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AsianCuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Tirol -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Tirol">
+        <rdfs:label rdf:datatype="&xsd;string">Tirol</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AdministrativeDivision1"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Toilets -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Toilets">
+        <rdfs:label rdf:datatype="&xsd;string">Toilette</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">WC</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Other"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ToiletsDisabled -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ToiletsDisabled">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Toilets"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#ToiletsUrinal -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#ToiletsUrinal">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Toilets"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Tourism -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Tourism">
+        <rdfs:label rdf:datatype="&xsd;string">Tourismus</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#BuildingFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#TramRoute -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#TramRoute">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Route"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#TramStop -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#TramStop">
+        <rdfs:label rdf:datatype="&xsd;string">Straßenbahn-Haltestelle</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Stop"/>
+        <rdfs:comment>Tram-Haltestelle</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Transportation -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Transportation">
+        <rdfs:label rdf:datatype="&xsd;string">Transport</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#BuildingFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#TravelAgency -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#TravelAgency">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#TurkishCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#TurkishCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Türkische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#TypedFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#TypedFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#_Feature"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&geoconcepts;terms#isLocated"/>
+                <owl:someValuesFrom rdf:resource="&geoconcepts;terms#TypedFeature"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&geoconcepts;terms#hasFeatureCode"/>
+                <owl:someValuesFrom rdf:resource="&geoconcepts;terms#_FeatureCode"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#U1 -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#U1">
+        <rdfs:label rdf:datatype="&xsd;string">U1</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SubwayRoute"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#U2 -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#U2">
+        <rdfs:label rdf:datatype="&xsd;string">U2</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SubwayRoute"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#U3 -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#U3">
+        <rdfs:label rdf:datatype="&xsd;string">U3</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SubwayRoute"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#U4 -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#U4">
+        <rdfs:label rdf:datatype="&xsd;string">U4</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SubwayRoute"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#U6 -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#U6">
+        <rdfs:label rdf:datatype="&xsd;string">U6</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SubwayRoute"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#UnderseaFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#UnderseaFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#TypedFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#University -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#University">
+        <rdfs:label rdf:datatype="&xsd;string">Universität</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Education"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#UniversityOfAppliedSciences -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#UniversityOfAppliedSciences">
+        <rdfs:label rdf:datatype="&xsd;string">Fachhochschule</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Education"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#VeganCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#VeganCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Vegane Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#VegetarianCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#VegetarianCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Vegetarische Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Cuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#VegetationFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#VegetationFeature">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#TypedFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#VienneseCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#VienneseCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Wiener Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AustrianCuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#VietnameseCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#VietnameseCuisine">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AsianCuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#VocationalSchool -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#VocationalSchool">
+        <rdfs:label rdf:datatype="&xsd;string">Berufsschule</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#School"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Vorarlberg -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Vorarlberg">
+        <rdfs:label rdf:datatype="&xsd;string">Vorarlberg</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AdministrativeDivision1"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#VorarlbergCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#VorarlbergCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Vorarlberger Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AustrianCuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#WLANFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#WLANFeature">
+        <rdfs:label rdf:datatype="&xsd;string">WLAN</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">Wireless LAN</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#WaldviertelCuisine -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#WaldviertelCuisine">
+        <rdfs:label rdf:datatype="&xsd;string">Waldviertler Küche</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AustrianCuisine"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Waterway -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Waterway">
+        <rdfs:label rdf:datatype="&xsd;string">Wasserstraße</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#HydrographicFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#WheelChairAccessFeature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#WheelChairAccessFeature">
+        <rdfs:label rdf:datatype="&xsd;string">behindertengerecht</rdfs:label>
+        <rdfs:label rdf:datatype="&xsd;string">rollstuhlgerecht</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#SpecialFeature"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Wien -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Wien">
+        <rdfs:label rdf:datatype="&xsd;string">Wien</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#AdministrativeDivision1"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#WikipediaArticle -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#WikipediaArticle">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Link"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#WineShop -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#WineShop">
+        <rdfs:label rdf:datatype="&xsd;string">Weinhandlung</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Shop"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#WurstStand -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#WurstStand">
+        <rdfs:label rdf:datatype="&xsd;string">Würstelstand</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#FastFood"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#Zoo -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#Zoo">
+        <rdfs:label rdf:datatype="&xsd;string">Zoo</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Leisure"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#_Feature -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#_Feature"/>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#_FeatureCode -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#_FeatureCode">
+        <rdfs:subClassOf rdf:resource="&geoconcepts;terms#Attributes"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#_Geometry -->
+
+    <owl:Class rdf:about="&geoconcepts;terms#_Geometry">
+        <rdfs:comment>posList as String should be a DataProperty</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2002/07/owl#Thing -->
+
+    <owl:Class rdf:about="&owl;Thing"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r1 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r1">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r2"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r4"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r5"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r6"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r7"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r8"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r9"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r10 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r10">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r11"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r12"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r23"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r4"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r5"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r11 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r11">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r10"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r2"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r22"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r3"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r12 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r12">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r10"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r13"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r14"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r15"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r23"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r5"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r6"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r13 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r13">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r12"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r14"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r15"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r23"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r14 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r14">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r12"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r13"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r15"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r16"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r17"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r15 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r15">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r12"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r13"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r14"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r16"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r5"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r6"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r7"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r16 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r16">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r14"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r15"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r17"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r7"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r8"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r17 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r17">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r14"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r16"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r18"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r8"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r9"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r18 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r18">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r17"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r19"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r9"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r19 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r19">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r17"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r18"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r20"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r21"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r2 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r2">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r1"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r11"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r20"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r22"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r9"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r20 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r20">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r19"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r2"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r21"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r22"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r9"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r21 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r21">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r19"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r2"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r20"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r22"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r22 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r22">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r2"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r20"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r21"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r23 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r23">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r10"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r12"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r13"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r3 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r3">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r1"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r10"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r11"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r2"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r4"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r4 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r4">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r1"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r10"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r5"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r6"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r5 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r5">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r10"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r12"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r15"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r4"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r6"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r6 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r6">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r1"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r12"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r15"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r4"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r5"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r7"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r7 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r7">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r1"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r15"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r16"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r17"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r6"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r8"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r8 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r8">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r1"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r16"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r17"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r7"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r9"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r9 -->
+
+    <owl:NamedIndividual rdf:about="&geoconcepts;terms#r9">
+        <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r1"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r17"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r18"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r19"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r2"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r20"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r8"/>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+
