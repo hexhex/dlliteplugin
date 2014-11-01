@@ -4,12 +4,8 @@ customer(X):- isIn(X,Z), not &cDL[OWLONTOLOGY,cp,cn,rp,worksrp,"-Customer"](X).
 % collect all drivers into driver predicate
 driver(X):-isIn(X,Z), not customer(X).
 
-% a driver can go to regions where he works or to those adjoint to the former
-candriveto(X,Y):-driver(X),&rDL[OWLONTOLOGY,a,b,c,d,"worksIn"](X,Y).
-candriveto(X,Z):-driver(X),&rDL[OWLONTOLOGY,a,b,c,d,"worksIn"](X,Z), not &rDL[OWLONTOLOGY,a,b,c,d,"disjoint"](Z,Y).
-
 % assign a driver to a customer if they are in the adjoint districts
 drives(X,Y):-isIn(X,Z), isIn(Y,Z1), &rDL[OWLONTOLOGY,cp,cn,rp,rn,"adjoint"](Z,Z1), customer(X), driver(Y), not omit(X,Y).
 
 % omit assignment if EDriver participates in it and he serves the needs of a customer who wants to go to a region where the driver is not supposed to work
-omit(X,Y):-&cDL[OWLONTOLOGY,a,b,c,d,"EDriver"](X),not candriveto(X,Z),needsTo(Y,Z).
+omit(X,Y):-&cDL[OWLONTOLOGY,a,b,c,d,"EDriver"](X),needsTo(Y,Z), &rDL[OWLONTOLOGY,a,b,c,d,"notworksIn"](X,Z).
