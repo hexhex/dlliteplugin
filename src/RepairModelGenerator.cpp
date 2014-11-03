@@ -76,6 +76,33 @@ namespace dllite {
 		idb.insert(idb.end(), ci.innerRules.begin(), ci.innerRules.end());
 		idb.insert(idb.end(), ci.innerConstraints.begin(), ci.innerConstraints.end());
 
+		DBGLOG(DBG,"RMG: number of outer external atoms is: " << outerEatoms.size());
+
+		// add outer eatoms to the set of inner ones
+			innerEatoms = ci.innerEatoms;
+			innerEatoms.insert(innerEatoms.end(), outerEatoms.begin(), outerEatoms.end());
+			DBGLOG(DBG,"RMG: number of inner Eatoms after addition of outer ones: "<<innerEatoms.size());
+
+			// construct an additional vector in which the outer atoms are stored
+			std::vector<dlvhex::ID> outer;
+
+			if( !outerEatoms.empty() )
+			{
+				DBGLOG(DBG,"RMG: There are outer external atoms, we store them in a separate set");
+				for(unsigned eaIndex = 0; eaIndex < outerEatoms.size(); ++eaIndex) {
+						DBGLOG(DBG,"RMG: atom: "<< RawPrinter::toString(reg,outerEatoms[eaIndex])<<" is outer, store it");
+						outer.push_back(outerEatoms[eaIndex]);
+				}
+
+			}
+
+
+			// clear outer atoms from the set
+			outerEatoms.clear();
+
+			DBGLOG(DBG,"RMG: number of outer eatoms after adding them to the set of inner ones is: "<<outerEatoms.size());
+
+
 		// create program for domain exploration
 		if (ctx.config.getOption("LiberalSafety")) {
 			DBGLOG(DBG, "RMG: LS: 1. liberal safety option is enabled" );
@@ -84,35 +111,6 @@ namespace dllite {
 			addDomainPredicatesAndCreateDomainExplorationProgram(ci, ctx, idb, deidb, deidbInnerEatoms, outerEatoms);
 			DBGLOG(DBG, "RMG: added domain predicates and created domain exploitation program" );
 		}
-
-
-		// add outer eatoms to the set of inner ones
-		innerEatoms = ci.innerEatoms;
-		innerEatoms.insert(innerEatoms.end(), outerEatoms.begin(), outerEatoms.end());
-
-		DBGLOG(DBG,"RMG: number of inner Eatoms after addition of outer ones: "<<innerEatoms.size());
-
-		// construct an additional vector in which the outer atoms are stored
-		std::vector<dlvhex::ID> outer;
-
-		if( !outerEatoms.empty() )
-		{
-			DBGLOG(DBG,"RMG: number of outer atoms: "<<outerEatoms.size());
-
-			DBGLOG(DBG,"RMG: There are outer external atoms, we store them in a separate set");
-			for(unsigned eaIndex = 0; eaIndex < outerEatoms.size(); ++eaIndex) {
-					DBGLOG(DBG,"RMG: atom: "<< RawPrinter::toString(reg,outerEatoms[eaIndex])<<" is outer, store it");
-					outer.push_back(outerEatoms[eaIndex]);
-			}
-
-		}
-
-
-		// clear outer atoms from the set
-		outerEatoms.clear();
-
-		DBGLOG(DBG,"RMG: number of outer Eatoms after eliminating them: "<<outerEatoms.size());
-
 
 		// create guessing rules "gidb" for innerEatoms in all inner rules and constraints
 		DBGLOG(DBG, "RMG: Create eatoms guessing rules");
@@ -282,6 +280,7 @@ namespace dllite {
 		// evaluate edb+xidb+gidb
 		{
 			DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid,"RMG: genuine g&c init guessprog");
+			DBGLOG(DBG,"RMG: vefore evaluating guessing program, number of outer atoms is: "<<factory.outerEatoms.size());
 			DBGLOG(DBG,"RMG: evaluating guessing program");
 			OrdinaryASPProgram program(reg, factory.xidb, postprocessedInput, factory.ctx.maxint);
 
