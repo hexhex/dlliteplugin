@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 
 
 <!DOCTYPE rdf:RDF [
@@ -3463,12 +3462,11 @@ with the Event &quot;Market&quot;</rdfs:comment>
      -->
 
     
-
-
-    <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r1 -->
+ <!-- http://www.kr.tuwien.ac.at/myits/geoconcepts/terms#r1 -->
 
     <owl:NamedIndividual rdf:about="&geoconcepts;terms#r1">
         <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r1"/>
         <adjoint rdf:resource="&geoconcepts;terms#r2"/>
         <adjoint rdf:resource="&geoconcepts;terms#r3"/>
         <adjoint rdf:resource="&geoconcepts;terms#r4"/>
@@ -3485,6 +3483,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
 
     <owl:NamedIndividual rdf:about="&geoconcepts;terms#r10">
         <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r10"/>
         <adjoint rdf:resource="&geoconcepts;terms#r11"/>
         <adjoint rdf:resource="&geoconcepts;terms#r12"/>
         <adjoint rdf:resource="&geoconcepts;terms#r23"/>
@@ -3500,6 +3499,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
     <owl:NamedIndividual rdf:about="&geoconcepts;terms#r11">
         <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
         <adjoint rdf:resource="&geoconcepts;terms#r10"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r11"/>
         <adjoint rdf:resource="&geoconcepts;terms#r2"/>
         <adjoint rdf:resource="&geoconcepts;terms#r22"/>
         <adjoint rdf:resource="&geoconcepts;terms#r3"/>
@@ -3512,6 +3512,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
     <owl:NamedIndividual rdf:about="&geoconcepts;terms#r12">
         <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
         <adjoint rdf:resource="&geoconcepts;terms#r10"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r12"/>
         <adjoint rdf:resource="&geoconcepts;terms#r13"/>
         <adjoint rdf:resource="&geoconcepts;terms#r14"/>
         <adjoint rdf:resource="&geoconcepts;terms#r15"/>
@@ -3527,6 +3528,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
     <owl:NamedIndividual rdf:about="&geoconcepts;terms#r13">
         <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
         <adjoint rdf:resource="&geoconcepts;terms#r12"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r13"/>
         <adjoint rdf:resource="&geoconcepts;terms#r14"/>
         <adjoint rdf:resource="&geoconcepts;terms#r15"/>
         <adjoint rdf:resource="&geoconcepts;terms#r23"/>
@@ -3540,6 +3542,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
         <adjoint rdf:resource="&geoconcepts;terms#r12"/>
         <adjoint rdf:resource="&geoconcepts;terms#r13"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r14"/>
         <adjoint rdf:resource="&geoconcepts;terms#r15"/>
         <adjoint rdf:resource="&geoconcepts;terms#r16"/>
         <adjoint rdf:resource="&geoconcepts;terms#r17"/>
@@ -3554,6 +3557,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <adjoint rdf:resource="&geoconcepts;terms#r12"/>
         <adjoint rdf:resource="&geoconcepts;terms#r13"/>
         <adjoint rdf:resource="&geoconcepts;terms#r14"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r15"/>
         <adjoint rdf:resource="&geoconcepts;terms#r16"/>
         <adjoint rdf:resource="&geoconcepts;terms#r5"/>
         <adjoint rdf:resource="&geoconcepts;terms#r6"/>
@@ -3568,6 +3572,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
         <adjoint rdf:resource="&geoconcepts;terms#r14"/>
         <adjoint rdf:resource="&geoconcepts;terms#r15"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r16"/>
         <adjoint rdf:resource="&geoconcepts;terms#r17"/>
         <adjoint rdf:resource="&geoconcepts;terms#r7"/>
         <adjoint rdf:resource="&geoconcepts;terms#r8"/>
@@ -3581,6 +3586,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
         <adjoint rdf:resource="&geoconcepts;terms#r14"/>
         <adjoint rdf:resource="&geoconcepts;terms#r16"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r17"/>
         <adjoint rdf:resource="&geoconcepts;terms#r18"/>
         <adjoint rdf:resource="&geoconcepts;terms#r8"/>
         <adjoint rdf:resource="&geoconcepts;terms#r9"/>
@@ -3593,6 +3599,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
     <owl:NamedIndividual rdf:about="&geoconcepts;terms#r18">
         <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
         <adjoint rdf:resource="&geoconcepts;terms#r17"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r18"/>
         <adjoint rdf:resource="&geoconcepts;terms#r19"/>
         <adjoint rdf:resource="&geoconcepts;terms#r9"/>
     </owl:NamedIndividual>
@@ -3605,6 +3612,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
         <adjoint rdf:resource="&geoconcepts;terms#r17"/>
         <adjoint rdf:resource="&geoconcepts;terms#r18"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r19"/>
         <adjoint rdf:resource="&geoconcepts;terms#r20"/>
         <adjoint rdf:resource="&geoconcepts;terms#r21"/>
     </owl:NamedIndividual>
@@ -3617,6 +3625,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
         <adjoint rdf:resource="&geoconcepts;terms#r1"/>
         <adjoint rdf:resource="&geoconcepts;terms#r11"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r2"/>
         <adjoint rdf:resource="&geoconcepts;terms#r20"/>
         <adjoint rdf:resource="&geoconcepts;terms#r22"/>
         <adjoint rdf:resource="&geoconcepts;terms#r3"/>
@@ -3631,6 +3640,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <rdf:type rdf:resource="&geoconcepts;terms#AdministrativeDivision3"/>
         <adjoint rdf:resource="&geoconcepts;terms#r19"/>
         <adjoint rdf:resource="&geoconcepts;terms#r2"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r20"/>
         <adjoint rdf:resource="&geoconcepts;terms#r21"/>
         <adjoint rdf:resource="&geoconcepts;terms#r22"/>
         <adjoint rdf:resource="&geoconcepts;terms#r9"/>
@@ -3645,6 +3655,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <adjoint rdf:resource="&geoconcepts;terms#r19"/>
         <adjoint rdf:resource="&geoconcepts;terms#r2"/>
         <adjoint rdf:resource="&geoconcepts;terms#r20"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r21"/>
         <adjoint rdf:resource="&geoconcepts;terms#r22"/>
     </owl:NamedIndividual>
     
@@ -3657,6 +3668,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <adjoint rdf:resource="&geoconcepts;terms#r2"/>
         <adjoint rdf:resource="&geoconcepts;terms#r20"/>
         <adjoint rdf:resource="&geoconcepts;terms#r21"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r22"/>
     </owl:NamedIndividual>
     
 
@@ -3668,6 +3680,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <adjoint rdf:resource="&geoconcepts;terms#r10"/>
         <adjoint rdf:resource="&geoconcepts;terms#r12"/>
         <adjoint rdf:resource="&geoconcepts;terms#r13"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r23"/>
     </owl:NamedIndividual>
     
 
@@ -3680,6 +3693,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <adjoint rdf:resource="&geoconcepts;terms#r10"/>
         <adjoint rdf:resource="&geoconcepts;terms#r11"/>
         <adjoint rdf:resource="&geoconcepts;terms#r2"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r3"/>
         <adjoint rdf:resource="&geoconcepts;terms#r4"/>
     </owl:NamedIndividual>
     
@@ -3692,6 +3706,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <adjoint rdf:resource="&geoconcepts;terms#r1"/>
         <adjoint rdf:resource="&geoconcepts;terms#r10"/>
         <adjoint rdf:resource="&geoconcepts;terms#r3"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r4"/>
         <adjoint rdf:resource="&geoconcepts;terms#r5"/>
         <adjoint rdf:resource="&geoconcepts;terms#r6"/>
     </owl:NamedIndividual>
@@ -3706,6 +3721,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <adjoint rdf:resource="&geoconcepts;terms#r12"/>
         <adjoint rdf:resource="&geoconcepts;terms#r15"/>
         <adjoint rdf:resource="&geoconcepts;terms#r4"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r5"/>
         <adjoint rdf:resource="&geoconcepts;terms#r6"/>
     </owl:NamedIndividual>
     
@@ -3720,6 +3736,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <adjoint rdf:resource="&geoconcepts;terms#r15"/>
         <adjoint rdf:resource="&geoconcepts;terms#r4"/>
         <adjoint rdf:resource="&geoconcepts;terms#r5"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r6"/>
         <adjoint rdf:resource="&geoconcepts;terms#r7"/>
     </owl:NamedIndividual>
     
@@ -3734,6 +3751,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <adjoint rdf:resource="&geoconcepts;terms#r16"/>
         <adjoint rdf:resource="&geoconcepts;terms#r17"/>
         <adjoint rdf:resource="&geoconcepts;terms#r6"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r7"/>
         <adjoint rdf:resource="&geoconcepts;terms#r8"/>
     </owl:NamedIndividual>
     
@@ -3747,6 +3765,7 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <adjoint rdf:resource="&geoconcepts;terms#r16"/>
         <adjoint rdf:resource="&geoconcepts;terms#r17"/>
         <adjoint rdf:resource="&geoconcepts;terms#r7"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r8"/>
         <adjoint rdf:resource="&geoconcepts;terms#r9"/>
     </owl:NamedIndividual>
     
@@ -3763,7 +3782,9 @@ with the Event &quot;Market&quot;</rdfs:comment>
         <adjoint rdf:resource="&geoconcepts;terms#r2"/>
         <adjoint rdf:resource="&geoconcepts;terms#r20"/>
         <adjoint rdf:resource="&geoconcepts;terms#r8"/>
+        <adjoint rdf:resource="&geoconcepts;terms#r9"/>
     </owl:NamedIndividual>
+
 <owl:Thing rdf:about="#c1"><rdf:type rdf:resource="#Customer"/></owl:Thing>
 <owl:Thing rdf:about="#c2"><rdf:type rdf:resource="#Customer"/></owl:Thing>
 <owl:Thing rdf:about="#c3"><rdf:type rdf:resource="#Customer"/></owl:Thing>
