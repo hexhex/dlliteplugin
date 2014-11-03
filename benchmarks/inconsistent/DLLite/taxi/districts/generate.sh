@@ -20,17 +20,6 @@ do
 	fi
 done
 
-if [[ $2 -le 10 ]]; then 
-	prob1=$((32768 * 30 / 100)) 
-
-elif [[ $2 -le 20 ]]; then 
-	prob1=$((32768 * 70 / 100)) 
-
-else 
-	prob1=32768 
-
-fi 
-
 prob2=$((32768 * 50 / 100)) 
 
 for (( i=1; i <= $drivers; i++ ))
