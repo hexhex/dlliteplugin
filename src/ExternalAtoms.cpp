@@ -877,19 +877,10 @@ namespace dllite {
 #endif
 
 
-		/*	bm::bvector<>::enumerator ens = query.eatom->getPredicateInputMask()->getStorage().first();
-			bm::bvector<>::enumerator ens_end = query.eatom->getPredicateInputMask()->getStorage().end();
-
-			while (ens < ens_end){
-				std::string enStr = RawPrinter::toString(reg,reg->ogatoms.getIDByAddress(*ens));
-				DBGLOG(DBG,"LSS: IPM "<<enStr);
-				ens++;
-			}*/
 
 			// iterate over the maximum input
 			DBGLOG(DBG, "LSS: Analyzing input to the external atom");
-			//bm::bvector<>::enumerator en = query.interpretation->getStorage().first();
-			//bm::bvector<>::enumerator en_end = query.interpretation->getStorage().end();
+
 
 			bm::bvector<>::enumerator en = query.eatom->getPredicateInputMask()->getStorage().first();
 			bm::bvector<>::enumerator en_end = query.eatom->getPredicateInputMask()->getStorage().end();
@@ -904,16 +895,14 @@ namespace dllite {
 
 #ifndef NDEBUG
 				std::string enStr = RawPrinter::toString(reg,reg->ogatoms.getIDByAddress(*en));
-				DBGLOG(DBG, "LSS: Current input atom: " << enStr);
+				DBGLOG(DBG, "LSS: IPM: Current input atom: " << enStr);
 #endif
 				const OrdinaryAtom& oatom = reg->ogatoms.getByAddress(*en);
 
 				if (oatom.tuple[0] == query.input[1]) {
 					// c+
 					DBGLOG(DBG, "LSS: Atom belongs to c+");
-					assert(
-							oatom.tuple.size() == 3
-							&& "Second parameter must be a binary predicate");
+					assert(oatom.tuple.size() == 3&& "Second parameter must be a binary predicate");
 					ID cID = oatom.tuple[1];
 
 					// check if sub(C, Q) is true in the classification assignment
@@ -1035,10 +1024,9 @@ namespace dllite {
 							potentialSupportSets->addNogood(supportset);
 
 							// check if c-(C', Y) occurs in the maximal interpretation
-							bm::bvector<>::enumerator en3 =
-							query.interpretation->getStorage().first();
-							bm::bvector<>::enumerator en3_end =
-							query.interpretation->getStorage().end();
+							bm::bvector<>::enumerator en3 = query.eatom->getPredicateInputMask()->getStorage().first();
+							bm::bvector<>::enumerator en3_end = query.eatom->getPredicateInputMask()->getStorage().end();
+
 #ifndef NDEBUG
 							DBGLOG(DBG,
 									"LSS: Checking if (C',Y) with C'=" << cpStr << " occurs in c- (for some Y)");
@@ -1097,220 +1085,258 @@ namespace dllite {
 
 					ID cID = oatom.tuple[1];
 
-					/* // check if sub(negC, Q) is true in the classification assignment
-					 OrdinaryAtom subncq(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
-					 subncq.tuple.push_back(theDLLitePlugin.subID);
-					 subncq.tuple.push_back(theDLLitePlugin.dlNeg(cID));
-					 subncq.tuple.push_back(qID);
-					 ID subncqID = reg->storeOrdinaryAtom(subncq);
+					// construct support set (c+(C,O),C(O))
 
-					 DBGCHECKATOM(subncqID)
-					 if (classification->getFact(subncqID.address)){
-					 OrdinaryAtom cmcx = theDLLitePlugin.getNewAtom(query.input[2]);
-					 cmcx.tuple.push_back(cID);
-					 cmcx.tuple.push_back(outvarID);
-					 Nogood supportset;
-					 supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cmcx)));
-					 supportset.insert(outlit);
-					 DBGLOG(DBG, "LSS: Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
-					 nogoods->addNogood(supportset);
-					 }else{
-					 DBGLOG(DBG, "LSS: Does not hold");
-					 }*/
+
 				} else if (oatom.tuple[0] == query.input[3]) {
 					// r+
 					DBGLOG(DBG, "LSS: Atom belongs to r+");
-					assert(
-							oatom.tuple.size() == 4
-							&& "Fourth parameter must be a ternary predicate");
+					assert(oatom.tuple.size() == 4&& "Fourth parameter must be a ternary predicate");
 
 					ID rID = oatom.tuple[1];
 					ID exrID = theDLLitePlugin.dlEx(rID);
 
-					// check if sub(exR, Q) is true in the classification assignment (applicable only for concepts)
-					OrdinaryAtom subexrq(
-							ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
-					subexrq.tuple.push_back(theDLLitePlugin.subID);
-					subexrq.tuple.push_back(theDLLitePlugin.dlEx(rID));
-					subexrq.tuple.push_back(qID);
-					ID subexrqID = reg->storeOrdinaryAtom(subexrq);
+					#ifndef NDEBUG
+						std::string rIDStr = RawPrinter::toString(reg, rID);
+						std::string exrIDStr = RawPrinter::toString(reg, exrID);
+					#endif
 
-					DBGCHECKATOM(subexrqID)
-					if (classification->getFact(subexrqID.address)) {
-						OrdinaryAtom rprxy = theDLLitePlugin.getNewAtom(query.input[3]);
-						rprxy.tuple.push_back(rID);
-						rprxy.tuple.push_back(outvarID);
-						rprxy.tuple.push_back(theDLLitePlugin.yID);
+					if (cQID!=ID_FAIL) {
+						// check if sub(exR, Q) classification assignment (applicable only for concepts)
+						OrdinaryAtom subexrq(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+						subexrq.tuple.push_back(theDLLitePlugin.subID);
+						subexrq.tuple.push_back(theDLLitePlugin.dlEx(rID));
+						subexrq.tuple.push_back(qID);
+						ID subexrqID = reg->storeOrdinaryAtom(subexrq);
+
+						DBGCHECKATOM(subexrqID)
+						if (classification->getFact(subexrqID.address)) {
+							OrdinaryAtom rprxy = theDLLitePlugin.getNewAtom(query.input[3]);
+							rprxy.tuple.push_back(rID);
+							rprxy.tuple.push_back(outvarID);
+							rprxy.tuple.push_back(theDLLitePlugin.yID);
+							Nogood supportset;
+							supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
+							supportset.insert(outlit);
+							DBGLOG(DBG,"LSS: Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
+							potentialSupportSets->addNogood(supportset);
+						} else {
+							DBGLOG(DBG, "LSS: Does not hold");
+						}
+					}
+
+					else {
+						// check if sub(R, Q) is true in the classification assignment (applicable only for roles)
+						OrdinaryAtom subrq(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+						subrq.tuple.push_back(theDLLitePlugin.subID);
+						subrq.tuple.push_back(rID);
+						subrq.tuple.push_back(qID);
+						ID subrqID = reg->storeOrdinaryAtom(subrq);
+
+						DBGCHECKATOM(subrqID)
+						if (classification->getFact(subrqID.address)) {
+							OrdinaryAtom rprxy = theDLLitePlugin.getNewAtom(query.input[1]);
+							rprxy.tuple.push_back(rID);
+							rprxy.tuple.push_back(outvarID1);
+							rprxy.tuple.push_back(outvarID2);
+							Nogood supportset;
+							supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
+							supportset.insert(outlit);
+							DBGLOG(DBG,"LSS: Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
+							potentialSupportSets->addNogood(supportset);
+						} else {
+							DBGLOG(DBG, "LSS: Does not hold");
+						}
+					}
+
+
+
+					// check if confref(R) is true in the classification assignment (applicable only for roles)
+					OrdinaryAtom confrefr(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+					confrefr.tuple.push_back(theDLLitePlugin.confrefID);
+					confrefr.tuple.push_back(rID);
+					ID confrefrID = reg->storeOrdinaryAtom(confrefr);
+
+					DBGCHECKATOM(confrefrID)
+					if (classification->getFact(confrefrID.address)) {
+						OrdinaryAtom rprref = theDLLitePlugin.getNewAtom(query.input[3]);
+						rprref.tuple.push_back(rID);
+						rprref.tuple.push_back(theDLLitePlugin.yID);
+						rprref.tuple.push_back(theDLLitePlugin.yID);
 						Nogood supportset;
-						supportset.insert(
-								NogoodContainer::createLiteral(
-										reg->storeOrdinaryAtom(rprxy)));
+						supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprref)));
 						supportset.insert(outlit);
-						DBGLOG(DBG,
-								"LSS: Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
+						DBGLOG(DBG,"LSS: Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
 						potentialSupportSets->addNogood(supportset);
 					} else {
 						DBGLOG(DBG, "LSS: Does not hold");
 					}
-#ifndef NDEBUG
-					std::string rIDStr = RawPrinter::toString(reg, rID);
-					std::string exrIDStr = RawPrinter::toString(reg, exrID);
 
-					DBGLOG(DBG,
-							"LSS: Checking if sub(" << exrIDStr << ", C) is true in the classification assignment (for some C)");
-					DBGLOG(DBG,
-							"LSS: or if if sub(" << rIDStr << ", R') is true in the classification assignment (for some R')");
-#endif
 
-					// check if sub(R, Q) is true in the classification assignment (applicable only for roles)
-					OrdinaryAtom subrq(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
-					subrq.tuple.push_back(theDLLitePlugin.subID);
-					subrq.tuple.push_back(rID);
-					subrq.tuple.push_back(qID);
-					ID subrqID = reg->storeOrdinaryAtom(subrq);
+					// check if funct(R) is true in the classification assignment (applicable only for roles)
+					OrdinaryAtom functr(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+					functr.tuple.push_back(theDLLitePlugin.functID);
+					functr.tuple.push_back(rID);
+					ID functrID = reg->storeOrdinaryAtom(functr);
 
-					DBGCHECKATOM(subrqID)
-					if (classification->getFact(subrqID.address)) {
-						OrdinaryAtom rprxy = theDLLitePlugin.getNewAtom(query.input[1]);
-						rprxy.tuple.push_back(rID);
-						rprxy.tuple.push_back(outvarID1);
-						rprxy.tuple.push_back(outvarID2);
+					DBGCHECKATOM(functrID)
+
+					// add two support sets: {r+(R,X,Y), r+(R,X,Z)}, {r+(R,X,Y), R(X,Z)}
+					if (classification->getFact(functrID.address)) {
+						OrdinaryAtom rprfunct = theDLLitePlugin.getNewAtom(query.input[3]);
+						rprfunct.tuple.push_back(rID);
+						rprfunct.tuple.push_back(theDLLitePlugin.xID);
+						rprfunct.tuple.push_back(theDLLitePlugin.yID);
+
+						OrdinaryAtom rprfunct2 = theDLLitePlugin.getNewAtom(query.input[3]);
+						rprfunct.tuple.push_back(rID);
+						rprfunct.tuple.push_back(theDLLitePlugin.xID);
+						rprfunct.tuple.push_back(theDLLitePlugin.zID);
+
+						OrdinaryAtom rfunct = theDLLitePlugin.getNewGuardAtom();
+						rfunct.tuple.push_back(rID);
+						rfunct.tuple.push_back(theDLLitePlugin.xID);
+						rfunct.tuple.push_back(theDLLitePlugin.zID);
+
 						Nogood supportset;
-						supportset.insert(
-								NogoodContainer::createLiteral(
-										reg->storeOrdinaryAtom(rprxy)));
+						supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprfunct)));
+						supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprfunct2)));
 						supportset.insert(outlit);
-						DBGLOG(DBG,
-								"LSS: Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
+						DBGLOG(DBG,"LSS: --> Learned support set: " << supportset.getStringRepresentation(reg));
 						potentialSupportSets->addNogood(supportset);
+
+						Nogood supportset2;
+						supportset2.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprfunct)));
+						supportset2.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rfunct)));
+						supportset2.insert(outlit);
+						DBGLOG(DBG,"LSS: --> Learned support set: " << supportset2.getStringRepresentation(reg));
+						potentialSupportSets->addNogood(supportset2);
+
+
 					} else {
-						DBGLOG(DBG, "LSS: Does not hold");
+							DBGLOG(DBG, "LSS: Does not hold");
 					}
 
-					bm::bvector<>::enumerator en2 =
-					classification->getStorage().first();
-					bm::bvector<>::enumerator en2_end =
-					classification->getStorage().end();
+
+					#ifndef NDEBUG
+						std::string cStr=RawPrinter::toString(reg,exrID);
+						std::string cStr2=RawPrinter::toString(reg,rID);
+						DBGLOG(DBG,"LSS: Checking if conf("<<cStr<<",C') holds in CM for some C' or conf("<<cStr2<<",R') holds for some R'");
+					#endif
+
+					bm::bvector<>::enumerator en2 = classification->getStorage().first();
+					bm::bvector<>::enumerator en2_end =	classification->getStorage().end();
 					while (en2 < en2_end) {
 						const OrdinaryAtom& at = reg->ogatoms.getByAddress(*en2);
-						if (at.tuple[0] == query.input[3] && at.tuple[1] == exrID) {
-							DBGLOG(DBG,
-									"LSS: --> Found a match with C=" << RawPrinter::toString(reg, at.tuple[2]));
-							Nogood supportset;
+						if (at.tuple[0] == theDLLitePlugin.confID && at.tuple[1] == exrID) {
+							DBGLOG(DBG,"LSS: Found a match for conf("<<RawPrinter::toString(reg,exrID)<<",C') with C'=" << RawPrinter::toString(reg, at.tuple[2]));
+							DBGLOG(DBG,"LSS: Check whether C' is a concept");
 
-							// add { T r+(R,X,Y), -C(O) }
-							OrdinaryAtom rprxy = theDLLitePlugin.getNewAtom(
-									query.input[3]);
-							rprxy.tuple.push_back(rID);
-							rprxy.tuple.push_back(theDLLitePlugin.xID);
-							rprxy.tuple.push_back(theDLLitePlugin.yID);
-							supportset.insert(
-									NogoodContainer::createLiteral(
-											reg->storeOrdinaryAtom(rprxy)));
+							if ((theDLLitePlugin.isDlNeg(at.tuple[2]) && theDLLitePlugin.isDlEx(theDLLitePlugin.dlNeg(at.tuple[2])))||(theDLLitePlugin.isDlEx(at.tuple[2]))) {
+								DBGLOG(DBG,"LSS: C' is of form exR or -exR, ignore it");
+							} else {
+								DBGLOG(DBG,"LSS: C' is a concept, create a support set");
+								Nogood supportset;
+								// add { T r+(R,X,Y), C(X) }
+								OrdinaryAtom rprxy = theDLLitePlugin.getNewAtom(query.input[3]);
+								rprxy.tuple.push_back(rID);
+								rprxy.tuple.push_back(theDLLitePlugin.xID);
+								rprxy.tuple.push_back(theDLLitePlugin.yID);
+								supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
 
-							// guard atom
-							ID negctID = theDLLitePlugin.dlNeg(at.tuple[2]);
-							OrdinaryAtom negc = theDLLitePlugin.getNewGuardAtom();
-							negc.tuple.push_back(negctID);
-							negc.tuple.push_back(theDLLitePlugin.xID);
-							ID negcID = reg->storeOrdinaryAtom(negc);
-							supportset.insert(NogoodContainer::createLiteral(negcID));
+								// guard atom
+								ID cgID = at.tuple[2];
+								OrdinaryAtom cg = theDLLitePlugin.getNewGuardAtom();
+								cg.tuple.push_back(cgID);
+								cg.tuple.push_back(theDLLitePlugin.xID);
+								ID cgatID = reg->storeOrdinaryAtom(cg);
+								supportset.insert(NogoodContainer::createLiteral(cgatID));
 
-							supportset.insert(outlit);
+								supportset.insert(outlit);
 
-							DBGLOG(DBG,
-									"LSS: --> Learned support set: " << supportset.getStringRepresentation(reg));
-							potentialSupportSets->addNogood(supportset);
+								DBGLOG(DBG,"LSS: --> Learned support set: " << supportset.getStringRepresentation(reg));
+								potentialSupportSets->addNogood(supportset);
+								if (theDLLitePlugin.isDlNeg(cgID)) {
+									bm::bvector<>::enumerator en3 = query.eatom->getPredicateInputMask()->getStorage().first();
+									bm::bvector<>::enumerator en3_end = query.eatom->getPredicateInputMask()->getStorage().end();
+									while (en3 < en3_end) {
+											const OrdinaryAtom& inat = reg->ogatoms.getByAddress(*en3);
+											if (inat.tuple[0] == query.input[2]&& inat.tuple[1] == theDLLitePlugin.dlNeg(cgID)) {
+												DBGLOG(DBG,"LSS: Found a match for c-(inv(C'),X)");
+												Nogood supportset2;
+												// add { T r+(R,X,Y), T C-(X) }
+												supportset2.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
+												OrdinaryAtom cx = theDLLitePlugin.getNewAtom(query.input[2]);
+												cx.tuple.push_back(theDLLitePlugin.dlNeg(cgID));
+												rprxy.tuple.push_back(theDLLitePlugin.xID);
+												supportset2.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cx)));
+
+												supportset2.insert(outlit);
+
+												DBGLOG(DBG,"LSS: --> Learned support set: " << supportset2.getStringRepresentation(reg));
+
+											}
+											en3++;
+									}
+								}
+							}
 						}
-						if (at.tuple[0] == query.input[3] && at.tuple[1] == rID) {
-							DBGLOG(DBG,
-									"LSS: --> Found a match with R'=" << RawPrinter::toString(reg, at.tuple[2]));
+
+						if (at.tuple[0] == theDLLitePlugin.confID && at.tuple[1] == rID) {
+							DBGLOG(DBG,"LSS: --> Found a match for conf("<<RawPrinter::toString(reg,rID)<<",R') with R'=" << RawPrinter::toString(reg, at.tuple[2]));
 							Nogood supportset;
 
-							// add { T r+(R,X,Y), -R'(X,Y) }
-							OrdinaryAtom rprxy = theDLLitePlugin.getNewAtom(
-									query.input[3]);
+							// add { T r+(R,X,Y), R'(X,Y) }
+							OrdinaryAtom rprxy = theDLLitePlugin.getNewAtom(query.input[3]);
 							rprxy.tuple.push_back(rID);
 							rprxy.tuple.push_back(theDLLitePlugin.xID);
 							rprxy.tuple.push_back(theDLLitePlugin.yID);
-							supportset.insert(
-									NogoodContainer::createLiteral(
-											reg->storeOrdinaryAtom(rprxy)));
+							supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
 
 							// guard atom
-							ID negrptID = theDLLitePlugin.dlNeg(at.tuple[2]);
-							OrdinaryAtom negrp = theDLLitePlugin.getNewGuardAtom();
-							negrp.tuple.push_back(negrptID);
-							negrp.tuple.push_back(theDLLitePlugin.xID);
-							negrp.tuple.push_back(theDLLitePlugin.yID);
-							ID negrpID = reg->storeOrdinaryAtom(negrp);
-							supportset.insert(NogoodContainer::createLiteral(negrpID));
+							ID rgID = at.tuple[2];
+							OrdinaryAtom rg = theDLLitePlugin.getNewGuardAtom();
+							rg.tuple.push_back(rgID);
+							rg.tuple.push_back(theDLLitePlugin.xID);
+							rg.tuple.push_back(theDLLitePlugin.yID);
+							ID rgatID = reg->storeOrdinaryAtom(rg);
+							supportset.insert(NogoodContainer::createLiteral(rgatID));
 
 							supportset.insert(outlit);
 
 							DBGLOG(DBG,"LSS: --> Learned support set: " << supportset.getStringRepresentation(reg));
 							potentialSupportSets->addNogood(supportset);
+
+							// if R' is negative, then check whether r-(R',X,Y) holds in the maximum input
+							if (theDLLitePlugin.isDlNeg(rgID)){
+
+								bm::bvector<>::enumerator en3 = query.eatom->getPredicateInputMask()->getStorage().first();
+								bm::bvector<>::enumerator en3_end = query.eatom->getPredicateInputMask()->getStorage().end();
+								while (en3 < en3_end) {
+									const OrdinaryAtom& inat = reg->ogatoms.getByAddress(*en3);
+									if (inat.tuple[0] == query.input[4]&& inat.tuple[1] == rgID) {
+										DBGLOG(DBG,"LSS: ");
+									}
+									en3++;
+								}
+							}
+
 						}
 
 						en2++;
 					}
-			#ifndef NDEBUG
-					DBGLOG(DBG,"LSS: Checking if confref(" << rIDStr << ") is true in the classification assignment");
-			#endif
 
-			// check if confref(R) is true in the classification assignment (applicable only for roles)
-			OrdinaryAtom confrefr(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
-			confrefr.tuple.push_back(theDLLitePlugin.confrefID);
-			confrefr.tuple.push_back(rID);
-			ID confrefrID = reg->storeOrdinaryAtom(confrefr);
 
-			DBGCHECKATOM(confrefrID)
-			if (classification->getFact(confrefrID.address)) {
-				OrdinaryAtom rprxx = theDLLitePlugin.getNewAtom(query.input[1]);
-				rprxx.tuple.push_back(rID);
-				rprxx.tuple.push_back(outvarID1);
-				rprxx.tuple.push_back(outvarID1);
-				Nogood supportset;
-				supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxx)));
-				supportset.insert(outlit);
-				DBGLOG(DBG,"LSS: Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
-				potentialSupportSets->addNogood(supportset);
-			} else {
-				DBGLOG(DBG, "LSS: Does not hold");
-			}
-				} else if (oatom.tuple[0] == query.input[4]) {
-					// r-
-					DBGLOG(DBG, "LSS: Atom belongs to r-");
-					assert(
-							oatom.tuple.size() == 4
-							&& "Fifth parameter must be a ternary predicate");
 
-					ID rID = oatom.tuple[1];
+		} else if (oatom.tuple[0] == query.input[4]) {
+			// r-
+			DBGLOG(DBG, "LSS: Atom belongs to r-");
+			assert(oatom.tuple.size() == 4&& "Fifth parameter must be a ternary predicate");
+			ID rID = oatom.tuple[1];
 
-					/*// check if sub(negexR, Q) is true in the classification assignment
-					 OrdinaryAtom subnexrq(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
-					 subnexrq.tuple.push_back(theDLLitePlugin.subID);
-					 subnexrq.tuple.push_back(theDLLitePlugin.dlNeg(theDLLitePlugin.dlEx(rID)));
-					 subnexrq.tuple.push_back(qID);
-					 ID subnexrqID = reg->storeOrdinaryAtom(subnexrq);
-
-					 DBGCHECKATOM(subnexrqID)
-					 if (classification->getFact(subnexrqID.address)){
-					 OrdinaryAtom rprxy = theDLLitePlugin.getNewAtom(query.input[4]);
-					 rprxy.tuple.push_back(rID);
-					 rprxy.tuple.push_back(outvarID);
-					 rprxy.tuple.push_back(theDLLitePlugin.yID);
-					 Nogood supportset;
-					 supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rprxy)));
-					 supportset.insert(outlit);
-					 DBGLOG(DBG, "LSS: Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
-					 nogoods->addNogood(supportset);
-					 }else{
-					 DBGLOG(DBG, "LSS: Does not hold");
-					 }*/
-				}
-				en++;
-			}
+		}
+		en++;
+	}
 
 			DBGLOG(DBG, "LSS: Analyzing query and Abox");
 			{
@@ -1378,7 +1404,7 @@ namespace dllite {
 									"LSS: --> Learned support set: " << supportset.getStringRepresentation(reg));
 							potentialSupportSets->addNogood(supportset);
 						} else {
-							DBGLOG(DBG, "LSS: (this is not form exR)");
+							DBGLOG(DBG, "LSS: (this is not of form exR)");
 							if (cQID != ID_FAIL) {
 								// guard atom for C(O)
 								OrdinaryAtom co = theDLLitePlugin.getNewGuardAtom();
@@ -1403,8 +1429,7 @@ namespace dllite {
 										NogoodContainer::createLiteral(
 												reg->storeOrdinaryAtom(co)));
 								supportset.insert(outlit);
-								DBGLOG(DBG,
-										"LSS: --> Learned support set: " << supportset.getStringRepresentation(reg));
+								DBGLOG(DBG,"LSS: --> Learned support set: " << supportset.getStringRepresentation(reg));
 								potentialSupportSets->addNogood(supportset);
 							} else {
 								assert(false);
@@ -1419,7 +1444,7 @@ namespace dllite {
 
 		}
 		optimizeSupportSets(potentialSupportSets, nogoods);
-		DBGLOG(DBG, "LSS: EL: Finished support set learning");
+		DBGLOG(DBG, "LSS: Finished support set learning");
 	}
 
 	void DLPluginAtom::optimizeSupportSets(SimpleNogoodContainerPtr initial,
