@@ -940,8 +940,7 @@ namespace dllite {
 						cpcx.tuple.push_back(cID);
 						cpcx.tuple.push_back(theDLLitePlugin.xID);
 						Nogood supportset;
-						supportset.insert(NogoodContainer::createLiteral(
-										reg->storeOrdinaryAtom(cpcx)));
+						supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcx)));
 						supportset.insert(outlit);
 						DBGLOG(DBG,
 								"LSS: Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
@@ -1027,19 +1026,20 @@ namespace dllite {
 									Nogood supportset;
 
 									// add { T c+(C,Y), T c-(C,Y) }
-									OrdinaryAtom cpcy = theDLLitePlugin.getNewAtom(query.input[1], true);
+									OrdinaryAtom cpcy = theDLLitePlugin.getNewAtom(query.input[1], false);
 									cpcy.tuple.push_back(cID);
 									cpcy.tuple.push_back(theDLLitePlugin.yID);
+									//cpcy.tuple.push_back(at.tuple[2]);
 									supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcy)));
 
-									OrdinaryAtom cmcy = theDLLitePlugin.getNewAtom(query.input[2], true);
-									cmcy.tuple.push_back(at.tuple[1]);
+									OrdinaryAtom cmcy = theDLLitePlugin.getNewAtom(query.input[2], false);
+									cmcy.tuple.push_back(theDLLitePlugin.dlNeg(cpID));
 									cmcy.tuple.push_back(theDLLitePlugin.yID);
 									supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cmcy)));
 
 									supportset.insert(outlit);
 
-									DBGLOG(DBG,"LSS: --> Learned support set: " << supportset.getStringRepresentation(reg));
+									DBGLOG(DBG,"LSS: --> !Learned support set: " << supportset.getStringRepresentation(reg));
 									potentialSupportSets->addNogood(supportset);
 									break;
 								}
@@ -1060,11 +1060,10 @@ namespace dllite {
 					ID cID = oatom.tuple[1];
 					ID guardID;
 
-					// construct support set (c+(C,O),C(O))
 					Nogood supportset;
 
 					// add { T c-(C,Y), C(Y) }
-					OrdinaryAtom cmcy = theDLLitePlugin.getNewAtom(query.input[2], true);
+					OrdinaryAtom cmcy = theDLLitePlugin.getNewAtom(query.input[2], false);
 					cmcy.tuple.push_back(cID);
 					cmcy.tuple.push_back(theDLLitePlugin.yID);
 					supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cmcy)));
@@ -1417,9 +1416,7 @@ namespace dllite {
 								co.tuple.push_back(outvarID1);
 								co.tuple.push_back(outvarID2);
 								Nogood supportset;
-								supportset.insert(
-										NogoodContainer::createLiteral(
-												reg->storeOrdinaryAtom(co)));
+								supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(co)));
 								supportset.insert(outlit);
 								DBGLOG(DBG,"LSS: --> Learned support set: " << supportset.getStringRepresentation(reg));
 								potentialSupportSets->addNogood(supportset);
@@ -1471,6 +1468,7 @@ namespace dllite {
 				BOOST_FOREACH(ID litid, ng) {
 					ID newid = reg->onatoms.getIDByAddress(litid.address);
 					const OrdinaryAtom& oa = reg->onatoms.getByAddress(litid.address);
+
 					if ((newid.isGuardAuxiliary())&& (std::find(abp.begin(), abp.end(), oa.tuple[1])== abp.end())) {
 						DBGLOG(DBG, "LSS: EL: "<< RawPrinter::toString(reg,newid)<<" is a guard predicate not occurring in ABox");
 						elim = true;
@@ -1496,8 +1494,7 @@ namespace dllite {
 			for (int i = 0; i < s; i++) {
 				bool elim = false;
 				const Nogood& ng = initial->getNogood(i);
-				DBGLOG(DBG,
-						"LSSO: consider support set: "<<ng.getStringRepresentation(reg));
+				DBGLOG(DBG,"LSSO: consider support set: "<<ng.getStringRepresentation(reg));
 				DBGLOG(DBG, "LSSO: is it of size >3? "<<ng.size());
 				if (ng.size() > 3) {
 					DBGLOG(DBG, "LSSO: yes");
@@ -1506,12 +1503,12 @@ namespace dllite {
 				} else {
 					DBGLOG(DBG, "LSSO: no");
 					BOOST_FOREACH(ID litid, ng) {
-						ID newid = reg->onatoms.getIDByAddress(litid.address);
-						const OrdinaryAtom& oa = reg->onatoms.getByAddress(
-								litid.address);
-						DBGLOG(DBG,
-								"LSSO: is " <<RawPrinter::toString(reg,newid)<<" a guard with predicate not occurring in ABox?");
-						if ((newid.isGuardAuxiliary())&& (std::find(abp.begin(), abp.end(), oa.tuple[1])== abp.end())) {
+						DBGLOG(DBG,"LSSO: consider element "<<RawPrinter::toString(reg,litid)<< " with id "<<litid);
+
+						const OrdinaryAtom& oa = reg->onatoms.getByAddress(litid.address);
+						DBGLOG(DBG,"LSSO: is " <<RawPrinter::toString(reg,litid)<<" a guard with predicate not occurring in ABox?");
+						DBGLOG(DBG,"LSSO: check for " <<RawPrinter::toString(reg,oa.tuple[1])<<" with "<<oa.tuple[1]);
+						if ((litid.isGuardAuxiliary())&& (std::find(abp.begin(), abp.end(), oa.tuple[1])== abp.end())) {
 							DBGLOG(DBG, "LSSO: yes");
 							elim = true;
 							DBGLOG(DBG, "LSSO: support set is marked for elimination");
@@ -1521,9 +1518,9 @@ namespace dllite {
 						}
 						DBGLOG(DBG,"LSSO: finished with "<<RawPrinter::toString(reg,litid));
 					}
-				//	DBGLOG(DBG,"LSSO: else block is finished");
+					DBGLOG(DBG,"LSSO: else block is finished");
 				}
-				//DBGLOG(DBG,"LSSO: exit else block");
+				DBGLOG(DBG,"LSSO: exit else block");
 				if (elim) {
 					DBGLOG(DBG, "LSSO: if current support set is marked, eliminate it");
 					initial->removeNogood(ng);
