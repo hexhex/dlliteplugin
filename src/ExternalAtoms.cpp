@@ -890,6 +890,7 @@ namespace dllite {
 			ID qID = query.input[5];
 
 #define DBGCHECKATOM(id) { std::stringstream ss; RawPrinter printer(ss, reg); printer.print(id); DBGLOG(DBG, "LSS: Checking if " << ss.str() << " holds in CM:"); }
+
 			while (en < en_end) {
 				// check if it is c+, c-, r+ or r-
 
@@ -918,12 +919,9 @@ namespace dllite {
 						cpcx.tuple.push_back(cID);
 						cpcx.tuple.push_back(outvarID);
 						Nogood supportset;
-						supportset.insert(
-								NogoodContainer::createLiteral(
-										reg->storeOrdinaryAtom(cpcx)));
+						supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcx)));
 						supportset.insert(outlit);
-						DBGLOG(DBG,
-								"LSS: Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
+						DBGLOG(DBG,"LSS: Holds --> Learned support set: " << supportset.getStringRepresentation(reg));
 						potentialSupportSets->addNogood(supportset);
 					} else {
 						DBGLOG(DBG, "LSS: Does not hold");
@@ -952,73 +950,62 @@ namespace dllite {
 						DBGLOG(DBG, "LSS: Does not hold");
 					}
 
-					// check if sub(C, C') is true in the classification assignment (for some C')
+					// check if conf(C, C') is true in the classification model (for some C')
 #ifndef NDEBUG
 					std::string cStr = RawPrinter::toString(reg, cID);
 
-					DBGLOG(DBG,"LSS: Checking if sub(" << cStr << ", C') is true in the classification assignment (for some C')");
+					DBGLOG(DBG,"LSS: Checking if conf(" << cStr << ", C') is true in the classification assignment (for some C')");
 #endif
-					bm::bvector<>::enumerator en2 =
-					classification->getStorage().first();
-					bm::bvector<>::enumerator en2_end =
-					classification->getStorage().end();
+					bm::bvector<>::enumerator en2 = classification->getStorage().first();
+					bm::bvector<>::enumerator en2_end =	classification->getStorage().end();
 					while (en2 < en2_end) {
 #ifndef NDEBUG
-						std::string en2Str = RawPrinter::toString(reg,
-								reg->ogatoms.getIDByAddress(*en2));
+						std::string en2Str = RawPrinter::toString(reg,reg->ogatoms.getIDByAddress(*en2));
 						DBGLOG(DBG, "LSS: Current classification atom: " << en2Str);
 #endif
 						const OrdinaryAtom& clAtom = reg->ogatoms.getByAddress(*en2);
-						if (clAtom.tuple[0] == theDLLitePlugin.subID
-								&& clAtom.tuple[1] == cID) {
+						if (clAtom.tuple[0] == theDLLitePlugin.confID && clAtom.tuple[1] == cID) {
 							ID cpID = clAtom.tuple[2];
 #ifndef NDEBUG
 							std::string cpStr = RawPrinter::toString(reg, cpID);
 							DBGLOG(DBG,"LSS: Found a match with C=" << cStr << " and C'=" << cpStr);
 #endif
 
-							// add {c+(C, Y), negC'(Y)}
+							// add {c+(C, Y), C'(Y)}
 							Nogood supportset;
 
 							OrdinaryAtom cpcy = theDLLitePlugin.getNewAtom(query.input[1]);
 							cpcy.tuple.push_back(cID);
 							cpcy.tuple.push_back(theDLLitePlugin.yID);
-							supportset.insert(
-									NogoodContainer::createLiteral(
-											reg->storeOrdinaryAtom(cpcy)));
+							supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcy)));
 
 							// guard atom
 							// since we cannot check guard atoms of form exR(Y), we rewrite them to R(Y,Z)
+
 							ID guardID;
 							if (theDLLitePlugin.isDlEx(cpID)) {
-								ID negnoexcpID = theDLLitePlugin.dlNeg(
-										theDLLitePlugin.dlRemoveEx(clAtom.tuple[2]));
-								OrdinaryAtom negnoexcp =
-								theDLLitePlugin.getNewGuardAtom();
+								ID negnoexcpID = theDLLitePlugin.dlRemoveEx(clAtom.tuple[2]);
+								OrdinaryAtom negnoexcp = theDLLitePlugin.getNewGuardAtom();
 								negnoexcp.tuple.push_back(negnoexcpID);
 								negnoexcp.tuple.push_back(theDLLitePlugin.yID);
 								negnoexcp.tuple.push_back(theDLLitePlugin.zID);
 								guardID = reg->storeOrdinaryAtom(negnoexcp);
-								supportset.insert(
-										NogoodContainer::createLiteral(guardID));
+								supportset.insert(NogoodContainer::createLiteral(guardID));
 							} else {
-								ID negcpID = theDLLitePlugin.dlNeg(clAtom.tuple[2]);
+								ID negcpID = clAtom.tuple[2];
 								OrdinaryAtom negcp = theDLLitePlugin.getNewGuardAtom();
 								negcp.tuple.push_back(negcpID);
 								negcp.tuple.push_back(theDLLitePlugin.yID);
 								guardID = reg->storeOrdinaryAtom(negcp);
-								supportset.insert(
-										NogoodContainer::createLiteral(guardID));
+								supportset.insert(NogoodContainer::createLiteral(guardID));
 							}
 
 							supportset.insert(outlit);
 
 #ifndef NDEBUG
 							std::string negcpStr = RawPrinter::toString(reg, guardID);
-							std::string guardStr = theDLLitePlugin.printGuardAtom(
-									guardID);
-							DBGLOG(DBG,
-									"LSS: --> Learned support set: " << supportset.getStringRepresentation(reg) << " where " << negcpStr << " is the guard atom " << guardStr);
+							std::string guardStr = theDLLitePlugin.printGuardAtom(guardID);
+							DBGLOG(DBG,"LSS: --> Learned support set: " << supportset.getStringRepresentation(reg) << " where " << negcpStr << " is the guard atom " << guardStr);
 #endif
 
 							potentialSupportSets->addNogood(supportset);
@@ -1028,44 +1015,33 @@ namespace dllite {
 							bm::bvector<>::enumerator en3_end = query.eatom->getPredicateInputMask()->getStorage().end();
 
 #ifndef NDEBUG
-							DBGLOG(DBG,
-									"LSS: Checking if (C',Y) with C'=" << cpStr << " occurs in c- (for some Y)");
+							DBGLOG(DBG,"LSS: Checking if (C',Y) with C'=" << RawPrinter::toString(reg, theDLLitePlugin.dlNeg(cpID)) << " occurs in c- (for some Y)");
 #endif
 							while (en3 < en3_end) {
-								const OrdinaryAtom& at = reg->ogatoms.getByAddress(
-										*en3);
-								if (at.tuple[0] == query.input[2]
-										&& at.tuple[1] == clAtom.tuple[2]) {
+								const OrdinaryAtom& at = reg->ogatoms.getByAddress(*en3);
+								if (at.tuple[0] == query.input[2] && at.tuple[1] == theDLLitePlugin.dlNeg(clAtom.tuple[2])) {
 #ifndef NDEBUG
-									std::string yStr = RawPrinter::toString(reg,
-											at.tuple[2]);
-									DBGLOG(DBG,
-											"LSS: --> Found a match with Y=" << yStr);
+									std::string yStr = RawPrinter::toString(reg,at.tuple[2]);
+									DBGLOG(DBG,"LSS: --> Found a match with Y=" << yStr);
 #endif
 									Nogood supportset;
 
 									// add { T c+(C,Y), T c-(C,Y) }
-									OrdinaryAtom cpcy = theDLLitePlugin.getNewAtom(
-											query.input[1], true);
+									OrdinaryAtom cpcy = theDLLitePlugin.getNewAtom(query.input[1], true);
 									cpcy.tuple.push_back(cID);
-									cpcy.tuple.push_back(at.tuple[2]);
-									supportset.insert(
-											NogoodContainer::createLiteral(
-													reg->storeOrdinaryAtom(cpcy)));
+									cpcy.tuple.push_back(theDLLitePlugin.yID);
+									supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cpcy)));
 
-									OrdinaryAtom cmcy = theDLLitePlugin.getNewAtom(
-											query.input[2], true);
-									cmcy.tuple.push_back(cID);
-									cmcy.tuple.push_back(at.tuple[2]);
-									supportset.insert(
-											NogoodContainer::createLiteral(
-													reg->storeOrdinaryAtom(cmcy)));
+									OrdinaryAtom cmcy = theDLLitePlugin.getNewAtom(query.input[2], true);
+									cmcy.tuple.push_back(at.tuple[1]);
+									cmcy.tuple.push_back(theDLLitePlugin.yID);
+									supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cmcy)));
 
 									supportset.insert(outlit);
 
-									DBGLOG(DBG,
-											"LSS: --> Learned support set: " << supportset.getStringRepresentation(reg));
+									DBGLOG(DBG,"LSS: --> Learned support set: " << supportset.getStringRepresentation(reg));
 									potentialSupportSets->addNogood(supportset);
+									break;
 								}
 								en3++;
 							}
@@ -1074,19 +1050,35 @@ namespace dllite {
 						}
 						en2++;
 					}
-					DBGLOG(DBG,
-							"LSS: Finished checking if sub(" << cStr << ", C') is true in the classification assignment (for some C')");
+					DBGLOG(DBG,"LSS: Finished checking if conf(" << cStr << ", C') is true in the classification assignment (for some C')");
+
 				} else if (oatom.tuple[0] == query.input[2]) {
 					// c-
 					DBGLOG(DBG, "LSS: Atom belongs to c-");
-					assert(
-							oatom.tuple.size() == 3
-							&& "Third parameter must be a binary predicate");
+					assert(oatom.tuple.size() == 3&& "Third parameter must be a binary predicate");
 
 					ID cID = oatom.tuple[1];
+					ID guardID;
 
 					// construct support set (c+(C,O),C(O))
+					Nogood supportset;
 
+					// add { T c-(C,Y), C(Y) }
+					OrdinaryAtom cmcy = theDLLitePlugin.getNewAtom(query.input[2], true);
+					cmcy.tuple.push_back(cID);
+					cmcy.tuple.push_back(theDLLitePlugin.yID);
+					supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(cmcy)));
+
+					ID cyID = theDLLitePlugin.dlNeg(cID);
+					OrdinaryAtom cy = theDLLitePlugin.getNewGuardAtom();
+					cy.tuple.push_back(cyID);
+					cy.tuple.push_back(theDLLitePlugin.yID);
+					guardID = reg->storeOrdinaryAtom(cy);
+					supportset.insert(NogoodContainer::createLiteral(guardID));
+
+					supportset.insert(outlit);
+					DBGLOG(DBG,"LSS: --> Learned support set: " << supportset.getStringRepresentation(reg));
+					potentialSupportSets->addNogood(supportset);
 
 				} else if (oatom.tuple[0] == query.input[3]) {
 					// r+
@@ -1479,8 +1471,6 @@ namespace dllite {
 				BOOST_FOREACH(ID litid, ng) {
 					ID newid = reg->onatoms.getIDByAddress(litid.address);
 					const OrdinaryAtom& oa = reg->onatoms.getByAddress(litid.address);
-					//	DBGLOG(DBG,"EL: is " <<RawPrinter::toString(reg,newid)<<" a guard with predicate not occurring in ABox?");
-					//	DBGLOG(DBG,"EL: check for " <<RawPrinter::toString(reg,oa.tuple[1])<<" with "<<oa.tuple[1]);
 					if ((newid.isGuardAuxiliary())&& (std::find(abp.begin(), abp.end(), oa.tuple[1])== abp.end())) {
 						DBGLOG(DBG, "LSS: EL: "<< RawPrinter::toString(reg,newid)<<" is a guard predicate not occurring in ABox");
 						elim = true;
@@ -1521,11 +1511,7 @@ namespace dllite {
 								litid.address);
 						DBGLOG(DBG,
 								"LSSO: is " <<RawPrinter::toString(reg,newid)<<" a guard with predicate not occurring in ABox?");
-						DBGLOG(DBG,
-								"LSSO: check for " <<RawPrinter::toString(reg,oa.tuple[1])<<" with "<<oa.tuple[1]);
-						if ((newid.isGuardAuxiliary())
-								&& (std::find(abp.begin(), abp.end(), oa.tuple[1])
-										== abp.end())) {
+						if ((newid.isGuardAuxiliary())&& (std::find(abp.begin(), abp.end(), oa.tuple[1])== abp.end())) {
 							DBGLOG(DBG, "LSSO: yes");
 							elim = true;
 							DBGLOG(DBG, "LSSO: support set is marked for elimination");
@@ -1533,8 +1519,11 @@ namespace dllite {
 						} else {
 							DBGLOG(DBG, "LSSO: no");
 						}
+						DBGLOG(DBG,"LSSO: finished with "<<RawPrinter::toString(reg,litid));
 					}
+				//	DBGLOG(DBG,"LSSO: else block is finished");
 				}
+				//DBGLOG(DBG,"LSSO: exit else block");
 				if (elim) {
 					DBGLOG(DBG, "LSSO: if current support set is marked, eliminate it");
 					initial->removeNogood(ng);
