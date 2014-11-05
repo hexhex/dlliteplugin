@@ -1,0 +1,34 @@
+% by default, a research assistant is a student.
+resas(X) :- &cDL[OWLONTOLOGY, a, b, c, d, "ResearchAssistant"](X), domain(X).
+student(X) :- resas(X), not neg_student(X).
+
+% single out the non-students under default assumption.
+pcstud("Student", X) :- student(X).
+neg_student(X) :- resas(X), &cDL[OWLONTOLOGY, pcstud, b, c, d, "-Student"](X), domain(X).
+
+% assign every research assistant to a postdoc, who is supposed to help the former in case research problems emerge;
+% collect the assignments into "helps" predicate where the first parameter is a postdoc and the second is a research assistant 
+ helps(Z1,Z2):- resas(Z1), &cDL[OWLONTOLOGY,a,b, c, d, "PostDoc"](Z2), not omit(Z1,Z2), domain(X).
+
+% omit helps(a,b) if b is a postdoc (which could happen since research assistants might be visiting postdocs even though by default they are students)  
+ omit(Z1,Z2):- &cDL[OWLONTOLOGY,a, b, c, d,"PostDoc"](Z1), &cDL[OWLONTOLOGY,a, b, c, d,"PostDoc"](Z2), domain(X).
+
+% collect visiting postdocs into a logic program predicate
+visitPostDoc(Z) :- &cDL[OWLONTOLOGY,a,b,c,d,"VisitPostDoc"](Z), domain(X).
+
+% collect all individuals who can be involved in organizational help
+orghelp(Z):-&cDL[OWLONTOLOGY, a,b,c,d,"OrgHelp"](Z), domain(X).
+
+% assign a person capable of providing organizational help to a visiting postdoc
+supports(Z1,Z):-orghelp(Z1),visitPostDoc(Z),not drop(Z1,Z).
+
+% by default organizational help is provided by students 
+student(Z1):-orghelp(Z1),&cDL[OWLONTOLOGY,negpcstud,b,c,d,"-NonStudent"](Z1), domain(X).
+negStudent(Z1):-orghelp(Z1),not student(Z1).
+
+% drop "support(a,b)" if a is an international student"
+drop(Z1,Z):-orghelp(Z1),&cDL[OWLONTOLOGY,a,b,c,d,"InternationalStudent"](Z1), visitPostDoc(Z), domain(X).
+
+
+
+
