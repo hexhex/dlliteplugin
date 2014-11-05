@@ -740,6 +740,15 @@
     
 
 
+    <!-- http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#NonStudent -->
+
+    <owl:Class rdf:about="&univ-bench;NonStudent">
+        <rdfs:subClassOf rdf:resource="&univ-bench;Person"/>
+        <owl:disjointWith rdf:resource="&univ-bench;Student"/>
+    </owl:Class>
+    
+
+
     <!-- http://www.lehigh.edu/~zhp2/2004/0401/univ-bench.owl#OrgHelp -->
 
     <owl:Class rdf:about="&univ-bench;OrgHelp">
@@ -937,6 +946,7 @@
 
     <owl:Class rdf:about="&univ-bench;VisitPostDoc">
         <rdfs:subClassOf rdf:resource="&univ-bench;PostDoc"/>
+        <rdfs:subClassOf rdf:resource="&univ-bench;ResearchAssistant"/>
     </owl:Class>
     
 
