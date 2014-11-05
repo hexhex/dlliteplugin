@@ -8,7 +8,7 @@ for i in "${concepts[@]}"
 
 do
 		if [[ $RANDOM -le $prop ]]; then
-			echo "domain(\"$i\")."
+			echo "domain(\"http://www.Department0.University0.edu/$i\")."
 		fi
 done
 
