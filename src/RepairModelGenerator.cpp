@@ -2504,6 +2504,10 @@ namespace dllite {
 	DBGLOG(DBG,"EL: RMG: PC: evaluation postcheck is finished");
 
 	}
+
+		if (evalsucc==false) {
+			return false;
+		}
 	// start with the minimality check
 
 
