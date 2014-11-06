@@ -119,6 +119,6 @@ else
 
 	# run single instance
 	owlfile="${instance%%.hex}.owl"
-	confstr="-n=1;--repair=$owlfile -n=1;--repair=$owlfile -n=1; --repair=$owlfile -n=1 --replim=1; --repair=$owlfile -n=1 --replim=2; --repair=$owlfile -n=1 --repdel=EDriver" # (2)
+	confstr="-n=1;--repair=$owlfile -n=1;--repair=$owlfile -n=1; --repair=$owlfile -n=1 --replim=5; --repair=$owlfile -n=1 --replim=10; --repair=$owlfile -n=1 --repdel=EDriver" # (2)
 	$bmscripts/runconfigs.sh "dlvhex2 --plugindir=../../../../../src --supportsets --liberalsafety --heuristics=monolithic INST CONF" "$confstr" "$instance" "$to" # (3)
 fi
