@@ -1186,6 +1186,7 @@ namespace dllite {
 				nogoodGrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), learnedEANogoods, learnedEANogoods, annotatedGroundProgram));
 			}
 
+
 			// case when ontology is in DLLite
 
 			else {
@@ -1905,6 +1906,12 @@ namespace dllite {
 										DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 										program.idb.push_back(ruleID);
 									}
+
+									// add here possibility to limit the number of predicates allowed for deletion
+									/*	if (factory.ctx.getPluginData<DLLitePlugin>().replim!=-1) {
+											DBGLOG(DBG, "RMG: repair limit is set to "<<factory.ctx.getPluginData<DLLitePlugin>().replim);
+									}*/
+
 								}
 							}
 						}
@@ -2129,11 +2136,10 @@ namespace dllite {
 
 	bool RepairModelGenerator::postCheck(InterpretationConstPtr modelCandidate) {
 
-		DBGLOG(DBG,"RMG: PC: evaluation post check is started:");
-		DBGLOG(DBG,"RMG: PC: current model candidate is: "<< *modelCandidate);
+		// the general case (both for DLLite and EL ontologies)
 
-		// boolean variable which stores the evaluation result
-		bool evalsucc=true;
+		DBGLOG(DBG,"RMG: PC: post check of the repair model candidate is started:");
+		DBGLOG(DBG,"RMG: PC: current model candidate is: "<< *modelCandidate);
 
 		// extract repair ABox candidate from the model
 
@@ -2212,11 +2218,15 @@ namespace dllite {
 		}
 		DBGLOG(DBG,"RMG: PC:}");
 		}
+		DBGLOG(DBG, "RMG: the number of assertions in the original ABox is "<<ab.size());
+		DBGLOG(DBG, "RMG: the number of assertions in the repaired ABox is "<<newab.size());
+		DBGLOG(DBG, "RMG: the number of removed assertions is "<<ab.size()-newab.size());
 
+		// check whether the number of eliminated assertion does not exceed the limit (if given)
 		if (factory.ctx.getPluginData<DLLitePlugin>().replim!=-1) {
 			if (ab.size()-newab.size()>factory.ctx.getPluginData<DLLitePlugin>().replim) {
-				evalsucc=false;
-				DBGLOG(DBG, "RMG: PC: evaluation postcheck failed, as the number of deleted assertions exceeded the limit "<<factory.ctx.getPluginData<DLLitePlugin>().replim);
+				DBGLOG(DBG, "RMG: PC: postcheck failed, as the number of deleted assertions is "<< ab.size()-newab.size()<<" which exceeds the limit replim="<<factory.ctx.getPluginData<DLLitePlugin>().replim);
+				return false;
 			}
 		}
 
@@ -2225,6 +2235,9 @@ namespace dllite {
 		// the case when ontology is in EL
 
 		if (factory.ctx.getPluginData<DLLitePlugin>().el) {
+
+		// boolean variable which stores the evaluation result
+		bool evalsucc=true;
 
 		bm::bvector<>::enumerator enm = modelCandidate->getStorage().first();
 		bm::bvector<>::enumerator enm_end = modelCandidate->getStorage().end();
@@ -2483,7 +2496,7 @@ namespace dllite {
 								repl.tuple.push_back(reg->ogatoms.getByID(id).tuple[8]);
 
 								if (!modelCandidate->getFact(reg->ogatoms.getIDByStorage(repl))) {
-									DBGLOG(DBG,"EL: RMG: PC: evaluation of a current atom did not succed");
+									DBGLOG(DBG,"EL: RMG: PC: evaluation of a current atom did not succeed");
 									return false;
 								}
 
@@ -2505,9 +2518,7 @@ namespace dllite {
 
 	}
 
-		if (evalsucc==false) {
-			return false;
-		}
+
 	// start with the minimality check
 
 
