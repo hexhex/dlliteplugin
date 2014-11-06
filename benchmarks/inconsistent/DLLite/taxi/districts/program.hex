@@ -5,12 +5,12 @@ customer(X):- isIn(X,Z), not &cDL[OWLONTOLOGY,a,b,c,d,"-Customer"](X).
 driver(X):-isIn(X,Z), not customer(X).
 
 % assign a driver to a customer if they are in the adjoint districts
-drives(X,Y):-isIn(X,Z), isIn(Y,Z1), &rDL[OWLONTOLOGY,a,b,c,d,"adjoint"](Z,Z1), customer(X), driver(Y), not omit(X,Y).
+drives(X,Y):-needsTo(X,Z), goTo(Y,Z1), &rDL[OWLONTOLOGY,a,b,c,d,"adjoint"](Z,Z1), customer(X), driver(Y), not omit(X,Y).
 
 % omit assignment if EDriver participates in it and he serves the needs of a customer who wants to go to a region where the driver is not supposed to work
 omit(X,Y):-&cDL[OWLONTOLOGY,a,b,c,d,"EDriver"](X),needsTo(Y,Z), &rDL[OWLONTOLOGY,a,b,c,d,"notworksIn"](X,Z).
 
 % ensure that each customer is assigned to at least one driver
-ok(X):-customer(Y),drives(X,Y).
+ok(Y):-customer(Y),drives(X,Y).
 fail:-customer(X),not ok(X).
 :-fail.
