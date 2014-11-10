@@ -1,9 +1,13 @@
+p(X,Y):-aux_o_0_1(X,Y).
+q(X,Y,Z):-aux_o_0_1(X,Y,Z).
+
+
 %%%%%%% counting concepts %%%%%%%%
 beforep(X1,Y1,X2,Y2):-p(X1,Y1),p(X2,Y2),X1<X2.
 beforep(X1,Y1,X2,Y2):-p(X1,Y1),p(X2,Y2),X1==X2,Y1<Y2.
 
-exceededp(X1,Y1,X2,Y2):-beforep(X1,Y1,X2,Y2),beforep(X3,Y3,X2,Y2),beforep(X1,Y1,X3,Y3).
-nextp(X1,Y1,X2,Y2):-beforep(X1,Y1,X2,Y2),not exceededp(X1,Y1,X2,Y2).
+exceededp(X1,Y1,X2,Y2):-p(X1,Y1),p(X2,Y2),p(X3,Y3),beforep(X1,Y1,X2,Y2),beforep(X3,Y3,X2,Y2),beforep(X1,Y1,X3,Y3).
+nextp(X1,Y1,X2,Y2):-p(X1,Y1),p(X2,Y2),beforep(X1,Y1,X2,Y2),not exceededp(X1,Y1,X2,Y2).
 
 existssmallerp(X1,Y1):-p(X1,Y1),p(X2,Y2),beforep(X2,Y2,X1,Z1).
 minp(X1,Y1):-p(X1,Y1),not existssmallerp(X1,Y1).
@@ -12,11 +16,6 @@ minp(X1,Y1):-p(X1,Y1),not existssmallerp(X1,Y1).
 partialCountp(X1,Y1,1):- minp(X1,Y1).
 partialCountp(X2,Y2,V) :- not p(X1,Y1), nextp(X1,Y1,X2,Y2), partialCountp(X1,Y1,V).
 partialCountp(X2,Y2,V2) :- p(X1,Y1), nextp(X1,Y1,X2,Y2), partialCountp(X1,Y1,V), V2=V+1.
-
-p("a","b").
-p("b","c").
-p("c","d").
-
 
 %%%%%%% counting roles %%%%%%%%
 beforeq(X1,Y1,Z1,X2,Y2,Z2):-q(X1,Y1,Z1),q(X2,Y2,Z2),X1<X2.
@@ -34,11 +33,6 @@ partialCountq(X1,Y1,Z1,1):- minq(X1,Y1,Z1).
 partialCountq(X2,Y2,Z2,V) :- not q(X1,Y1,Z1), nextq(X1,Y1,Z1,X2,Y2,Z2), partialCountq(X1,Y1,Z1,V).
 partialCountq(X2,Y2,Z2,V2) :- q(X1,Y1,Z1), nextq(X1,Y1,Z1,X2,Y2,Z2), partialCountq(X1,Y1,Z1,V), V2=V+1.
 
-
-q("a","b","c").
-q("a","c","d").
-q("a","e","f").
-q("b","h","k").
 
 %%%%%% summing up %%%%%%%%%
 countp(Z):-partialCountp(X,Y,Z).
