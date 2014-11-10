@@ -766,7 +766,7 @@ namespace dllite {
 
 								if (!incomplete) {
 
-									DBGLOG(DBG, "EL: RMG: since support familiare complete, we add");
+									DBGLOG(DBG, "EL: RMG: since support families are complete, we add");
 									DBGLOG(DBG, "EL: RMG: RULE: :-e_a(Q,O),not supp_e_a(Q,O)");
 									//   RULE   :-e_a("Q",O),not supp_e_a("Q",O).
 									{
@@ -1216,7 +1216,7 @@ namespace dllite {
 						// DBGLOG(DBG, "RMG: evaluating external atom " << RawPrinter::toString(reg,factory.allEatoms[eaIndex]) << " for support set learning");
 						DBGLOG(DBG, "RMG: evaluating external atom " << RawPrinter::toString(reg,factory.innerEatoms[eaIndex]) << " for support set learning");
 						learnSupportSetsForExternalAtom(factory.ctx, eatom, supportSetsOfExternalAtom[eaIndex]);
-						DBGLOG(DBG, "RMG: number of learnt support sets: "<<supportSetsOfExternalAtom[eaIndex]->getNogoodCount());
+						DBGLOG(DBG, "RMG: number of learned support sets: "<<supportSetsOfExternalAtom[eaIndex]->getNogoodCount());
 					}
 
 					// prepare for rewriting
@@ -1907,16 +1907,129 @@ namespace dllite {
 										program.idb.push_back(ruleID);
 									}
 
-									// add here possibility to limit the number of predicates allowed for deletion
-									/*	if (factory.ctx.getPluginData<DLLitePlugin>().replim!=-1) {
-											DBGLOG(DBG, "RMG: repair limit is set to "<<factory.ctx.getPluginData<DLLitePlugin>().replim);
-									}*/
-
 								}
 							}
 						}
 					}
 				}
+
+				if (factory.ctx.getPluginData<DLLitePlugin>().replim!=-1) {
+					int lim=factory.ctx.getPluginData<DLLitePlugin>().replim;
+					DBGLOG(DBG,"RMG: number of facts allowed for deletion is limited to "<<lim);
+					DBGLOG(DBG,"RMG: RULE: bar_aux_concept(X,Y):-bar_aux_o(X,Y).");
+					{
+						Rule rule(ID::MAINKIND_RULE);
+						// HEAD: bar_aux_o_concepts(C,X)
+						{
+							OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+							ID auxconceptID = reg->storeConstantTerm("aux_o_0_1_concepts");
+							headat.tuple.push_back(auxconceptID);
+							headat.tuple.push_back(theDLLitePlugin.xID);
+							rule.head.push_back(reg->storeOrdinaryAtom(headat));
+
+						}
+						// BODY: bar_aux_o(C,X)
+						{
+							OrdinaryAtom bodyat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+							bodyat.tuple.push_back(guardbarPredicateID);
+							bodyat.tuple.push_back(theDLLitePlugin.xID);
+							rule.body.push_back(reg->storeOrdinaryAtom(bodyat));
+						}
+
+						ID ruleID = reg->storeRule(rule);
+
+						program.idb.push_back(ruleID);
+
+						DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
+					}
+
+
+					DBGLOG(DBG,"RMG: RULE: bar_aux_role(X,Y):-bar_aux_o(X,Y).");
+					{
+						Rule rule(ID::MAINKIND_RULE);
+						// HEAD: bar_aux_o_roles(R,X,Y)
+						{
+							OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+							ID auxroleID = reg->storeConstantTerm("aux_o_0_1_roles");
+							headat.tuple.push_back(auxroleID);
+							headat.tuple.push_back(theDLLitePlugin.xID);
+							headat.tuple.push_back(theDLLitePlugin.yID);
+							rule.head.push_back(reg->storeOrdinaryAtom(headat));
+						}
+						// BODY: bar_aux_o(R,X,Y)
+						{
+							OrdinaryAtom bodyat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+							bodyat.tuple.push_back(guardbarPredicateID);
+							bodyat.tuple.push_back(theDLLitePlugin.xID);
+							bodyat.tuple.push_back(theDLLitePlugin.yID);
+							rule.body.push_back(reg->storeOrdinaryAtom(bodyat));
+						}
+
+						ID ruleID = reg->storeRule(rule);
+
+						program.idb.push_back(ruleID);
+
+						DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
+					}
+
+
+					DBGLOG(DBG,"RMG: RULE: concept_count(Z):-Z=#count{X,Y:bar_aux_concept(X,Y)}.");
+
+					{
+						Rule rule(ID::MAINKIND_RULE);
+
+						// HEAD: concept_count(Z)
+						{
+							OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+							ID conceptcountID = reg->storeConstantTerm("aux_o_0_1_concepts_count");
+							headat.tuple.push_back(conceptcountID);
+							headat.tuple.push_back(theDLLitePlugin.zID);
+							rule.head.push_back(reg->storeOrdinaryAtom(headat));
+
+						}
+
+						// BODY: Z=#count{X,Y:p(X,Y)}
+					/*	{
+							AggregateAtom agatom(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_AGGREGATE);
+							agatom.tuple.push_back(theDLLitePlugin.zID);
+							agatom.tuple.push_back(ID::termFromBuiltin(ID::TERM_BUILTIN_EQ));
+							agatom.tuple.push_back(theDLLitePlugin.yID);
+							agatom.tuple.push_back(ID_FAIL);
+							agatom.tuple.push_back(ID_FAIL);
+							rule.body.push_back(agid);
+						}*/
+
+						ID ruleID = reg->storeRule(rule);
+
+						program.idb.push_back(ruleID);
+
+						DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
+					}
+
+
+
+
+
+					DBGLOG(DBG,"RMG: RULE: role_count(Z):-Z=#count{X,Y:bar_aux_role(X,Y,Z)}.");
+					DBGLOG(DBG,"RMG: RULE: concept_count(Z).");
+
+
+				}
+
+				// additional rules for the case when the number of predicates allowed for deletion is limited
+
+					if (factory.ctx.getPluginData<DLLitePlugin>().reppredlim!=-1) {
+						DBGLOG(DBG, "RMG: number of predicates allowed for deletion is limited by "<<factory.ctx.getPluginData<DLLitePlugin>().reppredlim);
+						DBGLOG(DBG, "RMG: Additional rules:");
+						DBGLOG(DBG, "RMG: RULE: del(X):-bar_aux_o(X,Y).");
+
+						for (int i=0;i<factory.ctx.getPluginData<DLLitePlugin>().reppredlim;i++) {
+							DBGLOG(DBG, "RMG: add the atoms with del to the rule body");
+						}
+
+						DBGLOG(DBG, "RMG: for all of the added predicates add to the rule's body the needed inequality constraints");
+
+					}
 
 				DBGLOG(DBG, "RMG: Adding Abox");
 				InterpretationPtr edb(new Interpretation(reg));
@@ -2207,13 +2320,13 @@ namespace dllite {
 		std::vector<ID>::iterator newa_end = newab.end();
 
 		if (newa>=newa_end) {
-			DBGLOG(DBG,"RMG: PC: final ABox is empty ");
+			DBGLOG(DBG,"REPAIR: final ABox is empty ");
 		}
 		else {
-			DBGLOG(DBG,"RMG: PC: final ABox is: {");
+			DBGLOG(DBG,"REPAIR: final ABox is: {");
 		while (newa<newa_end) {
 			ID idab = ID(*newa);
-			DBGLOG(DBG,"RMG: PC: "<<RawPrinter::toString(reg,idab));
+			DBGLOG(DBG,"REPAIR: "<<RawPrinter::toString(reg,idab));
 			newa++;
 		}
 		DBGLOG(DBG,"RMG: PC:}");
@@ -2222,13 +2335,13 @@ namespace dllite {
 		DBGLOG(DBG, "RMG: the number of assertions in the repaired ABox is "<<newab.size());
 		DBGLOG(DBG, "RMG: the number of removed assertions is "<<ab.size()-newab.size());
 
-		// check whether the number of eliminated assertion does not exceed the limit (if given)
-		if (factory.ctx.getPluginData<DLLitePlugin>().replim!=-1) {
+		// naive check whether the number of eliminated assertion does not exceed the limit (if given)
+/*		if (factory.ctx.getPluginData<DLLitePlugin>().replim!=-1) {
 			if (ab.size()-newab.size()>factory.ctx.getPluginData<DLLitePlugin>().replim) {
 				DBGLOG(DBG, "RMG: PC: postcheck failed, as the number of deleted assertions is "<< ab.size()-newab.size()<<" which exceeds the limit replim="<<factory.ctx.getPluginData<DLLitePlugin>().replim);
 				return false;
 			}
-		}
+		}*/
 
 
 
