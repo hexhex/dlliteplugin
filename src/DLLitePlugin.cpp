@@ -988,16 +988,25 @@ namespace dllite {
 		std::vector<std::list<const char*>::iterator> found;
 		for(std::list<const char*>::iterator it = pluginOptions.begin(); it != pluginOptions.end(); it++) {
 			std::string option(*it);
+
+			// --repair option, enables RepairModelGenerator
+
 			if (option.find("--repair=") != std::string::npos) {
 				ctx.getPluginData<DLLitePlugin>().repair = true;
 				ctx.getPluginData<DLLitePlugin>().repairOntology = option.substr(9);
 				found.push_back(it);
 			}
+
+			// --el option ensures that ontology is in EL, and thus the incomplete support set algorithm needs to be enabled
+
 			if (option.find("--el") !=std::string::npos) {
 				ctx.getPluginData<DLLitePlugin>().el = true;
 				found.push_back(it);
 
 			}
+
+			// --supsize specifies maximal size of support sets that are exploited for repair computation
+
 			if (option.find("--supsize=") !=std::string::npos) {
 				std::string s = option.substr(10);
 				ctx.getPluginData<DLLitePlugin>().incomplete=true;
@@ -1012,13 +1021,10 @@ namespace dllite {
 					assert(false && "Specified size of support sets is not a number");
 
 				}
-
-				/*	istringstream buffer(s);
-				 int a;
-				 buffer >> a;
-				 ctx.getPluginData<DLLitePlugin>().supsize=a;*/
 				found.push_back(it);
 			}
+
+			// --supnumber specifies the maximal number of support sets that are exploited for repair computation
 
 			if (option.find("--supnumber=") !=std::string::npos) {
 				std::string s = option.substr(12);
@@ -1039,8 +1045,11 @@ namespace dllite {
 				found.push_back(it);
 
 			}
+
+			// --replimitfact specifies number of ABox facts allowed for deletion
+
 			if (option.find("--replimfact=") !=std::string::npos) {
-				std::string s = option.substr(9);
+				std::string s = option.substr(13);
 				//ctx.getPluginData<DLLitePlugin>().incomplete=true;
 				DBGLOG(DBG, "repair limit block ");
 				try
@@ -1056,8 +1065,10 @@ namespace dllite {
 				found.push_back(it);
 			}
 
+			// --replimpred specifies number of predicates that can be eliminated
+
 			if (option.find("--replimpred=") !=std::string::npos) {
-				std::string s = option.substr(9);
+				std::string s = option.substr(13);
 				//ctx.getPluginData<DLLitePlugin>().incomplete=true;
 				DBGLOG(DBG, "number of predicates for repair limit block ");
 				try
@@ -1073,9 +1084,11 @@ namespace dllite {
 				found.push_back(it);
 			}
 
+			// --repdelpred specifies a set of predicates that are allowed for deletion
+
 			if (option.find("--repdelpred=") != std::string::npos) {
 				ctx.getPluginData<DLLitePlugin>().repdelpredflag=true;
-				std::string s = option.substr(9);
+				std::string s = option.substr(13);
 				boost::algorithm::split(ctx.getPluginData<DLLitePlugin>().repdelpred, s, boost::is_any_of(","));
 				DBGLOG(DBG, "predicates for deletion are ");
 				BOOST_FOREACH (std::string sub, ctx.getPluginData<DLLitePlugin>().repdelpred) {
@@ -1084,12 +1097,61 @@ namespace dllite {
 				found.push_back(it);
 			}
 
+			// --repleavepred specifies a set of predicates that are forbidden for deletion (protected)
+
 			if (option.find("--repleavepred=") != std::string::npos) {
 				ctx.getPluginData<DLLitePlugin>().repleavepredflag=true;
-				std::string s = option.substr(11);
+				std::string s = option.substr(15);
 				boost::algorithm::split(ctx.getPluginData<DLLitePlugin>().repleavepred, s, boost::is_any_of(","));
 				DBGLOG(DBG, "predicates that need to be left are ");
 				BOOST_FOREACH (std::string sub, ctx.getPluginData<DLLitePlugin>().repleavepred) {
+					DBGLOG(DBG, sub);
+				}
+				found.push_back(it);
+			}
+
+
+			// options responsible for limiting constants allowed for elimination
+			// --replimconst specifies a number of constants that can participate in the ABox assertions that are removed
+
+			if (option.find("--replimconst=") !=std::string::npos) {
+					std::string s = option.substr(14);
+					DBGLOG(DBG, "number of predicates for repair limit block ");
+					try
+					{
+						int i = boost::lexical_cast<int>(s);
+						ctx.getPluginData<DLLitePlugin>().replimconst=i;
+						DBGLOG(DBG, "replimconst is "<< i);
+					}
+					catch(const boost::bad_lexical_cast&)
+					{
+						assert(false && "Specified number of constants allowed for deletion is not a number");
+					}
+					found.push_back(it);
+			}
+
+			// --repdelconst specifies a set of constants that are allowed to participate in the ABox facts that are to be deleted
+
+
+			if (option.find("--repdelconst=") != std::string::npos) {
+				ctx.getPluginData<DLLitePlugin>().repdelconstflag=true;
+				std::string s = option.substr(14);
+				boost::algorithm::split(ctx.getPluginData<DLLitePlugin>().repdelconst, s, boost::is_any_of(","));
+				DBGLOG(DBG, "predicates for deletion are ");
+				BOOST_FOREACH (std::string sub, ctx.getPluginData<DLLitePlugin>().repdelconst) {
+					DBGLOG(DBG, sub);
+				}
+				found.push_back(it);
+			}
+
+			// --repleaveconst specifies a set of constants facts over which are forbidden for deletion
+
+			if (option.find("--repleaveconst=") != std::string::npos) {
+				ctx.getPluginData<DLLitePlugin>().repleaveconstflag=true;
+				std::string s = option.substr(16);
+				boost::algorithm::split(ctx.getPluginData<DLLitePlugin>().repleaveconst, s, boost::is_any_of(","));
+				DBGLOG(DBG, "predicates that need to be left are ");
+				BOOST_FOREACH (std::string sub, ctx.getPluginData<DLLitePlugin>().repleaveconst) {
 					DBGLOG(DBG, sub);
 				}
 				found.push_back(it);

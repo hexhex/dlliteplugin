@@ -1921,6 +1921,7 @@ namespace dllite {
 					DBGLOG(DBG,"RMG: number of facts allowed for deletion is limited to "<<lim);
 					DBGLOG(DBG,"RMG: RULE: bar_aux_concept(X,Y):-bar_aux_o(X,Y).");
 
+					// TODO: before adding IDs make sure that they have not yet been added to the table
 					// prepare IDs that will be used further in the rule construction
 					ID auxconceptID = reg->storeConstantTerm("aux_o_0_1_concepts");
 					ID auxroleID = reg->storeConstantTerm("aux_o_0_1_roles");
@@ -2178,14 +2179,8 @@ namespace dllite {
 
 						Rule rule(ID::MAINKIND_RULE | ID::SUBKIND_RULE_CONSTRAINT);
 
-/*						// BODY: result_count(X)
-						{
-							OrdinaryAtom bodyat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
-							bodyat.tuple.push_back(resultcountID);
-							bodyat.tuple.push_back(theDLLitePlugin.xID);
-							rule.body.push_back(reg->storeOrdinaryAtom(bodyat));
-						}*/
-						// BODY: lim<=#sum{}
+
+						// BODY: lim<=#sum{X,result_count(X)}
 						{
 							AggregateAtom agatom(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_AGGREGATE);
 							agatom.tuple[0] = ID::termFromInteger(lim+1);
