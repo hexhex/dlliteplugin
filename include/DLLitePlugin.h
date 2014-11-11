@@ -160,18 +160,18 @@ bool el; 		// is ontology in EL format?
 bool incomplete; // mode where the incomplete support families are processed
 int supsize;    // maximal size of support sets used for exploitation
 int supnumber;   // maximal number of support sets used for exploitation
-int replim;   // maximal number facts that can be deleted
-int reppredlim;   // maximal number of predicates allowed for deletion
-std::vector<std::string> repdel; // predicates that are allowed for repair deletion
-bool repdelflag;
-std::vector<std::string> repleave;   // predicates that are forbidden for repair deletion
-bool repleaveflag;
+int replimfact;   // maximal number facts that can be deleted
+int replimpred;   // maximal number of predicates allowed for deletion
+std::vector<std::string> repdelpred; // predicates that are allowed for repair deletion
+bool repdelpredflag;
+std::vector<std::string> repleavepred;   // predicates that are forbidden for repair deletion
+bool repleavepredflag;
 bool rewrite;	// automatically rewrite DL-atoms?
 bool optimize;	// automatically optimize rules with DL-atoms?
 std::string repairOntology;	// name of the ontology to repair (if repair=true)
 std::string ontology;	// name of the ontology for rewriting
 std::vector<DLExpression> dlexpressions;	// cache for DL-expressions
-CtxData() : repair(false), el(false), incomplete(false), supsize(-1), supnumber(-1), replim(-1), reppredlim(-1), rewrite(false),repdelflag(false), repleaveflag(false), optimize(false) {};
+CtxData() : repair(false), el(false), incomplete(false), supsize(-1), supnumber(-1), replimfact(-1), replimpred(-1), rewrite(false),repdelpredflag(false), repleavepredflag(false), optimize(false) {};
 virtual ~CtxData() {};
 };
 

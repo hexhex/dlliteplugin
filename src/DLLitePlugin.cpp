@@ -1039,15 +1039,15 @@ namespace dllite {
 				found.push_back(it);
 
 			}
-			if (option.find("--replim=") !=std::string::npos) {
+			if (option.find("--replimfact=") !=std::string::npos) {
 				std::string s = option.substr(9);
 				//ctx.getPluginData<DLLitePlugin>().incomplete=true;
 				DBGLOG(DBG, "repair limit block ");
 				try
 				{
 					int i = boost::lexical_cast<int>(s);
-					ctx.getPluginData<DLLitePlugin>().replim=i;
-					DBGLOG(DBG, "replim is "<< i);
+					ctx.getPluginData<DLLitePlugin>().replimfact=i;
+					DBGLOG(DBG, "replimfact is "<< i);
 				}
 				catch(const boost::bad_lexical_cast&)
 				{
@@ -1056,15 +1056,15 @@ namespace dllite {
 				found.push_back(it);
 			}
 
-			if (option.find("--reppredlim=") !=std::string::npos) {
+			if (option.find("--replimpred=") !=std::string::npos) {
 				std::string s = option.substr(9);
 				//ctx.getPluginData<DLLitePlugin>().incomplete=true;
 				DBGLOG(DBG, "number of predicates for repair limit block ");
 				try
 				{
 					int i = boost::lexical_cast<int>(s);
-					ctx.getPluginData<DLLitePlugin>().reppredlim=i;
-					DBGLOG(DBG, "reppredlim is "<< i);
+					ctx.getPluginData<DLLitePlugin>().replimpred=i;
+					DBGLOG(DBG, "replimpred is "<< i);
 				}
 				catch(const boost::bad_lexical_cast&)
 				{
@@ -1073,23 +1073,23 @@ namespace dllite {
 				found.push_back(it);
 			}
 
-			if (option.find("--repdel=") != std::string::npos) {
-				ctx.getPluginData<DLLitePlugin>().repdelflag=true;
+			if (option.find("--repdelpred=") != std::string::npos) {
+				ctx.getPluginData<DLLitePlugin>().repdelpredflag=true;
 				std::string s = option.substr(9);
-				boost::algorithm::split(ctx.getPluginData<DLLitePlugin>().repdel, s, boost::is_any_of(","));
+				boost::algorithm::split(ctx.getPluginData<DLLitePlugin>().repdelpred, s, boost::is_any_of(","));
 				DBGLOG(DBG, "predicates for deletion are ");
-				BOOST_FOREACH (std::string sub, ctx.getPluginData<DLLitePlugin>().repdel) {
+				BOOST_FOREACH (std::string sub, ctx.getPluginData<DLLitePlugin>().repdelpred) {
 					DBGLOG(DBG, sub);
 				}
 				found.push_back(it);
 			}
 
-			if (option.find("--repleave=") != std::string::npos) {
-				ctx.getPluginData<DLLitePlugin>().repleaveflag=true;
+			if (option.find("--repleavepred=") != std::string::npos) {
+				ctx.getPluginData<DLLitePlugin>().repleavepredflag=true;
 				std::string s = option.substr(11);
-				boost::algorithm::split(ctx.getPluginData<DLLitePlugin>().repleave, s, boost::is_any_of(","));
+				boost::algorithm::split(ctx.getPluginData<DLLitePlugin>().repleavepred, s, boost::is_any_of(","));
 				DBGLOG(DBG, "predicates that need to be left are ");
-				BOOST_FOREACH (std::string sub, ctx.getPluginData<DLLitePlugin>().repleave) {
+				BOOST_FOREACH (std::string sub, ctx.getPluginData<DLLitePlugin>().repleavepred) {
 					DBGLOG(DBG, sub);
 				}
 				found.push_back(it);
@@ -1253,5 +1253,4 @@ extern "C" void * PLUGINIMPORTFUNCTION() {
 // Local Variables:
 // mode: C++
 // End:
-
 

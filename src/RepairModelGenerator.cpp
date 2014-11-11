@@ -432,10 +432,10 @@ namespace dllite {
 			program.idb.insert(program.idb.end(), factory.gidb.begin(), factory.gidb.end());
 
 			// set the respective flags if the set of protected predicates/predicates allowed for deletion is given
-			if (factory.ctx.getPluginData<DLLitePlugin>().repleaveflag!=false)
+			if (factory.ctx.getPluginData<DLLitePlugin>().repleavepredflag!=false)
 					rep_leave_set_given=true;
 
-			if (factory.ctx.getPluginData<DLLitePlugin>().repdelflag!=false)
+			if (factory.ctx.getPluginData<DLLitePlugin>().repdelpredflag!=false)
 					rep_del_set_given=true;
 
 			// distiguish cases depending on the ontology expressivity
@@ -1497,11 +1497,11 @@ namespace dllite {
 
 
 								DBGLOG(DBG, "RMG: Check whether there any reasons for not deleting " <<cidstr);
-								if (std::find(factory.ctx.getPluginData<DLLitePlugin>().repdel.begin(), factory.ctx.getPluginData<DLLitePlugin>().repdel.end(),cidstr)!=factory.ctx.getPluginData<DLLitePlugin>().repdel.end())
+								if (std::find(factory.ctx.getPluginData<DLLitePlugin>().repdelpred.begin(), factory.ctx.getPluginData<DLLitePlugin>().repdelpred.end(),cidstr)!=factory.ctx.getPluginData<DLLitePlugin>().repdelpred.end())
 								{
 									DBGLOG(DBG,"RMG: the predicate "<<cidstr<< " is in "<< delpred);
 								}
-								if ((rep_del_set_given && (std::find(factory.ctx.getPluginData<DLLitePlugin>().repdel.begin(), factory.ctx.getPluginData<DLLitePlugin>().repdel.end(),cidstr)==factory.ctx.getPluginData<DLLitePlugin>().repdel.end()))) {
+								if ((rep_del_set_given && (std::find(factory.ctx.getPluginData<DLLitePlugin>().repdelpred.begin(), factory.ctx.getPluginData<DLLitePlugin>().repdelpred.end(),cidstr)==factory.ctx.getPluginData<DLLitePlugin>().repdelpred.end()))) {
 									DBGLOG(DBG, "RMG: the ontology predicate "<<cidstr<< " is forbidden for deletion");
 									DBGLOG(DBG, "RMG: RULE: "<< ":-aux_o(C,X), n_e_a(Q,O). ");
 									{
@@ -1916,8 +1916,8 @@ namespace dllite {
 					}
 				}
 
-				if (factory.ctx.getPluginData<DLLitePlugin>().replim!=-1) {
-					int lim=factory.ctx.getPluginData<DLLitePlugin>().replim;
+				if (factory.ctx.getPluginData<DLLitePlugin>().replimfact!=-1) {
+					int lim=factory.ctx.getPluginData<DLLitePlugin>().replimfact;
 					DBGLOG(DBG,"RMG: number of facts allowed for deletion is limited to "<<lim);
 					DBGLOG(DBG,"RMG: RULE: bar_aux_concept(X,Y):-bar_aux_o(X,Y).");
 
