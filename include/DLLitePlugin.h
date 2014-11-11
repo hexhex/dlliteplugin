@@ -161,6 +161,7 @@ bool incomplete; // mode where the incomplete support families are processed
 int supsize;    // maximal size of support sets used for exploitation
 int supnumber;   // maximal number of support sets used for exploitation
 int replim;   // maximal number facts that can be deleted
+int reppredlim;   // maximal number of predicates allowed for deletion
 std::vector<std::string> repdel; // predicates that are allowed for repair deletion
 bool repdelflag;
 std::vector<std::string> repleave;   // predicates that are forbidden for repair deletion
@@ -170,7 +171,7 @@ bool optimize;	// automatically optimize rules with DL-atoms?
 std::string repairOntology;	// name of the ontology to repair (if repair=true)
 std::string ontology;	// name of the ontology for rewriting
 std::vector<DLExpression> dlexpressions;	// cache for DL-expressions
-CtxData() : repair(false), el(false), incomplete(false), supsize(-1), supnumber(-1), replim(-1), rewrite(false),repdelflag(false), repleaveflag(false), optimize(false) {};
+CtxData() : repair(false), el(false), incomplete(false), supsize(-1), supnumber(-1), replim(-1), reppredlim(-1), rewrite(false),repdelflag(false), repleaveflag(false), optimize(false) {};
 virtual ~CtxData() {};
 };
 
@@ -277,7 +278,7 @@ return ss.str();
 }
 
 // frequently used IDs
-ID guardPredicateID, subID, opID, confID, invID, functID, confrefID, xID, yID, zID;
+ID guardPredicateID, subID, opID, confID, invID, functID, confrefID, xID, yID, zID, uID;
 
 // IDB of the classification program
 std::vector<ID> classificationIDB;
@@ -327,4 +328,5 @@ virtual BaseModelGeneratorFactoryPtr getCustomModelGeneratorFactory(ProgramCtx& 
 DLVHEX_NAMESPACE_END
 
 #endif
+
 

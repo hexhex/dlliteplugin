@@ -1051,7 +1051,24 @@ namespace dllite {
 				}
 				catch(const boost::bad_lexical_cast&)
 				{
-					assert(false && "Specified number of support sets is not a number");
+					assert(false && "Specified number of assertions allowed for deletion is not a number");
+				}
+				found.push_back(it);
+			}
+
+			if (option.find("--reppredlim=") !=std::string::npos) {
+				std::string s = option.substr(9);
+				//ctx.getPluginData<DLLitePlugin>().incomplete=true;
+				DBGLOG(DBG, "number of predicates for repair limit block ");
+				try
+				{
+					int i = boost::lexical_cast<int>(s);
+					ctx.getPluginData<DLLitePlugin>().reppredlim=i;
+					DBGLOG(DBG, "reppredlim is "<< i);
+				}
+				catch(const boost::bad_lexical_cast&)
+				{
+					assert(false && "Specified number of predicates allowed for deletion is not a number");
 				}
 				found.push_back(it);
 			}
@@ -1204,6 +1221,7 @@ namespace dllite {
 		xID = reg->storeVariableTerm("X");
 		yID = reg->storeVariableTerm("Y");
 		zID = reg->storeVariableTerm("Z");
+		uID = reg->storeVariableTerm("U");
 		guardPredicateID = reg->getAuxiliaryConstantSymbol('o', ID(0, 0));
 	}
 
@@ -1235,4 +1253,5 @@ extern "C" void * PLUGINIMPORTFUNCTION() {
 // Local Variables:
 // mode: C++
 // End:
+
 

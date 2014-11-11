@@ -2172,27 +2172,32 @@ namespace dllite {
 						DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 					}
 
-					DBGLOG(DBG,"RMG: RULE: :-result_count(X),X<lim.");
+					DBGLOG(DBG,"RMG: RULE: :-lim<=#sum{X:result_count(X)}.");
 
 					{
 
 						Rule rule(ID::MAINKIND_RULE | ID::SUBKIND_RULE_CONSTRAINT);
 
-						// BODY: result_count(X)
+/*						// BODY: result_count(X)
 						{
 							OrdinaryAtom bodyat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
 							bodyat.tuple.push_back(resultcountID);
 							bodyat.tuple.push_back(theDLLitePlugin.xID);
 							rule.body.push_back(reg->storeOrdinaryAtom(bodyat));
-						}
-						// BODY: X<lim
+						}*/
+						// BODY: lim<=#sum{}
 						{
 							AggregateAtom agatom(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_AGGREGATE);
 							agatom.tuple[0] = ID::termFromInteger(lim+1);
 							agatom.tuple[1] = ID::termFromBuiltin(ID::TERM_BUILTIN_LE);
-							agatom.tuple[2] = theDLLitePlugin.xID;
+							agatom.tuple[2] = ID::termFromBuiltin(ID::TERM_BUILTIN_AGGSUM);
 							agatom.tuple[3] = ID_FAIL;
-							agatom.tuple[4] = ID_FAIL;;
+							agatom.tuple[4] = ID_FAIL;
+							agatom.variables.push_back(theDLLitePlugin.xID);
+							OrdinaryAtom countag(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+							countag.tuple.push_back(resultcountID);
+							countag.tuple.push_back(theDLLitePlugin.xID);
+							agatom.literals.push_back(reg->storeOrdinaryAtom(countag));
 							rule.body.push_back(reg->aatoms.storeAndGetID(agatom));
 						}
 
@@ -2210,7 +2215,7 @@ namespace dllite {
 
 				// additional rules for the case when the number of predicates allowed for deletion is limited
 
-					if (factory.ctx.getPluginData<DLLitePlugin>().reppredlim!=-1) {
+					/*if (factory.ctx.getPluginData<DLLitePlugin>().reppredlim!=-1) {
 						DBGLOG(DBG, "RMG: number of predicates allowed for deletion is limited by "<<factory.ctx.getPluginData<DLLitePlugin>().reppredlim);
 						DBGLOG(DBG, "RMG: Additional rules:");
 						DBGLOG(DBG, "RMG: RULE: del(X):-bar_aux_o(X,Y).");
@@ -2221,7 +2226,7 @@ namespace dllite {
 
 						DBGLOG(DBG, "RMG: for all of the added predicates add to the rule's body the needed inequality constraints");
 
-					}
+					}*/
 
 				DBGLOG(DBG, "RMG: Adding Abox");
 				InterpretationPtr edb(new Interpretation(reg));
