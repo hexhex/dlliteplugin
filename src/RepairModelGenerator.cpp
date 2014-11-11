@@ -54,6 +54,9 @@
 #include <map>
 #include <vector>
 #include <boost/foreach.hpp>
+#include <sstream>
+#include <string.h>
+#include <boost/lexical_cast.hpp>
 
 DLVHEX_NAMESPACE_BEGIN
 
@@ -1917,22 +1920,34 @@ namespace dllite {
 					int lim=factory.ctx.getPluginData<DLLitePlugin>().replim;
 					DBGLOG(DBG,"RMG: number of facts allowed for deletion is limited to "<<lim);
 					DBGLOG(DBG,"RMG: RULE: bar_aux_concept(X,Y):-bar_aux_o(X,Y).");
+
+					// prepare IDs that will be used further in the rule construction
+					ID auxconceptID = reg->storeConstantTerm("aux_o_0_1_concepts");
+					ID auxroleID = reg->storeConstantTerm("aux_o_0_1_roles");
+					ID conceptcountID = reg->storeConstantTerm("aux_o_0_1_concepts_count");
+					ID rolecountID = reg->storeConstantTerm("aux_o_0_1_roles_count");
+					ID finalcountID = reg->storeConstantTerm("final_count");
+					ID constconceptcountID = reg->storeConstantTerm("const_concept_count");
+					ID constrolecountID = reg->storeConstantTerm("const_roles_count");
+					ID resultcountID = reg->storeConstantTerm("result_count");
 					{
 						Rule rule(ID::MAINKIND_RULE);
-						// HEAD: bar_aux_o_concepts(C,X)
+						// HEAD: bar_aux_o_concepts(X,Y)
 						{
 							OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
-							ID auxconceptID = reg->storeConstantTerm("aux_o_0_1_concepts");
 							headat.tuple.push_back(auxconceptID);
 							headat.tuple.push_back(theDLLitePlugin.xID);
+							headat.tuple.push_back(theDLLitePlugin.yID);
 							rule.head.push_back(reg->storeOrdinaryAtom(headat));
 
 						}
-						// BODY: bar_aux_o(C,X)
+
+						// BODY: bar_aux_o(X,Y)
 						{
 							OrdinaryAtom bodyat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
 							bodyat.tuple.push_back(guardbarPredicateID);
 							bodyat.tuple.push_back(theDLLitePlugin.xID);
+							bodyat.tuple.push_back(theDLLitePlugin.yID);
 							rule.body.push_back(reg->storeOrdinaryAtom(bodyat));
 						}
 
@@ -1950,10 +1965,10 @@ namespace dllite {
 						// HEAD: bar_aux_o_roles(R,X,Y)
 						{
 							OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
-							ID auxroleID = reg->storeConstantTerm("aux_o_0_1_roles");
 							headat.tuple.push_back(auxroleID);
 							headat.tuple.push_back(theDLLitePlugin.xID);
 							headat.tuple.push_back(theDLLitePlugin.yID);
+							headat.tuple.push_back(theDLLitePlugin.zID);
 							rule.head.push_back(reg->storeOrdinaryAtom(headat));
 						}
 						// BODY: bar_aux_o(R,X,Y)
@@ -1962,6 +1977,7 @@ namespace dllite {
 							bodyat.tuple.push_back(guardbarPredicateID);
 							bodyat.tuple.push_back(theDLLitePlugin.xID);
 							bodyat.tuple.push_back(theDLLitePlugin.yID);
+							bodyat.tuple.push_back(theDLLitePlugin.zID);
 							rule.body.push_back(reg->storeOrdinaryAtom(bodyat));
 						}
 
@@ -1973,7 +1989,7 @@ namespace dllite {
 					}
 
 
-					DBGLOG(DBG,"RMG: RULE: concept_count(Z):-Z=#count{X,Y:bar_aux_concept(X,Y)}.");
+					DBGLOG(DBG,"RMG: RULE: bar_aux_concept_count(Z):-Z=#count{X,Y:bar_aux_concept(X,Y)}.");
 
 					{
 						Rule rule(ID::MAINKIND_RULE);
@@ -1981,7 +1997,6 @@ namespace dllite {
 						// HEAD: concept_count(Z)
 						{
 							OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
-							ID conceptcountID = reg->storeConstantTerm("aux_o_0_1_concepts_count");
 							headat.tuple.push_back(conceptcountID);
 							headat.tuple.push_back(theDLLitePlugin.zID);
 							rule.head.push_back(reg->storeOrdinaryAtom(headat));
@@ -1989,15 +2004,22 @@ namespace dllite {
 						}
 
 						// BODY: Z=#count{X,Y:p(X,Y)}
-					/*	{
+						{
 							AggregateAtom agatom(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_AGGREGATE);
-							agatom.tuple.push_back(theDLLitePlugin.zID);
-							agatom.tuple.push_back(ID::termFromBuiltin(ID::TERM_BUILTIN_EQ));
-							agatom.tuple.push_back(theDLLitePlugin.yID);
-							agatom.tuple.push_back(ID_FAIL);
-							agatom.tuple.push_back(ID_FAIL);
-							rule.body.push_back(agid);
-						}*/
+							agatom.tuple[0] = theDLLitePlugin.zID;
+							agatom.tuple[1] = ID::termFromBuiltin(ID::TERM_BUILTIN_EQ);
+							agatom.tuple[2] = ID::termFromBuiltin(ID::TERM_BUILTIN_AGGCOUNT);
+							agatom.tuple[3] = ID_FAIL;
+							agatom.tuple[4] = ID_FAIL;
+							agatom.variables.push_back(theDLLitePlugin.xID);
+							agatom.variables.push_back(theDLLitePlugin.yID);
+							OrdinaryAtom conceptag(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+							conceptag.tuple.push_back(auxconceptID);
+							conceptag.tuple.push_back(theDLLitePlugin.xID);
+							conceptag.tuple.push_back(theDLLitePlugin.yID);
+							agatom.literals.push_back(reg->storeOrdinaryAtom(conceptag));
+							rule.body.push_back(reg->aatoms.storeAndGetID(agatom));
+						}
 
 						ID ruleID = reg->storeRule(rule);
 
@@ -2009,11 +2031,181 @@ namespace dllite {
 
 
 
+					DBGLOG(DBG,"RMG: RULE: bar_aux_role_count(Z1):-Z1=#count{X,Y,Z:bar_aux_role(X,Y,Z)}.");
 
-					DBGLOG(DBG,"RMG: RULE: role_count(Z):-Z=#count{X,Y:bar_aux_role(X,Y,Z)}.");
-					DBGLOG(DBG,"RMG: RULE: concept_count(Z).");
+					{
+						Rule rule(ID::MAINKIND_RULE);
+
+						// HEAD: role_count(U)
+						{
+							OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+							headat.tuple.push_back(rolecountID);
+							headat.tuple.push_back(theDLLitePlugin.uID);
+							rule.head.push_back(reg->storeOrdinaryAtom(headat));
+						}
+
+						// BODY: Z=#count{X,Y,Z:p(X,Y,Z)}
+						{
+							AggregateAtom agatom(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_AGGREGATE);
+							agatom.tuple[0] = theDLLitePlugin.uID;
+							agatom.tuple[1] = ID::termFromBuiltin(ID::TERM_BUILTIN_EQ);
+							agatom.tuple[2] = ID::termFromBuiltin(ID::TERM_BUILTIN_AGGCOUNT);
+							agatom.tuple[3] = ID_FAIL;
+							agatom.tuple[4] = ID_FAIL;
+							agatom.variables.push_back(theDLLitePlugin.xID);
+							agatom.variables.push_back(theDLLitePlugin.yID);
+							agatom.variables.push_back(theDLLitePlugin.zID);
+							OrdinaryAtom roleag(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+							roleag.tuple.push_back(auxroleID);
+							roleag.tuple.push_back(theDLLitePlugin.xID);
+							roleag.tuple.push_back(theDLLitePlugin.yID);
+							roleag.tuple.push_back(theDLLitePlugin.zID);
+							agatom.literals.push_back(reg->storeOrdinaryAtom(roleag));
+							rule.body.push_back(reg->aatoms.storeAndGetID(agatom));
+						}
+
+						ID ruleID = reg->storeRule(rule);
+
+						program.idb.push_back(ruleID);
+
+						DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
+					}
 
 
+					DBGLOG(DBG,"RMG: RULE: final_count(concepts_count_const,X):-concepts_count(X).");
+
+					{
+						Rule rule(ID::MAINKIND_RULE);
+
+						// HEAD: final_count(const_concepts_count,X)
+						{
+							OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+							headat.tuple.push_back(finalcountID);
+							headat.tuple.push_back(constconceptcountID);
+							headat.tuple.push_back(theDLLitePlugin.xID);
+							rule.head.push_back(reg->storeOrdinaryAtom(headat));
+						}
+
+						// BODY: concept_count(X)
+						{
+							OrdinaryAtom bodyat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+							bodyat.tuple.push_back(conceptcountID );
+							bodyat.tuple.push_back(theDLLitePlugin.xID);
+							rule.body.push_back(reg->storeOrdinaryAtom(bodyat));
+						}
+
+						ID ruleID = reg->storeRule(rule);
+
+						program.idb.push_back(ruleID);
+
+						DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
+					}
+
+					DBGLOG(DBG,"RMG: RULE: final_count(roles_count_const,X):-roles_count(X).");
+
+					{
+						Rule rule(ID::MAINKIND_RULE);
+
+						// HEAD: final_count(const_roles_count,X)
+						{
+							OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+							headat.tuple.push_back(finalcountID);
+							headat.tuple.push_back(constrolecountID);
+							headat.tuple.push_back(theDLLitePlugin.xID);
+							rule.head.push_back(reg->storeOrdinaryAtom(headat));
+						}
+
+						// BODY: role_count(X)
+						{
+							OrdinaryAtom bodyat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+							bodyat.tuple.push_back(rolecountID );
+							bodyat.tuple.push_back(theDLLitePlugin.xID);
+							rule.body.push_back(reg->storeOrdinaryAtom(bodyat));
+						}
+
+						ID ruleID = reg->storeRule(rule);
+
+						program.idb.push_back(ruleID);
+
+						DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
+					}
+
+					DBGLOG(DBG,"RMG: RULE: result(U):-U=#sum{Y:final_count(X,Y)}.");
+
+
+
+					{
+						Rule rule(ID::MAINKIND_RULE);
+
+						// HEAD: result_count(U)
+						{
+							OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+							headat.tuple.push_back(resultcountID);
+							headat.tuple.push_back(theDLLitePlugin.uID);
+							rule.head.push_back(reg->storeOrdinaryAtom(headat));
+						}
+
+						// BODY: U=#sum{Y:final_count(X,Y)}
+
+
+						{
+							AggregateAtom agatom(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_AGGREGATE);
+							agatom.tuple[0] = theDLLitePlugin.uID;
+							agatom.tuple[1] = ID::termFromBuiltin(ID::TERM_BUILTIN_EQ);
+							agatom.tuple[2] = ID::termFromBuiltin(ID::TERM_BUILTIN_AGGSUM);
+							agatom.tuple[3] = ID_FAIL;
+							agatom.tuple[4] = ID_FAIL;
+							agatom.variables.push_back(theDLLitePlugin.yID);
+							OrdinaryAtom countag(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+							countag.tuple.push_back(finalcountID);
+							countag.tuple.push_back(theDLLitePlugin.xID);
+							countag.tuple.push_back(theDLLitePlugin.yID);
+							agatom.literals.push_back(reg->storeOrdinaryAtom(countag));
+							rule.body.push_back(reg->aatoms.storeAndGetID(agatom));
+						}
+
+
+						ID ruleID = reg->storeRule(rule);
+
+						program.idb.push_back(ruleID);
+
+						DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
+					}
+
+					DBGLOG(DBG,"RMG: RULE: :-result_count(X),X<lim.");
+
+					{
+
+						Rule rule(ID::MAINKIND_RULE | ID::SUBKIND_RULE_CONSTRAINT);
+
+						// BODY: result_count(X)
+						{
+							OrdinaryAtom bodyat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
+							bodyat.tuple.push_back(resultcountID);
+							bodyat.tuple.push_back(theDLLitePlugin.xID);
+							rule.body.push_back(reg->storeOrdinaryAtom(bodyat));
+						}
+						// BODY: X<lim
+						{
+							AggregateAtom agatom(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_AGGREGATE);
+							agatom.tuple[0] = ID::termFromInteger(lim+1);
+							agatom.tuple[1] = ID::termFromBuiltin(ID::TERM_BUILTIN_LE);
+							agatom.tuple[2] = theDLLitePlugin.xID;
+							agatom.tuple[3] = ID_FAIL;
+							agatom.tuple[4] = ID_FAIL;;
+							rule.body.push_back(reg->aatoms.storeAndGetID(agatom));
+						}
+
+						ID ruleID = reg->storeRule(rule);
+
+						program.idb.push_back(ruleID);
+
+						DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
+					}
+
+					DBGLOG(DBG,"RMG: maxint is set to "<<factory.ctx.maxint);
+
+					if (factory.ctx.maxint<lim*2) factory.ctx.maxint=lim*2;
 				}
 
 				// additional rules for the case when the number of predicates allowed for deletion is limited
