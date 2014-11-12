@@ -176,7 +176,7 @@ bool optimize;	// automatically optimize rules with DL-atoms?
 std::string repairOntology;	// name of the ontology to repair (if repair=true)
 std::string ontology;	// name of the ontology for rewriting
 std::vector<DLExpression> dlexpressions;	// cache for DL-expressions
-CtxData() : repair(false), el(false), incomplete(false), supsize(-1), supnumber(-1), replimfact(-1), replimpred(-1), rewrite(false),repdelpredflag(false), repleavepredflag(false), repdelconstflag(false), repleaveconstflag(false), optimize(false) {};
+CtxData() : repair(false), el(false), incomplete(false), supsize(-1), supnumber(-1), replimfact(-1), replimpred(-1), replimconst(-1), rewrite(false),repdelpredflag(false), repleavepredflag(false), repdelconstflag(false), repleaveconstflag(false), optimize(false) {};
 virtual ~CtxData() {};
 };
 
