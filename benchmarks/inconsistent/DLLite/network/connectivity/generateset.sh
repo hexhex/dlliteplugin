@@ -2,6 +2,7 @@
 # $2 ending probability
 # $3 step
 # $4 number of instances
+# $5 number of nodes
 
 if [[ $# -lt 4 ]]; then
 	echo "Error: Script expects 4 parameters
@@ -30,8 +31,8 @@ fi
 			in=`printf "%03d" ${inst}`
 
 			# create ontology instances
-			./generate.sh 70 ${concprop} > "instances/inst_prop_${rp}_inst_${in}.hex"
-			cp ontology.owl instances/inst_prop_${rp}_inst_${in}.owl
+			./generate.sh $5 ${concprop} > "instances/inst_prop_${rp}_inst_${in}.hex"
+			cp ontology_$5.owl instances/inst_prop_${rp}_inst_${in}.owl
 
 			# instantiate the program
 			#cat program.hex | sed "s/OWLONTOLOGY/\"instances/inst_prop_${rp}_inst_${in}.owl\"/g" >> "instances/inst_prop_${rp}_inst_${in}.hex"
