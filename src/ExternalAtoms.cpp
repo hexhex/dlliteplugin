@@ -458,14 +458,31 @@ namespace dllite {
 			if (cQID != ID_FAIL) {
 				std::string call = "java -Xmx1000M -jar "+path+" \"Q(?0)  <-  "+std::string(querystr)+param+"\" "+opath+" F";
 
-				DBGLOG(DBG, "LSS: EL: sending call to Requim " << call);
+				DBGLOG(DBG, "LSS: EL: sending call to Requiem " << call);
 
 				if(!(in = popen(call.c_str(), "r"))) {
 					assert(false&&"call to requiem failed");
 				}
 
-				while((fgets(buff, sizeof(buff), in)!=NULL)) {
+				bool computed_all_rewritings=true;
+				bool get_further_rewritings=true;
+
+				if (ctx.getPluginData<DLLitePlugin>().supnumber==0) {
+					get_further_rewritings=false;
+					computed_all_rewritings=false;
+				}
+				int number_of_considered_rewritings=0;	             
+	
+				while((fgets(buff, sizeof(buff), in)!=NULL)&&get_further_rewritings) {
 					DBGLOG(DBG, "LSS: EL: got query rewriting from Requiem " << buff);
+					number_of_considered_rewritings++;	
+					if (number_of_considered_rewritings>ctx.getPluginData<DLLitePlugin>().supnumber) {
+						computed_all_rewritings=false;
+						get_further_rewritings=false;
+						break;
+					}
+				
+
 					std::vector<std::string> strs;
 					boost::split(strs, buff, boost::is_any_of("\t "), boost::token_compress_on);
 					std::vector<std::string>::iterator row_it = strs.begin();
@@ -490,9 +507,19 @@ namespace dllite {
 					// vector for storing support sets constructed from the current rewriting
 					std::vector<std::vector<dlvhex::ID> > ngset;
 
+					int rewriting_size=0;
 					while (row_it<row_end) {
+
 						std::string str (*row_it);
 						DBGLOG(DBG, "LSS: EL: current atom of the rewriting is: " << *row_it);
+						rewriting_size++;
+
+						if ((ctx.getPluginData<DLLitePlugin>().supsize!=-1)&&(rewriting_size>ctx.getPluginData<DLLitePlugin>().supsize)) {
+							computed_all_rewritings=false;
+							DBGLOG(DBG,"LSS: EL: current rewriting exceeds the support size limit, we break");
+							break;
+						}
+
 						std::size_t varb = str.find("(");
 						std::size_t vare = str.find(")");
 						std::size_t varm = str.find(",");
@@ -614,8 +641,6 @@ namespace dllite {
 
 								ia = NogoodContainer::createLiteral(reg->storeOrdinaryAtom(gatom));
 
-								//NogoodContainer::createLiteral(reg->storeOrdinaryAtom(gatom))
-
 								DBGLOG(DBG,"LSS: EL: op is "<< RawPrinter::toString(reg,opID));
 								DBGLOG(DBG,"LSS: EL: var1 is "<< RawPrinter::toString(reg,var1ID));
 
@@ -692,7 +717,6 @@ namespace dllite {
 						for (std::vector<dlvhex::ID>::size_type k = 0; k != ngset[l].size(); k++){
 							DBGLOG(DBG,"LSS: EL: "<<RawPrinter::toString(reg,ngset[l][k]));
 						}
-						DBGLOG(DBG,"LSS: EL: }");
 					}
 
 
@@ -713,15 +737,21 @@ namespace dllite {
 								supset.insert(NogoodContainer::createLiteral(ngset[t][k]));
 								DBGLOG(DBG,"LSS: EL: inserted");
 							}
-							DBGLOG(DBG,"LSS: EL: created support set "<<supset.getStringRepresentation(reg));
+							DBGLOG(DBG,"LSS: EL: -->adding support set "<<supset.getStringRepresentation(reg));
 
 							potentialSupportSets->addNogood(supset);
 							// construction of a support set is finished, add it to the set of all support sets
-							DBGLOG(DBG, "LSS: EL: adding support set to the set"<< supportset.getStringRepresentation(reg));
 						}
 					}
 
 				}
+
+				if (!computed_all_rewritings) {
+					DBGLOG(DBG,"LSS: EL: There is no evidence for support family completeness");
+					DBGLOG(DBG,"LSS: EL: Thus we add the current atom to the set of atoms not known to be completele supported");
+					ctx.getPluginData<DLLitePlugin>().incompletedlat.push_back(cQID);
+				}
+
 				pclose(in);
 
 			}

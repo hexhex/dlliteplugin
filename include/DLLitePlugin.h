@@ -158,6 +158,7 @@ std::vector<DLLitePlugin::CachedOntologyPtr> ontologies;
 bool repair;	// enable RepairModelGenerator?
 bool el; 		// is ontology in EL format?
 bool incomplete; // mode where the incomplete support families are processed
+std::vector<ID> incompletedlat; // vector storing additional information about completeness of support families for DL-atoms
 int supsize;    // maximal size of support sets used for exploitation
 int supnumber;   // maximal number of support sets used for exploitation
 int replimfact;   // maximal number facts that can be deleted

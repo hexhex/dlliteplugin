@@ -84,7 +84,6 @@ namespace dllite {
 		// add outer eatoms to the set of inner ones
 			innerEatoms = ci.innerEatoms;
 			innerEatoms.insert(innerEatoms.end(), outerEatoms.begin(), outerEatoms.end());
-			DBGLOG(DBG,"RMG: number of inner Eatoms after addition of outer ones: "<<innerEatoms.size());
 
 			// construct an additional vector in which the outer atoms are stored
 			std::vector<dlvhex::ID> outer;
@@ -103,12 +102,11 @@ namespace dllite {
 			// clear outer atoms from the set
 			outerEatoms.clear();
 
-			DBGLOG(DBG,"RMG: number of outer eatoms after adding them to the set of inner ones is: "<<outerEatoms.size());
+			DBGLOG(DBG,"RMG: number of inner external atoms after adding outer ones to them: " << outerEatoms.size());
 
 
 		// create program for domain exploration
 		if (ctx.config.getOption("LiberalSafety")) {
-			DBGLOG(DBG, "RMG: LS: 1. liberal safety option is enabled" );
 			// add domain predicates for all external atoms which are necessary to establish liberal domain-expansion safety
 			// and extract the domain-exploration program from the IDB
 			addDomainPredicatesAndCreateDomainExplorationProgram(ci, ctx, idb, deidb, deidbInnerEatoms, outerEatoms);
@@ -118,7 +116,6 @@ namespace dllite {
 		// create guessing rules "gidb" for innerEatoms in all inner rules and constraints
 		DBGLOG(DBG, "RMG: Create eatoms guessing rules");
 		createEatomGuessingRules(ctx);
-		DBGLOG(DBG, "RMG: After creating the guessing rules");
 
 		// transform original innerRules and innerConstraints to xidb with only auxiliaries
 		xidb.reserve(idb.size());
@@ -270,11 +267,9 @@ namespace dllite {
 
 
 		if (factory.ctx.config.getOption("LiberalSafety")) {
-			DBGLOG(DBG,"RMG: LS: 2. Liberal safety option is enabled");
 			InterpretationConstPtr domPredicatesExtension = computeExtensionOfDomainPredicates(factory.ci, factory.ctx, postprocInput, factory.deidb, factory.deidbInnerEatoms);
 			DBGLOG(DBG,"RMG: computed domain predicate extension");
 			postprocInput->add(*domPredicatesExtension);
-			DBGLOG(DBG,"RMG: added domain predicate extension to the postprocinput");
 		}
 
 		// assign to const member -> this value must stay the same from here on!
@@ -283,7 +278,7 @@ namespace dllite {
 		// evaluate edb+xidb+gidb
 		{
 			DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid,"RMG: genuine g&c init guessprog");
-			DBGLOG(DBG,"RMG: vefore evaluating guessing program, number of outer atoms is: "<<factory.outerEatoms.size());
+			DBGLOG(DBG,"RMG: before evaluating guessing program, number of outer atoms is: "<<factory.outerEatoms.size());
 			DBGLOG(DBG,"RMG: evaluating guessing program");
 			OrdinaryASPProgram program(reg, factory.xidb, postprocessedInput, factory.ctx.maxint);
 
@@ -314,11 +309,9 @@ namespace dllite {
 			//  solver->addPropagator(this);
 		}
 
-		// setHeuristics();
 		// start learning support sets
 
 		learnSupportSets();
-		// DBGLOG(DBG,"RMG: learnSupportSets method is finished, "<<  supportSets->getNogoodCount() << " support sets were learnt");
 
 		// initialize UFS checker
 		//   Concerning the last parameter, note that clasp backend uses choice rules for implementing disjunctions:
@@ -425,7 +418,6 @@ namespace dllite {
 		bool rep_del_set_const_given = false;
 		bool rep_leave_set_const_given = false;
 		std::vector<SimpleNogoodContainerPtr> supportSetsOfExternalAtom;
-		std::vector<ID> complext;
 
 		// support set option is enabled
 		if (factory.ctx.config.getOption("SupportSets")) {
@@ -466,10 +458,8 @@ namespace dllite {
 			// add ontology ABox to the edb of the program
 
 
-			DBGLOG(DBG, "RMG: Adding Abox");
 			InterpretationPtr edb(new Interpretation(reg));
 			edb->add(*program.edb);
-			DBGLOG(DBG, "RMG: Program edb before adding ABox "<<*edb);
 			//program.edb = edb;
 			DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(factory.ctx, reg->storeConstantTerm(factory.ctx.getPluginData<DLLitePlugin>().repairOntology));
 
@@ -485,11 +475,11 @@ namespace dllite {
 				roleAssertion.tuple.push_back(ra.second.second);
 				edb->setFact(reg->storeOrdinaryAtom(roleAssertion).address);
 			}
-			DBGLOG(DBG, "RMG: Program edb after adding ABox "<<*edb);
+			DBGLOG(DBG, "RMG!: Program edb after adding ABox "<<*edb);
 
 
 
-			// analyzing options that restrict the repairs, adding respective rules
+			// analyzing options that restrict the repairs, and adding respective rules
 
 			if ((factory.ctx.getPluginData<DLLitePlugin>().replimfact!=-1)||(factory.ctx.getPluginData<DLLitePlugin>().replimpred!=-1)||(factory.ctx.getPluginData<DLLitePlugin>().replimconst!=-1)) {
 				std::vector<int> maxlimit;
@@ -506,7 +496,7 @@ namespace dllite {
 
 			if (factory.ctx.getPluginData<DLLitePlugin>().replimfact!=-1) {
 				int lim=factory.ctx.getPluginData<DLLitePlugin>().replimfact;
-				DBGLOG(DBG,"RMG: number of facts allowed for deletion is limited to "<<lim);
+				DBGLOG(DBG,"RMG: replimfact: number of facts allowed for deletion is limited to "<<lim);
 				DBGLOG(DBG,"RMG: RULE: bar_aux_concept(X,Y):-bar_aux_o(X,Y).");
 
 				// TODO: before adding IDs make sure that they have not yet been added to the table
@@ -794,7 +784,7 @@ namespace dllite {
 				if (factory.ctx.getPluginData<DLLitePlugin>().replimpred!=-1) {
 
 					int predlim=factory.ctx.getPluginData<DLLitePlugin>().replimpred;
-					DBGLOG(DBG, "RMG: number of predicates allowed for deletion is limited by "<<predlim);
+					DBGLOG(DBG, "RMG: replimpred: number of predicates allowed for deletion is limited by "<<predlim);
 
 					// prepare IDs that will be used within the rules:
 					ID predlimID = reg->storeConstantTerm("aux_o_0_1_predlim");
@@ -916,6 +906,7 @@ namespace dllite {
 
 				if (factory.ctx.getPluginData<DLLitePlugin>().replimconst!=-1) {
 
+					DBGLOG(DBG,"RMG: replimconst: number of facts allowed for deletion is limited to "<<factory.ctx.getPluginData<DLLitePlugin>().replimconst);
 					ID delconstID = reg->getNewConstantTerm("delconst");
 
 					int replimconst = factory.ctx.getPluginData<DLLitePlugin>().replimconst;
@@ -1187,7 +1178,6 @@ namespace dllite {
 
 				}
 
-				DBGLOG(DBG,"RMG: after adding some rules");
 
 				// a set of constants forbidden for deletion is specified
 
@@ -1327,10 +1317,13 @@ namespace dllite {
 
 			if (factory.ctx.getPluginData<DLLitePlugin>().el) {
 
+				DBGLOG(DBG,"EL: RMG: --el option is enabled");
+
 				// variables for storing maximal support set size and number if they are available
 				int supsizelimit = factory.ctx.getPluginData<DLLitePlugin>().supsize;
 				int supnumberlimit = factory.ctx.getPluginData<DLLitePlugin>().supnumber;
-
+				bool incomplete = factory.ctx.getPluginData<DLLitePlugin>().incomplete;
+				std::vector<ID> completely_supported_eatoms;
 
 				// print out limit information into the debug output
 				if (supsizelimit!=-1)
@@ -1339,27 +1332,47 @@ namespace dllite {
 				if (supnumberlimit!=-1)
 					DBGLOG(DBG,"EL: RMG: support set number limit is: "<<supnumberlimit);
 
-				if (factory.ctx.getPluginData<DLLitePlugin>().incomplete)
-					DBGLOG(DBG,"EL: RMG: support family not known to be complete");
+				if (incomplete)
+					DBGLOG(DBG,"EL: RMG: by default all support families incomplete, if we learn additional information about completeness of some of the we add it to the declarative program");
 
 
 
 
 				// go through external atoms
 				for(unsigned eaIndex = 0; eaIndex < factory.innerEatoms.size(); ++eaIndex) {
-					DBGLOG(DBG,"RMG: consider atom "<< RawPrinter::toString(reg,factory.innerEatoms[eaIndex]));
+					bool dlatcompl;
+					if (factory.ctx.getPluginData<DLLitePlugin>().incomplete)
+						dlatcompl=false;
+					else
+						dlatcompl=true;
+
+					DBGLOG(DBG,"EL: RMG: consider atom "<< RawPrinter::toString(reg,factory.innerEatoms[eaIndex]));
 					const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
+
+
 
 					supportSetsOfExternalAtom.push_back(SimpleNogoodContainerPtr(new SimpleNogoodContainer()));
 
 					// if the external atom provides support sets then proceed with their learning
 					if (eatom.getExtSourceProperties().providesSupportSets()) {
-						DBGLOG(DBG, "RMG: evaluating external atom " << RawPrinter::toString(reg,factory.innerEatoms[eaIndex]) << " for support set learning");
-						DBGLOG(DBG, "RMG: call learnSupportSetsForExternalAtom");
+						DBGLOG(DBG, "EL: RMG: evaluating external atom " << RawPrinter::toString(reg,factory.innerEatoms[eaIndex]) << " for support set learning");
 
 						learnSupportSetsForExternalAtom(factory.ctx, eatom, supportSetsOfExternalAtom[eaIndex]);
-						DBGLOG(DBG, "RMG: number of learned support sets: "<<supportSetsOfExternalAtom[eaIndex]->getNogoodCount());
+						DBGLOG(DBG, "EL: RMG: number of learned support sets: "<<supportSetsOfExternalAtom[eaIndex]->getNogoodCount());
 					}
+
+					if ((dlatcompl==false)&&(std::find(factory.ctx.getPluginData<DLLitePlugin>().incompletedlat.begin(), factory.ctx.getPluginData<DLLitePlugin>().incompletedlat.end(), factory.innerEatoms[eaIndex]) == factory.ctx.getPluginData<DLLitePlugin>().incompletedlat.end())) {
+						// there is a chance that the support family for this atom is still complete
+						if ((supnumberlimit==-1)||(supportSetsOfExternalAtom[eaIndex]->getNogoodCount()<=supnumberlimit)) {
+							dlatcompl=true;
+							DBGLOG(DBG,"EL: RMG: the support family is known to be complete");
+						}
+					}
+
+					if (dlatcompl) {
+						completely_supported_eatoms.push_back(factory.innerEatoms[eaIndex]);
+					}
+
 
 					// prepare for rewriting
 					// cQID is the predicate for concept query
@@ -1379,31 +1392,30 @@ namespace dllite {
 					else if (eatom.predicate==rdlID) {
 						//query is a role
 						rQID = eatom.inputs[5];
+						dlatcompl=true;
 					}
 
 					else assert(false);
 
 					// s is number of nogoods for considered external atom (with index eaIndex)
 					int s = supportSetsOfExternalAtom[eaIndex]->getNogoodCount();
-					int supsizelimit = factory.ctx.getPluginData<DLLitePlugin>().supsize;
-					int supnumberlimit = factory.ctx.getPluginData<DLLitePlugin>().supnumber;
-					bool incomplete = factory.ctx.getPluginData<DLLitePlugin>().incomplete;
+
 
 					// go through nogoods for current external atom
 					for (int i = 0; i < s; i++) {
 						const Nogood& ng = supportSetsOfExternalAtom[eaIndex]->getNogood(i);
 						if ((supnumberlimit!=-1)&&(i>supnumberlimit)) {
-							DBGLOG(DBG, "EL: RMG: the limit on number of support sets is reached ");
-							complext.push_back(factory.innerEatoms[eaIndex]);
+							DBGLOG(DBG, "EL: RMG: the limit "<<supnumberlimit<<" on number of support sets is reached ");
 							break;
 						}
 
-						if ((supsizelimit!=-1)&&(ng.size()>supsizelimit+1)) {
+					/*	if ((supsizelimit!=-1)&&(ng.size()>supsizelimit+1)) {
 							DBGLOG(DBG, "EL: RMG: skip support set, its size exceeds the limit "<<supsizelimit);
 						}
 
-						else {
-							DBGLOG(DBG, "EL: RMG: creating rules from support set " << ng.getStringRepresentation(reg));
+						else {*/
+
+							DBGLOG(DBG, "EL: RMG: creating rules for support set " << ng.getStringRepresentation(reg));
 
 							// create guard atom that will be used for rules
 							OrdinaryAtom guard(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
@@ -1432,8 +1444,6 @@ namespace dllite {
 
 							if (ontopart.size()!=0) {
 								// case: ontology part of the support set is nonempty
-
-
 								// case: program part of the support set is nonempty
 
 								DBGLOG(DBG, "EL: RMG: ontology part is nonempty ");
@@ -1441,7 +1451,7 @@ namespace dllite {
 								{	DBGLOG(DBG,"EL: RMG: RULE: bar_aux_o(P_1,...) v bar_aux_o(P_n, ...):-aux_p(D,Y), aux_o(P_1,...), aux_o(P_n,...), n_e_a(Q,O). (neg. repl. of eatom)");
 
 									Rule choosingRule(ID::MAINKIND_RULE | ID::PROPERTY_RULE_DISJ);
-									//		DBGLOG(DBG, "EL: RMG: disjunctive rule is created");
+									// DBGLOG(DBG, "EL: RMG: disjunctive rule is created");
 									// HEAD: bar_aux_o("P_1",...) v...v bar_aux_o("P_n",...):-
 									// BODY: aux_o("P_1",...),bar_zux_o("P_n",...)
 									{
@@ -1505,17 +1515,13 @@ namespace dllite {
 										{
 											std::vector<ID>::iterator it = progpart.begin();
 											std::vector<ID>::iterator it_end = progpart.end();
-											//	DBGLOG(DBG, "EL: RMG: start going through logic program part" );
 
 											while (it < it_end) {
-												//	DBGLOG(DBG, "EL: RMG: current logic program predicate is  "<< RawPrinter::toString(reg,*it));
 												ID id=*it;
 												ID idOrig = (id.isOrdinaryGroundAtom() ? reg->ogatoms.getIDByAddress(id.address) : reg->onatoms.getIDByAddress(id.address));
 
 												// add logic program predicates to the body
 												choosingRule.body.push_back(ID::posLiteralFromAtom(idOrig));
-												//	DBGLOG(DBG, "EL: RMG: added a predicate to the body ");
-
 												it++;
 											}
 										}
@@ -1525,11 +1531,6 @@ namespace dllite {
 									ID choosingRuleID = reg->storeRule(choosingRule);
 									DBGLOG(DBG, "EL: RMG: RULE: adding rule: " << RawPrinter::toString(reg, choosingRuleID));
 									program.idb.push_back(choosingRuleID);
-
-									DBGLOG(DBG, "EL: RMG: RULE: IDB:  program idb after rule addition: ");
-									for (unsigned ruleIndex=0; ruleIndex<program.idb.size(); ruleIndex++) {
-										DBGLOG(DBG, "EL: RMG: RULE: IDB: "<<RawPrinter::toString(reg,program.idb[ruleIndex])<<"\n");
-									}
 
 								}
 
@@ -1594,10 +1595,7 @@ namespace dllite {
 
 											rule.body.push_back(ID::nafLiteralFromAtom(reg->storeOrdinaryAtom(bodyatbar)));
 											rule.body.push_back(ID::posLiteralFromAtom(reg->storeOrdinaryAtom(bodyat)));
-											//		DBGLOG(DBG, "EL: RMG: went through ontology element "<< RawPrinter::toString(reg, id) );
-
 											it++;
-
 										}
 									}
 
@@ -1621,20 +1619,16 @@ namespace dllite {
 										} else {assert(false);}
 
 										rule.body.push_back(ID::posLiteralFromAtom(reg->storeOrdinaryAtom(repl)));
-										//DBGLOG(DBG, "EL: RMG: added negative replacement atom" );
 									}
 
 									ID ruleID = reg->storeRule(rule);
 									DBGLOG(DBG, "EL: RMG: RULE: adding rule: " << RawPrinter::toString(reg, ruleID));
 									program.idb.push_back(ruleID);
 
-									DBGLOG(DBG, "EL: RMG: RULE: IDB: program idb after rule addition: ");
-									for (unsigned ruleIndex=0; ruleIndex<program.idb.size(); ruleIndex++) {
-										DBGLOG(DBG, "EL: RMG: RULE: IDB: "<<RawPrinter::toString(reg,program.idb[ruleIndex])<<"\n");
-									}
+
 								}
 
-								if (!incomplete) {
+								if (dlatcompl) {
 
 									DBGLOG(DBG, "EL: RMG: since support families are complete, we add");
 									DBGLOG(DBG, "EL: RMG: RULE: :-e_a(Q,O),not supp_e_a(Q,O)");
@@ -1686,10 +1680,7 @@ namespace dllite {
 										DBGLOG(DBG, "EL: RMG: RULE: adding rule: " << RawPrinter::toString(reg, ruleID));
 										program.idb.push_back(ruleID);
 
-										DBGLOG(DBG, "EL: RMG: RULE: IDB: program idb after rule addition: \n");
-										for (unsigned ruleIndex=0; ruleIndex<program.idb.size(); ruleIndex++) {
-											DBGLOG(DBG, "EL: RMG: RULE: IDB: "<<RawPrinter::toString(reg,program.idb[ruleIndex])<<"\n");
-										}
+
 									}
 								}
 
@@ -1700,7 +1691,6 @@ namespace dllite {
 								{	DBGLOG(DBG,"EL: RMG: RULE: :- n_e_a(Q,O), aux_p(P,X)");
 
 									Rule rule(ID::MAINKIND_RULE | ID::SUBKIND_RULE_CONSTRAINT);
-									//	DBGLOG(DBG, "EL: RMG: rule is created");
 
 									// BODY: n_e_a(Q,O)
 									{	OrdinaryAtom repl(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
@@ -1721,22 +1711,18 @@ namespace dllite {
 										} else {assert(false);}
 
 										rule.body.push_back(ID::posLiteralFromAtom(reg->storeOrdinaryAtom(repl)));
-										//	DBGLOG(DBG, "EL: RMG: added negative replacement atom" );
 
 									}
 									//BODY: aux_p(P,X)
 									{
 										std::vector<ID>::iterator it = progpart.begin();
 										std::vector<ID>::iterator it_end = progpart.end();
-										//DBGLOG(DBG, "EL: RMG: start going through logic program part" );
 
 										while (it < it_end) {
-											//	DBGLOG(DBG, "EL: RMG: current logic program predicate is  "<< RawPrinter::toString(reg,*it));
 											ID id=*it;
 											ID idOrig = (id.isOrdinaryGroundAtom() ? reg->ogatoms.getIDByAddress(id.address) : reg->onatoms.getIDByAddress(id.address));
 											// add logic program predicates to the body
 											rule.body.push_back(ID::posLiteralFromAtom(idOrig));
-											//		DBGLOG(DBG, "EL: RMG: added a predicate to the body ");
 											it++;
 										}
 									}
@@ -1745,17 +1731,15 @@ namespace dllite {
 									DBGLOG(DBG, "EL: RMG: RULE: adding rule: " << RawPrinter::toString(reg, ruleID));
 									program.idb.push_back(ruleID);
 
-									DBGLOG(DBG, "EL: RMG: RULE: program idb after rule addition: \n");
-									for (unsigned ruleIndex=0; ruleIndex<program.idb.size(); ruleIndex++) {
-										DBGLOG(DBG, "EL: RMG: RULE: IDB: "<<RawPrinter::toString(reg,program.idb[ruleIndex])<<"\n");
-									}
+
 								}
 
 							}
-							if (incomplete) {
+
+							if (!dlatcompl) {
 								{
 
-									DBGLOG(DBG, "EL: RMG: support families are incomplete, thus we add two rule with eval in heads");
+									DBGLOG(DBG, "EL: RMG: support family is incomplete, thus we add two rules with eval in heads");
 									DBGLOG(DBG,"EL: RMG: RULE:  eval_e_a(Q,O):- not supp_e_a(Q,O),e_a(Q,O), not comp_e_a(Q,O).");
 									Rule rule(ID::MAINKIND_RULE);
 									//	DBGLOG(DBG, "EL: RMG: rule is created");
@@ -1849,10 +1833,7 @@ namespace dllite {
 									DBGLOG(DBG, "EL: RMG: RULE: adding rule: " << RawPrinter::toString(reg, ruleID));
 									program.idb.push_back(ruleID);
 
-									DBGLOG(DBG, "EL: RMG: RULE: program idb after rule addition: \n");
-									for (unsigned ruleIndex=0; ruleIndex<program.idb.size(); ruleIndex++) {
-										DBGLOG(DBG, "EL: RMG: RULE: IDB: "<<RawPrinter::toString(reg,program.idb[ruleIndex])<<"\n");
-									}
+
 
 								}
 
@@ -1931,44 +1912,24 @@ namespace dllite {
 									DBGLOG(DBG, "EL: RMG: RULE: adding rule: " << RawPrinter::toString(reg, ruleID));
 									program.idb.push_back(ruleID);
 
-									DBGLOG(DBG, "EL: RMG: RULE: program idb after rule addition: \n");
-									for (unsigned ruleIndex=0; ruleIndex<program.idb.size(); ruleIndex++) {
-										DBGLOG(DBG, "EL: RMG: RULE: IDB: "<<RawPrinter::toString(reg,program.idb[ruleIndex])<<"\n");
-									}
 								}
 
 							}
-						}
+
+
+
+
 
 					}
 
 				}
-				/*
-				DBGLOG(DBG, "EL: RMG: adding Abox");
-				InterpretationPtr edb(new Interpretation(reg));*/
-				//edb->add(*program.edb);
 
-				program.edb = edb;
-				/*DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(factory.ctx, reg->storeConstantTerm(factory.ctx.getPluginData<DLLitePlugin>().repairOntology));
-
-				// add ontology ABox in form of facts aux_o("D",c)
-				edb->add(*ontology->conceptAssertions);
-
-				// (accordingly aux_o("R",c1,c2)).
-				BOOST_FOREACH (DLLitePlugin::CachedOntology::RoleAssertion ra, ontology->roleAssertions) {
-					OrdinaryAtom roleAssertion(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
-					roleAssertion.tuple.push_back(guardPredicateID);
-					roleAssertion.tuple.push_back(ra.first);
-					roleAssertion.tuple.push_back(ra.second.first);
-					roleAssertion.tuple.push_back(ra.second.second);
-					edb->setFact(reg->storeOrdinaryAtom(roleAssertion).address);
-				}*/
 				DBGLOG(DBG, "RMG: program edb: "<<*edb);
 				DBGLOG(DBG, "RMG: adding information about support set completeness ");
 
 
 				for (unsigned eaIndex = 0; eaIndex < factory.innerEatoms.size(); ++eaIndex) {
-					//	DBGLOG(DBG,"EL: RMG: adding completeness fact for atom "<< RawPrinter::toString(reg,factory.innerEatoms[eaIndex]));
+
 					const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
 					ID cQID = ID_FAIL;
 					ID rQID = ID_FAIL;
@@ -1988,10 +1949,8 @@ namespace dllite {
 
 					else assert(false);
 
-					if (!factory.ctx.getPluginData<DLLitePlugin>().incomplete) {
-
-						DBGLOG(DBG, "EL: RMG: incomplete=false, i.e. support families are complete, add comp predicates ");
-
+					if ((!factory.ctx.getPluginData<DLLitePlugin>().incomplete)||(std::find(completely_supported_eatoms.begin(),completely_supported_eatoms.end(), factory.innerEatoms[eaIndex]) != completely_supported_eatoms.end())) {
+						DBGLOG(DBG, "EL: RMG: support family is complete, add comp predicates ");
 						{
 							OrdinaryAtom comp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
 							comp.tuple.push_back(reg->getAuxiliaryConstantSymbol('c', factory.innerEatoms[eaIndex]));
@@ -2010,26 +1969,6 @@ namespace dllite {
 						}
 					}
 
-					else if (factory.ctx.getPluginData<DLLitePlugin>().supnumber!=-1) {
-						if (std::find(complext.begin(), complext.end(), factory.innerEatoms[eaIndex]) != complext.end()){
-							{
-								OrdinaryAtom comp(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
-								comp.tuple.push_back(reg->getAuxiliaryConstantSymbol('c', factory.innerEatoms[eaIndex]));
-								comp.tuple.push_back(eatom.inputs[0]);
-								comp.tuple.push_back(eatom.inputs[1]);
-								comp.tuple.push_back(eatom.inputs[2]);
-								comp.tuple.push_back(eatom.inputs[3]);
-								comp.tuple.push_back(eatom.inputs[4]);
-								comp.tuple.push_back(eatom.inputs[5]);
-								if (cQID!=ID_FAIL)
-								comp.tuple.push_back(cQID);
-								else if (rQID!=ID_FAIL)
-								comp.tuple.push_back(rQID);
-								else {assert(false);}
-								edb->setFact(reg->storeOrdinaryAtom(comp).address);
-							}
-						}
-					}
 				}
 				program.edb = edb;
 
@@ -3058,14 +2997,6 @@ namespace dllite {
 		DBGLOG(DBG, "RMG: the number of assertions in the repaired ABox is "<<newab.size());
 		DBGLOG(DBG, "RMG: the number of removed assertions is "<<ab.size()-newab.size());
 
-		// naive check whether the number of eliminated assertion does not exceed the limit (if given)
-/*		if (factory.ctx.getPluginData<DLLitePlugin>().replim!=-1) {
-			if (ab.size()-newab.size()>factory.ctx.getPluginData<DLLitePlugin>().replim) {
-				DBGLOG(DBG, "RMG: PC: postcheck failed, as the number of deleted assertions is "<< ab.size()-newab.size()<<" which exceeds the limit replim="<<factory.ctx.getPluginData<DLLitePlugin>().replim);
-				return false;
-			}
-		}*/
-
 
 
 		// the case when ontology is in EL
@@ -3093,21 +3024,21 @@ namespace dllite {
 			DBGLOG(DBG,"RMG: PC: current atoms is: "<< RawPrinter::toString(reg,id)<<" with tuple "<<RawPrinter::toString(reg,reg->ogatoms.getByID(id).tuple[0]));
 
 			if (reg->ogatoms.getByID(id).tuple[0]==evid) {
-				DBGLOG(DBG,"RMG: this is eval atom, search for its twin among external ones");
+				DBGLOG(DBG,"RMG: PC: this is eval atom, search for its twin among external ones");
 
-				DBGLOG(DBG,"RMG: number of external atoms: "<<factory.innerEatoms.size());
+				DBGLOG(DBG,"RMG: PC: number of external atoms: "<<factory.innerEatoms.size());
 				for (unsigned eaIndex=0; eaIndex<factory.innerEatoms.size();eaIndex++) {
 					const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
 
 					ID eatID = factory.innerEatoms[eaIndex];
-					DBGLOG(DBG,"RMG: consider atom "<< RawPrinter::toString(reg,eatID));
+					DBGLOG(DBG,"RMG: PC: consider atom "<< RawPrinter::toString(reg,eatID));
 					bool ev=true;
 					for (int i=1; i<7;i++) {
 						ID idev = reg->ogatoms.getByID(id).tuple[i];
 						ID idea = reg->eatoms.getByID(eatID).inputs[i-1];
 						if (idev!=idea) {
-							DBGLOG(DBG,"RMG: eval.tuple["<<i<<"] = "<<RawPrinter::toString(reg, reg->ogatoms.getByID(id).tuple[i]));
-							DBGLOG(DBG,"RMG: extatom.input["<<i-1<<"] = "<<RawPrinter::toString(reg, reg->eatoms.getByID(factory.innerEatoms[eaIndex]).inputs[i-1]));
+							DBGLOG(DBG,"RMG: PC: eval.tuple["<<i<<"] = "<<RawPrinter::toString(reg, reg->ogatoms.getByID(id).tuple[i]));
+							DBGLOG(DBG,"RMG: PC: extatom.input["<<i-1<<"] = "<<RawPrinter::toString(reg, reg->eatoms.getByID(factory.innerEatoms[eaIndex]).inputs[i-1]));
 							ev=false;
 						}
 					}
