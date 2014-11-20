@@ -407,11 +407,11 @@ namespace dllite {
 			ID outlit = NogoodContainer::createLiteral(ExternalLearningHelper::getOutputAtom(query, outlist, false));
 #ifndef NDEBUG
 			std::string outlitStr = RawPrinter::toString(reg, outlit);
-			DBGLOG(DBG, "LSS: output atom is: " << outlitStr);
+			DBGLOG(DBG, "LSS: EL: output atom is: " << outlitStr);
 #endif
 
 			// enlist ABox predicates
-			DBGLOG(DBG, "LSS: ABox predicates are: ");
+			DBGLOG(DBG, "LSS: EL: ABox predicates are: ");
 			std::vector<ID> abp;
 			std::string opath;
 			if (ctx.getPluginData<DLLitePlugin>().repair) {
@@ -424,12 +424,20 @@ namespace dllite {
 			}
 
 			BOOST_FOREACH(ID id,abp) {
-				DBGLOG(DBG, "LSS:" << RawPrinter::toString(reg,id)<<" with "<< id);
+				DBGLOG(DBG, "LSS: EL:" << RawPrinter::toString(reg,id));
 			}
 
-			bm::bvector<>::enumerator en = query.interpretation->getStorage().first();
+			/*bm::bvector<>::enumerator en = query.interpretation->getStorage().first();
 			bm::bvector<>::enumerator en_end = query.interpretation->getStorage().end();
-			DBGLOG(DBG,"LSS: going through the maximal input ");
+			*/
+
+			bm::bvector<>::enumerator en = query.eatom->getPredicateInputMask()->getStorage().first();
+			bm::bvector<>::enumerator en_end = query.eatom->getPredicateInputMask()->getStorage().end();
+
+
+			if (en<en_end) {
+				DBGLOG(DBG,"LSS: EL: going through the maximal input ");
+			}
 
 			while (en < en_end) {
 				// for each atom of the maximal input check if the predicate is c+ or r+ (c-, r- are not relevant if ontology is in EL)
@@ -536,7 +544,7 @@ namespace dllite {
 						}
 
 						pred = "\""+pred+"\"";
-						DBGLOG(DBG, "LSS: EL: quoted predicate name is " << pred);
+						DBGLOG(DBG, "LSS: EL: quoted predicate name is " << pred<<" check its relevance");
 						ID opID = reg->terms.getIDByString(pred);
 
 /*
@@ -586,12 +594,9 @@ namespace dllite {
 
 
 						// check whether the obtained predicate occurs in the ABox
-
-
-						DBGLOG(DBG, "LSS: EL: check relevance of "<<pred<<" for given DL-atom");
-
 						if ((std::find(abp.begin(), abp.end(), opID) == abp.end())&&(maxinput.find(reg->terms.getIDByString(pred))==maxinput.end()))
 						{
+							// the ekement is not relevant
 							DBGLOG(DBG, "LSS: EL: predicate "<<pred<<" does not occur in either of the ABox or the maximum input, skip the rewriting");
 							sup = false;
 							break;
@@ -641,10 +646,8 @@ namespace dllite {
 
 								ia = NogoodContainer::createLiteral(reg->storeOrdinaryAtom(gatom));
 
-								DBGLOG(DBG,"LSS: EL: op is "<< RawPrinter::toString(reg,opID));
-								DBGLOG(DBG,"LSS: EL: var1 is "<< RawPrinter::toString(reg,var1ID));
 
-							    DBGLOG(DBG,"LSS: EL: the atom created for support set is "<< ia);
+							    DBGLOG(DBG,"LSS: EL: the atom created for support set is "<< RawPrinter::toString(reg,ia));
 
 							}
 
@@ -665,10 +668,9 @@ namespace dllite {
 									rp.tuple.push_back(var1ID);
 									rp.tuple.push_back(var2ID);
 								}
-								DBGLOG(DBG,"LSS: EL: op is "<< RawPrinter::toString(reg,opID));
-								DBGLOG(DBG,"LSS: EL: var1 is "<< RawPrinter::toString(reg,var1ID));
+
 								ip = NogoodContainer::createLiteral(reg->storeOrdinaryAtom(rp));
-								DBGLOG(DBG,"LSS: EL: the atom created from it is "<< RawPrinter::toString(reg,ip));
+								DBGLOG(DBG,"LSS: EL: the atom created for support set is "<< RawPrinter::toString(reg,ip));
 							}
 
 							inp.push_back(ip);
@@ -697,15 +699,16 @@ namespace dllite {
 						DBGLOG(DBG,"LSS: EL: start constructing combinations of ontology and input predicates for support sets");
 
 							std::vector<dlvhex::ID> s=ontinp;
-							for (int m=0; m<temp.size(); m++) {
 
+							for (int m=0; m<temp.size(); m++) {
 					   			 if ((i >> m) % 2 == 1)
 									s[temp[m].second]=temp[m].first;
 							}
-							for (std::vector<dlvhex::ID>::size_type t = 0; t != s.size(); t++){
+
+							for (std::vector<dlvhex::ID>::size_type t = 0; t != s.size(); t++) {
 								DBGLOG(DBG,"LSS: EL: s["<<t<<"] = "<<RawPrinter::toString(reg,s[t]));
 							}
-							DBGLOG(DBG,"LSS: EL: adding to the set of support sets");
+
 							ngset.push_back(s);
 					}
 
@@ -726,16 +729,11 @@ namespace dllite {
 						DBGLOG(DBG,"LSS: EL: there were "<< ngset.size()<<" support sets created from this rewriting");
 
 						for (std::vector<std::vector<dlvhex::ID> >::size_type t = 0; t != ngset.size(); t++) {
-							DBGLOG(DBG,"LSS: EL: consider support set number "<<t);
 							Nogood supset;
-							DBGLOG(DBG,"LSS: EL: before adding outlit");
 							supset.insert(outlit);
-							DBGLOG(DBG,"LSS: EL: add outlit "<<RawPrinter::toString(reg, outlit));
 							// construct literal from a given atom and add it to nogood
 							for (std::vector<dlvhex::ID>::size_type k = 0; k != ngset[t].size(); k++) {
-								DBGLOG(DBG,"LSS: EL: insert literal number "<<k<<" of support set number "<<t);
 								supset.insert(NogoodContainer::createLiteral(ngset[t][k]));
-								DBGLOG(DBG,"LSS: EL: inserted");
 							}
 							DBGLOG(DBG,"LSS: EL: -->adding support set "<<supset.getStringRepresentation(reg));
 
@@ -748,7 +746,7 @@ namespace dllite {
 
 				if (!computed_all_rewritings) {
 					DBGLOG(DBG,"LSS: EL: There is no evidence for support family completeness");
-					DBGLOG(DBG,"LSS: EL: Thus we add the current atom to the set of atoms not known to be completele supported");
+					DBGLOG(DBG,"LSS: EL: Thus we add the current atom to the set of atoms not known to be completely supported");
 					ctx.getPluginData<DLLitePlugin>().incompletedlat.push_back(cQID);
 				}
 
@@ -1483,7 +1481,7 @@ namespace dllite {
 							ctx.getPluginData<DLLitePlugin>().ontology))->AboxPredicates;
 		}
 		BOOST_FOREACH(ID id,abp) {
-			DBGLOG(DBG, RawPrinter::toString(reg,id)<<" with "<< id);
+			DBGLOG(DBG, RawPrinter::toString(reg,id));
 		}
 
 		int s = initial->getNogoodCount();
@@ -1533,7 +1531,7 @@ namespace dllite {
 				} else {
 					DBGLOG(DBG, "LSSO: no");
 					BOOST_FOREACH(ID litid, ng) {
-						DBGLOG(DBG,"LSSO: consider element "<<RawPrinter::toString(reg,litid)<< " with id "<<litid);
+						DBGLOG(DBG,"LSSO: consider element "<<RawPrinter::toString(reg,litid));
 
 						const OrdinaryAtom& oa = reg->onatoms.getByAddress(litid.address);
 						DBGLOG(DBG,"LSSO: is " <<RawPrinter::toString(reg,litid)<<" a guard with predicate not occurring in ABox?");

@@ -90,9 +90,7 @@ namespace dllite {
 
 			if( !outerEatoms.empty() )
 			{
-				DBGLOG(DBG,"RMG: There are outer external atoms, we store them in a separate set");
 				for(unsigned eaIndex = 0; eaIndex < outerEatoms.size(); ++eaIndex) {
-						DBGLOG(DBG,"RMG: atom: "<< RawPrinter::toString(reg,outerEatoms[eaIndex])<<" is outer, store it");
 						outer.push_back(outerEatoms[eaIndex]);
 				}
 
@@ -101,8 +99,6 @@ namespace dllite {
 
 			// clear outer atoms from the set
 			outerEatoms.clear();
-
-			DBGLOG(DBG,"RMG: number of inner external atoms after adding outer ones to them: " << outerEatoms.size());
 
 
 		// create program for domain exploration
@@ -114,7 +110,6 @@ namespace dllite {
 		}
 
 		// create guessing rules "gidb" for innerEatoms in all inner rules and constraints
-		DBGLOG(DBG, "RMG: Create eatoms guessing rules");
 		createEatomGuessingRules(ctx);
 
 		// transform original innerRules and innerConstraints to xidb with only auxiliaries
@@ -258,17 +253,11 @@ namespace dllite {
 			DLVHEX_BENCHMARK_COUNT(sidcountexternalatomcomps,1);
 		}
 
-		else {
-
-			DBGLOG(DBG,"RMG: factory.outerEatoms is empty");
-		}
-
-		// compute extensions of domain predicates and add it to the input
+		// compute extensions of domain predicates and add them to the input
 
 
 		if (factory.ctx.config.getOption("LiberalSafety")) {
 			InterpretationConstPtr domPredicatesExtension = computeExtensionOfDomainPredicates(factory.ci, factory.ctx, postprocInput, factory.deidb, factory.deidbInnerEatoms);
-			DBGLOG(DBG,"RMG: computed domain predicate extension");
 			postprocInput->add(*domPredicatesExtension);
 		}
 
@@ -278,8 +267,8 @@ namespace dllite {
 		// evaluate edb+xidb+gidb
 		{
 			DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid,"RMG: genuine g&c init guessprog");
-			DBGLOG(DBG,"RMG: before evaluating guessing program, number of outer atoms is: "<<factory.outerEatoms.size());
-			DBGLOG(DBG,"RMG: evaluating guessing program");
+			//DBGLOG(DBG,"RMG: before evaluating guessing program, number of outer eatoms is: "<<factory.outerEatoms.size());
+			//DBGLOG(DBG,"RMG: evaluating guessing program");
 			OrdinaryASPProgram program(reg, factory.xidb, postprocessedInput, factory.ctx.maxint);
 
 			// append gidb to xidb
@@ -300,13 +289,11 @@ namespace dllite {
 					// this will not find unfounded sets due to external sources,
 					// but at least unfounded sets due to disjunctions
 					!factory.ctx.config.getOption("FLPCheck") && !factory.ctx.config.getOption("UFSCheck"));
-			learnedEANogoods = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
-			learnedEANogoodsTransferredIndex = 0;
-			nogoodGrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), learnedEANogoods, learnedEANogoods, annotatedGroundProgram));
+					learnedEANogoods = SimpleNogoodContainerPtr(new SimpleNogoodContainer());
+					learnedEANogoodsTransferredIndex = 0;
+					nogoodGrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), learnedEANogoods, learnedEANogoods, annotatedGroundProgram));
 
-			DBGLOG(DBG,"RMG: Finished evaluation of a guessing program");
-			//if( factory.ctx.config.getOption("NoPropagator") == 0 )
-			//  solver->addPropagator(this);
+					//DBGLOG(DBG,"RMG: Finished evaluation of a guessing program");
 		}
 
 		// start learning support sets
@@ -411,7 +398,6 @@ namespace dllite {
 	}
 
 	void RepairModelGenerator::learnSupportSets() {
-		DBGLOG(DBG,"RMG: start support set learning");
 		DBGLOG(DBG,"RMG: number of all eatoms: "<<factory.innerEatoms.size());
 		bool rep_del_set_given = false;
 		bool rep_leave_set_given = false;
@@ -421,7 +407,7 @@ namespace dllite {
 
 		// support set option is enabled
 		if (factory.ctx.config.getOption("SupportSets")) {
-			DBGLOG(DBG,"RMG: support set learning option is enabled");
+			DBGLOG(DBG,"RMG: start support set learning");
 			OrdinaryASPProgram program(reg, factory.xidb, postprocessedInput, factory.ctx.maxint);
 			program.idb.insert(program.idb.end(), factory.gidb.begin(), factory.gidb.end());
 
@@ -475,7 +461,7 @@ namespace dllite {
 				roleAssertion.tuple.push_back(ra.second.second);
 				edb->setFact(reg->storeOrdinaryAtom(roleAssertion).address);
 			}
-			DBGLOG(DBG, "RMG!: Program edb after adding ABox "<<*edb);
+			DBGLOG(DBG, "RMG: Program edb after adding ABox "<<*edb);
 
 
 
@@ -489,7 +475,7 @@ namespace dllite {
 				std::vector<int>::iterator result;
 				result=std::max_element(maxlimit.begin(), maxlimit.end());
 				int distance = std::distance(maxlimit.begin(), result);
-				factory.ctx.maxint=maxlimit[distance];
+				factory.ctx.maxint=maxlimit[distance]*2;
 				DBGLOG(DBG,"RMG: maxint is set to "<<factory.ctx.maxint);
 
 			}
@@ -771,10 +757,19 @@ namespace dllite {
 						OrdinaryAtom bodyat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
 						bodyat.tuple.push_back(resultcountID);
 						bodyat.tuple.push_back(theDLLitePlugin.xID);
-						rule.head.push_back(reg->storeOrdinaryAtom(bodyat));
+						rule.body.push_back(reg->storeOrdinaryAtom(bodyat));
 					}
+
+
+						ID ruleID = reg->storeRule(rule);
+
+						program.idb.push_back(ruleID);
+
+						DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 				}
+
 			}
+
 
 
 
@@ -1306,7 +1301,7 @@ namespace dllite {
 				}
 
 					// print out program idb before support set learning
-					DBGLOG(DBG, "RMG: program idb before support set learning and before additional rule construction: ");
+					DBGLOG(DBG, "RMG: program idb after parsing limit option but before support set learning: ");
 
 					for (unsigned ruleIndex=0; ruleIndex<program.idb.size(); ruleIndex++) {
 						DBGLOG(DBG, "RMG: "<<RawPrinter::toString(reg,program.idb[ruleIndex])<<"\n");
@@ -1924,6 +1919,7 @@ namespace dllite {
 
 				}
 
+
 				DBGLOG(DBG, "RMG: program edb: "<<*edb);
 				DBGLOG(DBG, "RMG: adding information about support set completeness ");
 
@@ -1997,8 +1993,7 @@ namespace dllite {
 
 			else {
 
-				OrdinaryASPProgram program(reg, factory.xidb, postprocessedInput, factory.ctx.maxint);
-				program.idb.insert(program.idb.end(), factory.gidb.begin(), factory.gidb.end());
+
 
 				for(unsigned eaIndex = 0; eaIndex < factory.innerEatoms.size(); ++eaIndex) {
 
@@ -2073,7 +2068,7 @@ namespace dllite {
 
 								// restore flags of ID
 								ID idOrig = (id.isOrdinaryGroundAtom() ? reg->ogatoms.getIDByAddress(id.address) : reg->onatoms.getIDByAddress(id.address));
-								DBGLOG(DBG, "RMG: checking literal " << RawPrinter::toString(reg, idOrig));
+								//DBGLOG(DBG, "RMG: checking literal " << RawPrinter::toString(reg, idOrig));
 
 								//keep current ordinary atom of ng in oatom
 								const OrdinaryAtom& oatom = (id.isOrdinaryGroundAtom() ? reg->ogatoms.getByAddress(id.address) : reg->onatoms.getByAddress(id.address));
@@ -3862,5 +3857,6 @@ void RepairModelGenerator::propagate(InterpretationConstPtr partialInterpretatio
 DLVHEX_NAMESPACE_END
 
 // vi:ts=8:noexpandtab:
+
 
 
