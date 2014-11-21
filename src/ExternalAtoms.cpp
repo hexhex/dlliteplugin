@@ -427,9 +427,6 @@ namespace dllite {
 				DBGLOG(DBG, "LSS: EL:" << RawPrinter::toString(reg,id));
 			}
 
-			/*bm::bvector<>::enumerator en = query.interpretation->getStorage().first();
-			bm::bvector<>::enumerator en_end = query.interpretation->getStorage().end();
-			*/
 
 			bm::bvector<>::enumerator en = query.eatom->getPredicateInputMask()->getStorage().first();
 			bm::bvector<>::enumerator en_end = query.eatom->getPredicateInputMask()->getStorage().end();
@@ -485,6 +482,7 @@ namespace dllite {
 					DBGLOG(DBG, "LSS: EL: got query rewriting from Requiem " << buff);
 					number_of_considered_rewritings++;	
 					if (number_of_considered_rewritings>ctx.getPluginData<DLLitePlugin>().supnumber) {
+						DBGLOG(DBG,"LSS: EL: we stop computing further rewritings, the limit for the number of rewritings allowed for computation is reached");
 						computed_all_rewritings=false;
 						get_further_rewritings=false;
 						break;
@@ -596,7 +594,7 @@ namespace dllite {
 						// check whether the obtained predicate occurs in the ABox
 						if ((std::find(abp.begin(), abp.end(), opID) == abp.end())&&(maxinput.find(reg->terms.getIDByString(pred))==maxinput.end()))
 						{
-							// the ekement is not relevant
+							// the element is not relevant
 							DBGLOG(DBG, "LSS: EL: predicate "<<pred<<" does not occur in either of the ABox or the maximum input, skip the rewriting");
 							sup = false;
 							break;
@@ -645,7 +643,6 @@ namespace dllite {
 								if (r) gatom.tuple.push_back(var2ID);
 
 								ia = NogoodContainer::createLiteral(reg->storeOrdinaryAtom(gatom));
-
 
 							    DBGLOG(DBG,"LSS: EL: the atom created for support set is "<< RawPrinter::toString(reg,ia));
 
@@ -746,7 +743,7 @@ namespace dllite {
 
 				if (!computed_all_rewritings) {
 					DBGLOG(DBG,"LSS: EL: There is no evidence for support family completeness");
-					DBGLOG(DBG,"LSS: EL: Thus we add the current atom to the set of atoms not known to be completely supported");
+					DBGLOG(DBG,"LSS: EL: Thus we add "<<RawPrinter::toString(reg,cQID)<<" the current atom to the set of atoms not known to be completely supported");
 					ctx.getPluginData<DLLitePlugin>().incompletedlat.push_back(cQID);
 				}
 
@@ -1461,7 +1458,7 @@ namespace dllite {
 
 		}
 		optimizeSupportSets(potentialSupportSets, nogoods);
-		DBGLOG(DBG, "LSS: Finished support set learning");
+		DBGLOG(DBG, "LSS: finished support set learning");
 	}
 
 	void DLPluginAtom::optimizeSupportSets(SimpleNogoodContainerPtr initial,
