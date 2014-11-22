@@ -1,5 +1,5 @@
 AC_PREREQ([2.61])
-AC_INIT([dlvhex-dlliteplugin],[2.0.0],[dlvhex-devel@lists.sourceforge.net])
+AC_INIT([dlvhex2-dlliteplugin],[2.0.0],[dlvhex-devel@lists.sourceforge.net])
 AC_CONFIG_SRCDIR([src/DLLitePlugin.cpp])
 AC_CONFIG_HEADERS([src/config.h])
 
@@ -51,17 +51,18 @@ AC_ARG_WITH([owlcpp],
   [with_owlcpp=auto])
 
 # check for dlvhex, sets various variables
-DLVHEX_REQUIRE([2.3.0])
+DLVHEX_REQUIRE([2.4.0])
 
 AC_DEFINE([POSIX], [1], [Defined on POSIX systems.])
 
 # check owlcpp support
 AM_CONDITIONAL([DO_BUILDOWLCPP],[test "x${with_owlcpp}" == xauto])
+LOCAL_OWLCPP_ROOT="\$(top_builddir)/owlcpp"
 if test "x$with_owlcpp" == xauto; then
-	OWLCPP_ROOT=`cd ./owlcpp; pwd`
+	OWLCPP_ROOT=``
 	EXTSOLVER_LIBADD="${EXTSOLVER_LIBADD} -lowlcpp_io -lowlcpp_logic -lowlcpp_rdf -lfactpp_kernel -lraptor2 -lxml2"
-	EXTSOLVER_LDFLAGS="${EXTSOLVER_LDFLAGS} -L$OWLCPP_ROOT/libs"
-	EXTSOLVER_CPPFLAGS="${EXTSOLVER_CPPFLAGS} -I$OWLCPP_ROOT/include"
+	EXTSOLVER_LDFLAGS="${EXTSOLVER_LDFLAGS} -L$LOCAL_OWLCPP_ROOT/libs"
+	EXTSOLVER_CPPFLAGS="${EXTSOLVER_CPPFLAGS} -I$LOCAL_OWLCPP_ROOT/include"
 
 	AC_SUBST([DO_BUILDOWLCPP], ["yes"])
 	AC_DEFINE([HAVE_OWLCPP], [1], [Defined if we found owlcpp.])
@@ -71,7 +72,6 @@ if test "x$with_owlcpp" == xauto; then
 	BOOST_REQUIRE([1.55.0])
 elif test "x$with_owlcpp" != xauto -a "x$with_owlcpp" != x; then
 	OWLCPP_ROOT=$with_owlcpp
-	LOCAL_OWLCPP_ROOT=`cd ./owlcpp; pwd`
 	EXTSOLVER_LIBADD="${EXTSOLVER_LIBADD} -lowlcpp_io -lowlcpp_logic -lowlcpp_rdf -lfactpp_kernel -lraptor2 -lxml2"
 	EXTSOLVER_LDFLAGS="${EXTSOLVER_LDFLAGS} -L$LOCAL_OWLCPP_ROOT/libs"
 	EXTSOLVER_CPPFLAGS="${EXTSOLVER_CPPFLAGS} -I$LOCAL_OWLCPP_ROOT/include"
