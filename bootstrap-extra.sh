@@ -5,7 +5,7 @@ LIBXML2V=2.9.1
 RAPTOR2V=2.0.14
 FACTPPV=1.6.2
 OWLCPPV=0.3.4
-ICONVV=1.9.2 # only for Windows
+#ICONVV=1.9.2 # only for Windows
 if [ $# -gt 1 ]; then
 	boost_major_version=$2
 	BOOSTV="${boost_major_version:0:1}.${boost_major_version:1:2}.0"
