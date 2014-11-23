@@ -5,7 +5,7 @@ LIBXML2V=2.9.1
 RAPTOR2V=2.0.14
 FACTPPV=1.6.2
 OWLCPPV=0.3.4
-#ICONVV=1.9.2 # only for Windows
+ICONVV=1.9.2 # only for Windows
 if [ $# -gt 1 ]; then
 	boost_major_version=$2
 	BOOSTV="${boost_major_version:0:1}.${boost_major_version:1:2}.0"
@@ -23,7 +23,19 @@ osx=$(uname -a | grep "Darwin" | wc -l)
 if [ ! -f $OWLCPPMAINDIR/owlcpp-$OWLCPPV.zip ]
 then
 	echo "Downloading owlcpp source version $OWLCPPV"
-	wget -O $OWLCPPMAINDIR/owlcpp-$OWLCPPV.zip http://downloads.sourceforge.net/project/owl-cpp/v$OWLCPPV/owlcpp-v$OWLCPPV.zip
+
+	# This does currently not work (retry with next release of owlcpp):
+	#wget -O $OWLCPPMAINDIR/owlcpp-$OWLCPPV.zip http://downloads.sourceforge.net/project/owl-cpp/v$OWLCPPV/owlcpp-v$OWLCPPV.zip
+
+	# use git version as workaround:
+	git clone git://git.code.sf.net/p/owl-cpp/code $OWLCPPMAINDIR/owlcpp-$OWLCPPV
+	WD=$PWD
+	cd $OWLCPPMAINDIR/owlcpp-$OWLCPPV
+	git checkout 706c023712081dff811ec10d70f7161ae0f82ee3
+	cd ..
+	zip -r owlcpp-$OWLCPPV.zip owlcpp-$OWLCPPV
+	cd $WD
+
 	if [ $? -gt 0 ]
 	then
 		echo "Error while downloading owlcpp; aborting"
