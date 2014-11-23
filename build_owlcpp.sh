@@ -154,23 +154,23 @@ if [[ $OWLCPP_ROOT == "" ]]; then
 		mkdir libs
 
 		echo \"   owlcpp libs\"
-		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\io\\msvc-10.0\\release\\link-static\\threading-multi\\libowlcpp_io.lib libs\\
-		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\logic\\msvc-10.0\\release\\link-static\\libowlcpp_logic.lib libs\\
-		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\rdf\\msvc-10.0\\release\\link-static\\threading-multi\\libowlcpp_rdf.lib libs\\
-		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\io\\msvc-10.0\\debug\\link-static\\threading-multi\\libowlcpp_io.lib libs\\libowlcpp_io-dbg.lib
-		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\logic\\msvc-10.0\\debug\\link-static\\libowlcpp_logic.lib libs\\libowlcpp_logic-dbg.lib
-		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\rdf\\msvc-10.0\\debug\\link-static\\threading-multi\\libowlcpp_rdf.lib libs\\libowlcpp_rdf-dbg.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\io\\msvc-*\\release\\link-static\\threading-multi\\libowlcpp_io.lib libs\\
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\logic\\msvc-*\\release\\link-static\\libowlcpp_logic.lib libs\\
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\rdf\\msvc-*\\release\\link-static\\threading-multi\\libowlcpp_rdf.lib libs\\
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\io\\msvc-*\\debug\\link-static\\threading-multi\\libowlcpp_io.lib libs\\libowlcpp_io-dbg.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\logic\\msvc-*\\debug\\link-static\\libowlcpp_logic.lib libs\\libowlcpp_logic-dbg.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\rdf\\msvc-*\\debug\\link-static\\threading-multi\\libowlcpp_rdf.lib libs\\libowlcpp_rdf-dbg.lib
 		echo \"   libiconv libs\"
 		copy %OWLCPPMAIN%\\libiconv-$ICONVV\\lib\\iconv.lib libs\\libiconv.lib
 		echo \"   factpp libs\"
-		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\factpp\\factpp\\msvc-10.0\\release\\link-static\\libfactpp_kernel-vc100.lib libs\\libfactpp_kernel.lib
-		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\factpp\\factpp\\msvc-10.0\\debug\\link-static\\libfactpp_kernel-vc100-gd.lib libs\\libfactpp_kernel-dbg.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\factpp\\factpp\\msvc-*\\release\\link-static\\libfactpp_kernel-vc100.lib libs\\libfactpp_kernel.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\factpp\\factpp\\msvc-*\\debug\\link-static\\libfactpp_kernel-vc100-gd.lib libs\\libfactpp_kernel-dbg.lib
 		echo \"   libxml2 libs\"
-		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\libxml2\\libxml2\\msvc-10.0\\release\\libxml2-version-$LIBXML2V\\link-static\\threading-multi\\libxml2-vc100-mt-2_9.lib libs\\libxml2.lib
-		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\libxml2\\libxml2\\msvc-10.0\\debug\\libxml2-version-$LIBXML2V\\link-static\\threading-multi\\libxml2-vc100-mt-gd-2_9.lib libs\\libxml2-dbg.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\libxml2\\libxml2\\msvc-*\\release\\libxml2-version-$LIBXML2V\\link-static\\threading-multi\\libxml2-vc100-mt-2_9.lib libs\\libxml2.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\libxml2\\libxml2\\msvc-*\\debug\\libxml2-version-$LIBXML2V\\link-static\\threading-multi\\libxml2-vc100-mt-gd-2_9.lib libs\\libxml2-dbg.lib
 		echo \"   libraptor libs\"
-		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\raptor\\raptor\\msvc-10.0\\release\\link-static\\raptor-version-$RAPTOR2V\\threading-multi\\libraptor-vc100-mt-2_0.lib libs\\libraptor.lib
-		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\raptor\\raptor\\msvc-10.0\\debug\\link-static\\raptor-version-$RAPTOR2V\\threading-multi\\libraptor-vc100-mt-gd-2_0.lib libs\\libraptor-dbg.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\raptor\\raptor\\msvc-*\\release\\link-static\\raptor-version-$RAPTOR2V\\threading-multi\\libraptor-vc100-mt-2_0.lib libs\\libraptor.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\raptor\\raptor\\msvc-*\\debug\\link-static\\raptor-version-$RAPTOR2V\\threading-multi\\libraptor-vc100-mt-gd-2_0.lib libs\\libraptor-dbg.lib
 
 		echo \"   owlcpp headers\"
 		mkdir include
