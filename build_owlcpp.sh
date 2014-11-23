@@ -270,7 +270,7 @@ if [[ $OWLCPP_ROOT == "" ]]; then
 		if [ $? -gt 0 ]; then
 			cat $OWLCPPBUILDDIR/output.out
 			echo "Building boost failed; aborting"
-			cd popd > /dev/null
+			popd > /dev/null
 			exit 1
 		fi
 		popd > /dev/null
