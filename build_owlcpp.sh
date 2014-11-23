@@ -45,7 +45,8 @@ if [[ $OWLCPP_ROOT == "" ]]; then
 	echo "Extracting archives from $OWLCPPSRCDIR in $OWLCPPBUILDDIR"
 	if [ ! -d $OWLCPPBUILDDIR/owlcpp-$OWLCPPV ]; then
 		unzip $OWLCPPSRCDIR/owlcpp-$OWLCPPV.zip #> /dev/null 2> /dev/null
-		mv $OWLCPPBUILDDIR/owlcpp-v$OWLCPPV $OWLCPPBUILDDIR/owlcpp-$OWLCPPV
+		# renaming might be necessary if downloaded as tar.gz (not necessary if cloned from git)
+		mv $OWLCPPBUILDDIR/owlcpp-v$OWLCPPV $OWLCPPBUILDDIR/owlcpp-$OWLCPPV 2> /dev/null
 		patchowlcpp=1
 	else
 		patchowlcpp=0
