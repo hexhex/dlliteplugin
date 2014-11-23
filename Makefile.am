@@ -16,4 +16,5 @@ DIST_SUBDIRS = \
 
 EXTRA_DIST = \
           build_owlcpp.sh \
-          build_owlcpp.bat
+          build_owlcpp.bat \
+          requiem
