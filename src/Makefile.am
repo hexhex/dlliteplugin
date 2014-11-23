@@ -18,6 +18,12 @@ AM_CPPFLAGS = \
 	$(DLVHEX_CFLAGS) \
 	$(EXTSOLVER_CPPFLAGS)
 
+# for more information on `-version-info' see
+# <http://www.gnu.org/software/libtool/manual.html#Versioning>, and
+# the USENIX paper `Library Interface Versioning in Solaris and Linux'
+# <http://www.usenix.org/publications/library/proceedings/als00/2000papers/papers/full_papers/browndavid/browndavid.pdf>
+libdlvhexplugin_dllite_la_LDFLAGS = -version-info 2:0:0
+
 libdlvhexplugin_dllite_la_LDFLAGS = -avoid-version -module $(EXTSOLVER_LDFLAGS) $(BOOST_FILESYSTEM_LDFLAGS)
 
 libdlvhexplugin_dllite_la_LIBADD = $(EXTSOLVER_LIBADD) $(BOOST_FILESYSTEM_LIBS)
