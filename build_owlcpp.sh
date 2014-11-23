@@ -51,6 +51,7 @@ if [[ $OWLCPP_ROOT == "" ]]; then
 	else
 		patchowlcpp=0
 	fi
+	OWLCPP_ROOT=$OWLCPPBUILDDIR/owlcpp-$OWLCPPV
 	if [ ! -d $OWLCPPBUILDDIR/boost_$BOOSTVU ]; then
 		tar -xzf $OWLCPPSRCDIR/boost-$BOOSTV.tar.gz #> /dev/null 2> /dev/null
 	fi
@@ -303,56 +304,54 @@ if [[ $OWLCPP_ROOT == "" ]]; then
 		echo "Building owlcpp failed; aborting"
 		exit 1
 	fi
-
-	OWLCPPBUILDDIR=$OWLCPPBUILDDIR/owlcpp-$OWLCPPV
 fi
 
 # scan $(OWLCPPBUILDDIR) for .a and header files and create symbolic links in $OWLCPPBUILDDIR/include and $OWLCPPBUILDDIR/libs
 echo "Creating symbolic links to owlcpp"
 mkdir $OWLCPPBUILDDIR/include 2> /dev/null
 rm $OWLCPPBUILDDIR/include/*
-ln -s $OWLCPPBUILDDIR/include/owlcpp $OWLCPPBUILDDIR/include/owlcpp
-ln -s $OWLCPPBUILDDIR/out/include/factpp $OWLCPPBUILDDIR/include/factpp
-ln -s $OWLCPPBUILDDIR/out/include/libxml $OWLCPPBUILDDIR/include/libxml
-ln -s $OWLCPPBUILDDIR/out/include/raptor $OWLCPPBUILDDIR/include/raptor
+ln -s $OWLCPP_ROOT/include/owlcpp $OWLCPPBUILDDIR/include/owlcpp
+ln -s $OWLCPP_ROOT/out/include/factpp $OWLCPPBUILDDIR/include/factpp
+ln -s $OWLCPP_ROOT/out/include/libxml $OWLCPPBUILDDIR/include/libxml
+ln -s $OWLCPP_ROOT/out/include/raptor $OWLCPPBUILDDIR/include/raptor
 mkdir $OWLCPPBUILDDIR/libs 2> /dev/null
 rm $OWLCPPBUILDDIR/libs/*.a
 
-if [ $(ls $OWLCPPBUILDDIR/out/bin/io/*/release/link-static/libowlcpp_io.a | wc -l) -eq 0 ]; then
+if [ $(ls $OWLCPP_ROOT/out/bin/io/*/release/link-static/libowlcpp_io.a | wc -l) -eq 0 ]; then
 	echo "Error: libowlcpp_io.a not found in $OWLCPPBUILDDIR/out/bin/io/*/release/link-static"
 	exit 1
 fi
-ln -s $(ls $OWLCPPBUILDDIR/out/bin/io/*/release/link-static/libowlcpp_io.a | head) $OWLCPPBUILDDIR/libs/libowlcpp_io.a
+ln -s $(ls $OWLCPP_ROOT/out/bin/io/*/release/link-static/libowlcpp_io.a | head) $OWLCPPBUILDDIR/libs/libowlcpp_io.a
 
-if [ $(ls $OWLCPPBUILDDIR/out/bin/logic/*/release/link-static/libowlcpp_logic.a | wc -l) -eq 0 ]; then
-        echo "Error: libowlcpp_logic.a not found in $OWLCPPBUILDDIR/out/bin/logic/*/release/link-static"
+if [ $(ls $OWLCPP_ROOT/out/bin/logic/*/release/link-static/libowlcpp_logic.a | wc -l) -eq 0 ]; then
+        echo "Error: libowlcpp_logic.a not found in $OWLCPP_ROOT/out/bin/logic/*/release/link-static"
         exit 1
 fi
-ln -s $(ls $OWLCPPBUILDDIR/out/bin/logic/*/release/link-static/libowlcpp_logic.a | head) $OWLCPPBUILDDIR/libs/libowlcpp_logic.a
+ln -s $(ls $OWLCPP_ROOT/out/bin/logic/*/release/link-static/libowlcpp_logic.a | head) $OWLCPPBUILDDIR/libs/libowlcpp_logic.a
 
-if [ $(ls $OWLCPPBUILDDIR/out/bin/rdf/*/release/link-static/libowlcpp_rdf.a | wc -l) -eq 0 ]; then
-        echo "Error: libowlcpp_rdf.a not found in $OWLCPPBUILDDIR/out/bin/rdf/*/release/link-static"
+if [ $(ls $OWLCPP_ROOT/out/bin/rdf/*/release/link-static/libowlcpp_rdf.a | wc -l) -eq 0 ]; then
+        echo "Error: libowlcpp_rdf.a not found in $OWLCPP_ROOT/out/bin/rdf/*/release/link-static"
         exit 1
 fi
-ln -s $(ls $OWLCPPBUILDDIR/out/bin/rdf/*/release/link-static/libowlcpp_rdf.a | head) $OWLCPPBUILDDIR/libs/libowlcpp_rdf.a
+ln -s $(ls $OWLCPP_ROOT/out/bin/rdf/*/release/link-static/libowlcpp_rdf.a | head) $OWLCPPBUILDDIR/libs/libowlcpp_rdf.a
 
-if [ $(ls $OWLCPPBUILDDIR/out/ext/factpp/factpp/*/release/link-static/libfactpp_kernel*.a | wc -l) -eq 0 ]; then
-        echo "Error: libfactpp_kernel*.a not found in $OWLCPPBUILDDIR/out/ext/factpp/factpp/*/release/link-static/libfactpp_kernel*.a"
+if [ $(ls $OWLCPP_ROOT/out/ext/factpp/factpp/*/release/link-static/libfactpp_kernel*.a | wc -l) -eq 0 ]; then
+        echo "Error: libfactpp_kernel*.a not found in $OWLCPP_ROOT/out/ext/factpp/factpp/*/release/link-static/libfactpp_kernel*.a"
         exit 1
 fi
-ln -s $(ls $OWLCPPBUILDDIR/out/ext/factpp/factpp/*/release/link-static/libfactpp_kernel*.a | head) $OWLCPPBUILDDIR/libs/libfactpp_kernel.a
+ln -s $(ls $OWLCPP_ROOT/out/ext/factpp/factpp/*/release/link-static/libfactpp_kernel*.a | head) $OWLCPPBUILDDIR/libs/libfactpp_kernel.a
 
-if [ $(ls $OWLCPPBUILDDIR/out/ext/libxml2/libxml2/*/release/libxml2-version-*/link-static/libxml2*.a | wc -l) -eq 0 ]; then
-        echo "Error: libxml2*.a not found in $OWLCPPBUILDDIR/out/ext/libxml2/libxml2/*/release/libxml2-version-*/link-static/libxml2*.a"
+if [ $(ls $OWLCPP_ROOT/out/ext/libxml2/libxml2/*/release/libxml2-version-*/link-static/libxml2*.a | wc -l) -eq 0 ]; then
+        echo "Error: libxml2*.a not found in $OWLCPP_ROOT/out/ext/libxml2/libxml2/*/release/libxml2-version-*/link-static/libxml2*.a"
         exit 1
 fi
-ln -s $(ls $OWLCPPBUILDDIR/out/ext/libxml2/libxml2/*/release/libxml2-version-*/link-static/libxml2*.a | head) $OWLCPPBUILDDIR/libs/libxml2.a
+ln -s $(ls $OWLCPP_ROOT/out/ext/libxml2/libxml2/*/release/libxml2-version-*/link-static/libxml2*.a | head) $OWLCPPBUILDDIR/libs/libxml2.a
 
-if [ $(ls $OWLCPPBUILDDIR/out/ext/raptor/raptor/*/release/link-static/raptor-*/libraptor*.a | wc -l) -eq 0 ]; then
-        echo "Error: libraptor*.a not found in $OWLCPPBUILDDIR/out/ext/raptor/raptor/*/release/link-static/raptor-*/libraptor*.a"
+if [ $(ls $OWLCPP_ROOT/out/ext/raptor/raptor/*/release/link-static/raptor-*/libraptor*.a | wc -l) -eq 0 ]; then
+        echo "Error: libraptor*.a not found in $OWLCPP_ROOT/out/ext/raptor/raptor/*/release/link-static/raptor-*/libraptor*.a"
         exit 1
 fi
-ln -s $(ls $OWLCPPBUILDDIR/out/ext/raptor/raptor/*/release/link-static/raptor-*/libraptor*.a | head) $OWLCPPBUILDDIR/libs/libraptor2.a
+ln -s $(ls $OWLCPP_ROOT/out/ext/raptor/raptor/*/release/link-static/raptor-*/libraptor*.a | head) $OWLCPPBUILDDIR/libs/libraptor2.a
 
 echo "This file just marks that owlcpp was successfully built. Remove it to rebuild." > $OWLCPPBUILDDIR/successfully_built
 
