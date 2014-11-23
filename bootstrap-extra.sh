@@ -28,12 +28,13 @@ then
 	#wget -O $OWLCPPMAINDIR/owlcpp-$OWLCPPV.zip http://downloads.sourceforge.net/project/owl-cpp/v$OWLCPPV/owlcpp-v$OWLCPPV.zip
 
 	# use git version as workaround:
-	git clone git://git.code.sf.net/p/owl-cpp/code $OWLCPPMAINDIR/owlcpp-$OWLCPPV
+	git clone git://git.code.sf.net/p/owl-cpp/code $OWLCPPMAINDIR/git/owlcpp-$OWLCPPV
 	WD=$PWD
-	cd $OWLCPPMAINDIR/owlcpp-$OWLCPPV
+	cd $OWLCPPMAINDIR/git/owlcpp-$OWLCPPV
 	git checkout 706c023712081dff811ec10d70f7161ae0f82ee3
 	cd ..
 	zip -r owlcpp-$OWLCPPV.zip owlcpp-$OWLCPPV
+	mv owlcpp-$OWLCPPV.zip ../
 	cd $WD
 
 	if [ $? -gt 0 ]
