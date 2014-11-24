@@ -152,8 +152,8 @@ if [[ $OWLCPP_ROOT == "" ]]; then
 		set BOOST_BUILD_PATH=%OWLCPPMAIN%\\boost_$BOOSTVU\\tools\\build\\v2
 		set BOOST_BUILD_PATH_ESC=%BOOST_BUILD_PATH:\\=/%
 		echo boost-build \"%BOOST_BUILD_PATH_ESC%\" ; > boost-build.jam
-		call %OWLCPPMAIN%\\boost_$BOOSTVU\\tools\\build\\v2\\b2.exe release
-		call %OWLCPPMAIN%\\boost_$BOOSTVU\\tools\\build\\v2\\b2.exe debug
+		call %OWLCPPMAIN%\\boost_$BOOSTVU\\tools\\build\\v2\\b2.exe --toolset=msvc-10.0 release
+		call %OWLCPPMAIN%\\boost_$BOOSTVU\\tools\\build\\v2\\b2.exe --toolset=msvc-10.0 debug
 		del %USERPROFILE%\\user-config.jam
 
 		echo \"Extracting files\"
