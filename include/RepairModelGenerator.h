@@ -133,6 +133,8 @@ protected:
   InterpretationConstPtr postprocessedInput;
   // non-external fact input, i.e., postprocessedInput before evaluating outer eatoms
   InterpretationPtr mask;
+  InterpretationPtr filtermodel;
+  std::vector<ID> auxiliarypredicates;
 
   // internal solver
   NogoodGrounderPtr nogoodGrounder;		// grounder for nonground nogoods
@@ -179,7 +181,7 @@ protected:
 
 
   /**
-   * Checks if a compatible set is a model, i.e., it does the FLP check.
+   * Checks if a model is a repair answer set. It checks whether the external atoms have the correct values under the computed repair and proceeds with the flp check.
    * The details depend on the selected semantics (well-justified FLP or FLP) and the selected algorithm (explicit or ufs-based)
    * Depending on the eaVerificationMode, the compatibility is either directly checked in this function,
    *   of previously recorded verfication results are used to compute the return value.

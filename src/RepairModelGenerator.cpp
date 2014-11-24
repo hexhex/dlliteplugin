@@ -293,7 +293,6 @@ namespace dllite {
 					learnedEANogoodsTransferredIndex = 0;
 					nogoodGrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), learnedEANogoods, learnedEANogoods, annotatedGroundProgram));
 
-					//DBGLOG(DBG,"RMG: Finished evaluation of a guessing program");
 		}
 
 		// start learning support sets
@@ -329,14 +328,16 @@ namespace dllite {
 		DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidgcsolve, "genuine guess and check loop");
 		DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sidhexsolve, "HEX solver time");
 
+		factory.gpMask.updateMask();
+		factory.gnMask.updateMask();
+
 		InterpretationPtr modelCandidate;
 		do
 		{
 			LOG(DBG,"RMG: asking for next model");
 			modelCandidate = solver->getNextModel();
-			//	DBGLOG(DBG,"a model candidate is obtained: " << *modelCandidate);
-			// getnextmodel calls propogate method
-			// model is returned
+
+
 			DBGLOG(DBG, "RMG: Statistics:" << std::endl << solver->getStatistics());
 			if( !modelCandidate )
 			{
@@ -346,50 +347,43 @@ namespace dllite {
 			DLVHEX_BENCHMARK_REGISTER_AND_COUNT(ssidmodelcandidates, "Candidate compatible sets", 1);
 			LOG_SCOPE(DBG,"gM", false);
 
-			LOG(DBG,"RMG: got guess model " << *modelCandidate);
-
 			if (postCheck(modelCandidate)) {
+
+				modelCandidate->getStorage() -= factory.gpMask.mask()->getStorage();
+				modelCandidate->getStorage() -= factory.gnMask.mask()->getStorage();
+				modelCandidate->getStorage() -= mask->getStorage();
+
+				InterpretationPtr I(new Interpretation(reg));
+				// go through elements of the model candidate, and for each of them check whether ID of its predicate occurs in auxiliary predicates set
+				bm::bvector<>::enumerator en = modelCandidate->getStorage().first();
+				bm::bvector<>::enumerator en_end =	modelCandidate->getStorage().end();
+
+				while (en < en_end) {
+					const OrdinaryAtom& oatom = reg->ogatoms.getByAddress(*en);
+					ID oatomID = reg->ogatoms.getIDByAddress(*en);
+					ID predID = oatom.tuple[0];
+					DBGLOG(DBG,"RMG: current predicate is "<<RawPrinter::toString(reg,predID)<< " for atom "<<RawPrinter::toString(reg,oatomID));
+
+
+					if (std::find(auxiliarypredicates.begin(), auxiliarypredicates.end(),predID)!=auxiliarypredicates.end()) {
+						DBGLOG(DBG,"RMG: "<<RawPrinter::toString(reg,predID)<<" is auxiliary, should not be present in the final model ");
+						I->setFact(oatomID.address);
+					}
+
+					en++;
+				}
+
+				DBGLOG(DBG,"RMG: filtermodel is "<<*I);
+				modelCandidate->getStorage() -= I->getStorage();
+				DBGLOG(DBG,"RMG: modelCandidate is "<<*modelCandidate);
+
+
 				return modelCandidate;
 			}
 
 
 
-			//LOG(DBG,"got guess model, will do repair check on " << *modelCandidate);
-			/*if (!repairCheck(modelCandidate))
-			 {
-			 LOG(DBG,"RMG: no repair ABox was found");
-			 continue;
-			 //	return InterpretationPtr();
-
-			 }
-			 else {
-			 LOG(DBG,"RMG: repair ABox was found");
-
-			 modelCandidate->getStorage() -= factory.gpMask.mask()->getStorage();
-			 modelCandidate->getStorage() -= factory.gnMask.mask()->getStorage();
-			 modelCandidate->getStorage() -= mask->getStorage();
-
-			 LOG(DBG,"returning model without guess: " << *modelCandidate);
-			 return modelCandidate;
-			 }*/
-
-			/*else {
-			 DBGLOG(DBG, "Checking if model candidate is a model");
-			 if (!isModel(modelCandidate))
-			 {
-			 LOG(DBG,"Model candidate is not a model (isModel failed)");
-			 continue;
-			 }
-
-
-			 // remove edb and the guess (from here we don't need the guess anymore)
-			 modelCandidate->getStorage() -= factory.gpMask.mask()->getStorage();
-			 modelCandidate->getStorage() -= factory.gnMask.mask()->getStorage();
-			 modelCandidate->getStorage() -= mask->getStorage();
-
-			 LOG(DBG,"returning model without guess: " << *modelCandidate);
-			 return modelCandidate;}*/
-		}while(true);
+		} while(true);
 	}
 
 	void RepairModelGenerator::generalizeNogood(Nogood ng) {
@@ -424,7 +418,6 @@ namespace dllite {
 			if (factory.ctx.getPluginData<DLLitePlugin>().repdelconstflag!=false)
 					rep_del_set_const_given=true;
 
-
 			// prepare predicate ids
 
 			// guardpredicate
@@ -441,7 +434,37 @@ namespace dllite {
 			ID varoID2 = reg->storeVariableTerm("O1	");
 
 
-			// add ontology ABox to the edb of the program
+			// special IDs for the repair restriction
+			ID auxconceptID = reg->getNewConstantTerm("aux_o_0_1_concepts");
+			ID auxroleID = reg->getNewConstantTerm("aux_o_0_1_roles");
+			ID conceptcountID = reg->getNewConstantTerm("aux_o_0_1_concepts_count");
+			ID rolecountID = reg->getNewConstantTerm("aux_o_0_1_roles_count");
+			ID finalcountID = reg->getNewConstantTerm("final_count");
+			ID constconceptcountID = reg->getNewConstantTerm("const_concept_count");
+			ID constrolecountID = reg->getNewConstantTerm("const_roles_count");
+			ID resultcountID = reg->getNewConstantTerm("result_count");
+			ID delconstID = reg->getNewConstantTerm("delconst");
+			ID predlimID = reg->storeConstantTerm("aux_o_0_1_predlim");
+			ID constconceptcountpredlimID = reg->storeConstantTerm("const_concepts_count_predlim");
+			ID constrolecountpredlimID = reg->storeConstantTerm("const_roles_count_predlim");
+			ID constallowedforremID = reg->getNewConstantTerm("constrem");
+			ID constforbidforremID = reg->getNewConstantTerm("constnotrem");
+
+
+			auxiliarypredicates.push_back(auxconceptID);
+			auxiliarypredicates.push_back(auxroleID);
+			auxiliarypredicates.push_back(conceptcountID);
+			auxiliarypredicates.push_back(rolecountID);
+			auxiliarypredicates.push_back(finalcountID);
+			auxiliarypredicates.push_back(constconceptcountID);
+			auxiliarypredicates.push_back(constrolecountID);
+			auxiliarypredicates.push_back(resultcountID);
+			auxiliarypredicates.push_back(delconstID);
+			auxiliarypredicates.push_back(predlimID);
+			auxiliarypredicates.push_back(constconceptcountpredlimID);
+			auxiliarypredicates.push_back(constrolecountpredlimID);
+			auxiliarypredicates.push_back(constallowedforremID);
+			auxiliarypredicates.push_back(constforbidforremID);
 
 
 			InterpretationPtr edb(new Interpretation(reg));
@@ -485,16 +508,7 @@ namespace dllite {
 				DBGLOG(DBG,"RMG: replimfact: number of facts allowed for deletion is limited to "<<lim);
 				DBGLOG(DBG,"RMG: RULE: bar_aux_concept(X,Y):-bar_aux_o(X,Y).");
 
-				// TODO: before adding IDs make sure that they have not yet been added to the table
-				// prepare IDs that will be used further in the rule construction
-				ID auxconceptID = reg->getNewConstantTerm("aux_o_0_1_concepts");
-				ID auxroleID = reg->getNewConstantTerm("aux_o_0_1_roles");
-				ID conceptcountID = reg->getNewConstantTerm("aux_o_0_1_concepts_count");
-				ID rolecountID = reg->getNewConstantTerm("aux_o_0_1_roles_count");
-				ID finalcountID = reg->getNewConstantTerm("final_count");
-				ID constconceptcountID = reg->getNewConstantTerm("const_concept_count");
-				ID constrolecountID = reg->getNewConstantTerm("const_roles_count");
-				ID resultcountID = reg->getNewConstantTerm("result_count");
+
 				{
 					Rule rule(ID::MAINKIND_RULE);
 					// HEAD: bar_aux_o_concepts(X,Y)
@@ -592,8 +606,6 @@ namespace dllite {
 
 					DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 				}
-
-
 
 
 				DBGLOG(DBG,"RMG: RULE: bar_aux_role_count(Z1):-Z1=#count{X,Y,Z:bar_aux_role(X,Y,Z)}.");
@@ -781,11 +793,6 @@ namespace dllite {
 					int predlim=factory.ctx.getPluginData<DLLitePlugin>().replimpred;
 					DBGLOG(DBG, "RMG: replimpred: number of predicates allowed for deletion is limited by "<<predlim);
 
-					// prepare IDs that will be used within the rules:
-					ID predlimID = reg->storeConstantTerm("aux_o_0_1_predlim");
-					ID constconceptcountID = reg->storeConstantTerm("const_concepts_count_predlim");
-					ID constrolecountID = reg->storeConstantTerm("const_roles_count_predlim");
-
 					DBGLOG(DBG, "RMG: additional rules:");
 					DBGLOG(DBG, "RMG: RULE: bar_aux_o_pred_lim(concepts,Z):-Z=#count{X:bar_aux_o(X,Y)}.");
 
@@ -796,7 +803,7 @@ namespace dllite {
 						{
 							OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
 							headat.tuple.push_back(predlimID);
-							headat.tuple.push_back(constconceptcountID);
+							headat.tuple.push_back(constconceptcountpredlimID);
 							headat.tuple.push_back(theDLLitePlugin.zID);
 							rule.head.push_back(reg->storeOrdinaryAtom(headat));
 						}
@@ -834,7 +841,7 @@ namespace dllite {
 						{
 							OrdinaryAtom headat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
 							headat.tuple.push_back(predlimID);
-							headat.tuple.push_back(constrolecountID);
+							headat.tuple.push_back(constrolecountpredlimID);
 							headat.tuple.push_back(theDLLitePlugin.uID);
 							rule.head.push_back(reg->storeOrdinaryAtom(headat));
 						}
@@ -865,7 +872,7 @@ namespace dllite {
 						DBGLOG(DBG, "RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 					}
 
-					DBGLOG(DBG, "RMG: RULE: :-predlim<=#sum{Y:bar_aux_o_pred_lim(X,Y)}.");
+					DBGLOG(DBG, "RMG: RULE: :-predlim<=#sum{Y:predlim(X,Y)}.");
 
 
 					{
@@ -902,7 +909,6 @@ namespace dllite {
 				if (factory.ctx.getPluginData<DLLitePlugin>().replimconst!=-1) {
 
 					DBGLOG(DBG,"RMG: replimconst: number of facts allowed for deletion is limited to "<<factory.ctx.getPluginData<DLLitePlugin>().replimconst);
-					ID delconstID = reg->getNewConstantTerm("delconst");
 
 					int replimconst = factory.ctx.getPluginData<DLLitePlugin>().replimconst;
 
@@ -1048,11 +1054,14 @@ namespace dllite {
 
 				// a set of constants allowed for deletion is specified
 				if (rep_del_set_const_given) {
+					DBGLOG(DBG,"RMG: constants in the delconst set are: ");
+					for(std::vector<std::string>::iterator it = factory.ctx.getPluginData<DLLitePlugin>().repdelconst.begin(); it !=factory.ctx.getPluginData<DLLitePlugin>().repdelconst.end(); ++it) {
+						DBGLOG(DBG,"RMG:"<<*it);
+					}
 
 					// add constants allowed for deletion to the predicate allowed
 					std::vector<dlvhex::ID> indauxvec;
 
-					ID constallowedforremID = reg->getNewConstantTerm("constrem");
 
 					InterpretationPtr ind(new Interpretation(reg));
 					ind->add(*ontology->individuals);
@@ -1063,7 +1072,7 @@ namespace dllite {
 						ID idind = ID(ID::MAINKIND_TERM | ID::SUBKIND_TERM_CONSTANT, *en2);
 						std::string en2Str = RawPrinter::toString(reg,idind);
 						DBGLOG(DBG,"RMG: individual "<<en2Str);
-						if (std::find(factory.ctx.getPluginData<DLLitePlugin>().repdelconst.begin(), factory.ctx.getPluginData<DLLitePlugin>().repdelconst.end(),en2Str)==factory.ctx.getPluginData<DLLitePlugin>().repdelconst.end()) {
+						if (std::find(factory.ctx.getPluginData<DLLitePlugin>().repdelconst.begin(), factory.ctx.getPluginData<DLLitePlugin>().repdelconst.end(),en2Str)!=factory.ctx.getPluginData<DLLitePlugin>().repdelconst.end()) {
 							DBGLOG(DBG,"RMG: "<<en2Str<<" is allowed for deletion ");
 							indauxvec.push_back(idind);
 						}
@@ -1098,7 +1107,6 @@ namespace dllite {
 							bodyat.tuple.push_back(guardbarPredicateID);
 							bodyat.tuple.push_back(theDLLitePlugin.xID);
 							bodyat.tuple.push_back(theDLLitePlugin.yID);
-							bodyat.tuple.push_back(theDLLitePlugin.zID);
 							rule.body.push_back(reg->storeOrdinaryAtom(bodyat));
 						}
 						ID ruleID = reg->storeRule(rule);
@@ -1163,6 +1171,7 @@ namespace dllite {
 							bodyat.tuple.push_back(theDLLitePlugin.zID);
 							rule.body.push_back(reg->storeOrdinaryAtom(bodyat));
 						}
+
 						ID ruleID = reg->storeRule(rule);
 
 						program.idb.push_back(ruleID);
@@ -1178,7 +1187,6 @@ namespace dllite {
 
 				if (rep_leave_set_const_given) {
 
-					ID constforbidforremID = reg->getNewConstantTerm("constnotrem");
 
 					std::vector<ID> indauxvec;
 
@@ -1193,7 +1201,7 @@ namespace dllite {
 						std::string en2Str = RawPrinter::toString(reg,idind);
 						DBGLOG(DBG,"RMG: individual "<<en2Str);
 
-						if (std::find(factory.ctx.getPluginData<DLLitePlugin>().repleaveconst.begin(), factory.ctx.getPluginData<DLLitePlugin>().repleaveconst.end(),en2Str)==factory.ctx.getPluginData<DLLitePlugin>().repleaveconst.end()) {
+						if (std::find(factory.ctx.getPluginData<DLLitePlugin>().repleaveconst.begin(), factory.ctx.getPluginData<DLLitePlugin>().repleaveconst.end(),en2Str)!=factory.ctx.getPluginData<DLLitePlugin>().repleaveconst.end()) {
 							DBGLOG(DBG,"RMG: "<<en2Str<<" is forbidden for deletion ");
 							indauxvec.push_back(idind);
 						}
@@ -1208,7 +1216,7 @@ namespace dllite {
 							edb->setFact(reg->storeOrdinaryAtom(at).address);
 						}
 
-					DBGLOG(DBG,"RMG: RULE: :- bar_aux(X,Y), constnotrem(Y) ");
+					DBGLOG(DBG,"RMG: RULE: :- bar_aux(X,Y), constforbidforrem(Y) ");
 					{
 						Rule rule(ID::MAINKIND_RULE | ID::SUBKIND_RULE_CONSTRAINT);
 
@@ -1226,7 +1234,6 @@ namespace dllite {
 							bodyat.tuple.push_back(guardbarPredicateID);
 							bodyat.tuple.push_back(theDLLitePlugin.xID);
 							bodyat.tuple.push_back(theDLLitePlugin.yID);
-							bodyat.tuple.push_back(theDLLitePlugin.zID);
 							rule.body.push_back(reg->storeOrdinaryAtom(bodyat));
 
 						}
@@ -1239,11 +1246,11 @@ namespace dllite {
 
 					}
 
-					DBGLOG(DBG,"RMG: RULE: :- bar_aux(X,Y,Z), constnotrem(Y) ");
+					DBGLOG(DBG,"RMG: RULE: :- bar_aux(X,Y,Z), constforbidforrem(Y) ");
 					{
 						Rule rule(ID::MAINKIND_RULE | ID::SUBKIND_RULE_CONSTRAINT);
 
-						// BODY: constnotrem(X)
+						// BODY: constnotrem(Y)
 						{
 							OrdinaryAtom bodyat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
 							bodyat.tuple.push_back(constforbidforremID);
@@ -1269,11 +1276,11 @@ namespace dllite {
 
 					}
 
-					DBGLOG(DBG,"RMG: RULE: :- bar_aux(X,Y,Z), constnotrem(Z) ");
+					DBGLOG(DBG,"RMG: RULE: :- bar_aux(X,Y,Z), constforbidforrem(Z) ");
 					{
 						Rule rule(ID::MAINKIND_RULE | ID::SUBKIND_RULE_CONSTRAINT);
 
-						// BODY: constnotrem(X)
+						// BODY: constforbidforrem(Z)
 						{
 							OrdinaryAtom bodyat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
 							bodyat.tuple.push_back(constforbidforremID);
@@ -2307,7 +2314,7 @@ namespace dllite {
 
 								DBGLOG(DBG, "RMG: Check whether there any reasons for not deleting " <<cidstr);
 
-								if ((rep_del_set_given && (std::find(factory.ctx.getPluginData<DLLitePlugin>().repdelpred.begin(), factory.ctx.getPluginData<DLLitePlugin>().repdelpred.end(),cidstr)==factory.ctx.getPluginData<DLLitePlugin>().repdelpred.end()))) {
+								if ((rep_del_set_given && (std::find(factory.ctx.getPluginData<DLLitePlugin>().repdelpred.begin(), factory.ctx.getPluginData<DLLitePlugin>().repdelpred.end(),cidstr)==factory.ctx.getPluginData<DLLitePlugin>().repdelpred.end()))||(rep_leave_set_given)&&((std::find(factory.ctx.getPluginData<DLLitePlugin>().repleavepred.begin(), factory.ctx.getPluginData<DLLitePlugin>().repleavepred.end(),cidstr)!=factory.ctx.getPluginData<DLLitePlugin>().repleavepred.end()))) {
 									DBGLOG(DBG, "RMG: the ontology predicate "<<cidstr<< " is forbidden for deletion");
 									DBGLOG(DBG, "RMG: RULE: "<< ":-aux_o(C,X), n_e_a(Q,O). ");
 									{
@@ -2750,9 +2757,6 @@ namespace dllite {
 									// but at least unfounded sets due to disjunctions
 									!factory.ctx.config.getOption("FLPCheck") && !factory.ctx.config.getOption("UFSCheck"));
 							nogoodGrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), learnedEANogoods, learnedEANogoods, annotatedGroundProgram));
-							DBGLOG(DBG, "RMG: after creating a nogood grounder");
-
-
 					}
 
 
@@ -2922,7 +2926,6 @@ namespace dllite {
 	bool RepairModelGenerator::postCheck(InterpretationConstPtr modelCandidate) {
 
 		// the general case (both for DLLite and EL ontologies)
-
 		DBGLOG(DBG,"RMG: PC: post check of the repair model candidate is started:");
 		DBGLOG(DBG,"RMG: PC: current model candidate is: "<< *modelCandidate);
 
@@ -2992,19 +2995,19 @@ namespace dllite {
 		std::vector<ID>::iterator newa_end = newab.end();
 
 		if (newa>=newa_end) {
-			DBGLOG(DBG,"REPAIR: final ABox is empty ");
+			DBGLOG(DBG,"RMG: PC: final ABox is empty ");
 		}
 		else {
-			DBGLOG(DBG,"REPAIR: final ABox is: ");
-		while (newa<newa_end) {
-			ID idab = ID(*newa);
-			DBGLOG(DBG,"REPAIR: "<<RawPrinter::toString(reg,idab));
-			newa++;
+			DBGLOG(DBG,"RMG: PC: final ABox is: ");
+			while (newa<newa_end) {
+				ID idab = ID(*newa);
+				DBGLOG(DBG,"RMG: PC: "<<RawPrinter::toString(reg,idab));
+				newa++;
+			}
 		}
-		}
-		DBGLOG(DBG, "RMG: the number of assertions in the original ABox is "<<ab.size());
-		DBGLOG(DBG, "RMG: the number of assertions in the repaired ABox is "<<newab.size());
-		DBGLOG(DBG, "RMG: the number of removed assertions is "<<ab.size()-newab.size());
+		DBGLOG(DBG, "RMG: PC: the number of assertions in the original ABox is "<<ab.size());
+		DBGLOG(DBG, "RMG: PC: the number of assertions in the repaired ABox is "<<newab.size());
+		DBGLOG(DBG, "RMG: PC: the number of removed assertions is "<<ab.size()-newab.size());
 
 
 
@@ -3075,7 +3078,7 @@ namespace dllite {
 						// the atom with index eaIndex has to be evaluated
 						// to fix the relevant input we create new auxiliary ontology predicates (for concepts and roles)
 						ID newauxIDun = theDLLitePlugin.storeQuotedConstantTerm("000");
-						//ID newauxIDbin = theDLLitePlugin.storeQuotedConstantTerm("111");
+						ID newauxIDbin = theDLLitePlugin.storeQuotedConstantTerm("111");
 
 						if (cQID!=ID_FAIL) {
 							DBGLOG(DBG,"EL: RMG: PC: evaluate "<< RawPrinter::toString(reg,eatID)<<" for a constant "<<RawPrinter::toString(reg,reg->ogatoms.getByID(id).tuple[7]));
@@ -3253,7 +3256,7 @@ namespace dllite {
 								repl.tuple.push_back(reg->ogatoms.getByID(id).tuple[8]);
 
 								if (!modelCandidate->getFact(reg->ogatoms.getIDByStorage(repl))) {
-									DBGLOG(DBG,"EL: RMG: PC: evaluation of a current atom dod not succed");
+									DBGLOG(DBG,"EL: RMG: PC: evaluation of the current atom did not succeed");
 									return false;
 								}
 							}
@@ -3272,12 +3275,11 @@ namespace dllite {
 								repl.tuple.push_back(reg->ogatoms.getByID(id).tuple[8]);
 
 								if (!modelCandidate->getFact(reg->ogatoms.getIDByStorage(repl))) {
-									DBGLOG(DBG,"EL: RMG: PC: evaluation of a current atom did not succeed");
+									DBGLOG(DBG,"EL: RMG: PC: evaluation of the current atom did not succeed");
 									return false;
 								}
 
-
-						}
+							}
 
 					}
 
@@ -3297,7 +3299,7 @@ namespace dllite {
 
 	// start with the minimality check
 
-
+		DBGLOG(DBG,"RMG: PC: model candidate is "<< *modelCandidate);
 
 	return true;
 
@@ -3763,7 +3765,7 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate) {
 
 bool RepairModelGenerator::isModel(InterpretationConstPtr compatibleSet) {
 
-	DBGLOG(DBG,"RMG: FLP check is started..");
+	DBGLOG(DBG,"RMG: isModel is started..");
 	// TODO: incorporate unfounded set check with respect to the repaired ABox
 
 	// which semantics?
@@ -3829,7 +3831,6 @@ bool RepairModelGenerator::isModel(InterpretationConstPtr compatibleSet) {
 					return true;
 				}
 			}
-
 			// no check
 			return true;
 		}
@@ -3846,7 +3847,7 @@ bool RepairModelGenerator::isVerified(ID eaAux, InterpretationConstPtr factWasSe
 }
 // 1. current interpretation
 // 2. which facts are assigned
-// 3. which atoms changed their truth value from the revious call (which were reassigned)
+// 3. which atoms changed their truth value from the previous call (which were reassigned)
 // 2,3, can be 0
 bool RepairModelGenerator::verifyExternalAtoms(InterpretationConstPtr partialInterpretation, InterpretationConstPtr factWasSet, InterpretationConstPtr changed) {
 	DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid, "genuine g&c verifyEAtoms");
