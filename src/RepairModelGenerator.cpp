@@ -233,7 +233,7 @@ namespace dllite {
 
 		// augment input with edb
 
-#warning perhaps we can pass multiple partially preprocessed input edb's to the external solver and save a lot of processing here
+// #warning perhaps we can pass multiple partially preprocessed input edb's to the external solver and save a lot of processing here
 		postprocInput->add(*factory.ctx.edb);
 
 		// remember which facts we must remove

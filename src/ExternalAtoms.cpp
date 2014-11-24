@@ -465,6 +465,9 @@ namespace dllite {
 
 				DBGLOG(DBG, "LSS: EL: sending call to Requiem " << call);
 
+#ifdef WIN32
+				assert(false && "requiem not supported under Windows");
+#else
 				if(!(in = popen(call.c_str(), "r"))) {
 					assert(false&&"call to requiem failed");
 				}
@@ -692,7 +695,7 @@ namespace dllite {
 						DBGLOG(DBG,"LSS: EL: temp[" << t << "] = "<<RawPrinter::toString(reg,temp[t].first));
 					}
 
-					for (int i=0; i<pow(2,temp.size()); i++) {
+					for (int i=0; i<pow_int(2,temp.size()); i++) {
 						DBGLOG(DBG,"LSS: EL: start constructing combinations of ontology and input predicates for support sets");
 
 							std::vector<dlvhex::ID> s=ontinp;
@@ -748,7 +751,7 @@ namespace dllite {
 				}
 
 				pclose(in);
-
+#endif
 			}
 			else if (rQID != ID_FAIL) {
 				DBGLOG(DBG, "LSS: EL: the query is a role, thus we do not call the Requeim tool");
