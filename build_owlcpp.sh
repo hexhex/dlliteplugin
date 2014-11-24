@@ -24,6 +24,13 @@ else
 	# default
 	BOOSTV=1.55.0
 fi
+if [ $# -gt 2 ]; then
+	if [[ $3 == "extractonly" ]]; then
+		extractonly=1
+	else
+		extractonly=0
+	fi
+fi
 BOOSTVU=$(echo $BOOSTV | sed 's/\./_/g')
 
 OWLCPP_ROOT=$1
@@ -128,81 +135,81 @@ if [[ $OWLCPP_ROOT == "" ]]; then
 	cd ..
 
 	echo "	echo off
-		set OWLCPPMAIN=%CD%\\\\owlcpp
+		set OWLCPPMAIN=%CD%\\owlcpp
 
 		echo \"Bootstrapping boost build\"
-		cd %OWLCPPMAIN%\\\\boost_$BOOSTVU\\\\tools\\\\build\\\\v2
+		cd %OWLCPPMAIN%\\boost_$BOOSTVU\\tools\\build\\v2
 		call bootstrap.bat
 
 		echo \"Building owlcpp (including other necessary libraries\"
-		cd %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV
-		copy lib\\io\\jamfile_win32.jam lib\\io\\jamfile.jam
-		set OWLCPPMAIN_ESC=%OWLCPPMAIN:\\\\=/%
-		echo local utils = \"%OWLCPPMAIN_ESC%\" ; > %USERPROFILE%\\\\user-config.jam
-		type user-config_win32.jam >> %USERPROFILE%\\\\user-config.jam
-		set BOOST=%OWLCPPMAIN%\\\\boost_$BOOSTVU
-		set BOOST_ROOT=%OWLCPPMAIN%\\\\boost_$BOOSTVU
-		set BOOST_BUILD_PATH=%OWLCPPMAIN%\\\\boost_$BOOSTVU\\\\tools\\\\build\\\\v2
-		set BOOST_BUILD_PATH_ESC=%BOOST_BUILD_PATH:\\\\=/%
+		cd %OWLCPPMAIN%\\owlcpp-$OWLCPPV
+		copy lib\io\jamfile_win32.jam lib\io\jamfile.jam
+		set OWLCPPMAIN_ESC=%OWLCPPMAIN:\\=/%
+		echo local utils = \"%OWLCPPMAIN_ESC%\" ; > %USERPROFILE%\\user-config.jam
+		type user-config_win32.jam >> %USERPROFILE%\\user-config.jam
+		set BOOST=%OWLCPPMAIN%\\boost_$BOOSTVU
+		set BOOST_ROOT=%OWLCPPMAIN%\\boost_$BOOSTVU
+		set BOOST_BUILD_PATH=%OWLCPPMAIN%\\boost_$BOOSTVU\\tools\\build\\v2
+		set BOOST_BUILD_PATH_ESC=%BOOST_BUILD_PATH:\\=/%
 		echo boost-build \"%BOOST_BUILD_PATH_ESC%\" ; > boost-build.jam
-		call %OWLCPPMAIN%\\\\boost_$BOOSTVU\\\\tools\\\\build\\\\v2\\\\b2.exe release
-		call %OWLCPPMAIN%\\\\boost_$BOOSTVU\\\\tools\\\\build\\\\v2\\\\b2.exe debug
-		del %USERPROFILE%\\\\user-config.jam
+		call %OWLCPPMAIN%\\boost_$BOOSTVU\\tools\\build\\v2\\b2.exe release
+		call %OWLCPPMAIN%\\boost_$BOOSTVU\\tools\\build\\v2\\b2.exe debug
+		del %USERPROFILE%\\user-config.jam
 
 		echo \"Extracting files\"
 		cd %OWLCPPMAIN%
 		mkdir libs
 
 		echo \"   owlcpp libs\"
-		copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\bin\\\\io\\\\msvc-10.0\\\\release\\\\link-static\\\\threading-multi\\\\libowlcpp_io.lib libs\\\\
-		copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\bin\\\\logic\\\\msvc-10.0\\\\release\\\\link-static\\\\libowlcpp_logic.lib libs\\\\
-		copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\bin\\\\rdf\\\\msvc-10.0\\\\release\\\\link-static\\\\threading-multi\\\\libowlcpp_rdf.lib libs\\\\
-		copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\bin\\\\io\\\\msvc-10.0\\\\debug\\\\link-static\\\\threading-multi\\\\libowlcpp_io.lib libs\\\\libowlcpp_io-dbg.lib
-		copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\bin\\\\logic\\\\msvc-10.0\\\\debug\\\\link-static\\\\libowlcpp_logic.lib libs\\\\libowlcpp_logic-dbg.lib
-		copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\bin\\\\rdf\\\\msvc-10.0\\\\debug\\\\link-static\\\\threading-multi\\\\libowlcpp_rdf.lib libs\\\\libowlcpp_rdf-dbg.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\io\\msvc-10.0\\release\\link-static\\threading-multi\\libowlcpp_io.lib %OWLCPPMAIN%\\libs\\
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\logic\\msvc-10.0\\release\\link-static\\libowlcpp_logic.lib %OWLCPPMAIN%\\libs\\
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\rdf\\msvc-10.0\\release\\link-static\\threading-multi\\libowlcpp_rdf.lib %OWLCPPMAIN%\\libs\\
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\io\\msvc-10.0\\debug\\link-static\\threading-multi\\libowlcpp_io.lib %OWLCPPMAIN%\\libs\\libowlcpp_io-dbg.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\logic\\msvc-10.0\\debug\\link-static\\threading-multi\\libowlcpp_logic.lib %OWLCPPMAIN%\\libs\\libowlcpp_logic-dbg.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\rdf\\msvc-10.0\\debug\\link-static\\threading-multi\\libowlcpp_rdf.lib %OWLCPPMAIN%\\libs\\libowlcpp_rdf-dbg.lib
 		echo \"   libiconv libs\"
-		copy %OWLCPPMAIN%\\\\libiconv-$ICONVV\\\\lib\\\\iconv.lib libs\\\\libiconv.lib
+		copy %OWLCPPMAIN%\\libiconv-$ICONVV\\lib\\iconv.lib %OWLCPPMAIN%\\libs\\libiconv.lib
 		echo \"   factpp libs\"
-		copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\factpp\\\\factpp\\\\msvc-10.0\\\\release\\\\link-static\\\\libfactpp_kernel-vc100.lib libs\\\\libfactpp_kernel.lib
-		copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\factpp\\\\factpp\\\\msvc-10.0\\\\debug\\\\link-static\\\\libfactpp_kernel-vc100-gd.lib libs\\\\libfactpp_kernel-dbg.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\factpp\\factpp\\msvc-10.0\\release\\link-static\\libfactpp_kernel*.lib %OWLCPPMAIN%\\libs\\libfactpp_kernel.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\factpp\\factpp\\msvc-10.0\\debug\\link-static\\libfactpp_kernel*-gd.lib %OWLCPPMAIN%\\libs\\libfactpp_kernel-dbg.lib
 		echo \"   libxml2 libs\"
-		copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\libxml2\\\\libxml2\\\\msvc-10.0\\\\release\\\\libxml2-version-$LIBXML2V\\\\link-static\\\\threading-multi\\\\libxml2-vc100-mt-2_9.lib libs\\\\libxml2.lib
-		copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\libxml2\\\\libxml2\\\\msvc-10.0\\\\debug\\\\libxml2-version-$LIBXML2V\\\\link-static\\\\threading-multi\\\\libxml2-vc100-mt-gd-2_9.lib libs\\\\libxml2-dbg.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\libxml2\\libxml2\\msvc-10.0\\release\\libxml2-version-$LIBXML2V\\link-static\\threading-multi\\libxml2*-mt-2_9.lib %OWLCPPMAIN%\\libs\\libxml2.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\libxml2\\libxml2\\msvc-10.0\\debug\\libxml2-version-$LIBXML2V\\link-static\\threading-multi\\libxml2*-mt-gd-2_9.lib %OWLCPPMAIN%\\libs\\libxml2-dbg.lib
 		echo \"   libraptor libs\"
-		copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\raptor\\\\raptor\\\\msvc-10.0\\\\release\\\\link-static\\\\raptor-version-$RAPTOR2V\\\\threading-multi\\\\libraptor-vc100-mt-2_0.lib libs\\\\libraptor.lib
-		copy %OWLCPPMAIN%\\\\owlcpp-$OWLCPPV\\\\out\\\\ext\\\\raptor\\\\raptor\\\\msvc-10.0\\\\debug\\\\link-static\\\\raptor-version-$RAPTOR2V\\\\threading-multi\\\\libraptor-vc100-mt-gd-2_0.lib libs\\\\libraptor-dbg.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\raptor\\raptor\\msvc-10.0\\release\\link-static\\raptor-version-$RAPTOR2V\\threading-multi\\libraptor*-mt-2_0.lib %OWLCPPMAIN%\\libs\\libraptor.lib
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\ext\\raptor\\raptor\\msvc-10.0\\debug\\link-static\\raptor-version-$RAPTOR2V\\threading-multi\\libraptor*-mt-gd-2_0.lib %OWLCPPMAIN%\\libs\\libraptor-dbg.lib
 
 		echo \"   owlcpp headers\"
 		mkdir include
-		mkdir include\\\\owlcpp
-		mkdir include\\\\owlcpp\\\\detail
-		mkdir include\\\\owlcpp\\\\io
-		mkdir include\\\\owlcpp\\\\io\\\\detail
-		mkdir include\\\\owlcpp\\\\logic
-		mkdir include\\\\owlcpp\\\\logic\\\\detail
-		mkdir include\\\\owlcpp\\\\rdf
-		mkdir include\\\\owlcpp\\\\rdf\\\\detail
-		mkdir include\\\\owlcpp\\\\terms
-		mkdir include\\\\owlcpp\\\\terms\\\\detail
-		copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\*.h* include\\\\owlcpp\\\\
-		copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\detail\\\\*.h* include\\\\owlcpp\\\\detail\\\\
-		copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\io\\\\*.h* include\\\\owlcpp\\\\io\\\\
-		copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\io\\\\detail\\\\*.h* include\\\\owlcpp\\\\io\\\\detail\\\\
-		copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\logic\\\\*.h* include\\\\owlcpp\\\\logic\\\\
-		copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\logic\\\\detail\\\\*.h* include\\\\owlcpp\\\\logic\\\\detail\\\\
-		copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\rdf\\\\*.h* include\\\\owlcpp\\\\rdf\\\\
-		copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\rdf\\\\detail\\\\*.h* include\\\\owlcpp\\\\rdf\\\\detail\\\\
-		copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\terms\\\\*.h* include\\\\owlcpp\\\\terms\\\\
-		copy owlcpp-$OWLCPPV\\\\include\\\\owlcpp\\\\terms\\\\detail\\\\*.h* include\\\\owlcpp\\\\terms\\\\detail\\\\
+		mkdir include\\owlcpp
+		mkdir include\\owlcpp\\detail
+		mkdir include\\owlcpp\\io
+		mkdir include\\owlcpp\\io\\detail
+		mkdir include\\owlcpp\\logic
+		mkdir include\\owlcpp\\logic\\detail
+		mkdir include\\owlcpp\\rdf
+		mkdir include\\owlcpp\\rdf\\detail
+		mkdir include\\owlcpp\\terms
+		mkdir include\\owlcpp\\terms\\detail
+		copy owlcpp-$OWLCPPV\\include\\owlcpp\\*.h* include\\owlcpp\\
+		copy owlcpp-$OWLCPPV\\include\\owlcpp\\detail\\*.h* include\\owlcpp\\detail\\
+		copy owlcpp-$OWLCPPV\\include\\owlcpp\\io\\*.h* include\\owlcpp\\io\\
+		copy owlcpp-$OWLCPPV\\include\\owlcpp\\io\\detail\\*.h* include\\owlcpp\\io\\detail\\
+		copy owlcpp-$OWLCPPV\\include\\owlcpp\\logic\\*.h* include\\owlcpp\\logic\\
+		copy owlcpp-$OWLCPPV\\include\\owlcpp\\logic\\detail\\*.h* include\\owlcpp\\logic\\detail\\
+		copy owlcpp-$OWLCPPV\\include\\owlcpp\\rdf\\*.h* include\\owlcpp\\rdf\\
+		copy owlcpp-$OWLCPPV\\include\\owlcpp\\rdf\\detail\\*.h* include\\owlcpp\\rdf\\detail\\
+		copy owlcpp-$OWLCPPV\\include\\owlcpp\\terms\\*.h* include\\owlcpp\\terms\\
+		copy owlcpp-$OWLCPPV\\include\\owlcpp\\terms\\detail\\*.h* include\\owlcpp\\terms\\detail\\
 		echo \"   factpp headers\"
-		mkdir include\\\\factpp
-		copy owlcpp-$OWLCPPV\\\\out\\\\include\\\\factpp\\\\*.h* include\\\\factpp\\\\
+		mkdir include\\factpp
+		copy owlcpp-$OWLCPPV\\out\\include\\factpp\\*.h* include\\factpp\\
 		echo \"   libxml2 headers\"
-		mkdir include\\\\libxml
-		copy owlcpp-$OWLCPPV\\\\out\\\\include\\\\libxml\\\\*.h* include\\\\libxml\\\\
+		mkdir include\\libxml
+		copy owlcpp-$OWLCPPV\\out\\include\\libxml\\*.h* include\\libxml\\
 		echo \"   raptor headers\"
-		mkdir include\\\\raptor
-		copy owlcpp-$OWLCPPV\\\\out\\\\include\\\\raptor\\\\*.h* include\\\\raptor\\\\
+		mkdir include\\raptor
+		copy owlcpp-$OWLCPPV\\out\\include\\raptor\\*.h* include\\raptor\\
 		" > build_owlcpp.bat
 
 	echo "Fixing jam-file"
@@ -241,6 +248,11 @@ if [[ $OWLCPP_ROOT == "" ]]; then
 	echo " constant LIBXML2 : \"\$(utils)/libxml2-$LIBXML2V\" $LIBXML2V ;" >> $OWLCPPBUILDDIR/owlcpp-$OWLCPPV/user-config_win32.jam
 	echo " constant RAPTOR : \"\$(utils)/raptor2-$RAPTOR2V\" $RAPTOR2V ;" >> $OWLCPPBUILDDIR/owlcpp-$OWLCPPV/user-config_win32.jam
 	echo " constant FACTPP : \"\$(utils)/FaCT++-$FACTPPV\" $FACTPPV ;" >> $OWLCPPBUILDDIR/owlcpp-$OWLCPPV/user-config_win32.jam
+
+	if [[ $extractonly == 1 ]]; then
+		echo "Aborting owlcpp build as requested"
+		exit 0
+	fi
 
 	if [ ! -f $OWLCPPBUILDDIR/boost_$BOOSTVU/tools/build/v2/b2 ]; then
 		echo "Building boost.build"
