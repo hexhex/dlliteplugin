@@ -162,7 +162,7 @@ if [[ $OWLCPP_ROOT == "" ]]; then
 
 		echo \"   owlcpp libs\"
 		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\io\\msvc-10.0\\release\\link-static\\threading-multi\\libowlcpp_io.lib %OWLCPPMAIN%\\libs\\
-		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\logic\\msvc-10.0\\release\\link-static\\libowlcpp_logic.lib %OWLCPPMAIN%\\libs\\
+		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\logic\\msvc-10.0\\release\\link-static\\threading-multi\\libowlcpp_logic.lib %OWLCPPMAIN%\\libs\\
 		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\rdf\\msvc-10.0\\release\\link-static\\threading-multi\\libowlcpp_rdf.lib %OWLCPPMAIN%\\libs\\
 		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\io\\msvc-10.0\\debug\\link-static\\threading-multi\\libowlcpp_io.lib %OWLCPPMAIN%\\libs\\libowlcpp_io-dbg.lib
 		copy %OWLCPPMAIN%\\owlcpp-$OWLCPPV\\out\\bin\\logic\\msvc-10.0\\debug\\link-static\\threading-multi\\libowlcpp_logic.lib %OWLCPPMAIN%\\libs\\libowlcpp_logic-dbg.lib
