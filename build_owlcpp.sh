@@ -24,6 +24,13 @@ else
 	# default
 	BOOSTV=1.55.0
 fi
+if [ $# -gt 2 ]; then
+	if [[ $3 == "extractonly" ]]; then
+		extractonly=1
+	else
+		extractonly=0
+	fi
+fi
 BOOSTVU=$(echo $BOOSTV | sed 's/\./_/g')
 
 OWLCPP_ROOT=$1
@@ -241,6 +248,11 @@ if [[ $OWLCPP_ROOT == "" ]]; then
 	echo " constant LIBXML2 : \"\$(utils)/libxml2-$LIBXML2V\" $LIBXML2V ;" >> $OWLCPPBUILDDIR/owlcpp-$OWLCPPV/user-config_win32.jam
 	echo " constant RAPTOR : \"\$(utils)/raptor2-$RAPTOR2V\" $RAPTOR2V ;" >> $OWLCPPBUILDDIR/owlcpp-$OWLCPPV/user-config_win32.jam
 	echo " constant FACTPP : \"\$(utils)/FaCT++-$FACTPPV\" $FACTPPV ;" >> $OWLCPPBUILDDIR/owlcpp-$OWLCPPV/user-config_win32.jam
+
+	if [[ $extractonly == 1 ]]; then
+		echo "Aborting owlcpp build as requested"
+		exit 0
+	fi
 
 	if [ ! -f $OWLCPPBUILDDIR/boost_$BOOSTVU/tools/build/v2/b2 ]; then
 		echo "Building boost.build"
