@@ -47,3 +47,16 @@ This is dlvhex-dlliteplugin, a plugin for `dlvhex'.
    If dlvhex is built without --with-owlcpp, no support for ontologies
    will be compiled into the binary and --repair is not available.
 
+* Windows Users:
+
+   1.
+   Call ./bootstrap.sh under Linux or use the distributed .tar.gz file.
+
+   2.
+   Copy the source directory/unpackged .tar.gz file to a Windows machine.
+
+   3.
+   Call .\build_owlcpp.bat.
+
+   4.
+   Compile the plugin using the Visual Studio project file in folder vs10.
