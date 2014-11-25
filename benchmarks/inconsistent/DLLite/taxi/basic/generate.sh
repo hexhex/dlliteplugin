@@ -2,7 +2,7 @@
 # $2: customer probability
 
 drivers=$(($1*20))
-regions=$(($1*5))
+regions=$(($1+4))
 customers=$(($1*50))
 
 #echo $drivers
@@ -21,13 +21,13 @@ do
 done
 
 if [[ $2 -le 10 ]]; then 
-	prob1=$((32768 * 30 / 100)) 
+	prob1=$((32768 * 35 / 100)) 
 
 elif [[ $2 -le 20 ]]; then 
-	prob1=$((32768 * 70 / 100)) 
+	prob1=$((32768 * 75 / 100)) 
 
 else 
-	prob1=32768 
+	prob1=$((32768 * 90 / 100)) 
 
 fi 
 
