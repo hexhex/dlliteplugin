@@ -96,8 +96,8 @@ namespace dllite {
 
 		if (node.getPrimer()->getId() == -1
 				|| !ontology->containsNamespace(returnValue)) {
-			DBGLOG(WARNING,
-					"DLLite resoner returned constant " << returnValue << ", which seems to be not a valid individual name (will ignore it)");
+			DBGLOG(DBG,
+					"DLLite reasoner returned constant " << returnValue << ", which seems to be not a valid individual name (will ignore it)");
 		} else {
 			ID tid = theDLLitePlugin.storeQuotedConstantTerm(
 					ontology->removeNamespaceFromString(returnValue));
