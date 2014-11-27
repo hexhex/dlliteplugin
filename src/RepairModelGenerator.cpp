@@ -1089,26 +1089,12 @@ namespace dllite {
 					{
 						Rule rule(ID::MAINKIND_RULE | ID::SUBKIND_RULE_CONSTRAINT);
 
-						// BODY: delconst(X)
-						{
-							OrdinaryAtom bodyat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
-							bodyat.tuple.push_back(delconstID);
-							bodyat.tuple.push_back(theDLLitePlugin.xID);
-							rule.body.push_back(reg->storeOrdinaryAtom(bodyat));
-						}
 
 						// BODY: replimconst<=#count{X:delconst(X)}
-						{
-							BuiltinAtom biatom(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_BUILTIN);
-							biatom.tuple.push_back(ID::termFromBuiltin(ID::TERM_BUILTIN_LE));
-							biatom.tuple.push_back(ID::termFromInteger(replimconst+1));
-							biatom.tuple.push_back(theDLLitePlugin.xID);
-							rule.body.push_back(reg->batoms.storeAndGetID(biatom));
-						}
 
 						{
 							AggregateAtom agatom(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_AGGREGATE);
-							agatom.tuple[0] = ID::termFromInteger(replimconst+1);
+							agatom.tuple[0] = ID::termFromInteger(replimconst);
 							agatom.tuple[1] = ID::termFromBuiltin(ID::TERM_BUILTIN_LE);
 							agatom.tuple[2] = ID::termFromBuiltin(ID::TERM_BUILTIN_AGGCOUNT);
 							agatom.tuple[3] = ID_FAIL;
