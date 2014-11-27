@@ -30,11 +30,13 @@ fi
 			in=`printf "%03d" ${inst}`
 
 			# create ontology instances
-			./generate.sh ${concprop} > "instances/inst_concprop_${rp}_inst_${in}.hex"
-			cp ontology.owl instances/inst_concprop_${rp}_inst_${in}.owl
+			./generate.sh ${concprop} > "instances/inst_size_${rp}_inst_${in}.hex"
+			cp ontology.owl instances/inst_size_${rp}_inst_${in}.owl
 
 			# instantiate the program
-			cat program.hex | sed "s/OWLONTOLOGY/\"inst_concprop_${rp}_inst_${in}.owl\"/g" >> "instances/inst_concprop_${rp}_inst_${in}.hex"
+			cat program.hex | sed "s/OWLONTOLOGY/\"instances\/inst_size_${rp}_inst_${in}.owl\"/g" >> "instances/inst_size_${rp}_inst_${in}.hex"
+		
+
 		done
 
 	done
