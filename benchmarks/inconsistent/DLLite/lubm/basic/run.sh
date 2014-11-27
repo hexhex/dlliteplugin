@@ -119,6 +119,6 @@ else
 
 	# run single instance
 	owlfile="${instance%%.hex}.owl"
-	confstr="-n=1;--repair=$owlfile -n=1;--repair=$owlfile -n=1 --replimfact=3; --repair=$owlfile -n=1 --replimfact=10;-n=1 --repair=$owlfile --replimpred=2;-n=1 --repair=$owlfile --replimconst=10; --repair=$owlfile -n=1 --repdelpred=EDriver" # (2)
+	confstr="-n=1;--repair=$owlfile -n=1;--repair=$owlfile -n=1 --replimfact=3; --repair=$owlfile -n=1 --replimfact=20;-n=1 --repair=$owlfile --replimpred=2;-n=1 --repair=$owlfile --replimconst=20" # (2)
 	$bmscripts/runconfigs.sh "dlvhex2 --plugindir=../../../../../src --supportsets --liberalsafety --heuristics=monolithic INST CONF" "$confstr" "$instance" "$to" "$mydir/ansctimeoutputbuilder.sh"
 fi
