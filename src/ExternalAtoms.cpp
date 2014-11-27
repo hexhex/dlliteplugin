@@ -387,12 +387,14 @@ namespace dllite {
 			}
 
 			// prepare output variable, tuple and negative output atom
-			ID outvarID1 = reg->storeVariableTerm("O0");
-			ID outvarID2 = reg->storeVariableTerm("O1");
+			ID outvarID = reg->storeVariableTerm("O0");
+			ID outvarID1 = reg->storeVariableTerm("O1");
+			ID outvarID2 = reg->storeVariableTerm("O2");
+
 			Tuple outlist;
 
 			if (cQID != ID_FAIL) {
-				outlist.push_back(outvarID1);
+				outlist.push_back(outvarID);
 			}
 
 			else if (rQID != ID_FAIL) {
@@ -1458,6 +1460,7 @@ namespace dllite {
 
 		}
 		optimizeSupportSets(potentialSupportSets, nogoods);
+
 		DBGLOG(DBG, "LSS: finished support set learning");
 	}
 

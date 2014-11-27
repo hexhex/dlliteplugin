@@ -451,8 +451,8 @@ namespace dllite {
 			ID complPredicateID = reg->getAuxiliaryConstantSymbol('c', ID(0, 0));
 			// variables used in support set construction
 			ID varoID = reg->storeVariableTerm("O");
-			ID varoID1 = reg->storeVariableTerm("O0");
-			ID varoID2 = reg->storeVariableTerm("O1	");
+			ID varoID1 = reg->storeVariableTerm("O1");
+			ID varoID2 = reg->storeVariableTerm("O2");
 
 
 			// special IDs for the repair restriction
@@ -750,7 +750,7 @@ namespace dllite {
 						rule.head.push_back(reg->storeOrdinaryAtom(headat));
 					}
 
-					// BODY: U=#sum{Y:final_count(X,Y)}
+					// BODY: U=#sum{Y,X:final_count(X,Y)}
 
 
 					{
@@ -761,6 +761,7 @@ namespace dllite {
 						agatom.tuple[3] = ID_FAIL;
 						agatom.tuple[4] = ID_FAIL;
 						agatom.variables.push_back(theDLLitePlugin.yID);
+						agatom.variables.push_back(theDLLitePlugin.xID);
 						OrdinaryAtom countag(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
 						countag.tuple.push_back(finalcountID);
 						countag.tuple.push_back(theDLLitePlugin.xID);
@@ -807,7 +808,7 @@ namespace dllite {
 
 						DBGLOG(DBG, "!RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 				}
-/*
+
 				DBGLOG(DBG,"RMG: RULE: ok:-result_count(X).");
 
 					{
@@ -854,7 +855,7 @@ namespace dllite {
 						ID ruleID = reg->storeRule(rule);
 						program.idb.push_back(ruleID);
 						DBGLOG(DBG, "!RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
-				}*/
+				}
 
 
 			}
@@ -949,7 +950,7 @@ namespace dllite {
 						DBGLOG(DBG, "!RMG: RULE: Adding rule: " << RawPrinter::toString(reg, ruleID));
 					}
 
-					DBGLOG(DBG, "RMG: RULE: :-predlim<=#sum{Y:predlim(X,Y)}.");
+					DBGLOG(DBG, "RMG: RULE: :-predlim<=#sum{Y,X:predlim(X,Y)}.");
 
 
 					{
@@ -964,6 +965,7 @@ namespace dllite {
 								agatom.tuple[3] = ID_FAIL;
 								agatom.tuple[4] = ID_FAIL;
 								agatom.variables.push_back(theDLLitePlugin.yID);
+								agatom.variables.push_back(theDLLitePlugin.xID);
 								OrdinaryAtom conceptag(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
 								conceptag.tuple.push_back(predlimID);
 								conceptag.tuple.push_back(theDLLitePlugin.xID);
@@ -2185,7 +2187,9 @@ namespace dllite {
 					// go through nogoods for current external atom
 					for (int i = 0; i < s; i++) {
 						const Nogood& ng = supportSetsOfExternalAtom[eaIndex]->getNogood(i);
-						DBGLOG(DBG, "RMG: checking support set " << ng.getStringRepresentation(reg));
+						DBGLOG(DBG, "!RMG: ================================================");
+						DBGLOG(DBG, "!RMG: support set " << ng.getStringRepresentation(reg));
+						DBGLOG(DBG, "!RMG: ================================================");
 
 						// create guard atom that will be used for rules
 						OrdinaryAtom guard(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYN | ID::PROPERTY_AUX);
@@ -2563,6 +2567,7 @@ namespace dllite {
 										repl.tuple.push_back(eatom.inputs[2]);
 										repl.tuple.push_back(eatom.inputs[3]);
 										repl.tuple.push_back(eatom.inputs[4]);
+
 										if (cQID!=ID_FAIL) {
 											repl.tuple.push_back(cQID);
 											repl.tuple.push_back(varoID);
