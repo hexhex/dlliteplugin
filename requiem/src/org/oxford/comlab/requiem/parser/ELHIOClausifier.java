@@ -152,7 +152,7 @@ public class ELHIOClausifier {
 			roles.add(roleName);
 		}
 		else{
-    		System.err.println("Ignoring invalid individual axiom: " + axiom.toString());
+    		//System.err.println("Ignoring invalid individual axiom: " + axiom.toString());
 		}*/
 	}
 	
@@ -333,11 +333,11 @@ public class ELHIOClausifier {
     
     
     private void printIgnoring(OWLDescription[] conceptInclusion){
-    	System.err.print("ignoring invalid concept inclusion: ");
+    	//System.err.print("ignoring invalid concept inclusion: ");
 		for(int j=0; j < conceptInclusion.length; j++){
-			System.err.print(conceptInclusion[j].toString() + " ");
+			//System.err.print(conceptInclusion[j].toString() + " ");
 		}
-		System.err.println();
+		//System.err.println();
     }
 	
 	/**
