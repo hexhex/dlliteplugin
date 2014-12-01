@@ -482,8 +482,7 @@ namespace dllite {
 	
 				while((fgets(buff, sizeof(buff), in)!=NULL)&&get_further_rewritings) {
 					DBGLOG(DBG, "LSS: EL: got query rewriting from Requiem " << buff);
-					number_of_considered_rewritings++;	
-					if (number_of_considered_rewritings>ctx.getPluginData<DLLitePlugin>().supnumber) {
+					if ((ctx.getPluginData<DLLitePlugin>().supnumber!=-1)&&(number_of_considered_rewritings>ctx.getPluginData<DLLitePlugin>().supnumber)) {
 						DBGLOG(DBG,"LSS: EL: we stop computing further rewritings, the limit for the number of rewritings allowed for computation is reached");
 						computed_all_rewritings=false;
 						get_further_rewritings=false;
@@ -740,6 +739,7 @@ namespace dllite {
 							// construction of a support set is finished, add it to the set of all support sets
 						}
 					}
+					number_of_considered_rewritings++;
 
 				}
 
