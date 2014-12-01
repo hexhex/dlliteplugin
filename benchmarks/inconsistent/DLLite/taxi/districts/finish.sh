@@ -1,1 +1,2 @@
-cat ./${PWD##*/}.output/${PWD##*/}.dat | ~/benchmarks/scripts/tolatextable.sh
+cat ./${PWD##*/}.output/${PWD##*/}.dat | ./tolatextable.sh none
+
