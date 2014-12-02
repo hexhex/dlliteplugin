@@ -16,8 +16,8 @@ fi
 
 # create a directory for storing benchmark instances
 
-if [ -d "instances" ]; then
-	rm instances/*.*
+ if [ -d "instances" ]; then
+	rm -r instances/*
 else
 	mkdir -p instances
 fi
@@ -31,12 +31,12 @@ fi
 			in=`printf "%03d" ${inst}`
 
 			# create ontology instances
-			./generate.sh $5 ${concprop} > "instances/inst_prop_${rp}_inst_${in}.hex"
-			cp ontology_$5.owl instances/inst_prop_${rp}_inst_${in}.owl
+			./generate.sh $5 ${concprop} > "instances/inst_size_${rp}_inst_${in}.hex"
+			cp ontology_$5.owl instances/inst_size_${rp}_inst_${in}.owl
 
 			# instantiate the program
 			#cat program.hex | sed "s/OWLONTOLOGY/\"instances/inst_prop_${rp}_inst_${in}.owl\"/g" >> "instances/inst_prop_${rp}_inst_${in}.hex"
-			cat program.hex | sed "s/OWLONTOLOGY/\"instances\/inst_prop_${rp}_inst_${in}.owl\"/g" >> "instances/inst_prop_${rp}_inst_${in}.hex"
+			cat program_$5.hex | sed "s/OWLONTOLOGY/\"instances\/inst_size_${rp}_inst_${in}.owl\"/g" >> "instances/inst_size_${rp}_inst_${in}.hex"
 
 			
 		done
