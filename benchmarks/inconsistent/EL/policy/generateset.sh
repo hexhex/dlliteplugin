@@ -3,6 +3,17 @@ if [[ $# -lt 5 ]]; then
 	exit 1;
 fi
 
+
+
+if [ -d "instances" ]; then
+        rm instances/*.*
+else
+        mkdir -p instances
+fi
+
+
+
+
 ./generate_ontology.sh $5 >ontology.owl
 
 for (( prop=$1; prop <= $2; prop+=$3 ))
@@ -17,13 +28,13 @@ do
 
 		# instantiate the program
 	
-		./generate.sh $5 $prop > "instances/inst_size_${propf}_inst_${in}.dl"
-		cp instances/inst_size_${propf}_inst_${in}.dl instances/inst_size_${propf}_inst_${in}.hex
-		sed 's/\([a-z][0-9]*\"\)/http\:\/\/www.semanticweb.org\/ontologies\/2014\/4\/policy.owl#\1/g' "instances/inst_size_${propf}_inst_${in}.dl" >"instances/inst_size_${propf}_inst_${in}.dlp"
-		cat program.hex | sed "s/OWLONTOLOGY/\"inst_size_${propf}_inst_${in}.owl\"/g" >> "instances/inst_size_${propf}_inst_${in}.hex"
+		./generate.sh $5 $prop > "instances/inst_size_${propf}_inst_${in}.hex"
+		#cp instances/inst_size_${propf}_inst_${in}.dl instances/inst_size_${propf}_inst_${in}.hex
+		#sed 's/\([a-z][0-9]*\"\)/http\:\/\/www.semanticweb.org\/ontologies\/2014\/4\/policy.owl#\1/g' "instances/inst_size_${propf}_inst_${in}.dl" >"instances/inst_size_${propf}_inst_${in}.dlp"
+		cat program.hex | sed "s/OWLONTOLOGY/\"instances\/inst_size_${propf}_inst_${in}.owl\"/g" >> "instances/inst_size_${propf}_inst_${in}.hex"
 		
 
-		cat program.dlp >> "instances/inst_size_${propf}_inst_${in}.dlp"
-		rm instances/*.dl
+		#cat program.dlp >> "instances/inst_size_${propf}_inst_${in}.dlp"
+		#rm instances/*.dl
 	done
 done
