@@ -105,8 +105,10 @@ if [[ $all -eq 1 ]]; then
 	# ============================================================
 
 	# run all instances using the benchmark script run insts
-	
+
 	$bmscripts/runinsts.sh "instances/*.hex" "$mydir/run.sh" "$mydir" "$to" "$mydir/aggregateresults.sh"
+	
+	#$bmscripts/runinsts.sh "instances/*.hex" "$mydir/run.sh" "$mydir" "$to"	# (1)
 else
 	# ============================================================
 	# Define the variable "confstr" in (2) as a semicolon-
@@ -119,6 +121,8 @@ else
 
 	# run single instance
 	owlfile="${instance%%.hex}.owl"
-	confstr="--repair=$owlfile -n=1; --repair=$owlfile -n=1 --replimfact=3; --repair=$owlfile -n=1 --replimfact=20; --repair=$owlfile -n=1 --repdelpred=Broken,forbid" # (2)
+	#confstr="-n=1;--repair=$owlfile -n=1;--repair=$owlfile -n=1 --replimfact=3; --repair=$owlfile -n=1 --replimfact=20;-n=1 --repair=$owlfile --replimpred=2;-n=1 --repair=$owlfile --replimconst=20;-n=1 --repair=$owlfile --repdelpred=ResearchAssistant" # (2)
+	confstr="-n=1"
+	
 	$bmscripts/runconfigs.sh "dlvhex2 --plugindir=../../../../../src --supportsets --liberalsafety --heuristics=monolithic --silent INST CONF" "$confstr" "$instance" "$to" "$mydir/ansctimeoutputbuilder.sh"
 fi
