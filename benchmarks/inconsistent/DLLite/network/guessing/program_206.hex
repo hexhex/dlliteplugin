@@ -1991,6 +1991,6 @@ open(X) v block(X):-not &cDL[OWLONTOLOGY,a,b,c,d,"-Avail"](X), node(X).
 
 negis(X):-domain(X), route(X,Y), X!=Y.
 
-:-node(X), not negis(X).
+:-domain(X), not negis(X).
 
 pc("Block",X):-block(X).
