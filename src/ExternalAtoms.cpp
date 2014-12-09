@@ -499,8 +499,6 @@ namespace dllite {
 					bool sup=true;
 					Nogood supportset;
 
-					// auxiliary variables for constructing all support sets
-
 					// vector for storing ontology predicates that are relevant for the current support set
 					std::vector<dlvhex::ID> ont;
 
@@ -524,6 +522,7 @@ namespace dllite {
 						if ((ctx.getPluginData<DLLitePlugin>().supsize!=-1)&&(rewriting_size>ctx.getPluginData<DLLitePlugin>().supsize)) {
 							computed_all_rewritings=false;
 							DBGLOG(DBG,"LSS: EL: current rewriting exceeds the support size limit, we break");
+							sup = false;
 							break;
 						}
 
@@ -545,51 +544,6 @@ namespace dllite {
 						pred = "\""+pred+"\"";
 						DBGLOG(DBG, "LSS: EL: quoted predicate name is " << pred<<" check its relevance");
 						ID opID = reg->terms.getIDByString(pred);
-
-/*
-						if ((std::find(abp.begin(), abp.end(), opID) != abp.end())||(maxinput.find(reg->terms.getIDByString(pred))!=maxinput.end())) {
-							DBGLOG(DBG, "LSS: EL: predicate "<<pred<<" occurs in the ABox or in the maximum input");
-							sup=true;
-							// TODO: distinguish here between atoms that come from the ABox and those that participate in the maximal input
-							OrdinaryAtom gatom = theDLLitePlugin.getNewGuardAtom();
-
-							if (varm!=std::string::npos) {
-								r=true;
-								std::string var1 = str.substr (varb+1,varm-varb-1);
-								std::string var2 = str.substr (varm+1,vare-varm-1);
-								DBGLOG(DBG, "LSS: EL: this is a role predicate ");
-								ID var1ID = reg->terms.getIDByString(var1);
-								if (var1ID==ID_FAIL) var1ID = reg->storeVariableTerm(var1);
-								ID var2ID = reg->terms.getIDByString(var2);
-								if (var2ID==ID_FAIL) var2ID = reg->storeVariableTerm(var2);
-								gatom.tuple.push_back(opID);
-								gatom.tuple.push_back(var1ID);
-								gatom.tuple.push_back(var2ID);
-								// add the element to the support set
-								supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(gatom)));
-							}
-							else {
-								std::string var1 = str.substr (varb+1,vare-varb-1);
-								DBGLOG(DBG,  "LSS: EL: this is a concept predicate");
-								ID var1ID = reg->terms.getIDByString(var1);
-								if (var1ID==ID_FAIL) var1ID = reg->storeVariableTerm(var1);
-								gatom.tuple.push_back(opID);
-								gatom.tuple.push_back(var1ID);
-								// add the element to the support set
-								supportset.insert(NogoodContainer::createLiteral(reg->storeOrdinaryAtom(gatom)));
-							}
-						}
-
-
-						else {
-							DBGLOG(DBG, "LSS: EL: predicate "<<pred<<" does not occur in either of the ABox or the maximum input, skip the rewriting");
-							sup = false;
-							break;
-						}*/
-
-
-
-						// TODO: fix this part, so that the input predicates are taken into account too
 
 
 						// check whether the obtained predicate occurs in the ABox
@@ -789,11 +743,16 @@ namespace dllite {
 				DBGLOG(DBG,"LSS: EL: consider support set number "<< i <<": " << potentialSupportSets->getNogood(i).getStringRepresentation(reg));
 				const Nogood& ng = potentialSupportSets->getNogood(i);
 				DBGLOG(DBG,"LSS: EL: check maximal input");
-
 				BOOST_FOREACH (ID id, ng) {
-					//	DBGLOG(DBG,"EL: current element: "<<RawPrinter::toString(reg,id));
-					const OrdinaryAtom& oa = reg->onatoms.getByAddress(id.address);
-					//DBGLOG(DBG,"EL: does "<<RawPrinter::toString(reg,oa.tuple[1])<<" occur in the maximal innput?");
+					/*if (id.isOrdinaryGroundAtom()) {
+						=reg->ogatoms.getByID(id); DBGLOG(DBG,"LSS: ground");
+					}
+					else if (id.isOrdinaryNongroundAtom){
+						const OrdinaryAtom& oa=reg->onatoms.getByID(id); DBGLOG(DBG,"LSS: nonground");
+					}*/
+					const OrdinaryAtom& oa = (id.isOrdinaryGroundAtom() ? reg->ogatoms.getByID(id) : reg->onatoms.getByID(id));
+					DBGLOG(DBG,"EL: current element: "<<RawPrinter::toString(reg,id));
+					DBGLOG(DBG,"EL: does "<<RawPrinter::toString(reg,oa.tuple[1])<<" occur in the maximal input?");
 
 					if (maxinput.find(oa.tuple[1])!=maxinput.end()) {
 						DBGLOG(DBG,"LSS: EL: "<<RawPrinter::toString(reg,oa.tuple[1])<<" occurs in maximal input "<< maxinput[oa.tuple[1]].size()<<" new support and add it");
@@ -819,7 +778,6 @@ namespace dllite {
 							}
 							additionalSupportSets->addNogood(sup);
 							DBGLOG(DBG, "LSS: EL: adding support set with input elements: " << sup.getStringRepresentation(reg));
-
 						}
 
 					}
@@ -1494,8 +1452,8 @@ namespace dllite {
 				//DBGLOG(DBG,"EL: consider support set: "<<ng.getStringRepresentation(reg));
 
 				BOOST_FOREACH(ID litid, ng) {
-					ID newid = reg->onatoms.getIDByAddress(litid.address);
-					const OrdinaryAtom& oa = reg->onatoms.getByAddress(litid.address);
+					ID newid = litid;
+					const OrdinaryAtom& oa = (litid.isOrdinaryGroundAtom() ? reg->ogatoms.getByID(litid) : reg->onatoms.getByID(litid));
 
 					if ((newid.isGuardAuxiliary())&& (std::find(abp.begin(), abp.end(), oa.tuple[1])== abp.end())) {
 						DBGLOG(DBG, "LSS: EL: "<< RawPrinter::toString(reg,newid)<<" is a guard predicate not occurring in ABox");
