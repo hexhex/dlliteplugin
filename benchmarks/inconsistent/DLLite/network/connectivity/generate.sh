@@ -1,39 +1,40 @@
  # $1: number of nodes
  # $2: probability of a fact
 
+in=( 1 3 6 9 10 11 12 13 14 15 17 18 19 20 23 26 28 29 30 32 34 41 46 47 48 50 53 56 60 61 62 63 68 67 )
+
+out=( 2 4 5 7 8 16 21 22 24 25 27 31 33 35 36 37 38 39 40 42 43 44 45 49 51 52 54 55 57 58 59 64 65 66 69 70 )
 
 
-
-array1=( 1 2 3 9 8 5 6 7 10 47 48 49 60 61 51 52 53 55 70)
-
-array2=( 54 34 62 63 11 65 64 66 67 68 69 56 57 36 35 )
-
-array3=( 16 46 45 15 12 16 17 43 44 42 37 38  39 40 22)
-
-array4=( 22 21 18 19 20 25 26 59 58 14 32 31 27 28 29)
+propin=$((32768 * $2 / 100))
 
 
+if [[ $propin -le 20 ]]; then
+	temp=$(($2*4))
+	propout=$((32768 * $temp / 100)) 
+elif [[ $propin -le 30 ]]; then 
+	temp=$(($2*3))
+        propout=$((32768 * $temp / 100))
+elif [[ $propin -le 40 ]]; then
+	temp=$((($4*2)+10))
+        propout=$((32768 * $temp / 100))
+else 
+	propout=32768
+fi
 
+for i in "${in[@]}" 
+do
+	if [[ $RANDOM -le $propin ]]; then
+		echo "in(\"n$i\")."
+	fi
+done
 
-prop=$((32768 * $2 / 100)) 
-
-
-
-	for (( i=1; i<=$1; i++ ))
-	do
-
-		if [[ $RANDOM -le $prop ]]; then
-			#r=$((RANDOM%2+1))
-			#if [[ $r -eq 1 ]]; then
-			if [[ $RANDOM -le $prop ]]; then
-				echo "out(\"c$i\")."
-			else
-				echo "in(\"c$i\")."
-			fi
-			echo "node(\"c$i\")."
-		fi
-	done
-
+ for i in "${out[@]}" 
+ do
+        if [[ $RANDOM -le $propout ]]; then
+                 echo "out(\"n$i\")."
+        fi
+ done
 
 
 

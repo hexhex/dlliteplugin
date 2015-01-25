@@ -154,6 +154,7 @@ ID pred;
 class CtxData : public PluginData
 {
 public:
+
 std::vector<DLLitePlugin::CachedOntologyPtr> ontologies;
 bool repair;	// enable RepairModelGenerator?
 bool el; 		// is ontology in EL format?
@@ -168,9 +169,9 @@ std::vector<std::string> repdelpred; // predicates that are allowed for repair d
 bool repdelpredflag;
 std::vector<std::string> repleavepred;   // predicates that are forbidden for repair deletion
 bool repleavepredflag;
-std::vector<std::string> repdelconst; // predicates that are allowed for repair deletion
+std::vector<std::string> repdelconst; // constants that are allowed for repair deletion
 bool repdelconstflag;
-std::vector<std::string> repleaveconst;   // predicates that are forbidden for repair deletion
+std::vector<std::string> repleaveconst;   // constants that are forbidden for repair deletion
 bool repleaveconstflag;
 bool rewrite;	// automatically rewrite DL-atoms?
 bool optimize;	// automatically optimize rules with DL-atoms?

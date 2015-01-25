@@ -1,0 +1,718 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY network "http://www.semanticweb.org/ontologies/2014/1/network.owl#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/ontologies/2014/1/network.owl#"
+     xml:base="http://www.semanticweb.org/ontologies/2014/1/network.owl"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:network="http://www.semanticweb.org/ontologies/2014/1/network.owl#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/ontologies/2014/1/network.owl"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#edge -->
+
+    <owl:ObjectProperty rdf:about="&network;edge"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#forbid -->
+
+    <owl:ObjectProperty rdf:about="&network;forbid">
+        <rdfs:domain rdf:resource="&network;Block"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#Avail -->
+
+    <owl:Class rdf:about="&network;Avail">
+        <owl:disjointWith rdf:resource="&network;Block"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#Block -->
+
+    <owl:Class rdf:about="&network;Block"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#Broken -->
+
+    <owl:Class rdf:about="&network;Broken">
+        <rdfs:subClassOf rdf:resource="&network;Block"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2014/1/network.owl#Node -->
+
+    <owl:Class rdf:about="&network;Node"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+<owl:Thing rdf:about="#n0"><edge rdf:resource="#n1"/></owl:Thing>
+<owl:Thing rdf:about="#n0"><edge rdf:resource="#n2"/></owl:Thing>
+<owl:Thing rdf:about="#n3"><edge rdf:resource="#n4"/></owl:Thing>
+<owl:Thing rdf:about="#n5"><edge rdf:resource="#n6"/></owl:Thing>
+<owl:Thing rdf:about="#n7"><edge rdf:resource="#n8"/></owl:Thing>
+<owl:Thing rdf:about="#n9"><edge rdf:resource="#n10"/></owl:Thing>
+<owl:Thing rdf:about="#n9"><edge rdf:resource="#n10"/></owl:Thing>
+<owl:Thing rdf:about="#n10"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n9"><forbid rdf:resource="#n10"/></owl:Thing>
+<owl:Thing rdf:about="#n11"><edge rdf:resource="#n12"/></owl:Thing>
+<owl:Thing rdf:about="#n13"><edge rdf:resource="#n14"/></owl:Thing>
+<owl:Thing rdf:about="#n15"><edge rdf:resource="#n16"/></owl:Thing>
+<owl:Thing rdf:about="#n12"><edge rdf:resource="#n11"/></owl:Thing>
+<owl:Thing rdf:about="#n6"><edge rdf:resource="#n5"/></owl:Thing>
+<owl:Thing rdf:about="#n17"><edge rdf:resource="#n18"/></owl:Thing>
+<owl:Thing rdf:about="#n19"><edge rdf:resource="#n20"/></owl:Thing>
+<owl:Thing rdf:about="#n2"><edge rdf:resource="#n1"/></owl:Thing>
+<owl:Thing rdf:about="#n2"><edge rdf:resource="#n0"/></owl:Thing>
+<owl:Thing rdf:about="#n16"><edge rdf:resource="#n15"/></owl:Thing>
+<owl:Thing rdf:about="#n20"><edge rdf:resource="#n19"/></owl:Thing>
+<owl:Thing rdf:about="#n21"><edge rdf:resource="#n22"/></owl:Thing>
+<owl:Thing rdf:about="#n4"><edge rdf:resource="#n3"/></owl:Thing>
+<owl:Thing rdf:about="#n14"><edge rdf:resource="#n13"/></owl:Thing>
+<owl:Thing rdf:about="#n8"><edge rdf:resource="#n7"/></owl:Thing>
+<owl:Thing rdf:about="#n7"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n8"><forbid rdf:resource="#n7"/></owl:Thing>
+<owl:Thing rdf:about="#n18"><edge rdf:resource="#n17"/></owl:Thing>
+<owl:Thing rdf:about="#n22"><edge rdf:resource="#n21"/></owl:Thing>
+<owl:Thing rdf:about="#n1"><edge rdf:resource="#n0"/></owl:Thing>
+<owl:Thing rdf:about="#n1"><edge rdf:resource="#n2"/></owl:Thing>
+<owl:Thing rdf:about="#n0"><edge rdf:resource="#n23"/></owl:Thing>
+<owl:Thing rdf:about="#n23"><edge rdf:resource="#n0"/></owl:Thing>
+<owl:Thing rdf:about="#n23"><edge rdf:resource="#n3"/></owl:Thing>
+<owl:Thing rdf:about="#n3"><edge rdf:resource="#n23"/></owl:Thing>
+<owl:Thing rdf:about="#n23"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n3"><forbid rdf:resource="#n23"/></owl:Thing>
+<owl:Thing rdf:about="#n3"><edge rdf:resource="#n24"/></owl:Thing>
+<owl:Thing rdf:about="#n24"><edge rdf:resource="#n3"/></owl:Thing>
+<owl:Thing rdf:about="#n3"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n24"><forbid rdf:resource="#n3"/></owl:Thing>
+<owl:Thing rdf:about="#n24"><edge rdf:resource="#n25"/></owl:Thing>
+<owl:Thing rdf:about="#n25"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n24"><forbid rdf:resource="#n25"/></owl:Thing>
+<owl:Thing rdf:about="#n25"><edge rdf:resource="#n24"/></owl:Thing>
+<owl:Thing rdf:about="#n25"><edge rdf:resource="#n5"/></owl:Thing>
+<owl:Thing rdf:about="#n5"><edge rdf:resource="#n25"/></owl:Thing>
+<owl:Thing rdf:about="#n25"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n5"><forbid rdf:resource="#n25"/></owl:Thing>
+<owl:Thing rdf:about="#n5"><edge rdf:resource="#n26"/></owl:Thing>
+<owl:Thing rdf:about="#n26"><edge rdf:resource="#n5"/></owl:Thing>
+<owl:Thing rdf:about="#n26"><edge rdf:resource="#n7"/></owl:Thing>
+<owl:Thing rdf:about="#n7"><edge rdf:resource="#n26"/></owl:Thing>
+<owl:Thing rdf:about="#n7"><edge rdf:resource="#n27"/></owl:Thing>
+<owl:Thing rdf:about="#n27"><edge rdf:resource="#n7"/></owl:Thing>
+<owl:Thing rdf:about="#n27"><edge rdf:resource="#n28"/></owl:Thing>
+<owl:Thing rdf:about="#n28"><edge rdf:resource="#n27"/></owl:Thing>
+<owl:Thing rdf:about="#n28"><edge rdf:resource="#n29"/></owl:Thing>
+<owl:Thing rdf:about="#n29"><edge rdf:resource="#n28"/></owl:Thing>
+<owl:Thing rdf:about="#n29"><edge rdf:resource="#n30"/></owl:Thing>
+<owl:Thing rdf:about="#n30"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n29"><forbid rdf:resource="#n30"/></owl:Thing>
+<owl:Thing rdf:about="#n30"><edge rdf:resource="#n29"/></owl:Thing>
+<owl:Thing rdf:about="#n30"><edge rdf:resource="#n31"/></owl:Thing>
+<owl:Thing rdf:about="#n31"><edge rdf:resource="#n30"/></owl:Thing>
+<owl:Thing rdf:about="#n30"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n31"><forbid rdf:resource="#n30"/></owl:Thing>
+<owl:Thing rdf:about="#n31"><edge rdf:resource="#n32"/></owl:Thing>
+<owl:Thing rdf:about="#n32"><edge rdf:resource="#n31"/></owl:Thing>
+<owl:Thing rdf:about="#n32"><edge rdf:resource="#n33"/></owl:Thing>
+<owl:Thing rdf:about="#n33"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n32"><forbid rdf:resource="#n33"/></owl:Thing>
+<owl:Thing rdf:about="#n33"><edge rdf:resource="#n32"/></owl:Thing>
+<owl:Thing rdf:about="#n33"><edge rdf:resource="#n34"/></owl:Thing>
+<owl:Thing rdf:about="#n34"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n33"><forbid rdf:resource="#n34"/></owl:Thing>
+<owl:Thing rdf:about="#n34"><edge rdf:resource="#n33"/></owl:Thing>
+<owl:Thing rdf:about="#n34"><edge rdf:resource="#n35"/></owl:Thing>
+<owl:Thing rdf:about="#n35"><edge rdf:resource="#n34"/></owl:Thing>
+<owl:Thing rdf:about="#n34"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n35"><forbid rdf:resource="#n34"/></owl:Thing>
+<owl:Thing rdf:about="#n35"><edge rdf:resource="#n36"/></owl:Thing>
+<owl:Thing rdf:about="#n36"><edge rdf:resource="#n35"/></owl:Thing>
+<owl:Thing rdf:about="#n35"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n36"><forbid rdf:resource="#n35"/></owl:Thing>
+<owl:Thing rdf:about="#n36"><edge rdf:resource="#n37"/></owl:Thing>
+<owl:Thing rdf:about="#n37"><edge rdf:resource="#n38"/></owl:Thing>
+<owl:Thing rdf:about="#n38"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n37"><forbid rdf:resource="#n38"/></owl:Thing>
+<owl:Thing rdf:about="#n37"><edge rdf:resource="#n36"/></owl:Thing>
+<owl:Thing rdf:about="#n38"><edge rdf:resource="#n37"/></owl:Thing>
+<owl:Thing rdf:about="#n9"><edge rdf:resource="#n10"/></owl:Thing>
+<owl:Thing rdf:about="#n9"><edge rdf:resource="#n10"/></owl:Thing>
+<owl:Thing rdf:about="#n39"><edge rdf:resource="#n40"/></owl:Thing>
+<owl:Thing rdf:about="#n39"><edge rdf:resource="#n40"/></owl:Thing>
+<owl:Thing rdf:about="#n9"><edge rdf:resource="#n10"/></owl:Thing>
+<owl:Thing rdf:about="#n41"><edge rdf:resource="#n42"/></owl:Thing>
+<owl:Thing rdf:about="#n42"><edge rdf:resource="#n41"/></owl:Thing>
+<owl:Thing rdf:about="#n42"><edge rdf:resource="#n43"/></owl:Thing>
+<owl:Thing rdf:about="#n43"><edge rdf:resource="#n42"/></owl:Thing>
+<owl:Thing rdf:about="#n43"><edge rdf:resource="#n44"/></owl:Thing>
+<owl:Thing rdf:about="#n44"><edge rdf:resource="#n43"/></owl:Thing>
+<owl:Thing rdf:about="#n44"><edge rdf:resource="#n45"/></owl:Thing>
+<owl:Thing rdf:about="#n45"><edge rdf:resource="#n44"/></owl:Thing>
+<owl:Thing rdf:about="#n44"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n45"><forbid rdf:resource="#n44"/></owl:Thing>
+<owl:Thing rdf:about="#n45"><edge rdf:resource="#n11"/></owl:Thing>
+<owl:Thing rdf:about="#n11"><edge rdf:resource="#n45"/></owl:Thing>
+<owl:Thing rdf:about="#n11"><edge rdf:resource="#n46"/></owl:Thing>
+<owl:Thing rdf:about="#n46"><edge rdf:resource="#n11"/></owl:Thing>
+<owl:Thing rdf:about="#n11"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n46"><forbid rdf:resource="#n11"/></owl:Thing>
+<owl:Thing rdf:about="#n46"><edge rdf:resource="#n47"/></owl:Thing>
+<owl:Thing rdf:about="#n47"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n46"><forbid rdf:resource="#n47"/></owl:Thing>
+<owl:Thing rdf:about="#n47"><edge rdf:resource="#n46"/></owl:Thing>
+<owl:Thing rdf:about="#n47"><edge rdf:resource="#n48"/></owl:Thing>
+<owl:Thing rdf:about="#n48"><edge rdf:resource="#n47"/></owl:Thing>
+<owl:Thing rdf:about="#n48"><edge rdf:resource="#n49"/></owl:Thing>
+<owl:Thing rdf:about="#n49"><edge rdf:resource="#n48"/></owl:Thing>
+<owl:Thing rdf:about="#n48"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n49"><forbid rdf:resource="#n48"/></owl:Thing>
+<owl:Thing rdf:about="#n49"><edge rdf:resource="#n50"/></owl:Thing>
+<owl:Thing rdf:about="#n50"><edge rdf:resource="#n49"/></owl:Thing>
+<owl:Thing rdf:about="#n50"><edge rdf:resource="#n51"/></owl:Thing>
+<owl:Thing rdf:about="#n51"><edge rdf:resource="#n50"/></owl:Thing>
+<owl:Thing rdf:about="#n51"><edge rdf:resource="#n52"/></owl:Thing>
+<owl:Thing rdf:about="#n52"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n51"><forbid rdf:resource="#n52"/></owl:Thing>
+<owl:Thing rdf:about="#n52"><edge rdf:resource="#n51"/></owl:Thing>
+<owl:Thing rdf:about="#n52"><edge rdf:resource="#n13"/></owl:Thing>
+<owl:Thing rdf:about="#n13"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n52"><forbid rdf:resource="#n13"/></owl:Thing>
+<owl:Thing rdf:about="#n13"><edge rdf:resource="#n52"/></owl:Thing>
+<owl:Thing rdf:about="#n13"><edge rdf:resource="#n53"/></owl:Thing>
+<owl:Thing rdf:about="#n53"><edge rdf:resource="#n13"/></owl:Thing>
+<owl:Thing rdf:about="#n53"><edge rdf:resource="#n15"/></owl:Thing>
+<owl:Thing rdf:about="#n15"><edge rdf:resource="#n53"/></owl:Thing>
+<owl:Thing rdf:about="#n15"><edge rdf:resource="#n54"/></owl:Thing>
+<owl:Thing rdf:about="#n54"><edge rdf:resource="#n15"/></owl:Thing>
+<owl:Thing rdf:about="#n54"><edge rdf:resource="#n55"/></owl:Thing>
+<owl:Thing rdf:about="#n55"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n54"><forbid rdf:resource="#n55"/></owl:Thing>
+<owl:Thing rdf:about="#n55"><edge rdf:resource="#n54"/></owl:Thing>
+<owl:Thing rdf:about="#n55"><edge rdf:resource="#n56"/></owl:Thing>
+<owl:Thing rdf:about="#n56"><edge rdf:resource="#n55"/></owl:Thing>
+<owl:Thing rdf:about="#n56"><edge rdf:resource="#n57"/></owl:Thing>
+<owl:Thing rdf:about="#n57"><edge rdf:resource="#n56"/></owl:Thing>
+<owl:Thing rdf:about="#n57"><edge rdf:resource="#n58"/></owl:Thing>
+<owl:Thing rdf:about="#n58"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n57"><forbid rdf:resource="#n58"/></owl:Thing>
+<owl:Thing rdf:about="#n58"><edge rdf:resource="#n57"/></owl:Thing>
+<owl:Thing rdf:about="#n58"><edge rdf:resource="#n59"/></owl:Thing>
+<owl:Thing rdf:about="#n59"><edge rdf:resource="#n58"/></owl:Thing>
+<owl:Thing rdf:about="#n58"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n59"><forbid rdf:resource="#n58"/></owl:Thing>
+<owl:Thing rdf:about="#n59"><edge rdf:resource="#n60"/></owl:Thing>
+<owl:Thing rdf:about="#n60"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n59"><forbid rdf:resource="#n60"/></owl:Thing>
+<owl:Thing rdf:about="#n60"><edge rdf:resource="#n61"/></owl:Thing>
+<owl:Thing rdf:about="#n61"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n60"><forbid rdf:resource="#n61"/></owl:Thing>
+<owl:Thing rdf:about="#n60"><edge rdf:resource="#n59"/></owl:Thing>
+<owl:Thing rdf:about="#n61"><edge rdf:resource="#n60"/></owl:Thing>
+<owl:Thing rdf:about="#n62"><edge rdf:resource="#n12"/></owl:Thing>
+<owl:Thing rdf:about="#n12"><edge rdf:resource="#n62"/></owl:Thing>
+<owl:Thing rdf:about="#n12"><edge rdf:resource="#n63"/></owl:Thing>
+<owl:Thing rdf:about="#n63"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n12"><forbid rdf:resource="#n63"/></owl:Thing>
+<owl:Thing rdf:about="#n63"><edge rdf:resource="#n12"/></owl:Thing>
+<owl:Thing rdf:about="#n63"><edge rdf:resource="#n64"/></owl:Thing>
+<owl:Thing rdf:about="#n64"><edge rdf:resource="#n63"/></owl:Thing>
+<owl:Thing rdf:about="#n63"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n64"><forbid rdf:resource="#n63"/></owl:Thing>
+<owl:Thing rdf:about="#n64"><edge rdf:resource="#n6"/></owl:Thing>
+<owl:Thing rdf:about="#n6"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n64"><forbid rdf:resource="#n6"/></owl:Thing>
+<owl:Thing rdf:about="#n6"><edge rdf:resource="#n64"/></owl:Thing>
+<owl:Thing rdf:about="#n64"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n6"><forbid rdf:resource="#n64"/></owl:Thing>
+<owl:Thing rdf:about="#n6"><edge rdf:resource="#n17"/></owl:Thing>
+<owl:Thing rdf:about="#n17"><edge rdf:resource="#n6"/></owl:Thing>
+<owl:Thing rdf:about="#n6"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n17"><forbid rdf:resource="#n6"/></owl:Thing>
+<owl:Thing rdf:about="#n17"><edge rdf:resource="#n19"/></owl:Thing>
+<owl:Thing rdf:about="#n19"><edge rdf:resource="#n17"/></owl:Thing>
+<owl:Thing rdf:about="#n19"><edge rdf:resource="#n65"/></owl:Thing>
+<owl:Thing rdf:about="#n65"><edge rdf:resource="#n19"/></owl:Thing>
+<owl:Thing rdf:about="#n65"><edge rdf:resource="#n2"/></owl:Thing>
+<owl:Thing rdf:about="#n2"><edge rdf:resource="#n65"/></owl:Thing>
+<owl:Thing rdf:about="#n2"><edge rdf:resource="#n66"/></owl:Thing>
+<owl:Thing rdf:about="#n66"><edge rdf:resource="#n2"/></owl:Thing>
+<owl:Thing rdf:about="#n66"><edge rdf:resource="#n67"/></owl:Thing>
+<owl:Thing rdf:about="#n67"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n66"><forbid rdf:resource="#n67"/></owl:Thing>
+<owl:Thing rdf:about="#n67"><edge rdf:resource="#n66"/></owl:Thing>
+<owl:Thing rdf:about="#n66"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n67"><forbid rdf:resource="#n66"/></owl:Thing>
+<owl:Thing rdf:about="#n67"><edge rdf:resource="#n68"/></owl:Thing>
+<owl:Thing rdf:about="#n68"><edge rdf:resource="#n67"/></owl:Thing>
+<owl:Thing rdf:about="#n68"><edge rdf:resource="#n16"/></owl:Thing>
+<owl:Thing rdf:about="#n16"><edge rdf:resource="#n68"/></owl:Thing>
+<owl:Thing rdf:about="#n16"><edge rdf:resource="#n69"/></owl:Thing>
+<owl:Thing rdf:about="#n69"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n16"><forbid rdf:resource="#n69"/></owl:Thing>
+<owl:Thing rdf:about="#n69"><edge rdf:resource="#n16"/></owl:Thing>
+<owl:Thing rdf:about="#n69"><edge rdf:resource="#n70"/></owl:Thing>
+<owl:Thing rdf:about="#n70"><edge rdf:resource="#n69"/></owl:Thing>
+<owl:Thing rdf:about="#n70"><edge rdf:resource="#n71"/></owl:Thing>
+<owl:Thing rdf:about="#n71"><edge rdf:resource="#n70"/></owl:Thing>
+<owl:Thing rdf:about="#n71"><edge rdf:resource="#n72"/></owl:Thing>
+<owl:Thing rdf:about="#n72"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n71"><forbid rdf:resource="#n72"/></owl:Thing>
+<owl:Thing rdf:about="#n72"><edge rdf:resource="#n71"/></owl:Thing>
+<owl:Thing rdf:about="#n72"><edge rdf:resource="#n73"/></owl:Thing>
+<owl:Thing rdf:about="#n73"><edge rdf:resource="#n72"/></owl:Thing>
+<owl:Thing rdf:about="#n73"><edge rdf:resource="#n74"/></owl:Thing>
+<owl:Thing rdf:about="#n74"><edge rdf:resource="#n75"/></owl:Thing>
+<owl:Thing rdf:about="#n74"><edge rdf:resource="#n73"/></owl:Thing>
+<owl:Thing rdf:about="#n75"><edge rdf:resource="#n74"/></owl:Thing>
+<owl:Thing rdf:about="#n76"><edge rdf:resource="#n77"/></owl:Thing>
+<owl:Thing rdf:about="#n77"><edge rdf:resource="#n76"/></owl:Thing>
+<owl:Thing rdf:about="#n76"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n77"><forbid rdf:resource="#n76"/></owl:Thing>
+<owl:Thing rdf:about="#n77"><edge rdf:resource="#n78"/></owl:Thing>
+<owl:Thing rdf:about="#n78"><edge rdf:resource="#n77"/></owl:Thing>
+<owl:Thing rdf:about="#n77"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n78"><forbid rdf:resource="#n77"/></owl:Thing>
+<owl:Thing rdf:about="#n78"><edge rdf:resource="#n79"/></owl:Thing>
+<owl:Thing rdf:about="#n79"><edge rdf:resource="#n78"/></owl:Thing>
+<owl:Thing rdf:about="#n79"><edge rdf:resource="#n80"/></owl:Thing>
+<owl:Thing rdf:about="#n80"><edge rdf:resource="#n79"/></owl:Thing>
+<owl:Thing rdf:about="#n80"><edge rdf:resource="#n81"/></owl:Thing>
+<owl:Thing rdf:about="#n81"><edge rdf:resource="#n80"/></owl:Thing>
+<owl:Thing rdf:about="#n81"><edge rdf:resource="#n82"/></owl:Thing>
+<owl:Thing rdf:about="#n82"><edge rdf:resource="#n81"/></owl:Thing>
+<owl:Thing rdf:about="#n82"><edge rdf:resource="#n83"/></owl:Thing>
+<owl:Thing rdf:about="#n83"><edge rdf:resource="#n82"/></owl:Thing>
+<owl:Thing rdf:about="#n83"><edge rdf:resource="#n20"/></owl:Thing>
+<owl:Thing rdf:about="#n20"><edge rdf:resource="#n83"/></owl:Thing>
+<owl:Thing rdf:about="#n20"><edge rdf:resource="#n84"/></owl:Thing>
+<owl:Thing rdf:about="#n84"><edge rdf:resource="#n20"/></owl:Thing>
+<owl:Thing rdf:about="#n20"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n84"><forbid rdf:resource="#n20"/></owl:Thing>
+<owl:Thing rdf:about="#n84"><edge rdf:resource="#n21"/></owl:Thing>
+<owl:Thing rdf:about="#n21"><edge rdf:resource="#n84"/></owl:Thing>
+<owl:Thing rdf:about="#n21"><edge rdf:resource="#n85"/></owl:Thing>
+<owl:Thing rdf:about="#n85"><edge rdf:resource="#n21"/></owl:Thing>
+<owl:Thing rdf:about="#n85"><edge rdf:resource="#n4"/></owl:Thing>
+<owl:Thing rdf:about="#n4"><edge rdf:resource="#n85"/></owl:Thing>
+<owl:Thing rdf:about="#n85"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n4"><forbid rdf:resource="#n85"/></owl:Thing>
+<owl:Thing rdf:about="#n4"><edge rdf:resource="#n86"/></owl:Thing>
+<owl:Thing rdf:about="#n86"><edge rdf:resource="#n4"/></owl:Thing>
+<owl:Thing rdf:about="#n86"><edge rdf:resource="#n87"/></owl:Thing>
+<owl:Thing rdf:about="#n87"><edge rdf:resource="#n86"/></owl:Thing>
+<owl:Thing rdf:about="#n87"><edge rdf:resource="#n14"/></owl:Thing>
+<owl:Thing rdf:about="#n14"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n87"><forbid rdf:resource="#n14"/></owl:Thing>
+<owl:Thing rdf:about="#n14"><edge rdf:resource="#n87"/></owl:Thing>
+<owl:Thing rdf:about="#n14"><edge rdf:resource="#n88"/></owl:Thing>
+<owl:Thing rdf:about="#n88"><edge rdf:resource="#n14"/></owl:Thing>
+<owl:Thing rdf:about="#n88"><edge rdf:resource="#n89"/></owl:Thing>
+<owl:Thing rdf:about="#n89"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n88"><forbid rdf:resource="#n89"/></owl:Thing>
+<owl:Thing rdf:about="#n89"><edge rdf:resource="#n88"/></owl:Thing>
+<owl:Thing rdf:about="#n89"><edge rdf:resource="#n90"/></owl:Thing>
+<owl:Thing rdf:about="#n90"><edge rdf:resource="#n89"/></owl:Thing>
+<owl:Thing rdf:about="#n90"><edge rdf:resource="#n91"/></owl:Thing>
+<owl:Thing rdf:about="#n91"><edge rdf:resource="#n92"/></owl:Thing>
+<owl:Thing rdf:about="#n91"><edge rdf:resource="#n90"/></owl:Thing>
+<owl:Thing rdf:about="#n92"><edge rdf:resource="#n91"/></owl:Thing>
+<owl:Thing rdf:about="#n93"><edge rdf:resource="#n94"/></owl:Thing>
+<owl:Thing rdf:about="#n94"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n93"><forbid rdf:resource="#n94"/></owl:Thing>
+<owl:Thing rdf:about="#n94"><edge rdf:resource="#n93"/></owl:Thing>
+<owl:Thing rdf:about="#n94"><edge rdf:resource="#n95"/></owl:Thing>
+<owl:Thing rdf:about="#n95"><edge rdf:resource="#n94"/></owl:Thing>
+<owl:Thing rdf:about="#n95"><edge rdf:resource="#n96"/></owl:Thing>
+<owl:Thing rdf:about="#n96"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n95"><forbid rdf:resource="#n96"/></owl:Thing>
+<owl:Thing rdf:about="#n96"><edge rdf:resource="#n95"/></owl:Thing>
+<owl:Thing rdf:about="#n96"><edge rdf:resource="#n97"/></owl:Thing>
+<owl:Thing rdf:about="#n97"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n96"><forbid rdf:resource="#n97"/></owl:Thing>
+<owl:Thing rdf:about="#n97"><edge rdf:resource="#n96"/></owl:Thing>
+<owl:Thing rdf:about="#n97"><edge rdf:resource="#n98"/></owl:Thing>
+<owl:Thing rdf:about="#n98"><edge rdf:resource="#n97"/></owl:Thing>
+<owl:Thing rdf:about="#n98"><edge rdf:resource="#n99"/></owl:Thing>
+<owl:Thing rdf:about="#n99"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n98"><forbid rdf:resource="#n99"/></owl:Thing>
+<owl:Thing rdf:about="#n99"><edge rdf:resource="#n98"/></owl:Thing>
+<owl:Thing rdf:about="#n98"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n99"><forbid rdf:resource="#n98"/></owl:Thing>
+<owl:Thing rdf:about="#n99"><edge rdf:resource="#n100"/></owl:Thing>
+<owl:Thing rdf:about="#n100"><edge rdf:resource="#n99"/></owl:Thing>
+<owl:Thing rdf:about="#n100"><edge rdf:resource="#n101"/></owl:Thing>
+<owl:Thing rdf:about="#n101"><edge rdf:resource="#n100"/></owl:Thing>
+<owl:Thing rdf:about="#n101"><edge rdf:resource="#n102"/></owl:Thing>
+<owl:Thing rdf:about="#n102"><edge rdf:resource="#n101"/></owl:Thing>
+<owl:Thing rdf:about="#n102"><edge rdf:resource="#n8"/></owl:Thing>
+<owl:Thing rdf:about="#n8"><edge rdf:resource="#n102"/></owl:Thing>
+<owl:Thing rdf:about="#n8"><edge rdf:resource="#n103"/></owl:Thing>
+<owl:Thing rdf:about="#n103"><edge rdf:resource="#n8"/></owl:Thing>
+<owl:Thing rdf:about="#n103"><edge rdf:resource="#n18"/></owl:Thing>
+<owl:Thing rdf:about="#n18"><edge rdf:resource="#n103"/></owl:Thing>
+<owl:Thing rdf:about="#n103"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n18"><forbid rdf:resource="#n103"/></owl:Thing>
+<owl:Thing rdf:about="#n18"><edge rdf:resource="#n22"/></owl:Thing>
+<owl:Thing rdf:about="#n22"><edge rdf:resource="#n18"/></owl:Thing>
+<owl:Thing rdf:about="#n18"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n22"><forbid rdf:resource="#n18"/></owl:Thing>
+<owl:Thing rdf:about="#n22"><edge rdf:resource="#n1"/></owl:Thing>
+<owl:Thing rdf:about="#n1"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n22"><forbid rdf:resource="#n1"/></owl:Thing>
+<owl:Thing rdf:about="#n1"><edge rdf:resource="#n22"/></owl:Thing>
+<owl:Thing rdf:about="#n1"><edge rdf:resource="#n104"/></owl:Thing>
+<owl:Thing rdf:about="#n104"><edge rdf:resource="#n1"/></owl:Thing>
+<owl:Thing rdf:about="#n104"><edge rdf:resource="#n105"/></owl:Thing>
+<owl:Thing rdf:about="#n105"><edge rdf:resource="#n104"/></owl:Thing>
+<owl:Thing rdf:about="#n105"><edge rdf:resource="#n106"/></owl:Thing>
+<owl:Thing rdf:about="#n106"><edge rdf:resource="#n107"/></owl:Thing>
+<owl:Thing rdf:about="#n107"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n106"><forbid rdf:resource="#n107"/></owl:Thing>
+<owl:Thing rdf:about="#n106"><edge rdf:resource="#n105"/></owl:Thing>
+<owl:Thing rdf:about="#n107"><edge rdf:resource="#n106"/></owl:Thing>
+<owl:Thing rdf:about="#n38"><edge rdf:resource="#n108"/></owl:Thing>
+<owl:Thing rdf:about="#n0"><edge rdf:resource="#n109"/></owl:Thing>
+<owl:Thing rdf:about="#n23"><edge rdf:resource="#n110"/></owl:Thing>
+<owl:Thing rdf:about="#n3"><edge rdf:resource="#n111"/></owl:Thing>
+<owl:Thing rdf:about="#n111"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n3"><forbid rdf:resource="#n111"/></owl:Thing>
+<owl:Thing rdf:about="#n24"><edge rdf:resource="#n112"/></owl:Thing>
+<owl:Thing rdf:about="#n25"><edge rdf:resource="#n113"/></owl:Thing>
+<owl:Thing rdf:about="#n5"><edge rdf:resource="#n114"/></owl:Thing>
+<owl:Thing rdf:about="#n114"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n5"><forbid rdf:resource="#n114"/></owl:Thing>
+<owl:Thing rdf:about="#n26"><edge rdf:resource="#n115"/></owl:Thing>
+<owl:Thing rdf:about="#n7"><edge rdf:resource="#n116"/></owl:Thing>
+<owl:Thing rdf:about="#n27"><edge rdf:resource="#n117"/></owl:Thing>
+<owl:Thing rdf:about="#n28"><edge rdf:resource="#n118"/></owl:Thing>
+<owl:Thing rdf:about="#n29"><edge rdf:resource="#n119"/></owl:Thing>
+<owl:Thing rdf:about="#n30"><edge rdf:resource="#n120"/></owl:Thing>
+<owl:Thing rdf:about="#n31"><edge rdf:resource="#n121"/></owl:Thing>
+<owl:Thing rdf:about="#n32"><edge rdf:resource="#n122"/></owl:Thing>
+<owl:Thing rdf:about="#n33"><edge rdf:resource="#n123"/></owl:Thing>
+<owl:Thing rdf:about="#n34"><edge rdf:resource="#n124"/></owl:Thing>
+<owl:Thing rdf:about="#n35"><edge rdf:resource="#n125"/></owl:Thing>
+<owl:Thing rdf:about="#n36"><edge rdf:resource="#n126"/></owl:Thing>
+<owl:Thing rdf:about="#n126"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n36"><forbid rdf:resource="#n126"/></owl:Thing>
+<owl:Thing rdf:about="#n37"><edge rdf:resource="#n127"/></owl:Thing>
+<owl:Thing rdf:about="#n9"><edge rdf:resource="#n10"/></owl:Thing>
+<owl:Thing rdf:about="#n128"><edge rdf:resource="#n129"/></owl:Thing>
+<owl:Thing rdf:about="#n39"><edge rdf:resource="#n40"/></owl:Thing>
+<owl:Thing rdf:about="#n130"><edge rdf:resource="#n131"/></owl:Thing>
+<owl:Thing rdf:about="#n9"><edge rdf:resource="#n10"/></owl:Thing>
+<owl:Thing rdf:about="#n128"><edge rdf:resource="#n129"/></owl:Thing>
+<owl:Thing rdf:about="#n61"><edge rdf:resource="#n132"/></owl:Thing>
+<owl:Thing rdf:about="#n41"><edge rdf:resource="#n133"/></owl:Thing>
+<owl:Thing rdf:about="#n42"><edge rdf:resource="#n134"/></owl:Thing>
+<owl:Thing rdf:about="#n134"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n42"><forbid rdf:resource="#n134"/></owl:Thing>
+<owl:Thing rdf:about="#n43"><edge rdf:resource="#n135"/></owl:Thing>
+<owl:Thing rdf:about="#n44"><edge rdf:resource="#n136"/></owl:Thing>
+<owl:Thing rdf:about="#n45"><edge rdf:resource="#n137"/></owl:Thing>
+<owl:Thing rdf:about="#n11"><edge rdf:resource="#n138"/></owl:Thing>
+<owl:Thing rdf:about="#n46"><edge rdf:resource="#n139"/></owl:Thing>
+<owl:Thing rdf:about="#n47"><edge rdf:resource="#n140"/></owl:Thing>
+<owl:Thing rdf:about="#n48"><edge rdf:resource="#n141"/></owl:Thing>
+<owl:Thing rdf:about="#n49"><edge rdf:resource="#n142"/></owl:Thing>
+<owl:Thing rdf:about="#n50"><edge rdf:resource="#n143"/></owl:Thing>
+<owl:Thing rdf:about="#n143"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n50"><forbid rdf:resource="#n143"/></owl:Thing>
+<owl:Thing rdf:about="#n51"><edge rdf:resource="#n144"/></owl:Thing>
+<owl:Thing rdf:about="#n52"><edge rdf:resource="#n145"/></owl:Thing>
+<owl:Thing rdf:about="#n13"><edge rdf:resource="#n146"/></owl:Thing>
+<owl:Thing rdf:about="#n53"><edge rdf:resource="#n147"/></owl:Thing>
+<owl:Thing rdf:about="#n15"><edge rdf:resource="#n148"/></owl:Thing>
+<owl:Thing rdf:about="#n54"><edge rdf:resource="#n149"/></owl:Thing>
+<owl:Thing rdf:about="#n55"><edge rdf:resource="#n150"/></owl:Thing>
+<owl:Thing rdf:about="#n56"><edge rdf:resource="#n151"/></owl:Thing>
+<owl:Thing rdf:about="#n151"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n56"><forbid rdf:resource="#n151"/></owl:Thing>
+<owl:Thing rdf:about="#n57"><edge rdf:resource="#n152"/></owl:Thing>
+<owl:Thing rdf:about="#n58"><edge rdf:resource="#n153"/></owl:Thing>
+<owl:Thing rdf:about="#n153"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n58"><forbid rdf:resource="#n153"/></owl:Thing>
+<owl:Thing rdf:about="#n59"><edge rdf:resource="#n154"/></owl:Thing>
+<owl:Thing rdf:about="#n60"><edge rdf:resource="#n155"/></owl:Thing>
+<owl:Thing rdf:about="#n75"><edge rdf:resource="#n156"/></owl:Thing>
+<owl:Thing rdf:about="#n156"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n75"><forbid rdf:resource="#n156"/></owl:Thing>
+<owl:Thing rdf:about="#n62"><edge rdf:resource="#n157"/></owl:Thing>
+<owl:Thing rdf:about="#n12"><edge rdf:resource="#n138"/></owl:Thing>
+<owl:Thing rdf:about="#n63"><edge rdf:resource="#n158"/></owl:Thing>
+<owl:Thing rdf:about="#n158"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n63"><forbid rdf:resource="#n158"/></owl:Thing>
+<owl:Thing rdf:about="#n64"><edge rdf:resource="#n159"/></owl:Thing>
+<owl:Thing rdf:about="#n159"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n64"><forbid rdf:resource="#n159"/></owl:Thing>
+<owl:Thing rdf:about="#n6"><edge rdf:resource="#n114"/></owl:Thing>
+<owl:Thing rdf:about="#n17"><edge rdf:resource="#n160"/></owl:Thing>
+<owl:Thing rdf:about="#n19"><edge rdf:resource="#n161"/></owl:Thing>
+<owl:Thing rdf:about="#n65"><edge rdf:resource="#n162"/></owl:Thing>
+<owl:Thing rdf:about="#n2"><edge rdf:resource="#n109"/></owl:Thing>
+<owl:Thing rdf:about="#n66"><edge rdf:resource="#n163"/></owl:Thing>
+<owl:Thing rdf:about="#n163"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n66"><forbid rdf:resource="#n163"/></owl:Thing>
+<owl:Thing rdf:about="#n67"><edge rdf:resource="#n164"/></owl:Thing>
+<owl:Thing rdf:about="#n68"><edge rdf:resource="#n165"/></owl:Thing>
+<owl:Thing rdf:about="#n16"><edge rdf:resource="#n148"/></owl:Thing>
+<owl:Thing rdf:about="#n69"><edge rdf:resource="#n166"/></owl:Thing>
+<owl:Thing rdf:about="#n70"><edge rdf:resource="#n167"/></owl:Thing>
+<owl:Thing rdf:about="#n71"><edge rdf:resource="#n168"/></owl:Thing>
+<owl:Thing rdf:about="#n168"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n71"><forbid rdf:resource="#n168"/></owl:Thing>
+<owl:Thing rdf:about="#n72"><edge rdf:resource="#n169"/></owl:Thing>
+<owl:Thing rdf:about="#n169"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n72"><forbid rdf:resource="#n169"/></owl:Thing>
+<owl:Thing rdf:about="#n73"><edge rdf:resource="#n170"/></owl:Thing>
+<owl:Thing rdf:about="#n74"><edge rdf:resource="#n171"/></owl:Thing>
+<owl:Thing rdf:about="#n92"><edge rdf:resource="#n172"/></owl:Thing>
+<owl:Thing rdf:about="#n76"><edge rdf:resource="#n173"/></owl:Thing>
+<owl:Thing rdf:about="#n77"><edge rdf:resource="#n174"/></owl:Thing>
+<owl:Thing rdf:about="#n174"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n77"><forbid rdf:resource="#n174"/></owl:Thing>
+<owl:Thing rdf:about="#n78"><edge rdf:resource="#n175"/></owl:Thing>
+<owl:Thing rdf:about="#n79"><edge rdf:resource="#n176"/></owl:Thing>
+<owl:Thing rdf:about="#n80"><edge rdf:resource="#n177"/></owl:Thing>
+<owl:Thing rdf:about="#n81"><edge rdf:resource="#n178"/></owl:Thing>
+<owl:Thing rdf:about="#n82"><edge rdf:resource="#n179"/></owl:Thing>
+<owl:Thing rdf:about="#n83"><edge rdf:resource="#n180"/></owl:Thing>
+<owl:Thing rdf:about="#n20"><edge rdf:resource="#n161"/></owl:Thing>
+<owl:Thing rdf:about="#n84"><edge rdf:resource="#n181"/></owl:Thing>
+<owl:Thing rdf:about="#n21"><edge rdf:resource="#n182"/></owl:Thing>
+<owl:Thing rdf:about="#n85"><edge rdf:resource="#n183"/></owl:Thing>
+<owl:Thing rdf:about="#n4"><edge rdf:resource="#n111"/></owl:Thing>
+<owl:Thing rdf:about="#n86"><edge rdf:resource="#n184"/></owl:Thing>
+<owl:Thing rdf:about="#n87"><edge rdf:resource="#n185"/></owl:Thing>
+<owl:Thing rdf:about="#n14"><edge rdf:resource="#n146"/></owl:Thing>
+<owl:Thing rdf:about="#n88"><edge rdf:resource="#n186"/></owl:Thing>
+<owl:Thing rdf:about="#n186"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n88"><forbid rdf:resource="#n186"/></owl:Thing>
+<owl:Thing rdf:about="#n89"><edge rdf:resource="#n187"/></owl:Thing>
+<owl:Thing rdf:about="#n90"><edge rdf:resource="#n188"/></owl:Thing>
+<owl:Thing rdf:about="#n91"><edge rdf:resource="#n189"/></owl:Thing>
+<owl:Thing rdf:about="#n107"><edge rdf:resource="#n190"/></owl:Thing>
+<owl:Thing rdf:about="#n93"><edge rdf:resource="#n191"/></owl:Thing>
+<owl:Thing rdf:about="#n94"><edge rdf:resource="#n192"/></owl:Thing>
+<owl:Thing rdf:about="#n95"><edge rdf:resource="#n193"/></owl:Thing>
+<owl:Thing rdf:about="#n193"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n95"><forbid rdf:resource="#n193"/></owl:Thing>
+<owl:Thing rdf:about="#n96"><edge rdf:resource="#n194"/></owl:Thing>
+<owl:Thing rdf:about="#n97"><edge rdf:resource="#n195"/></owl:Thing>
+<owl:Thing rdf:about="#n195"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n97"><forbid rdf:resource="#n195"/></owl:Thing>
+<owl:Thing rdf:about="#n98"><edge rdf:resource="#n196"/></owl:Thing>
+<owl:Thing rdf:about="#n99"><edge rdf:resource="#n197"/></owl:Thing>
+<owl:Thing rdf:about="#n100"><edge rdf:resource="#n198"/></owl:Thing>
+<owl:Thing rdf:about="#n198"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n100"><forbid rdf:resource="#n198"/></owl:Thing>
+<owl:Thing rdf:about="#n101"><edge rdf:resource="#n199"/></owl:Thing>
+<owl:Thing rdf:about="#n102"><edge rdf:resource="#n200"/></owl:Thing>
+<owl:Thing rdf:about="#n200"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n102"><forbid rdf:resource="#n200"/></owl:Thing>
+<owl:Thing rdf:about="#n8"><edge rdf:resource="#n116"/></owl:Thing>
+<owl:Thing rdf:about="#n103"><edge rdf:resource="#n201"/></owl:Thing>
+<owl:Thing rdf:about="#n18"><edge rdf:resource="#n160"/></owl:Thing>
+<owl:Thing rdf:about="#n22"><edge rdf:resource="#n182"/></owl:Thing>
+<owl:Thing rdf:about="#n1"><edge rdf:resource="#n109"/></owl:Thing>
+<owl:Thing rdf:about="#n104"><edge rdf:resource="#n202"/></owl:Thing>
+<owl:Thing rdf:about="#n105"><edge rdf:resource="#n203"/></owl:Thing>
+<owl:Thing rdf:about="#n106"><edge rdf:resource="#n204"/></owl:Thing>
+<owl:Thing rdf:about="#n109"><edge rdf:resource="#n0"/></owl:Thing>
+<owl:Thing rdf:about="#n110"><edge rdf:resource="#n23"/></owl:Thing>
+<owl:Thing rdf:about="#n23"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n110"><forbid rdf:resource="#n23"/></owl:Thing>
+<owl:Thing rdf:about="#n111"><edge rdf:resource="#n3"/></owl:Thing>
+<owl:Thing rdf:about="#n112"><edge rdf:resource="#n24"/></owl:Thing>
+<owl:Thing rdf:about="#n113"><edge rdf:resource="#n25"/></owl:Thing>
+<owl:Thing rdf:about="#n114"><edge rdf:resource="#n5"/></owl:Thing>
+<owl:Thing rdf:about="#n115"><edge rdf:resource="#n26"/></owl:Thing>
+<owl:Thing rdf:about="#n116"><edge rdf:resource="#n7"/></owl:Thing>
+<owl:Thing rdf:about="#n117"><edge rdf:resource="#n27"/></owl:Thing>
+<owl:Thing rdf:about="#n27"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n117"><forbid rdf:resource="#n27"/></owl:Thing>
+<owl:Thing rdf:about="#n118"><edge rdf:resource="#n28"/></owl:Thing>
+<owl:Thing rdf:about="#n28"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n118"><forbid rdf:resource="#n28"/></owl:Thing>
+<owl:Thing rdf:about="#n119"><edge rdf:resource="#n29"/></owl:Thing>
+<owl:Thing rdf:about="#n120"><edge rdf:resource="#n30"/></owl:Thing>
+<owl:Thing rdf:about="#n121"><edge rdf:resource="#n31"/></owl:Thing>
+<owl:Thing rdf:about="#n122"><edge rdf:resource="#n32"/></owl:Thing>
+<owl:Thing rdf:about="#n123"><edge rdf:resource="#n33"/></owl:Thing>
+<owl:Thing rdf:about="#n33"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n123"><forbid rdf:resource="#n33"/></owl:Thing>
+<owl:Thing rdf:about="#n124"><edge rdf:resource="#n34"/></owl:Thing>
+<owl:Thing rdf:about="#n125"><edge rdf:resource="#n35"/></owl:Thing>
+<owl:Thing rdf:about="#n126"><edge rdf:resource="#n36"/></owl:Thing>
+<owl:Thing rdf:about="#n127"><edge rdf:resource="#n37"/></owl:Thing>
+<owl:Thing rdf:about="#n108"><edge rdf:resource="#n38"/></owl:Thing>
+<owl:Thing rdf:about="#n205"><edge rdf:resource="#n129"/></owl:Thing>
+<owl:Thing rdf:about="#n133"><edge rdf:resource="#n41"/></owl:Thing>
+<owl:Thing rdf:about="#n134"><edge rdf:resource="#n42"/></owl:Thing>
+<owl:Thing rdf:about="#n135"><edge rdf:resource="#n43"/></owl:Thing>
+<owl:Thing rdf:about="#n136"><edge rdf:resource="#n44"/></owl:Thing>
+<owl:Thing rdf:about="#n137"><edge rdf:resource="#n45"/></owl:Thing>
+<owl:Thing rdf:about="#n45"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n137"><forbid rdf:resource="#n45"/></owl:Thing>
+<owl:Thing rdf:about="#n138"><edge rdf:resource="#n11"/></owl:Thing>
+<owl:Thing rdf:about="#n139"><edge rdf:resource="#n46"/></owl:Thing>
+<owl:Thing rdf:about="#n46"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n139"><forbid rdf:resource="#n46"/></owl:Thing>
+<owl:Thing rdf:about="#n140"><edge rdf:resource="#n47"/></owl:Thing>
+<owl:Thing rdf:about="#n141"><edge rdf:resource="#n48"/></owl:Thing>
+<owl:Thing rdf:about="#n48"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n141"><forbid rdf:resource="#n48"/></owl:Thing>
+<owl:Thing rdf:about="#n142"><edge rdf:resource="#n49"/></owl:Thing>
+<owl:Thing rdf:about="#n143"><edge rdf:resource="#n50"/></owl:Thing>
+<owl:Thing rdf:about="#n144"><edge rdf:resource="#n51"/></owl:Thing>
+<owl:Thing rdf:about="#n145"><edge rdf:resource="#n52"/></owl:Thing>
+<owl:Thing rdf:about="#n146"><edge rdf:resource="#n13"/></owl:Thing>
+<owl:Thing rdf:about="#n147"><edge rdf:resource="#n53"/></owl:Thing>
+<owl:Thing rdf:about="#n148"><edge rdf:resource="#n15"/></owl:Thing>
+<owl:Thing rdf:about="#n149"><edge rdf:resource="#n54"/></owl:Thing>
+<owl:Thing rdf:about="#n150"><edge rdf:resource="#n55"/></owl:Thing>
+<owl:Thing rdf:about="#n55"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n150"><forbid rdf:resource="#n55"/></owl:Thing>
+<owl:Thing rdf:about="#n151"><edge rdf:resource="#n56"/></owl:Thing>
+<owl:Thing rdf:about="#n152"><edge rdf:resource="#n57"/></owl:Thing>
+<owl:Thing rdf:about="#n153"><edge rdf:resource="#n58"/></owl:Thing>
+<owl:Thing rdf:about="#n154"><edge rdf:resource="#n59"/></owl:Thing>
+<owl:Thing rdf:about="#n155"><edge rdf:resource="#n60"/></owl:Thing>
+<owl:Thing rdf:about="#n60"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n155"><forbid rdf:resource="#n60"/></owl:Thing>
+<owl:Thing rdf:about="#n132"><edge rdf:resource="#n61"/></owl:Thing>
+<owl:Thing rdf:about="#n157"><edge rdf:resource="#n62"/></owl:Thing>
+<owl:Thing rdf:about="#n138"><edge rdf:resource="#n12"/></owl:Thing>
+<owl:Thing rdf:about="#n158"><edge rdf:resource="#n63"/></owl:Thing>
+<owl:Thing rdf:about="#n63"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n158"><forbid rdf:resource="#n63"/></owl:Thing>
+<owl:Thing rdf:about="#n159"><edge rdf:resource="#n64"/></owl:Thing>
+<owl:Thing rdf:about="#n114"><edge rdf:resource="#n6"/></owl:Thing>
+<owl:Thing rdf:about="#n160"><edge rdf:resource="#n17"/></owl:Thing>
+<owl:Thing rdf:about="#n161"><edge rdf:resource="#n19"/></owl:Thing>
+<owl:Thing rdf:about="#n162"><edge rdf:resource="#n65"/></owl:Thing>
+<owl:Thing rdf:about="#n65"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n162"><forbid rdf:resource="#n65"/></owl:Thing>
+<owl:Thing rdf:about="#n109"><edge rdf:resource="#n2"/></owl:Thing>
+<owl:Thing rdf:about="#n163"><edge rdf:resource="#n66"/></owl:Thing>
+<owl:Thing rdf:about="#n164"><edge rdf:resource="#n67"/></owl:Thing>
+<owl:Thing rdf:about="#n165"><edge rdf:resource="#n68"/></owl:Thing>
+<owl:Thing rdf:about="#n148"><edge rdf:resource="#n16"/></owl:Thing>
+<owl:Thing rdf:about="#n166"><edge rdf:resource="#n69"/></owl:Thing>
+<owl:Thing rdf:about="#n167"><edge rdf:resource="#n70"/></owl:Thing>
+<owl:Thing rdf:about="#n168"><edge rdf:resource="#n71"/></owl:Thing>
+<owl:Thing rdf:about="#n71"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n168"><forbid rdf:resource="#n71"/></owl:Thing>
+<owl:Thing rdf:about="#n169"><edge rdf:resource="#n72"/></owl:Thing>
+<owl:Thing rdf:about="#n170"><edge rdf:resource="#n73"/></owl:Thing>
+<owl:Thing rdf:about="#n171"><edge rdf:resource="#n74"/></owl:Thing>
+<owl:Thing rdf:about="#n156"><edge rdf:resource="#n75"/></owl:Thing>
+<owl:Thing rdf:about="#n173"><edge rdf:resource="#n76"/></owl:Thing>
+<owl:Thing rdf:about="#n76"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n173"><forbid rdf:resource="#n76"/></owl:Thing>
+<owl:Thing rdf:about="#n174"><edge rdf:resource="#n77"/></owl:Thing>
+<owl:Thing rdf:about="#n77"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n174"><forbid rdf:resource="#n77"/></owl:Thing>
+<owl:Thing rdf:about="#n175"><edge rdf:resource="#n78"/></owl:Thing>
+<owl:Thing rdf:about="#n176"><edge rdf:resource="#n79"/></owl:Thing>
+<owl:Thing rdf:about="#n177"><edge rdf:resource="#n80"/></owl:Thing>
+<owl:Thing rdf:about="#n178"><edge rdf:resource="#n81"/></owl:Thing>
+<owl:Thing rdf:about="#n179"><edge rdf:resource="#n82"/></owl:Thing>
+<owl:Thing rdf:about="#n180"><edge rdf:resource="#n83"/></owl:Thing>
+<owl:Thing rdf:about="#n161"><edge rdf:resource="#n20"/></owl:Thing>
+<owl:Thing rdf:about="#n181"><edge rdf:resource="#n84"/></owl:Thing>
+<owl:Thing rdf:about="#n182"><edge rdf:resource="#n21"/></owl:Thing>
+<owl:Thing rdf:about="#n21"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n182"><forbid rdf:resource="#n21"/></owl:Thing>
+<owl:Thing rdf:about="#n183"><edge rdf:resource="#n85"/></owl:Thing>
+<owl:Thing rdf:about="#n111"><edge rdf:resource="#n4"/></owl:Thing>
+<owl:Thing rdf:about="#n184"><edge rdf:resource="#n86"/></owl:Thing>
+<owl:Thing rdf:about="#n185"><edge rdf:resource="#n87"/></owl:Thing>
+<owl:Thing rdf:about="#n146"><edge rdf:resource="#n14"/></owl:Thing>
+<owl:Thing rdf:about="#n14"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n146"><forbid rdf:resource="#n14"/></owl:Thing>
+<owl:Thing rdf:about="#n186"><edge rdf:resource="#n88"/></owl:Thing>
+<owl:Thing rdf:about="#n187"><edge rdf:resource="#n89"/></owl:Thing>
+<owl:Thing rdf:about="#n188"><edge rdf:resource="#n90"/></owl:Thing>
+<owl:Thing rdf:about="#n189"><edge rdf:resource="#n91"/></owl:Thing>
+<owl:Thing rdf:about="#n172"><edge rdf:resource="#n92"/></owl:Thing>
+<owl:Thing rdf:about="#n92"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n172"><forbid rdf:resource="#n92"/></owl:Thing>
+<owl:Thing rdf:about="#n191"><edge rdf:resource="#n93"/></owl:Thing>
+<owl:Thing rdf:about="#n93"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n191"><forbid rdf:resource="#n93"/></owl:Thing>
+<owl:Thing rdf:about="#n192"><edge rdf:resource="#n94"/></owl:Thing>
+<owl:Thing rdf:about="#n193"><edge rdf:resource="#n95"/></owl:Thing>
+<owl:Thing rdf:about="#n95"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n193"><forbid rdf:resource="#n95"/></owl:Thing>
+<owl:Thing rdf:about="#n194"><edge rdf:resource="#n96"/></owl:Thing>
+<owl:Thing rdf:about="#n195"><edge rdf:resource="#n97"/></owl:Thing>
+<owl:Thing rdf:about="#n196"><edge rdf:resource="#n98"/></owl:Thing>
+<owl:Thing rdf:about="#n197"><edge rdf:resource="#n99"/></owl:Thing>
+<owl:Thing rdf:about="#n198"><edge rdf:resource="#n100"/></owl:Thing>
+<owl:Thing rdf:about="#n199"><edge rdf:resource="#n101"/></owl:Thing>
+<owl:Thing rdf:about="#n200"><edge rdf:resource="#n102"/></owl:Thing>
+<owl:Thing rdf:about="#n116"><edge rdf:resource="#n8"/></owl:Thing>
+<owl:Thing rdf:about="#n201"><edge rdf:resource="#n103"/></owl:Thing>
+<owl:Thing rdf:about="#n160"><edge rdf:resource="#n18"/></owl:Thing>
+<owl:Thing rdf:about="#n182"><edge rdf:resource="#n22"/></owl:Thing>
+<owl:Thing rdf:about="#n22"><rdf:type rdf:resource="#Block"/></owl:Thing>
+<owl:Thing rdf:about="#n182"><forbid rdf:resource="#n22"/></owl:Thing>
+<owl:Thing rdf:about="#n109"><edge rdf:resource="#n1"/></owl:Thing>
+<owl:Thing rdf:about="#n202"><edge rdf:resource="#n104"/></owl:Thing>
+<owl:Thing rdf:about="#n203"><edge rdf:resource="#n105"/></owl:Thing>
+<owl:Thing rdf:about="#n204"><edge rdf:resource="#n106"/></owl:Thing>
+<owl:Thing rdf:about="#n190"><edge rdf:resource="#n107"/></owl:Thing>
+</rdf:RDF>

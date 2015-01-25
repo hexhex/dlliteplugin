@@ -1136,10 +1136,16 @@ namespace dllite {
 			if (option.find("--repdelconst=") != std::string::npos) {
 				ctx.getPluginData<DLLitePlugin>().repdelconstflag=true;
 				std::string s = option.substr(14);
-				boost::algorithm::split(ctx.getPluginData<DLLitePlugin>().repdelconst, s, boost::is_any_of(","));
-				DBGLOG(DBG, "predicates for deletion are ");
+				std::vector<std::string> tempvec;
+				boost::algorithm::split(tempvec, s, boost::is_any_of(","));
+				BOOST_FOREACH (std::string str, tempvec) {
+					std::string quotedstr='"'+str+'"';
+					ctx.getPluginData<DLLitePlugin>().repdelconst.push_back(quotedstr);
+				}
+
+				DBGLOG(DBG, "constants for deletion are ");
 				BOOST_FOREACH (std::string sub, ctx.getPluginData<DLLitePlugin>().repdelconst) {
-					DBGLOG(DBG, sub);
+					DBGLOG(DBG,sub);
 				}
 				found.push_back(it);
 			}
@@ -1149,10 +1155,17 @@ namespace dllite {
 			if (option.find("--repleaveconst=") != std::string::npos) {
 				ctx.getPluginData<DLLitePlugin>().repleaveconstflag=true;
 				std::string s = option.substr(16);
-				boost::algorithm::split(ctx.getPluginData<DLLitePlugin>().repleaveconst, s, boost::is_any_of(","));
-				DBGLOG(DBG, "predicates that need to be left are ");
+				std::vector<std::string> tempvec;
+				boost::algorithm::split(tempvec, s, boost::is_any_of(","));
+
+				BOOST_FOREACH (std::string str, tempvec) {
+					std::string quotedstr = '"'+str+'"';
+					ctx.getPluginData<DLLitePlugin>().repleaveconst.push_back(quotedstr);
+				}
+
+				DBGLOG(DBG, "constants for deletion are ");
 				BOOST_FOREACH (std::string sub, ctx.getPluginData<DLLitePlugin>().repleaveconst) {
-					DBGLOG(DBG, sub);
+					DBGLOG(DBG,sub);
 				}
 				found.push_back(it);
 			}

@@ -6,7 +6,7 @@ cat ontology_header.owl # ontology_header.owl must contain the static part of th
 size=$1
 customers=$((50*$size))
 drivers=$((20*$size))
-regions=$((5*$size))
+regions=$(($size+4))
 
 # add 50*$1 customers
 echo $regions
@@ -16,8 +16,8 @@ do
 done    
 
 
-edrivprob=$((32768 * 75 / 100))
-worksinprob=$((32768 * 60 / 100))
+edrivprob=$((32768 * 85 / 100))
+worksinprob=$((32768 * 17 / 100))
 
 # add 20*$1 drivers
 for (( i=1; i <= $drivers; i++ ))

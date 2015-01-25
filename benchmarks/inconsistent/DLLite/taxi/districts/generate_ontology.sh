@@ -15,8 +15,8 @@ do
 done    
 
 
-edrivprob=$((32768 * 75 / 100))
-worksinprob=$((32768 * 60 / 100))
+edrivprob=$((32768 * 85 / 100))
+worksinprob=$((32768 * 17 / 100))
 
 
 for (( i=1; i <= $drivers; i++ ))
@@ -28,7 +28,7 @@ do
 		echo "<owl:Thing rdf:about=\"#d$i\"><rdf:type rdf:resource=\"#EDriver\"/></owl:Thing>"
 	fi
 
-	# with probability 0.6 driver works in a certain region
+	# with probability 0.15 driver works in a certain region
 	for (( j=1; j<= $regions; j++ ))
 	do
 		if [[ $RANDOM -le $worksinprob ]]; then 

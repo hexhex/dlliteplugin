@@ -37,7 +37,7 @@ fi
 
 			# instantiate the program
 			#cat program.hex | sed "s/OWLONTOLOGY/\"instances/inst_prop_${rp}_inst_${in}.owl\"/g" >> "instances/inst_prop_${rp}_inst_${in}.hex"
-			cat program.hex | sed "s/OWLONTOLOGY/\"instances\/inst_prop_${rp}_inst_${in}.owl\"/g" >> "instances/inst_prop_${rp}_inst_${in}.hex"
+			cat program_$5.hex | sed "s/OWLONTOLOGY/\"instances\/inst_prop_${rp}_inst_${in}.owl\"/g" >> "instances/inst_prop_${rp}_inst_${in}.hex"
 
 			
 		done
