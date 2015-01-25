@@ -349,6 +349,7 @@ namespace dllite {
 	void DLPluginAtom::learnSupportSets(const Query& query, NogoodContainerPtr nogoods) {
 
 		DBGLOG(DBG, "LSS: learning support sets started");
+		const ExternalAtom& eatom = query.ctx->registry()->eatoms.getByID(query.eatomID);
 
 		// prepare variables for storing query and a nogood container
 		std::string querystr;
@@ -370,14 +371,14 @@ namespace dllite {
 			ID rdlID = reg->storeConstantTerm("rDL");
 
 			// analyze whether the given DL-atom has a concept or a role as a DL-query
-			if (query.eatom->predicate == cdlID) {
-				cQID = query.eatom->inputs[5];
+			if (eatom.predicate == cdlID) {
+				cQID = eatom.inputs[5];
 				querystr= RawPrinter::toString(reg,cQID);
 				DBGLOG(DBG,"LSS: EL: the DL-query is a concept "<< querystr);
 			}
 
-			else if (query.eatom->predicate == rdlID) {
-				rQID = query.eatom->inputs[5];
+			else if (eatom.predicate == rdlID) {
+				rQID = eatom.inputs[5];
 				querystr= RawPrinter::toString(reg,rQID);
 				DBGLOG(DBG,"LSS: EL: the DL-query is a role "<< querystr);
 			}
@@ -428,8 +429,8 @@ namespace dllite {
 			}
 
 
-			bm::bvector<>::enumerator en = query.eatom->getPredicateInputMask()->getStorage().first();
-			bm::bvector<>::enumerator en_end = query.eatom->getPredicateInputMask()->getStorage().end();
+			bm::bvector<>::enumerator en = eatom.getPredicateInputMask()->getStorage().first();
+			bm::bvector<>::enumerator en_end = eatom.getPredicateInputMask()->getStorage().end();
 
 
 			if (en<en_end) {
@@ -695,7 +696,9 @@ namespace dllite {
 						DBGLOG(DBG,"LSS: EL: temp[" << t << "] = "<<RawPrinter::toString(reg,temp[t].first));
 					}
 
-					for (int i=0; i<pow_int(2,temp.size()); i++) {
+					int pi = 1;
+					for (int i=0;i <temp.size();++i) pi *= 2;
+					for (int i=0; i<pi; i++) {
 						DBGLOG(DBG,"LSS: EL: start constructing combinations of ontology and input predicates for support sets");
 
 							std::vector<dlvhex::ID> s=ontinp;
@@ -863,13 +866,13 @@ namespace dllite {
 			ID cdlID = reg->storeConstantTerm("cDL");
 			ID rdlID = reg->storeConstantTerm("rDL");
 
-			if (query.eatom->predicate == cdlID) {
-				cQID = query.eatom->inputs[5];
+			if (eatom.predicate == cdlID) {
+				cQID = eatom.inputs[5];
 				DBGLOG(DBG,"LSS: query is a concept");
 			}
 
-			else if (query.eatom->predicate == rdlID) {
-				rQID = query.eatom->inputs[5];
+			else if (eatom.predicate == rdlID) {
+				rQID = eatom.inputs[5];
 				DBGLOG(DBG,"LSS: query is a role");
 			}
 
@@ -910,8 +913,8 @@ namespace dllite {
 			DBGLOG(DBG, "LSS: Analyzing input to the external atom");
 
 
-			bm::bvector<>::enumerator en = query.eatom->getPredicateInputMask()->getStorage().first();
-			bm::bvector<>::enumerator en_end = query.eatom->getPredicateInputMask()->getStorage().end();
+			bm::bvector<>::enumerator en = eatom.getPredicateInputMask()->getStorage().first();
+			bm::bvector<>::enumerator en_end = eatom.getPredicateInputMask()->getStorage().end();
 
 
 
@@ -1038,8 +1041,8 @@ namespace dllite {
 							potentialSupportSets->addNogood(supportset);
 
 							// check if c-(C', Y) occurs in the maximal interpretation
-							bm::bvector<>::enumerator en3 = query.eatom->getPredicateInputMask()->getStorage().first();
-							bm::bvector<>::enumerator en3_end = query.eatom->getPredicateInputMask()->getStorage().end();
+							bm::bvector<>::enumerator en3 = eatom.getPredicateInputMask()->getStorage().first();
+							bm::bvector<>::enumerator en3_end = eatom.getPredicateInputMask()->getStorage().end();
 
 #ifndef NDEBUG
 							DBGLOG(DBG,"LSS: Checking if (C',Y) with C'=" << RawPrinter::toString(reg, theDLLitePlugin.dlNeg(cpID)) << " occurs in c- (for some Y)");
@@ -1276,8 +1279,8 @@ namespace dllite {
 								DBGLOG(DBG,"LSS: --> Learned support set: " << supportset.getStringRepresentation(reg));
 								potentialSupportSets->addNogood(supportset);
 								if (theDLLitePlugin.isDlNeg(cgID)) {
-									bm::bvector<>::enumerator en3 = query.eatom->getPredicateInputMask()->getStorage().first();
-									bm::bvector<>::enumerator en3_end = query.eatom->getPredicateInputMask()->getStorage().end();
+									bm::bvector<>::enumerator en3 = eatom.getPredicateInputMask()->getStorage().first();
+									bm::bvector<>::enumerator en3_end = eatom.getPredicateInputMask()->getStorage().end();
 									while (en3 < en3_end) {
 											const OrdinaryAtom& inat = reg->ogatoms.getByAddress(*en3);
 											if (inat.tuple[0] == query.input[2]&& inat.tuple[1] == theDLLitePlugin.dlNeg(cgID)) {
@@ -1329,8 +1332,8 @@ namespace dllite {
 							// if R' is negative, then check whether r-(R',X,Y) holds in the maximum input
 							if (theDLLitePlugin.isDlNeg(rgID)){
 
-								bm::bvector<>::enumerator en3 = query.eatom->getPredicateInputMask()->getStorage().first();
-								bm::bvector<>::enumerator en3_end = query.eatom->getPredicateInputMask()->getStorage().end();
+								bm::bvector<>::enumerator en3 = eatom.getPredicateInputMask()->getStorage().first();
+								bm::bvector<>::enumerator en3_end = eatom.getPredicateInputMask()->getStorage().end();
 								while (en3 < en3_end) {
 									const OrdinaryAtom& inat = reg->ogatoms.getByAddress(*en3);
 									if (inat.tuple[0] == query.input[4]&& inat.tuple[1] == rgID) {

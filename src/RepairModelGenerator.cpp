@@ -1352,7 +1352,7 @@ namespace dllite {
 					if (eatom.getExtSourceProperties().providesSupportSets()) {
 						DBGLOG(DBG, "EL: RMG: evaluating external atom " << RawPrinter::toString(reg,factory.innerEatoms[eaIndex]) << " for support set learning");
 
-						learnSupportSetsForExternalAtom(factory.ctx, eatom, supportSetsOfExternalAtom[eaIndex]);
+						learnSupportSetsForExternalAtom(factory.ctx, factory.innerEatoms[eaIndex], supportSetsOfExternalAtom[eaIndex]);
 						DBGLOG(DBG, "EL: RMG: number of learned support sets: "<<supportSetsOfExternalAtom[eaIndex]->getNogoodCount());
 					}
 
@@ -2024,7 +2024,7 @@ namespace dllite {
 					if (eatom.getExtSourceProperties().providesSupportSets()) {
 						// DBGLOG(DBG, "RMG: evaluating external atom " << RawPrinter::toString(reg,factory.allEatoms[eaIndex]) << " for support set learning");
 						//DBGLOG(DBG, "RMG: evaluating external atom " << RawPrinter::toString(reg,factory.innerEatoms[eaIndex]) << " for support set learning");
-						learnSupportSetsForExternalAtom(factory.ctx, eatom, supportSetsOfExternalAtom[eaIndex]);
+						learnSupportSetsForExternalAtom(factory.ctx, factory.innerEatoms[eaIndex], supportSetsOfExternalAtom[eaIndex]);
 						DBGLOG(DBG, "RMG: number of learned support sets: "<<supportSetsOfExternalAtom[eaIndex]->getNogoodCount());
 					}
 
