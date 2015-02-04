@@ -345,6 +345,9 @@ namespace dllite {
 		DBGLOG(DBG, "Final Statistics:" << std::endl << solver->getStatistics());
 	}
 
+
+
+
 	//called from the core
 	InterpretationPtr RepairModelGenerator::generateNextModel() {
 		// now we have postprocessed input in postprocessedInput
@@ -372,6 +375,9 @@ namespace dllite {
 
 			if (postCheck(modelCandidate)) {
 
+				DBGLOG(DBG,"RMG: modelCandidate is "<<*modelCandidate<<", it is a compatible for the repaired ABox, which passed the flp check.");
+
+
 				modelCandidate->getStorage() -= factory.gpMask.mask()->getStorage();
 				modelCandidate->getStorage() -= factory.gnMask.mask()->getStorage();
 				modelCandidate->getStorage() -= mask->getStorage();
@@ -398,17 +404,22 @@ namespace dllite {
 
 				DBGLOG(DBG,"RMG: filtermodel is "<<*I);
 				modelCandidate->getStorage() -= I->getStorage();
-				DBGLOG(DBG,"RMG: modelCandidate is "<<*modelCandidate);
-
-
 				return modelCandidate;
+
 			}
+
 		} while(true);
 	}
+
+
+
 
 	void RepairModelGenerator::generalizeNogood(Nogood ng) {
 
 	}
+
+
+
 
 	void RepairModelGenerator::learnSupportSets() {
 
@@ -2878,6 +2889,7 @@ namespace dllite {
 	}
 
 
+	// evaluation postcheck and FLP check
 
 	bool RepairModelGenerator::postCheck(InterpretationConstPtr modelCandidate) {
 
@@ -2886,7 +2898,6 @@ namespace dllite {
 		DBGLOG(DBG,"*RMG: PC: current model candidate is: "<< *modelCandidate);
 
 		// extract repair ABox candidate from the model
-
 		// vector for storing IDs of original ABox assertions
 		std::vector<ID> ab;
 
@@ -3087,7 +3098,7 @@ namespace dllite {
 							DBGLOG(DBG,"EL: RMG: PC: atom for specifying the relevant constants is "<<RawPrinter::toString(reg,relevID));
 
 
-							// second specify that the new ABox needs to be used and add this ABox as facts w.r.t input atoms
+							// specify that the new ABox needs to be used and add this ABox as facts w.r.t input atoms
 							OrdinaryAtom usenewab(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
 							usenewab.tuple.push_back(eatom.inputs[1]);
 							ID usenewabID = reg->storeOrdinaryAtom(usenewab);
@@ -3204,7 +3215,7 @@ namespace dllite {
 
 						else if (rQID!=ID_FAIL) {
 							DBGLOG(DBG,"EL: *RMG: PC: current atom is a role");
-						/*	DBGLOG(DBG,"EL: RMG: PC: it needs to be evaluated for a pair of constants  ("<<reg->ogatoms.getByID(id).tuple[7]<<","<<reg->ogatoms.getByID(id).tuple[8]<<")");
+							DBGLOG(DBG,"EL: RMG: PC: it needs to be evaluated for a pair of constants  ("<<reg->ogatoms.getByID(id).tuple[7]<<","<<reg->ogatoms.getByID(id).tuple[8]<<")");
 
 							// check if query grounded by the relevant constant is in the ontology
 
@@ -3259,7 +3270,7 @@ namespace dllite {
 								}
 
 							}
-*/
+
 					}
 
 					else assert(false&&"External atom is neither unary nor binary");
@@ -3271,14 +3282,153 @@ namespace dllite {
 		}
 		enm++;
 	}
-	DBGLOG(DBG,"EL: RMG: PC: evaluation postcheck is finished");
-
-	}
+}
 
 
-	// start with the minimality check
 
-		DBGLOG(DBG,"*	RMG: PC: model candidate is "<< *modelCandidate);
+
+		// Start FLP-check
+
+		DBGLOG(DBG,"RMG: FLP check is started");
+
+
+
+		// create auxiliary ontology predicates
+		ID newauxIDun = theDLLitePlugin.storeQuotedConstantTerm("000");
+		ID newauxIDbin = theDLLitePlugin.storeQuotedConstantTerm("111");
+
+
+		// create a copy of interpretation for input
+		Interpretation::Ptr flpCheckInput;
+		flpCheckInput.reset(new Interpretation(*modelCandidate));
+
+
+		//for all external atoms specify that the new ABox needs to be used, and add this ABox as facts w.r.t input atoms
+		for (unsigned eaIndex=0; eaIndex<factory.innerEatoms.size();eaIndex++) {
+
+			const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
+
+			// determine whether the external atom has a concept query or a role query
+
+			ID cQID = ID_FAIL;
+			ID rQID = ID_FAIL;
+
+			ID cdlID = reg->storeConstantTerm("cDL");
+			ID rdlID = reg->storeConstantTerm("rDL");
+
+			if (eatom.predicate==cdlID) {
+				// query is a concept
+				cQID = eatom.inputs[5];
+			}
+
+			else if (eatom.predicate==rdlID) {
+				//query is a role
+				rQID = eatom.inputs[5];
+			}
+
+			else assert(false);
+
+
+			// create an atom that specifies that the new ontology should be used for the external atom
+			OrdinaryAtom usenewab(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+			usenewab.tuple.push_back(eatom.inputs[1]);
+			ID usenewabID = reg->storeOrdinaryAtom(usenewab);
+
+			// add the fact to the input interpretation that specifies the usage of the new ABox for the given external atom
+			DBGLOG(DBG,"RMG: FLP: atom that specifies that the new ABox is used: "<<RawPrinter::toString(reg,usenewabID));
+			flpCheckInput->setFact(usenewabID.address);
+
+
+
+			// add abox assertions to the input predicates
+			DBGLOG(DBG,"RMG: FLP: go through the new ABox");
+
+			newa = newab.begin();
+			newa_end = newab.end();
+
+
+			while (newa<newa_end) {
+				ID idadd = ID(*newa);
+
+
+				DBGLOG(DBG,"RMG: FLP: current ABox fact: "<<RawPrinter::toString(reg,idadd));
+
+				OrdinaryAtom addat=reg->ogatoms.getByID(idadd);
+
+				int size = addat.tuple.size();
+				DBGLOG(DBG,"RMG: FLP: size of the atom is "<<size);
+
+
+
+				OrdinaryAtom abfact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+
+				if (size==3) {
+					//create a concept
+					DBGLOG(DBG,"RMG: FLP: tuple size is 3, concept assertion");
+					abfact.tuple.push_back(eatom.inputs[1]);
+					abfact.tuple.push_back(addat.tuple[1]);
+					abfact.tuple.push_back(addat.tuple[2]);
+
+					ID abfactID = reg->storeOrdinaryAtom(abfact);
+					DBGLOG(DBG,"RMG: FLP: created atom is: "<<RawPrinter::toString(reg,abfactID));
+
+					flpCheckInput->setFact(abfactID.address);
+
+				}
+				else if (size==4){
+					//create a role
+					DBGLOG(DBG,"RMG: FLP: tuple size is 4, role assertion");
+
+					abfact.tuple.push_back(eatom.inputs[3]);
+					abfact.tuple.push_back(addat.tuple[1]);
+					abfact.tuple.push_back(addat.tuple[2]);
+					abfact.tuple.push_back(addat.tuple[3]);
+
+					ID abfactID = reg->storeOrdinaryAtom(abfact);
+					DBGLOG(DBG,"RMG: FLP: created atom is: "<<RawPrinter::toString(reg,abfactID));
+					flpCheckInput->setFact(abfactID.address);
+					DBGLOG(DBG,"RMG: FLP: added fact to interpretation");
+				}
+				else assert(false&&"ABox assertion is neither unary nor binary");
+
+				newa++;
+			}
+
+
+			DBGLOG(DBG,"RMG: FLP: interpretation for input is created "<<*flpCheckInput);
+
+		}
+
+		// FLP: ensure minimality of the compatible set wrt. the reduct (if necessary)
+		if (annotatedGroundProgram.hasHeadCycles() == 0 && annotatedGroundProgram.hasECycles() == 0 && factory.ctx.config.getOption("FLPDecisionCriterionHead") && factory.ctx.config.getOption("FLPDecisionCriterionE")) {
+			DBGLOG(DBG, "RMG: No head- or e-cycles --> No FLP/UFS check is needed");
+			return true;
+
+		} else {
+			DBGLOG(DBG, "RMG: Head- or e-cycles --> FLP/UFS check necessary");
+
+
+			// FLP check based on unfounded sets
+			if (factory.ctx.config.getOption("UFSCheck")) {
+				DBGLOG(DBG, "RMG: UFS Check");
+				std::vector<IDAddress> ufs = ufscm->getUnfoundedSet(modelCandidate, std::set<ID>(), factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : SimpleNogoodContainerPtr());
+
+				if (ufs.size() > 0) {
+					DBGLOG(DBG, "RMG: Got an UFS");
+					if (factory.ctx.config.getOption("UFSLearning")) {
+						DBGLOG(DBG, "Learn from UFS");
+						Nogood ufsng = ufscm->getLastUFSNogood();
+						solver->addNogood(ufsng);
+					}
+					return false;
+				} else {
+					return true;
+				}
+			}
+
+			// no check
+			return true;
+		}
 
 	return true;
 
@@ -3384,12 +3534,6 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate) {
 
 	DLLitePlugin::CachedOntologyPtr delontology;
 
-	/*DLLitePlugin::CachedOntologyPtr delOntology;
-	 InterpretationPtr delConceptsABoxPtr = delOntology->conceptAssertions;
-	 InterpretationPtr delConceptsABox(new Interpretation(reg));
-	 delConceptsABox->add(*delConceptsABoxPtr);
-	 std::vector<DLLitePlugin::CachedOntology::RoleAssertion> delRolesABox = delOntology->roleAssertions;
-	 */
 	DBGLOG(DBG,"RMG: create map (id of atom)->set of supp sets for it ");
 	// create a map that maps id of external atoms to vector of its support sets
 	std::map<ID,std::vector<Nogood> > dlatsupportsets;
@@ -3744,75 +3888,18 @@ bool RepairModelGenerator::repairCheck(InterpretationConstPtr modelCandidate) {
 
 bool RepairModelGenerator::isModel(InterpretationConstPtr compatibleSet) {
 
-	DBGLOG(DBG,"RMG: isModel is started..");
-	// TODO: incorporate unfounded set check with respect to the repaired ABox
+	DBGLOG(DBG,"RMG: isModel method is started..");
 
 	// which semantics?
 
-
 	if (factory.ctx.config.getOption("WellJustified")) {
 
-		DBGLOG(DBG,"RMG: the Well-Justified semantics is used ");
+		// no supported
 
-		// well-justified FLP: fixpoint iteration
-		InterpretationPtr fixpoint = welljustifiedSemanticsGetFixpoint(factory.ctx, compatibleSet, grounder->getGroundProgram());
-		InterpretationPtr reference = InterpretationPtr(new Interpretation(*compatibleSet));
-		factory.gpMask.updateMask();
-		factory.gnMask.updateMask();
-		reference->getStorage() -= factory.gpMask.mask()->getStorage();
-		reference->getStorage() -= factory.gnMask.mask()->getStorage();
-
-		DBGLOG(DBG, "RMG: Comparing fixpoint " << *fixpoint << " to reference " << *reference);
-		if ((fixpoint->getStorage() & reference->getStorage()).count() == reference->getStorage().count()) {
-			DBGLOG(DBG, "RMG: Well-Justified FLP Semantics: Pass fixpoint test");
-			return true;
-		} else {
-			DBGLOG(DBG, "RMG: Well-Justified FLP Semantics: Fail fixpoint test");
-			return false;
-		}
 	} else {
 
-		DBGLOG(DBG,"*RMG: the flp semantics is used ");
+		// flp check is here
 
-		// FLP: ensure minimality of the compatible set wrt. the reduct (if necessary)
-		if (annotatedGroundProgram.hasHeadCycles() == 0 && annotatedGroundProgram.hasECycles() == 0 && factory.ctx.config.getOption("FLPDecisionCriterionHead") && factory.ctx.config.getOption("FLPDecisionCriterionE")) {
-			DBGLOG(DBG, "RMG: No head- or e-cycles --> No FLP/UFS check is needed");
-			return true;
-		} else {
-			DBGLOG(DBG, "RMG: Head- or e-cycles --> FLP/UFS check necessary");
-
-			// Explicit FLP check
-			if (factory.ctx.config.getOption("FLPCheck")) {
-				DBGLOG(DBG, "RMG: explicit FLP Check");
-
-				// do FLP check (possibly with nogood learning) and add the learned nogoods to the main search
-				bool result = isSubsetMinimalFLPModel<GenuineSolver>(compatibleSet, postprocessedInput, factory.ctx, factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : SimpleNogoodContainerPtr());
-
-				//updateEANogoods(compatibleSet);
-				return result;
-			}
-
-			// UFS check
-			if (factory.ctx.config.getOption("UFSCheck")) {
-				DBGLOG(DBG, "RMG: UFS Check");
-				std::vector<IDAddress> ufs = ufscm->getUnfoundedSet(compatibleSet, std::set<ID>(), factory.ctx.config.getOption("ExternalLearning") ? learnedEANogoods : SimpleNogoodContainerPtr());
-
-				//updateEANogoods(compatibleSet);
-				if (ufs.size() > 0) {
-					DBGLOG(DBG, "RMG: Got a UFS");
-					if (factory.ctx.config.getOption("UFSLearning")) {
-						DBGLOG(DBG, "Learn from UFS");
-						Nogood ufsng = ufscm->getLastUFSNogood();
-						solver->addNogood(ufsng);
-					}
-					return false;
-				} else {
-					return true;
-				}
-			}
-			// no check
-			return true;
-		}
 	}
 }
 
@@ -3828,6 +3915,7 @@ bool RepairModelGenerator::isVerified(ID eaAux, InterpretationConstPtr factWasSe
 // 2. which facts are assigned
 // 3. which atoms changed their truth value from the previous call (which were reassigned)
 // 2,3, can be 0
+
 bool RepairModelGenerator::verifyExternalAtoms(InterpretationConstPtr partialInterpretation, InterpretationConstPtr factWasSet, InterpretationConstPtr changed) {
 	DLVHEX_BENCHMARK_REGISTER_AND_SCOPE(sid, "genuine g&c verifyEAtoms");
 	return false;
