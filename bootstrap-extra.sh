@@ -1,10 +1,10 @@
 OWLCPPMAINDIR=$(cd $(dirname $0)/owlcpp/; pwd)
 
 echo "Downloading  owlcpp to $OWLCPPMAINDIR"
-LIBXML2V=2.9.0
-RAPTOR2V=2.0.8
+LIBXML2V=2.9.1
+RAPTOR2V=2.0.14
 FACTPPV=1.6.2
-OWLCPPV=0.3.3
+OWLCPPV=0.3.4
 ICONVV=1.9.2 # only for Windows
 if [ $# -gt 1 ]; then
 	boost_major_version=$2
@@ -20,10 +20,11 @@ fi
 
 osx=$(uname -a | grep "Darwin" | wc -l)
 
-if [ ! -f $OWLCPPMAINDIR/owlcpp-$OWLCPPV.zip ]
+#if [ ! -f $OWLCPPMAINDIR/owlcpp-$OWLCPPV.zip ]
+if [ ! -d $OWLCPPMAINDIR/owlcpp-$OWLCPPV ]
 then
 	echo "Downloading owlcpp source version $OWLCPPV"
-	wget -O $OWLCPPMAINDIR/owlcpp-$OWLCPPV.zip http://downloads.sourceforge.net/project/owl-cpp/v0.3.3/owlcpp-v$OWLCPPV.zip
+	git clone git://git.code.sf.net/p/owl-cpp/code $OWLCPPMAINDIR/owlcpp-$OWLCPPV 
 	if [ $? -gt 0 ]
 	then
 		echo "Error while downloading owlcpp; aborting"
@@ -70,6 +71,7 @@ then
 	fi
 fi
 
+
 if [ ! -f $OWLCPPMAINDIR/FaCTpp-src-v$FACTPPV.tar.gz ]
 then
 	echo "Downloading FaCT++ source version $FACTPPV"
@@ -80,6 +82,21 @@ then
 		exit 1
 	fi
 fi
+
+
+
+#if [ ! -f $OWLCPPMAINDIR/FaCTpp-src-v$FACTPPV.tar.gz ]
+#then
+#	echo "Downloading FaCT++ source version $FACTPPV"
+	#wget -O $OWLCPPMAINDIR/FaCTpp-src-v$FACTPPV.tar.gz http://factplusplus.googlecode.com/files/FaCTpp-src-v$FACTPPV.tgz
+#	wget --no-check-certificate https://googledrive.com/host/0B688Ilel_jz_bDM2b3BaRlF6ZkE -O $OWLCPPMAINDIR/FaCTpp-src-v$FACTPPV.zip
+	
+#	if [ $? -gt 0 ]
+#	then
+#		echo "Error while downloading FaCT++; aborting"
+#		exit 1
+#	fi
+#fi
 
 if [ ! -f $OWLCPPMAINDIR/libiconv-$ICONVV-dev.zip ] || [ ! -f $OWLCPPMAINDIR/libiconv-$ICONVV-bin.zip ]
 then
@@ -117,6 +134,7 @@ if [ ! -d $OWLCPPMAINDIR/raptor2-$RAPTOR2V ]; then
 fi
 if [ ! -d $OWLCPPMAINDIR/FaCT++-$FACTPPV ]; then
 	tar -xzf $OWLCPPMAINDIR/FaCTpp-src-v$FACTPPV.tar.gz > /dev/null 2> /dev/null
+	#unzip -d $OWLCPPMAINDIR/FaCTpp-src-v$FACTPPV.zip > /dev/null 2> /dev/null
 fi
 if [ ! -d $OWLCPPMAINDIR/libiconv-$ICONVV ]; then
 	unzip -d $OWLCPPMAINDIR/libiconv-$ICONVV $OWLCPPMAINDIR/libiconv-$ICONVV-dev.zip > /dev/null 2> /dev/null
