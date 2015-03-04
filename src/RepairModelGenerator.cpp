@@ -245,7 +245,7 @@ namespace dllite {
 
 		// augment input with edb
 
-#warning perhaps we can pass multiple partially preprocessed input edb's to the external solver and save a lot of processing here
+// #warning perhaps we can pass multiple partially preprocessed input edb's to the external solver and save a lot of processing here
 
 		DBGLOG(DBG, "RMG: augmenting input with edb");
 		postprocInput->add(*factory.ctx.edb);
@@ -1434,7 +1434,7 @@ namespace dllite {
 							if (eatom.getExtSourceProperties().providesSupportSets()) {
 								DBGLOG(DBG, "EL: RMG: evaluating external atom " << RawPrinter::toString(reg,factory.innerEatoms[eaIndex]) << " for support set learning");
 
-								learnSupportSetsForExternalAtom(factory.ctx, eatom, supportSetsOfExternalAtom[eaIndex]);
+								learnSupportSetsForExternalAtom(factory.ctx, factory.innerEatoms[eaIndex], supportSetsOfExternalAtom[eaIndex]);
 								DBGLOG(DBG, "EL: RMG: number of learned support sets: "<<supportSetsOfExternalAtom[eaIndex]->getNogoodCount());
 							}
 
@@ -2089,7 +2089,8 @@ namespace dllite {
 
 					supportSetsOfExternalAtom.push_back(SimpleNogoodContainerPtr(new SimpleNogoodContainer()));
 					if (eatom.getExtSourceProperties().providesSupportSets()) {
-						learnSupportSetsForExternalAtom(factory.ctx, eatom, supportSetsOfExternalAtom[eaIndex]);
+
+						learnSupportSetsForExternalAtom(factory.ctx, factory.innerEatoms[eaIndex], supportSetsOfExternalAtom[eaIndex]);
 						DBGLOG(DBG, "RMG: number of learned support sets: "<<supportSetsOfExternalAtom[eaIndex]->getNogoodCount());
 					}
 

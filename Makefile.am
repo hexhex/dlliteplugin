@@ -6,4 +6,14 @@ SUBDIRS = \
           owlcpp/ \
           src/ \
           include/ \
-          include/
+          examples/
+
+DIST_SUBDIRS = \
+          owlcpp/ \
+          src/ \
+          include/ \
+          examples/
+
+EXTRA_DIST = \
+          build_owlcpp.sh \
+          requiem
