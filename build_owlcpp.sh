@@ -10,7 +10,7 @@ fi
 
 LIBXML2V=2.9.1
 RAPTOR2V=2.0.14
-FACTPPV=1.6.3
+FACTPPV=1.6.2
 OWLCPPV=0.3.4
 #ICONVV=1.9.2 # only for Windows
 
@@ -115,6 +115,8 @@ if [[ $OWLCPP_ROOT == "" ]]; then
 	echo "Generating user-config.jam"
 	cd $OWLCPPBUILDDIR/owlcpp-$OWLCPPV
 	cp doc/user-config.jam user-config.jam
+	
+	echo " using gcc ;"> user-config.jam
 	echo " constant BOOST : \"$OWLCPPBUILDDIR/boost_$BOOSTVU/\" $BOOSTV ;" >> user-config.jam
 	echo " constant LIBXML2 : \"$OWLCPPBUILDDIR/libxml2-$LIBXML2V\" $LIBXML2V ;" >> user-config.jam
 	echo " constant RAPTOR : \"$OWLCPPBUILDDIR/raptor2-$RAPTOR2V\" $RAPTOR2V ;" >> user-config.jam

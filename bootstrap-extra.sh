@@ -25,7 +25,6 @@ if [ ! -d $OWLCPPMAINDIR/owlcpp-$OWLCPPV ]
 then
 	echo "Downloading owlcpp source version $OWLCPPV"
 	git clone git://git.code.sf.net/p/owl-cpp/code $OWLCPPMAINDIR/owlcpp-$OWLCPPV 
-
 	if [ $? -gt 0 ]
 	then
 		echo "Error while downloading owlcpp; aborting"
