@@ -5,7 +5,8 @@ LIBXML2V=2.9.1
 RAPTOR2V=2.0.14
 FACTPPV=1.6.2
 OWLCPPV=0.3.4
-#ICONVV=1.9.2 # only for Windows
+ICONVV=1.9.2 # only for Windows
+
 if [ $# -gt 1 ]; then
 	boost_major_version=$2
 	BOOSTV="${boost_major_version:0:1}.${boost_major_version:1:2}.0"
@@ -20,7 +21,6 @@ fi
 
 osx=$(uname -a | grep "Darwin" | wc -l)
 
-#if [ ! -f $OWLCPPMAINDIR/owlcpp-$OWLCPPV.zip ]
 if [ ! -d $OWLCPPMAINDIR/owlcpp-$OWLCPPV ]
 then
 	echo "Downloading owlcpp source version $OWLCPPV"
@@ -129,9 +129,13 @@ if [ ! -d $OWLCPPMAINDIR/libxml2-$LIBXML2V ]; then
 else
 	bootstramlibxml2=0
 fi
+	echo "extracting raptor"
 if [ ! -d $OWLCPPMAINDIR/raptor2-$RAPTOR2V ]; then
+	echo "before extracting"
 	tar -xzf $OWLCPPMAINDIR/raptor2-$RAPTOR2V.tar.gz > /dev/null 2> /dev/null
+	echo "after extracting"
 fi
+
 if [ ! -d $OWLCPPMAINDIR/FaCT++-$FACTPPV ]; then
 	tar -xzf $OWLCPPMAINDIR/FaCTpp-src-v$FACTPPV.tar.gz > /dev/null 2> /dev/null
 	#unzip -d $OWLCPPMAINDIR/FaCTpp-src-v$FACTPPV.zip > /dev/null 2> /dev/null
@@ -175,6 +179,7 @@ echo " constant BOOST : \"$OWLCPPMAINDIR/boost_$BOOSTVU/\" $BOOSTV ;" >> user-co
 echo " constant LIBXML2 : \"$OWLCPPMAINDIR/libxml2-$LIBXML2V\" $LIBXML2V ;" >> user-config.jam
 echo " constant RAPTOR : \"$OWLCPPMAINDIR/raptor2-$RAPTOR2V\" $RAPTOR2V ;" >> user-config.jam
 echo " constant FACTPP : \"$OWLCPPMAINDIR/FaCT++-$FACTPPV\" $FACTPPV ;" >> user-config.jam
+echo " constant ICONV : \"$OWLCPPMAINDIR/libiconv-$ICONVV\" $ICONVV ;" >> user-config.jam
 cd ..
 
 echo "Updating jam files"

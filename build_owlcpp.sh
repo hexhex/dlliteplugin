@@ -12,7 +12,7 @@ LIBXML2V=2.9.1
 RAPTOR2V=2.0.14
 FACTPPV=1.6.2
 OWLCPPV=0.3.4
-#ICONVV=1.9.2 # only for Windows
+ICONVV=1.9.2 # only for Windows
 
 #LIBXML2V=2.9.0
 #RAPTOR2V=2.0.8
@@ -318,6 +318,8 @@ if [[ $OWLCPP_ROOT == "" ]]; then
 	pushd $OWLCPPBUILDDIR/owlcpp-$OWLCPPV > /dev/null
 	$BOOST_ROOT/tools/build/v2/b2 release cxxflags="-fpic -export-dynamic" cflags="-fpic -export-dynamic" "$params" > $OWLCPPBUILDDIR/output.out 2>&1
 	ret=$?
+		
+
 	export HOME=$REALHOME
 	if [ $ret -gt 0 ]; then
 		cat $OWLCPPBUILDDIR/output.out
