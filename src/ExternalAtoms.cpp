@@ -260,16 +260,14 @@ namespace dllite {
 				ontology->kernel->getExpressionManager()->Concept(
 						ontology->addNamespaceToString(
 								reg->terms.getByID(concept).getUnquotedString()));
-				if (ogatom.tuple.size() == 4)
-				if (ogatom.tuple[3].address == 1)
-				factppConcept =
-				ontology->kernel->getExpressionManager()->Not(
-						factppConcept);
+				if (ogatom.tuple.size() == 4) {
+					if (ogatom.tuple[3].address == 1) {
+						factppConcept = ontology->kernel->getExpressionManager()->Not(factppConcept);
+					}
+				} else if (ogatom.tuple[0] == query.input[2]) {
+					factppConcept = ontology->kernel->getExpressionManager()->Not(factppConcept);
+				}
 
-				else if (ogatom.tuple[0] == query.input[2])
-				factppConcept =
-				ontology->kernel->getExpressionManager()->Not(
-						factppConcept);
 				addedAxioms.push_back(
 						ontology->kernel->instanceOf(
 								ontology->kernel->getExpressionManager()->Individual(
