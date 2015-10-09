@@ -105,7 +105,7 @@ bool checkConceptAssertion(RegistryPtr reg, ID guardAtomID) const;
 bool checkRoleAssertion(RegistryPtr reg, ID guardAtomID) const;
 
 // returns the set of all individuals which which occur either in the Abox or in the query (including the DL-namespace)
-InterpretationPtr getAllIndividuals(const PluginAtom::Query& query);
+InterpretationPtr getAllIndividuals(const PluginAtom::Query& query, bool addPotentialIndividuals);
 
 bool isOwlConstant(std::string str) const;
 

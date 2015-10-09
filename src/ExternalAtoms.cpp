@@ -82,8 +82,8 @@ namespace dllite {
 	// ============================== Class DLPluginAtom::Actor_collector ==============================
 
 	DLPluginAtom::Actor_collector::Actor_collector(RegistryPtr reg, Answer& answer,
-			DLLitePlugin::CachedOntologyPtr ontology, Type t) :
-	reg(reg), answer(answer), ontology(ontology), type(t) {
+			DLLitePlugin::CachedOntologyPtr ontology, Type t, bool computeUnknown) :
+	reg(reg), answer(answer), ontology(ontology), type(t), computeUnknown(computeUnknown) {
 		DBGLOG(DBG, "Instantiating Actor_collector");
 	}
 
@@ -107,7 +107,14 @@ namespace dllite {
 				DBGLOG(DBG, "Adding element to tuple (ID=" << tid << ")");
 				Tuple tup;
 				tup.push_back(tid);
-				answer.get().push_back(tup);
+				if (computeUnknown) {
+					// only add to unknown if not already in true extension
+					if(std::find(answer.get().begin(), answer.get().end(), tup) == answer.get().end()) {
+						answer.getUnknown().push_back(tup);
+					}
+				} else {
+					answer.get().push_back(tup);
+				}
 			}
 		}
 
@@ -118,7 +125,7 @@ namespace dllite {
 
 	DLPluginAtom::DLPluginAtom(std::string predName, ProgramCtx& ctx,
 			bool monotonic) :
-	PluginAtom(predName, monotonic), ctx(ctx) {
+	PluginAtom(predName, monotonic), ctx(ctx), predName(predName) {
 	}
 
 	bool DLPluginAtom::changeABox(const Query& query) {
@@ -215,7 +222,7 @@ namespace dllite {
 	}
 
 	std::vector<TDLAxiom*> DLPluginAtom::expandAbox(const Query& query,
-			bool useExistingAbox) {
+			bool useExistingAbox, bool addAll) {
 		DBGLOG(DBG,"Expand Abox is started with useAbox = "<<useExistingAbox);
 		RegistryPtr reg = getRegistry();
 
@@ -225,9 +232,22 @@ namespace dllite {
 		// add the additional assertions
 		std::vector<TDLAxiom*> addedAxioms;
 
-		DBGLOG(DBG, "Expanding Abox");
-		bm::bvector<>::enumerator en = query.interpretation->getStorage().first();
-		bm::bvector<>::enumerator en_end = query.interpretation->getStorage().end();
+
+		bm::bvector<>::enumerator en;
+		bm::bvector<>::enumerator en_end;
+
+		// decide whether everything should be added, or just the assertions from the input predicates
+		if (addAll) {
+			DBGLOG(DBG, "Expanding Abox with all role and concept assertions");
+			const ExternalAtom& eatom = query.ctx->registry()->eatoms.getByID(query.eatomID);
+			en = eatom.getPredicateInputMask()->getStorage().first();
+			en_end = eatom.getPredicateInputMask()->getStorage().end();
+		} else {
+			DBGLOG(DBG, "Expanding Abox");
+			en = query.interpretation->getStorage().first();
+			en_end = query.interpretation->getStorage().end();
+		}
+
 		while (en < en_end) {
 			const OrdinaryAtom& ogatom = reg->ogatoms.getByAddress(*en);
 
@@ -1527,8 +1547,8 @@ namespace dllite {
 
 	// ============================== Class CDLAtom ==============================
 
-	CDLAtom::CDLAtom(ProgramCtx& ctx) :
-	DLPluginAtom("cDL", ctx) {
+	CDLAtom::CDLAtom(ProgramCtx& ctx, std::string predName) :
+	DLPluginAtom(predName, ctx) {
 		DBGLOG(DBG, "Constructor of cDL plugin is started");
 		addInputConstant(); // the ontology
 		addInputPredicate(); // the positive concept
@@ -1539,6 +1559,9 @@ namespace dllite {
 		addInputTuple(); // optional integer parameter: 0 to ignore the Abox from the ontology file, 1 to use it
 		setOutputArity(1); // arity of the output list
 
+		if (predName == "cDLp") {
+			prop.providesPartialAnswer = true;
+		}
 		prop.supportSets = true; // we provide support sets
 		prop.completePositiveSupportSets = true; // we even provide (positive) complete support sets
 	}
@@ -1565,13 +1588,13 @@ namespace dllite {
 		DBGLOG(DBG,"useABox = "<<useAbox);
 		DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(
 				ctx, query.input[0], useAbox);
-		std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox);
+		std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox, false);
 
 		// handle inconsistency
 		if (!ontology->kernel->isKBConsistent()) {
 			// add all individuals to the output
 			DBGLOG(DBG, "KB is inconsistent: returning all tuples");
-			InterpretationPtr intr = ontology->getAllIndividuals(query);
+			InterpretationPtr intr = ontology->getAllIndividuals(query, false);
 			bm::bvector<>::enumerator en = intr->getStorage().first();
 			bm::bvector<>::enumerator en_end = intr->getStorage().end();
 			while (en < en_end) {
@@ -1606,7 +1629,7 @@ namespace dllite {
 				DBGLOG(DBG,
 						"Preparing Actor_collector for " << to_string(t.subj_, ontology->store));
 				Actor_collector ret(reg, answer, ontology,
-						Actor_collector::Concept);
+						Actor_collector::Concept, false);
 				DBGLOG(DBG, "Sending concept query");
 				TDLConceptExpression* factppConcept =
 				ontology->kernel->getExpressionManager()->Concept(
@@ -1632,12 +1655,77 @@ namespace dllite {
 
 		DBGLOG(DBG, "Query answering complete, recovering Abox");
 		restoreAbox(query, addedAxioms);
+
+
+		if (predName == "cDLp") {
+			DBGLOG(DBG, "compute unknown output");
+
+			std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox, true);
+
+			// handle inconsistency
+			if (!ontology->kernel->isKBConsistent()) {
+				// add all individuals to the output
+				DBGLOG(DBG, "KB is inconsistent: returning all tuples");
+				InterpretationPtr intr = ontology->getAllIndividuals(query, true);
+				bm::bvector<>::enumerator en = intr->getStorage().first();
+				bm::bvector<>::enumerator en_end = intr->getStorage().end();
+				while (en < en_end) {
+					Tuple tup;
+					tup.push_back(
+							ID(ID::MAINKIND_TERM | ID::SUBKIND_TERM_CONSTANT, *en));
+					// only add to unknown if not already in true extension
+					if(std::find(answer.get().begin(), answer.get().end(), tup) == answer.get().end()) {
+						answer.getUnknown().push_back(tup);
+					}
+					en++;
+				}
+				DBGLOG(DBG, "Query answering for unknown output complete, recovering Abox");
+				restoreAbox(query, addedAxioms);
+				return;
+			}
+
+			BOOST_FOREACH(owlcpp::Triple const& t, ontology->store.map_triple()) {
+				DBGLOG(DBG,
+						"Current triple: " << to_string(t.subj_, ontology->store) << " / " << to_string(t.pred_, ontology->store) << " / " << to_string(t.obj_, ontology->store));
+
+				if (to_string(t.subj_, ontology->store) == queryConcept) {
+					// found concept
+					DBGLOG(DBG,
+							"Preparing Actor_collector for " << to_string(t.subj_, ontology->store));
+					Actor_collector ret(reg, answer, ontology,
+							Actor_collector::Concept, true);
+					DBGLOG(DBG, "Sending concept query");
+					TDLConceptExpression* factppConcept =
+					ontology->kernel->getExpressionManager()->Concept(
+							to_string(t.subj_, ontology->store));
+
+					if (negated)
+					factppConcept = ontology->kernel->getExpressionManager()->Not(
+							factppConcept);
+					try {
+						ontology->kernel->getInstances(factppConcept, ret);
+					} catch (...) {
+						throw PluginError(
+								"DLLite reasoner failed during concept query");
+					}
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				DBGLOG(WARNING,
+						"Queried non-existing concept " << ontology->removeNamespaceFromString(queryConcept));
+			}
+
+			DBGLOG(DBG, "Query answering for unknown output complete, recovering Abox");
+			restoreAbox(query, addedAxioms);
+		}
 	}
 
 	// ============================== Class RDLAtom ==============================
 
-	RDLAtom::RDLAtom(ProgramCtx& ctx) :
-	DLPluginAtom("rDL", ctx) {
+	RDLAtom::RDLAtom(ProgramCtx& ctx, std::string predName) :
+	DLPluginAtom(predName, ctx) {
 		DBGLOG(DBG, "Constructor of rDL plugin is started");
 		addInputConstant(); // the ontology
 		addInputPredicate(); // the positive concept
@@ -1648,6 +1736,9 @@ namespace dllite {
 		addInputTuple(); // optional integer parameter: 0 to ignore the Abox from the ontology file, 1 to use it
 		setOutputArity(2); // arity of the output list
 
+		if (predName == "rDLp") {
+			prop.providesPartialAnswer = true;
+		}
 		prop.supportSets = true; // we provide support sets
 		prop.completePositiveSupportSets = true; // we even provide (positive) complete support sets
 	}
@@ -1668,13 +1759,13 @@ namespace dllite {
 		&& (query.input.size() < 7 || query.input[6].address == 1);
 		DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(
 				ctx, query.input[0], useAbox);
-		std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox);
+		std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox, false);
 
 		// handle inconsistency
 		if (!ontology->kernel->isKBConsistent()) {
 			// add all pairs of individuals to the output
 			DBGLOG(DBG, "KB is inconsistent: returning all tuples");
-			InterpretationPtr intr = ontology->getAllIndividuals(query);
+			InterpretationPtr intr = ontology->getAllIndividuals(query, false);
 			bm::bvector<>::enumerator en = intr->getStorage().first();
 			bm::bvector<>::enumerator en_end = intr->getStorage().end();
 			while (en < en_end) {
@@ -1713,7 +1804,7 @@ namespace dllite {
 				ontology->addNamespaceToString(role));
 		DBGLOG(DBG, "Query is:" <<&factppRole);
 		DBGLOG(DBG, "Answering role query");
-		InterpretationPtr intr = ontology->getAllIndividuals(query);
+		InterpretationPtr intr = ontology->getAllIndividuals(query, false);
 
 		// for all individuals
 		bm::bvector<>::enumerator en = intr->getStorage().first();
@@ -1753,6 +1844,92 @@ namespace dllite {
 
 		DBGLOG(DBG, "Query answering complete, recovering Abox");
 		restoreAbox(query, addedAxioms);
+
+		if (predName == "rDLp") {
+			std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox, true);
+
+			// handle inconsistency
+			if (!ontology->kernel->isKBConsistent()) {
+				// add all pairs of individuals to the output
+				DBGLOG(DBG, "KB is inconsistent: returning all tuples");
+				InterpretationPtr intr = ontology->getAllIndividuals(query, true);
+				bm::bvector<>::enumerator en = intr->getStorage().first();
+				bm::bvector<>::enumerator en_end = intr->getStorage().end();
+				while (en < en_end) {
+					bm::bvector<>::enumerator en2 = intr->getStorage().first();
+					bm::bvector<>::enumerator en2_end = intr->getStorage().end();
+					while (en2 < en2_end) {
+						Tuple tup;
+						tup.push_back(
+								ID(ID::MAINKIND_TERM | ID::SUBKIND_TERM_CONSTANT, *en));
+						tup.push_back(
+								ID(ID::MAINKIND_TERM | ID::SUBKIND_TERM_CONSTANT,
+										*en2));
+						// only add to unknown if not already in true extension
+						if(std::find(answer.get().begin(), answer.get().end(), tup) == answer.get().end()) {
+							answer.getUnknown().push_back(tup);
+						}
+						en2++;
+					}
+					en++;
+				}
+				DBGLOG(DBG, "Query answering for unknown output complete, recovering Abox");
+				restoreAbox(query, addedAxioms);
+				return;
+			}
+
+			DBGLOG(DBG, "Query is:" <<&factppRole);
+			DBGLOG(DBG, "Answering role query");
+			InterpretationPtr intr = ontology->getAllIndividuals(query, true);
+
+			// for all individuals
+			en = intr->getStorage().first();
+			en_end = intr->getStorage().end();
+			while (en < en_end) {
+				ID individual = ID(ID::MAINKIND_TERM | ID::SUBKIND_TERM_CONSTANT, *en);
+
+				// query related individuals
+				DBGLOG(DBG,
+						"Querying individuals related to " << RawPrinter::toString(reg, individual));
+				std::vector<const TNamedEntry*> relatedIndividuals;
+				try {
+					DBGLOG(DBG, "Entered try block"<< ontology->reg->terms.getByID(individual).getUnquotedString());
+					ontology->kernel->getRoleFillers(
+							ontology->kernel->getExpressionManager()->Individual(
+									ontology->addNamespaceToString(
+											reg->terms.getByID(individual).getUnquotedString())),
+							//			ontology->reg->terms.getByID(individual).getUnquotedString()),
+							factppRole, relatedIndividuals);
+				} catch (...) {
+					throw PluginError("DLLite reasoner failed during role query");
+				}
+
+				// translate the result to HEX
+				BOOST_FOREACH (const TNamedEntry* related, relatedIndividuals) {
+					ID relatedIndividual = theDLLitePlugin.storeQuotedConstantTerm(
+							ontology->removeNamespaceFromString(related->getName()));
+					DBGLOG(DBG,
+							"Adding role membership: (" << reg->terms.getByID(relatedIndividual).getUnquotedString() << ", " << relatedIndividual << ")");
+					Tuple tup;
+					tup.push_back(individual);
+					tup.push_back(relatedIndividual);
+					// only add to unknown if not already in true extension
+					if(std::find(answer.get().begin(), answer.get().end(), tup) == answer.get().end()) {
+						answer.getUnknown().push_back(tup);
+					}
+				}
+				en++;
+			}
+
+			DBGLOG(DBG, "Query answering for unknown output complete, recovering Abox");
+			restoreAbox(query, addedAxioms);
+
+
+
+
+
+
+		}
 	}
 
 	// ============================== Class ConsDLAtom ==============================
@@ -1786,7 +1963,7 @@ namespace dllite {
 		&& (query.input.size() < 6 || query.input[5].address == 1);
 		DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(
 				ctx, query.input[0], useAbox);
-		std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox);
+		std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox, false);
 
 		// handle inconsistency
 		if (ontology->kernel->isKBConsistent()) {
@@ -1828,7 +2005,7 @@ namespace dllite {
 		&& (query.input.size() < 6 || query.input[5].address == 1);
 		DLLitePlugin::CachedOntologyPtr ontology = theDLLitePlugin.prepareOntology(
 				ctx, query.input[0], useAbox);
-		std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox);
+		std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox, false);
 
 		// handle inconsistency
 		if (!ontology->kernel->isKBConsistent()) {

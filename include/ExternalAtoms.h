@@ -57,12 +57,13 @@ class DLPluginAtom : public PluginAtom{
 protected:
 	ProgramCtx& ctx;
 	RegistryPtr reg;
+	std::string predName;
 
 	// checks the guard atoms wrt. the Abox, removes them from ng and sets keep to true in this case, and sets keep to false otherwise
 	virtual void guardSupportSet(bool& keep, Nogood& ng, const ID eaReplacement);
 
 	// expands the Abox with the facts given in the interpretation
-	std::vector<TDLAxiom*> expandAbox(const Query& query, bool useExistingAbox);
+	std::vector<TDLAxiom*> expandAbox(const Query& query, bool useExistingAbox, bool addAll);
 
 	// recorvers the original Abox
 	void restoreAbox(const Query& query, std::vector<TDLAxiom*> addedAxioms);
@@ -76,9 +77,10 @@ protected:
 		Type type;
 		Tuple currentTuple;
 		Answer& answer;
+		bool computeUnknown;
 		DLLitePlugin::CachedOntologyPtr ontology;
 	public:
-		Actor_collector(RegistryPtr reg, Answer& answer, DLLitePlugin::CachedOntologyPtr ontology, Type t);
+		Actor_collector(RegistryPtr reg, Answer& answer, DLLitePlugin::CachedOntologyPtr ontology, Type t, bool computeUnknown);
 		virtual ~Actor_collector();
 		bool apply(const TaxonomyVertex& node);
 		void processTuple(Tuple tup);
@@ -94,14 +96,14 @@ public:
 // concept queries
 class CDLAtom : public DLPluginAtom{
 public:
-	CDLAtom(ProgramCtx& ctx);
+	CDLAtom(ProgramCtx& ctx, std::string predName);
 	virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
 };
 
 // role queries
 class RDLAtom : public DLPluginAtom{
 public:
-	RDLAtom(ProgramCtx& ctx);
+	RDLAtom(ProgramCtx& ctx, std::string predName);
 	virtual void retrieve(const Query& query, Answer& answer, NogoodContainerPtr nogoods);
 };
 

@@ -664,7 +664,7 @@ namespace dllite {
 		assert(!!classification && "Could not compute classification");
 	}
 
-	InterpretationPtr DLLitePlugin::CachedOntology::getAllIndividuals(const PluginAtom::Query& query) {
+	InterpretationPtr DLLitePlugin::CachedOntology::getAllIndividuals(const PluginAtom::Query& query, bool addPotentialIndividuals) {
 
 		DBGLOG(DBG, "Retrieving all individuals");
 		InterpretationPtr allIndividuals(new Interpretation(reg));
@@ -674,8 +674,19 @@ namespace dllite {
 
 		// add individuals from the query
 		{
-			bm::bvector<>::enumerator en = query.interpretation->getStorage().first();
-			bm::bvector<>::enumerator en_end = query.interpretation->getStorage().end();
+			bm::bvector<>::enumerator en;
+			bm::bvector<>::enumerator en_end;
+
+			// for computation of unkown output also add individuals that are neither in the input nor in the ontology (might be added later)
+			if (addPotentialIndividuals) {
+				const ExternalAtom& eatom = query.ctx->registry()->eatoms.getByID(query.eatomID);
+				en = eatom.getPredicateInputMask()->getStorage().first();
+				en_end = eatom.getPredicateInputMask()->getStorage().end();
+			} else {
+				en = query.interpretation->getStorage().first();
+				en_end = query.interpretation->getStorage().end();
+			}
+
 			while (en < en_end) {
 				const OrdinaryAtom& ogatom = reg->ogatoms.getByAddress(*en);
 				assert((ogatom.tuple.size() == 3 || ogatom.tuple.size() == 4) && "invalid input atom");
@@ -976,8 +987,10 @@ namespace dllite {
 	// Define two external atoms: for the roles and for the concept queries
 	std::vector<PluginAtomPtr> DLLitePlugin::createAtoms(ProgramCtx& ctx) const {
 		std::vector<PluginAtomPtr> ret;
-		ret.push_back(PluginAtomPtr(new CDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
-		ret.push_back(PluginAtomPtr(new RDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
+		ret.push_back(PluginAtomPtr(new CDLAtom(ctx, "cDL"), PluginPtrDeleter<PluginAtom>()));
+		ret.push_back(PluginAtomPtr(new CDLAtom(ctx, "cDLp"), PluginPtrDeleter<PluginAtom>()));
+		ret.push_back(PluginAtomPtr(new RDLAtom(ctx, "rDL"), PluginPtrDeleter<PluginAtom>()));
+		ret.push_back(PluginAtomPtr(new RDLAtom(ctx, "rDLp"), PluginPtrDeleter<PluginAtom>()));
 		ret.push_back(PluginAtomPtr(new ConsDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
 		ret.push_back(PluginAtomPtr(new InconsDLAtom(ctx), PluginPtrDeleter<PluginAtom>()));
 		return ret;
