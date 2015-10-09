@@ -6,34 +6,34 @@ cat ontology_header.owl	# ontology_header.owl must contain the static part of th
 
 
 
-for (( i=1; i <= 10*$1; i++ ))
+for (( i=1; i <= 5*$1; i++ ))
 do
 	echo "<owl:Thing rdf:about=\"#s$i\"><rdf:type rdf:resource=\"#Staff\"/></owl:Thing>"
 done
 
 
-for (( i=1; i <= 2*$1; i++ ))
+for (( i=1; i <= 1*$1; i++ ))
 do
 	echo "<owl:Thing rdf:about=\"#s$i\"><rdf:type rdf:resource=\"#Unauthorized\"/></owl:Thing>"
 done
 
 
 
-for (( i=2; i <= 4*$1; i++ ))
+for (( i=2; i <= 2*$1; i++ ))
 do
 	echo "<owl:Thing rdf:about=\"#s$i\"><rdf:type rdf:resource=\"#Blacklisted\"/></owl:Thing>"
 done
 
 
-for (( i=1; i <= 4*$1; i++ ))
+for (( i=1; i <= 2*$1; i++ ))
 do
 
 
-a1=$((RANDOM%3+1))
+ac=$((RANDOM%3+1))
 
 	echo "<owl:Thing rdf:about=\"#r$i\"><rdf:type rdf:resource=\"#StaffRequest\"/></owl:Thing>"
 	echo "<owl:Thing rdf:about=\"#r$i\"><hasSubject rdf:resource=\"#s$i\"/></owl:Thing>"
-	echo "<owl:Thing rdf:about=\"#r$i\"><hasAction rdf:resource=\"#a$a1\"/></owl:Thing>"
+	echo "<owl:Thing rdf:about=\"#r$i\"><hasAction rdf:resource=\"#a$ac\"/></owl:Thing>"
 	if [[ $i -le 1*$1 ]]; then
 		echo "<owl:Thing rdf:about=\"#r$i\"><hasTarget rdf:resource=\"#p1\"/></owl:Thing>"	
 

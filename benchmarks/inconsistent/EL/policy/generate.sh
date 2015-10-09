@@ -6,7 +6,7 @@
 
 prop=$((32768 * $2 / 100)) 
 
-for (( i=1; i <= 4*$1; i++ ))
+for (( i=1; i <= 2*$1; i++ ))
 do
 	if [[ $RANDOM -le $prop ]]; then 
 

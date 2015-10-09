@@ -131,7 +131,7 @@
                     <rdf:Description rdf:about="#StaffRequest"/>
                     <owl:Restriction>
                         <owl:onProperty rdf:resource="#hasSubject"/>
-                        <owl:someValuesFrom rdf:resource="#UnauthorizedStaffRequest"/>
+                        <owl:someValuesFrom rdf:resource="#Unauthorized"/>
                     </owl:Restriction>
                 </owl:intersectionOf>
             </owl:Class>
