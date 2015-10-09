@@ -5,7 +5,7 @@ chief(Y):-hasowner(X,Y),projfile(X).
 grant(X):-&cDL[OWLONTOLOGY,p,b,c,d,"StaffRequest"](X), not deny(X).
 
 % blacklisted staff request is always denied
-deny(X):-&cDL[OWLONTOLOGY,q,b,c,d,"BlacklistedStaffRequest"](X).
+deny(X):-&cDL[OWLONTOLOGY,q,b,c,d,"UnauthorizedStaffRequest"](X).
 
 % owners of files must have access to them
 :-hasowner(Y,Z), deny(X), &rDL[OWLONTOLOGY,a,b,c,d,"hasTarget"](X,Y), &rDL[OWLONTOLOGY,a,b,c,d,"hasSubject"](X,Z).
