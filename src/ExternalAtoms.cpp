@@ -1657,7 +1657,7 @@ namespace dllite {
 		restoreAbox(query, addedAxioms);
 
 
-		if (predName == "cDLp") {
+		if (prop.providesPartialAnswer) {
 			DBGLOG(DBG, "compute unknown output");
 
 			std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox, true);
@@ -1845,7 +1845,8 @@ namespace dllite {
 		DBGLOG(DBG, "Query answering complete, recovering Abox");
 		restoreAbox(query, addedAxioms);
 
-		if (predName == "rDLp") {
+		if (prop.providesPartialAnswer) {
+			DBGLOG(DBG, "compute unknown output");
 			std::vector<TDLAxiom*> addedAxioms = expandAbox(query, useAbox, true);
 
 			// handle inconsistency

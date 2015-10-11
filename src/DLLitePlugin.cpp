@@ -688,10 +688,12 @@ namespace dllite {
 			}
 
 			while (en < en_end) {
-				const OrdinaryAtom& ogatom = reg->ogatoms.getByAddress(*en);
-				assert((ogatom.tuple.size() == 3 || ogatom.tuple.size() == 4) && "invalid input atom");
-				for (int i = 2; i < ogatom.tuple.size(); ++i) {
-					allIndividuals->setFact(ogatom.tuple[i].address);
+				if (!query.assigned || (query.assigned->getFact(*en)==true && query.interpretation->getFact(*en)==false)) {
+					const OrdinaryAtom& ogatom = reg->ogatoms.getByAddress(*en);
+					assert((ogatom.tuple.size() == 3 || ogatom.tuple.size() == 4) && "invalid input atom");
+					for (int i = 2; i < ogatom.tuple.size(); ++i) {
+						allIndividuals->setFact(ogatom.tuple[i].address);
+					}
 				}
 				en++;
 			}
