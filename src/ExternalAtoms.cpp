@@ -407,8 +407,8 @@ namespace dllite {
 
 			// prepare output variable, tuple and negative output atom
 			ID outvarID = reg->storeVariableTerm("O0");
-			ID outvarID1 = reg->storeVariableTerm("O1");
-			ID outvarID2 = reg->storeVariableTerm("O2");
+			ID outvarID1 = reg->storeVariableTerm("O0");
+			ID outvarID2 = reg->storeVariableTerm("O1");
 
 			Tuple outlist;
 
@@ -478,7 +478,8 @@ namespace dllite {
 			FILE *in;
 			char buff[512];
 			std::string param = (cQID != ID_FAIL) ? std::string("(?0)") : std::string("(?0,?1)");
-			std::string path = std::string(PLUGIN_DIR)+std::string("/requiem/dist/requiem-cli.jar");
+			//std::string path = std::string(PLUGIN_DIR)+std::string("/requiem/dist/requiem-cli.jar");
+			std::string path = "/usr/local/lib/dlvhex/plugins"+std::string("/requiem/dist/requiem-cli.jar");
 
 			DBGLOG(DBG, "LSS: EL: the path to requiem is : " <<path);
 			if (cQID != ID_FAIL) {
@@ -860,8 +861,8 @@ namespace dllite {
 			// prepare output variable, tuple and negative output atom
 			DBGLOG(DBG, "Storing output atom which will be part of any support set");
 			ID outvarID = reg->storeVariableTerm("O");
-			ID outvarID1 = reg->storeVariableTerm("O1");
-			ID outvarID2 = reg->storeVariableTerm("O2");
+			ID outvarID1 = reg->storeVariableTerm("O0");
+			ID outvarID2 = reg->storeVariableTerm("O1");
 			Tuple outlist;
 
 			if (cQID != ID_FAIL) {
@@ -1419,7 +1420,7 @@ namespace dllite {
 										"LSS: --> Learned support set: " << supportset.getStringRepresentation(reg));
 								potentialSupportSets->addNogood(supportset);
 							} else if (rQID != ID_FAIL) {
-								// guard atom for C(O1,O2)
+								// guard atom for C(O0,O1)
 								OrdinaryAtom co = theDLLitePlugin.getNewGuardAtom();
 								co.tuple.push_back(cID);
 								co.tuple.push_back(outvarID1);
