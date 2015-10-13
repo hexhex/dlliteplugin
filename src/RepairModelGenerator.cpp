@@ -1763,7 +1763,7 @@ namespace dllite {
 						{
 
 							DBGLOG(DBG, "RMG: EL:  support family is incomplete, thus we add two rules with eval in heads");
-							DBGLOG(DBG,"RMG: EL:  RULE:  eval_e_a(Q,O):- not supp_e_a(Q,O),e_a(Q,O), not comp_e_a(Q,O).");
+							DBGLOG(DBG,"RMG: EL:  RULE:  eval_e_a(Q,O):- not supp_e_a(Q,O),e_a(Q,O), not comp_e_a(Q).");
 							Rule rule(ID::MAINKIND_RULE);
 							//	DBGLOG(DBG, "RMG: EL:  rule is created");
 
@@ -1820,6 +1820,7 @@ namespace dllite {
 								repl.tuple.push_back(eatom.inputs[2]);
 								repl.tuple.push_back(eatom.inputs[3]);
 								repl.tuple.push_back(eatom.inputs[4]);
+								repl.tuple.push_back(eatom.inputs[5]);
 								if (cQID!=ID_FAIL) {
 									repl.tuple.push_back(cQID);
 									repl.tuple.push_back(varoID1);
@@ -1834,7 +1835,7 @@ namespace dllite {
 							}
 
 							{
-								//BODY: not comp_e_a(Q,O)
+								//BODY: not comp_e_a(Q)
 								OrdinaryAtom bodyat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
 								bodyat.tuple.push_back(complPredicateID);
 								bodyat.tuple.push_back(eatom.inputs[0]);
@@ -2905,10 +2906,10 @@ namespace dllite {
 			std::vector<ID> evalatoms;
 			while (enm < enm_end) {
 				ID id = reg->ogatoms.getIDByAddress(*enm);
-				DBGLOG(DBG,"RMG: PC: current atoms is: "<< RawPrinter::toString(reg,id)<<" with tuple "<<RawPrinter::toString(reg,reg->ogatoms.getByID(id).tuple[0]));
+				DBGLOG(DBG,"RMG: PC: current atoms is: "<< RawPrinter::toString(reg,id)<<" with predicate "<<RawPrinter::toString(reg,reg->ogatoms.getByID(id).tuple[0]));
 
 				if (reg->ogatoms.getByID(id).tuple[0]==evid) {
-					DBGLOG(DBG,"RMG: PC: this is eval atom, search for its twin in the model candidate and among external ones");
+					DBGLOG(DBG,"RMG: PC: this is eval atom, search for its twin among replacement atoms in the model candidate ");
 
 					bm::bvector<>::enumerator enm2 = modelCandidate->getStorage().first();
 					bm::bvector<>::enumerator enm2_end = modelCandidate->getStorage().end();
@@ -2918,27 +2919,37 @@ namespace dllite {
 						bool ok=false;
 						ID idcandidate = reg->ogatoms.getIDByAddress(*enm2);
 						DBGLOG(DBG,"RMG: PC: current atom to be considered is "<<RawPrinter::toString(reg,idcandidate));
-						if (idcandidate.isExternalAuxiliary() && !idcandidate.isExternalInputAuxiliary()&&(reg->isPositiveExternalAtomAuxiliaryAtom(idcandidate)||reg->isNegativeExternalAtomAuxiliaryAtom(idcandidate))&&(reg->ogatoms.getByID(id).tuple[0]!=reg->ogatoms.getByID(idcandidate).tuple[0])) {
-							for (int i=1; i<7;i++) {
-								ID id1 = reg->ogatoms.getByID(id).tuple[i];
-								ID id2 = reg->ogatoms.getByID(idcandidate).tuple[i];
+
+
+						if (idcandidate.isExternalAuxiliary() && !idcandidate.isExternalInputAuxiliary()&&(reg->isPositiveExternalAtomAuxiliaryAtom(idcandidate)||reg->isNegativeExternalAtomAuxiliaryAtom(idcandidate))&&(reg->ogatoms.getByID(id).tuple[0]!=reg->ogatoms.getByID(idcandidate).tuple[0])&&reg->ogatoms.getByID(idcandidate).tuple.size()<9) {
+							DBGLOG(DBG,"RMG: PC: this is a replacement atom");
+							DBGLOG(DBG,"RMG: PC: check whether it is a twin of the evaluation atom");
+							for (int i=1; i<8;i++) {
+								ID id1 = reg->ogatoms.getByAddress(*enm).tuple[i];
+								DBGLOG(DBG,"RMG: PC: id1.tuple["<<i<<"] = "<<RawPrinter::toString(reg,id1));
+								ID id2 = reg->ogatoms.getByAddress(*enm2).tuple[i];
+								DBGLOG(DBG,"RMG: PC: id2.tuple["<<i<<"] = "<<RawPrinter::toString(reg,id2));
+
 								if (id1!=id2) {
-									DBGLOG(DBG,"RMG: PC: id1.tuple["<<i<<"] = "<<RawPrinter::toString(reg, reg->ogatoms.getByID(id1).tuple[i]));
-									DBGLOG(DBG,"RMG: PC: id2.input["<<i-1<<"] = "<<RawPrinter::toString(reg, reg->ogatoms.getByID(id2).tuple[i]));
+									//DBGLOG(DBG,"RMG: PC: this is the wrong candidate for postevaluation");
 									break;
 								}
+								else if (i==7) {
+									DBGLOG(DBG,"RMG: PC: this is the right candidate for postevaluation");
+									ok=true;
+								}
 							}
-							ok=true;
+
 						}
 
 						if (ok) {
 							idforcheck=idcandidate;
+							//DBGLOG(DBG,"RMG: PC: evaluate the atom "<<RawPrinter::toString(reg,idforcheck));
 							break;
 						}
 						enm2++;
 					}
 
-					DBGLOG(DBG,"RMG: PC: the replacement atom that needs to be checked is "<<RawPrinter::toString(reg, idforcheck));
 
 					for (unsigned eaIndex=0; eaIndex<factory.innerEatoms.size();eaIndex++) {
 						const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
@@ -3004,7 +3015,7 @@ namespace dllite {
 								usenewab.tuple.push_back(eatom.inputs[1]);
 								ID usenewabID = reg->storeOrdinaryAtom(usenewab);
 
-								DBGLOG(DBG,"RMG: PC: atom that specifies that the new abox is used: "<<RawPrinter::toString(reg,usenewabID));
+								DBGLOG(DBG,"RMG: PC: atom that specifies that the new ABox is used: "<<RawPrinter::toString(reg,usenewabID));
 								postcheckInput->setFact(usenewabID.address);
 
 								// add abox assertions to the input predicates
