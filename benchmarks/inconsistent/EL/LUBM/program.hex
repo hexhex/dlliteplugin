@@ -1,5 +1,5 @@
 % By default all teaching assistant are students
-stud(X):-not &cDL[OWLONTOLOGY,a,b,c,d,"-Student"](X), &cDL[OWLONTOLOGY,a,b,c,d,"TeachingAssistant"](X).
+stud(X):-not &cDL[OWLONTOLOGY,a,b,c,d,"Employee"](X), &cDL[OWLONTOLOGY,a,b,c,d,"TeachingAssistant"](X).
 
 % Teaching assistants of a certain course can not take exam in this course
 :-&rDL[OWLONTOLOGY,pstud,b,c,d,"teachingAssistantOf"](X,Y),takesExam(X,Y).

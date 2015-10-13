@@ -478,8 +478,8 @@ namespace dllite {
 			FILE *in;
 			char buff[512];
 			std::string param = (cQID != ID_FAIL) ? std::string("(?0)") : std::string("(?0,?1)");
-			//std::string path = std::string(PLUGIN_DIR)+std::string("/requiem/dist/requiem-cli.jar");
-			std::string path = "/usr/local/lib/dlvhex/plugins"+std::string("/requiem/dist/requiem-cli.jar");
+			std::string path = std::string(PLUGIN_DIR)+std::string("/requiem/dist/requiem-cli.jar");
+			//std::string path = std::string("/home/dasha/local/lib/dlvhex/plugins")+std::string("/requiem/dist/requiem-cli.jar");
 
 			DBGLOG(DBG, "LSS: EL: the path to requiem is : " <<path);
 			if (cQID != ID_FAIL) {
