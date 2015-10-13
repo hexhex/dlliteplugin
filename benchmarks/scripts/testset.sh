@@ -1,3 +1,14 @@
+#$1 (optional) limit support set size or number by repair computation value supsize/supnum
+#$2 (optional) bound on support set size (resp. number)
+
+lim=""
+
+if [[ $# == 2 ]] && [[ $1 != "" ]] && [[ $2!="" ]]; then
+	lim="--$1=$2"
+	echo "Testing partial support families, option $lim is enabled for repair"
+fi
+
+
 start=`date +%s`
 
 loop="instances/*.hex"
@@ -60,7 +71,7 @@ fi
 
 incloop="instances/*.hex"
 
-cmdrep="dlvhex2 --heuristics=monolithic --plugindir=../../../../src --supportsets --el --liberalsafety --silent -n=1"
+cmdrep="dlvhex2 --heuristics=monolithic --plugindir=../../../../src --supportsets --el --liberalsafety --silent -n=1 --supsize=3"
 
 
 count=`ls -1 instances/*.hex 2>/dev/null | wc -l`
@@ -95,7 +106,7 @@ if [ $count != 0 ]; then
 		#echo "owl file: $ontofilename"
 
 		awk ' BEGIN { print "repair answer set: " } ' >>$instance.repinfo
-		$cmdrep $instance --repair=$ontofilename --verbose=1 2>$instance.out >>$instance.repinfo 
+		$cmdrep $instance --repair=$ontofilename --verbose=1 2>$instance.out >>$instance.repinfo
 		awk ' BEGIN { print "******************" } ' >>$instance.repinfo
 		
 		# check whether repair was found
@@ -122,7 +133,7 @@ if [ $count != 0 ]; then
 		done
 		
 		awk ' BEGIN { print "answer set of a repaired program:" } ' >>$instance.repinfo
-		$cmd $instance >>$instance.repinfo
+		$cmd $instance $lim >>$instance.repinfo
 		mv $ontofilename $ontofilename.repaired
 		mv $ontofilename.orig $ontofilename
 
