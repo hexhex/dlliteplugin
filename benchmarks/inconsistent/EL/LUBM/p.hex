@@ -1,1 +1,2 @@
-teaches(X,Z):-&rDL["ontology.owl",a,b,c,d,"teachingAssistantOf"](X,Y),&rDL["ontology.owl",a,b,c,d,"takesCouse"](Z,Y).
+%teaches(X,Z):-&rDL["ontology.owl",a,b,c,d,"teachingAssistantOf"](X,Y),&rDL["ontology.owl",a,b,c,d,"takesCouse"](Z,Y).
+employee(X):-&cDL["ontology.owl",a,b,c,d,"Employee"](X).

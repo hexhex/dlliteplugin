@@ -1,4 +1,4 @@
- # $1: probability of a fact
+ # $1: probability of a student taking exam in a certain course
 
 
 

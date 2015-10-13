@@ -164,6 +164,7 @@
 <owl:Thing rdf:about="#s18"><rdf:type rdf:resource="#Staff"/></owl:Thing>
 <owl:Thing rdf:about="#s19"><rdf:type rdf:resource="#Staff"/></owl:Thing>
 <owl:Thing rdf:about="#s20"><rdf:type rdf:resource="#Staff"/></owl:Thing>
+<<<<<<< HEAD
 <owl:Thing rdf:about="#s21"><rdf:type rdf:resource="#Staff"/></owl:Thing>
 <owl:Thing rdf:about="#s22"><rdf:type rdf:resource="#Staff"/></owl:Thing>
 <owl:Thing rdf:about="#s23"><rdf:type rdf:resource="#Staff"/></owl:Thing>
@@ -174,12 +175,17 @@
 <owl:Thing rdf:about="#s28"><rdf:type rdf:resource="#Staff"/></owl:Thing>
 <owl:Thing rdf:about="#s29"><rdf:type rdf:resource="#Staff"/></owl:Thing>
 <owl:Thing rdf:about="#s30"><rdf:type rdf:resource="#Staff"/></owl:Thing>
+=======
+>>>>>>> fd63e37589ecc9b9bc10a37a390af53d238c6716
 <owl:Thing rdf:about="#s1"><rdf:type rdf:resource="#Unauthorized"/></owl:Thing>
 <owl:Thing rdf:about="#s2"><rdf:type rdf:resource="#Unauthorized"/></owl:Thing>
 <owl:Thing rdf:about="#s3"><rdf:type rdf:resource="#Unauthorized"/></owl:Thing>
 <owl:Thing rdf:about="#s4"><rdf:type rdf:resource="#Unauthorized"/></owl:Thing>
+<<<<<<< HEAD
 <owl:Thing rdf:about="#s5"><rdf:type rdf:resource="#Unauthorized"/></owl:Thing>
 <owl:Thing rdf:about="#s6"><rdf:type rdf:resource="#Unauthorized"/></owl:Thing>
+=======
+>>>>>>> fd63e37589ecc9b9bc10a37a390af53d238c6716
 <owl:Thing rdf:about="#s2"><rdf:type rdf:resource="#Blacklisted"/></owl:Thing>
 <owl:Thing rdf:about="#s3"><rdf:type rdf:resource="#Blacklisted"/></owl:Thing>
 <owl:Thing rdf:about="#s4"><rdf:type rdf:resource="#Blacklisted"/></owl:Thing>
@@ -187,13 +193,16 @@
 <owl:Thing rdf:about="#s6"><rdf:type rdf:resource="#Blacklisted"/></owl:Thing>
 <owl:Thing rdf:about="#s7"><rdf:type rdf:resource="#Blacklisted"/></owl:Thing>
 <owl:Thing rdf:about="#s8"><rdf:type rdf:resource="#Blacklisted"/></owl:Thing>
+<<<<<<< HEAD
 <owl:Thing rdf:about="#s9"><rdf:type rdf:resource="#Blacklisted"/></owl:Thing>
 <owl:Thing rdf:about="#s10"><rdf:type rdf:resource="#Blacklisted"/></owl:Thing>
 <owl:Thing rdf:about="#s11"><rdf:type rdf:resource="#Blacklisted"/></owl:Thing>
 <owl:Thing rdf:about="#s12"><rdf:type rdf:resource="#Blacklisted"/></owl:Thing>
+=======
+>>>>>>> fd63e37589ecc9b9bc10a37a390af53d238c6716
 <owl:Thing rdf:about="#r1"><rdf:type rdf:resource="#StaffRequest"/></owl:Thing>
 <owl:Thing rdf:about="#r1"><hasSubject rdf:resource="#s1"/></owl:Thing>
-<owl:Thing rdf:about="#r1"><hasAction rdf:resource="#a3"/></owl:Thing>
+<owl:Thing rdf:about="#r1"><hasAction rdf:resource="#a1"/></owl:Thing>
 <owl:Thing rdf:about="#r1"><hasTarget rdf:resource="#p1"/></owl:Thing>
 <owl:Thing rdf:about="#r2"><rdf:type rdf:resource="#StaffRequest"/></owl:Thing>
 <owl:Thing rdf:about="#r2"><hasSubject rdf:resource="#s2"/></owl:Thing>
@@ -201,7 +210,11 @@
 <owl:Thing rdf:about="#r2"><hasTarget rdf:resource="#p1"/></owl:Thing>
 <owl:Thing rdf:about="#r3"><rdf:type rdf:resource="#StaffRequest"/></owl:Thing>
 <owl:Thing rdf:about="#r3"><hasSubject rdf:resource="#s3"/></owl:Thing>
+<<<<<<< HEAD
 <owl:Thing rdf:about="#r3"><hasAction rdf:resource="#a1"/></owl:Thing>
+=======
+<owl:Thing rdf:about="#r3"><hasAction rdf:resource="#a2"/></owl:Thing>
+>>>>>>> fd63e37589ecc9b9bc10a37a390af53d238c6716
 <owl:Thing rdf:about="#r3"><hasTarget rdf:resource="#p1"/></owl:Thing>
 <owl:Thing rdf:about="#r4"><rdf:type rdf:resource="#StaffRequest"/></owl:Thing>
 <owl:Thing rdf:about="#r4"><hasSubject rdf:resource="#s4"/></owl:Thing>
@@ -209,6 +222,7 @@
 <owl:Thing rdf:about="#r4"><hasTarget rdf:resource="#p1"/></owl:Thing>
 <owl:Thing rdf:about="#r5"><rdf:type rdf:resource="#StaffRequest"/></owl:Thing>
 <owl:Thing rdf:about="#r5"><hasSubject rdf:resource="#s5"/></owl:Thing>
+<<<<<<< HEAD
 <owl:Thing rdf:about="#r5"><hasAction rdf:resource="#a1"/></owl:Thing>
 <owl:Thing rdf:about="#r5"><hasTarget rdf:resource="#p1"/></owl:Thing>
 <owl:Thing rdf:about="#r6"><rdf:type rdf:resource="#StaffRequest"/></owl:Thing>
@@ -218,11 +232,23 @@
 <owl:Thing rdf:about="#r7"><rdf:type rdf:resource="#StaffRequest"/></owl:Thing>
 <owl:Thing rdf:about="#r7"><hasSubject rdf:resource="#s7"/></owl:Thing>
 <owl:Thing rdf:about="#r7"><hasAction rdf:resource="#a2"/></owl:Thing>
+=======
+<owl:Thing rdf:about="#r5"><hasAction rdf:resource="#a2"/></owl:Thing>
+<owl:Thing rdf:about="#r5"><hasTarget rdf:resource="#p2"/></owl:Thing>
+<owl:Thing rdf:about="#r6"><rdf:type rdf:resource="#StaffRequest"/></owl:Thing>
+<owl:Thing rdf:about="#r6"><hasSubject rdf:resource="#s6"/></owl:Thing>
+<owl:Thing rdf:about="#r6"><hasAction rdf:resource="#a2"/></owl:Thing>
+<owl:Thing rdf:about="#r6"><hasTarget rdf:resource="#p2"/></owl:Thing>
+<owl:Thing rdf:about="#r7"><rdf:type rdf:resource="#StaffRequest"/></owl:Thing>
+<owl:Thing rdf:about="#r7"><hasSubject rdf:resource="#s7"/></owl:Thing>
+<owl:Thing rdf:about="#r7"><hasAction rdf:resource="#a3"/></owl:Thing>
+>>>>>>> fd63e37589ecc9b9bc10a37a390af53d238c6716
 <owl:Thing rdf:about="#r7"><hasTarget rdf:resource="#p2"/></owl:Thing>
 <owl:Thing rdf:about="#r8"><rdf:type rdf:resource="#StaffRequest"/></owl:Thing>
 <owl:Thing rdf:about="#r8"><hasSubject rdf:resource="#s8"/></owl:Thing>
 <owl:Thing rdf:about="#r8"><hasAction rdf:resource="#a2"/></owl:Thing>
 <owl:Thing rdf:about="#r8"><hasTarget rdf:resource="#p2"/></owl:Thing>
+<<<<<<< HEAD
 <owl:Thing rdf:about="#r9"><rdf:type rdf:resource="#StaffRequest"/></owl:Thing>
 <owl:Thing rdf:about="#r9"><hasSubject rdf:resource="#s9"/></owl:Thing>
 <owl:Thing rdf:about="#r9"><hasAction rdf:resource="#a1"/></owl:Thing>
@@ -239,6 +265,8 @@
 <owl:Thing rdf:about="#r12"><hasSubject rdf:resource="#s12"/></owl:Thing>
 <owl:Thing rdf:about="#r12"><hasAction rdf:resource="#a2"/></owl:Thing>
 <owl:Thing rdf:about="#r12"><hasTarget rdf:resource="#p2"/></owl:Thing>
+=======
+>>>>>>> fd63e37589ecc9b9bc10a37a390af53d238c6716
 <owl:Thing rdf:about="#p1"><rdf:type rdf:resource="#Project"/></owl:Thing>
 <owl:Thing rdf:about="#p2"><rdf:type rdf:resource="#Project"/></owl:Thing>
 <owl:Thing rdf:about="#p3"><rdf:type rdf:resource="#Project"/></owl:Thing>

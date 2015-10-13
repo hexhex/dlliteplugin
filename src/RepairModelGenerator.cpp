@@ -38,7 +38,6 @@
 #undef DBGLOG
 #define DBGLOG(level,msg) { std::cout << msg << std::endl; }
 
-
 #include "RepairModelGenerator.h"
 #include "dlvhex2/Logger.h"
 #include "dlvhex2/Registry.h"
@@ -382,7 +381,7 @@ namespace dllite {
 
 				InterpretationPtr I(new Interpretation(reg));
 
-				// go through elements of the model candidate, and for each of them check whether ID of its predicate occurs in auxiliary predicates set
+				// filter out irrelevant atoms from the model
 
 				bm::bvector<>::enumerator en = modelCandidate->getStorage().first();
 				bm::bvector<>::enumerator en_end = modelCandidate->getStorage().end();
@@ -391,7 +390,7 @@ namespace dllite {
 					const OrdinaryAtom& oatom = reg->ogatoms.getByAddress(*en);
 					ID oatomID = reg->ogatoms.getIDByAddress(*en);
 					ID predID = oatom.tuple[0];
-					DBGLOG(DBG,"RMG: current predicate is "<<RawPrinter::toString(reg,predID)<< " for atom "<<RawPrinter::toString(reg,oatomID));
+					//DBGLOG(DBG,"RMG: current predicate is "<<RawPrinter::toString(reg,predID)<< " for atom "<<RawPrinter::toString(reg,oatomID));
 
 					if (std::find(auxiliarypredicates.begin(), auxiliarypredicates.end(),predID)!=auxiliarypredicates.end()) {
 						DBGLOG(DBG,"RMG: "<<RawPrinter::toString(reg,predID)<<" is auxiliary, should not be present in the final model ");
@@ -401,7 +400,7 @@ namespace dllite {
 					en++;
 				}
 
-				DBGLOG(DBG,"RMG: filtermodel is "<<*I);
+				//DBGLOG(DBG,"RMG: filtermodel is "<<*I);
 				modelCandidate->getStorage() -= I->getStorage();
 				return modelCandidate;
 
@@ -1759,11 +1758,11 @@ namespace dllite {
 						}
 					}
 
-				else {
+					else {
 						{
 
 							DBGLOG(DBG, "RMG: EL:  support family is incomplete, thus we add two rules with eval in heads");
-							DBGLOG(DBG,"RMG: EL:  RULE:  eval_e_a(Q,O):- not supp_e_a(Q,O),e_a(Q,O), not comp_e_a(Q,O).");
+							DBGLOG(DBG,"RMG: EL:  RULE:  eval_e_a(Q,O):- not supp_e_a(Q,O),e_a(Q,O), not comp_e_a(Q).");
 							Rule rule(ID::MAINKIND_RULE);
 							//	DBGLOG(DBG, "RMG: EL:  rule is created");
 
@@ -1820,6 +1819,7 @@ namespace dllite {
 								repl.tuple.push_back(eatom.inputs[2]);
 								repl.tuple.push_back(eatom.inputs[3]);
 								repl.tuple.push_back(eatom.inputs[4]);
+								repl.tuple.push_back(eatom.inputs[5]);
 								if (cQID!=ID_FAIL) {
 									repl.tuple.push_back(cQID);
 									repl.tuple.push_back(varoID1);
@@ -1834,7 +1834,7 @@ namespace dllite {
 							}
 
 							{
-								//BODY: not comp_e_a(Q,O)
+								//BODY: not comp_e_a(Q)
 								OrdinaryAtom bodyat(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG | ID::PROPERTY_AUX);
 								bodyat.tuple.push_back(complPredicateID);
 								bodyat.tuple.push_back(eatom.inputs[0]);
@@ -1844,11 +1844,11 @@ namespace dllite {
 								bodyat.tuple.push_back(eatom.inputs[4]);
 								bodyat.tuple.push_back(eatom.inputs[5]);
 								/*if (cQID!=ID_FAIL) {
-									bodyat.tuple.push_back(cQID);
-								}
-								else if (rQID!=ID_FAIL) {
-									bodyat.tuple.push_back(rQID);
-								} else {assert(false);}*/
+								 bodyat.tuple.push_back(cQID);
+								 }
+								 else if (rQID!=ID_FAIL) {
+								 bodyat.tuple.push_back(rQID);
+								 } else {assert(false);}*/
 								rule.body.push_back(ID::nafLiteralFromAtom(reg->storeOrdinaryAtom(bodyat)));
 
 							}
@@ -1920,14 +1920,14 @@ namespace dllite {
 								bodyat.tuple.push_back(eatom.inputs[4]);
 								bodyat.tuple.push_back(eatom.inputs[5]);
 								/*if (cQID!=ID_FAIL) {
-									bodyat.tuple.push_back(cQID);
-									//bodyat.tuple.push_back(varoID1);
-								}
-								else if (rQID!=ID_FAIL) {
-									bodyat.tuple.push_back(rQID);
-									//bodyat.tuple.push_back(varoID1);
-									//bodyat.tuple.push_back(varoID2);
-								} else {assert(false);}*/
+								 bodyat.tuple.push_back(cQID);
+								 //bodyat.tuple.push_back(varoID1);
+								 }
+								 else if (rQID!=ID_FAIL) {
+								 bodyat.tuple.push_back(rQID);
+								 //bodyat.tuple.push_back(varoID1);
+								 //bodyat.tuple.push_back(varoID2);
+								 } else {assert(false);}*/
 								rule.body.push_back(ID::nafLiteralFromAtom(reg->storeOrdinaryAtom(bodyat)));
 
 							}
@@ -2634,10 +2634,10 @@ namespace dllite {
 						factory.ctx, annotatedGroundProgram,
 				// no interleaved threading because guess and check MG will likely not profit from it
 						InterpretationConstPtr(),
-						// do the UFS check for disjunctions only if we don't do
-						// a minimality check in this class;
-						// this will not find unfounded sets due to external sources,
-						// but at least unfounded sets due to disjunctions
+				// do the UFS check for disjunctions only if we don't do
+				// a minimality check in this class;
+				// this will not find unfounded sets due to external sources,
+				// but at least unfounded sets due to disjunctions
 						!factory.ctx.config.getOption("FLPCheck") && !factory.ctx.config.getOption("UFSCheck"));
 				nogoodGrounder = NogoodGrounderPtr(new ImmediateNogoodGrounder(factory.ctx.registry(), learnedEANogoods, learnedEANogoods, annotatedGroundProgram));
 			}
@@ -2905,10 +2905,10 @@ namespace dllite {
 			std::vector<ID> evalatoms;
 			while (enm < enm_end) {
 				ID id = reg->ogatoms.getIDByAddress(*enm);
-				DBGLOG(DBG,"RMG: PC: current atoms is: "<< RawPrinter::toString(reg,id)<<" with tuple "<<RawPrinter::toString(reg,reg->ogatoms.getByID(id).tuple[0]));
+				DBGLOG(DBG,"RMG: PC: current atoms is: "<< RawPrinter::toString(reg,id)<<" with predicate "<<RawPrinter::toString(reg,reg->ogatoms.getByID(id).tuple[0]));
 
 				if (reg->ogatoms.getByID(id).tuple[0]==evid) {
-					DBGLOG(DBG,"RMG: PC: this is eval atom, search for its twin in the model candidate and among external ones");
+					DBGLOG(DBG,"RMG: PC: this is eval atom, search for its twin among replacement atoms in the model candidate ");
 
 					bm::bvector<>::enumerator enm2 = modelCandidate->getStorage().first();
 					bm::bvector<>::enumerator enm2_end = modelCandidate->getStorage().end();
@@ -2918,27 +2918,35 @@ namespace dllite {
 						bool ok=false;
 						ID idcandidate = reg->ogatoms.getIDByAddress(*enm2);
 						DBGLOG(DBG,"RMG: PC: current atom to be considered is "<<RawPrinter::toString(reg,idcandidate));
-						if (idcandidate.isExternalAuxiliary() && !idcandidate.isExternalInputAuxiliary()&&(reg->isPositiveExternalAtomAuxiliaryAtom(idcandidate)||reg->isNegativeExternalAtomAuxiliaryAtom(idcandidate))&&(reg->ogatoms.getByID(id).tuple[0]!=reg->ogatoms.getByID(idcandidate).tuple[0])) {
-							for (int i=1; i<7;i++) {
-								ID id1 = reg->ogatoms.getByID(id).tuple[i];
-								ID id2 = reg->ogatoms.getByID(idcandidate).tuple[i];
+
+						if (idcandidate.isExternalAuxiliary() && !idcandidate.isExternalInputAuxiliary()&&(reg->isPositiveExternalAtomAuxiliaryAtom(idcandidate)||reg->isNegativeExternalAtomAuxiliaryAtom(idcandidate))&&(reg->ogatoms.getByID(id).tuple[0]!=reg->ogatoms.getByID(idcandidate).tuple[0])&&reg->ogatoms.getByID(idcandidate).tuple.size()<9) {
+							DBGLOG(DBG,"RMG: PC: this is a replacement atom");
+							DBGLOG(DBG,"RMG: PC: check whether it is a twin of the evaluation atom");
+							for (int i=1; i<8;i++) {
+								ID id1 = reg->ogatoms.getByAddress(*enm).tuple[i];
+								DBGLOG(DBG,"RMG: PC: id1.tuple["<<i<<"] = "<<RawPrinter::toString(reg,id1));
+								ID id2 = reg->ogatoms.getByAddress(*enm2).tuple[i];
+								DBGLOG(DBG,"RMG: PC: id2.tuple["<<i<<"] = "<<RawPrinter::toString(reg,id2));
+
 								if (id1!=id2) {
-									DBGLOG(DBG,"RMG: PC: id1.tuple["<<i<<"] = "<<RawPrinter::toString(reg, reg->ogatoms.getByID(id1).tuple[i]));
-									DBGLOG(DBG,"RMG: PC: id2.input["<<i-1<<"] = "<<RawPrinter::toString(reg, reg->ogatoms.getByID(id2).tuple[i]));
+									//DBGLOG(DBG,"RMG: PC: this is the wrong candidate for postevaluation");
 									break;
 								}
+								else if (i==7) {
+									DBGLOG(DBG,"RMG: PC: this is the right candidate for postevaluation");
+									ok=true;
+								}
 							}
-							ok=true;
+
 						}
 
 						if (ok) {
 							idforcheck=idcandidate;
+							//DBGLOG(DBG,"RMG: PC: evaluate the atom "<<RawPrinter::toString(reg,idforcheck));
 							break;
 						}
 						enm2++;
 					}
-
-					DBGLOG(DBG,"RMG: PC: the replacement atom that needs to be checked is "<<RawPrinter::toString(reg, idforcheck));
 
 					for (unsigned eaIndex=0; eaIndex<factory.innerEatoms.size();eaIndex++) {
 						const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
@@ -3004,7 +3012,7 @@ namespace dllite {
 								usenewab.tuple.push_back(eatom.inputs[1]);
 								ID usenewabID = reg->storeOrdinaryAtom(usenewab);
 
-								DBGLOG(DBG,"RMG: PC: atom that specifies that the new abox is used: "<<RawPrinter::toString(reg,usenewabID));
+								DBGLOG(DBG,"RMG: PC: atom that specifies that the new ABox is used: "<<RawPrinter::toString(reg,usenewabID));
 								postcheckInput->setFact(usenewabID.address);
 
 								// add abox assertions to the input predicates
@@ -3180,111 +3188,110 @@ namespace dllite {
 		}
 
 		// Start FLP-check
-
-		DBGLOG(DBG,"RMG: FLP check is started");
-
-		// create auxiliary ontology predicates
-		ID newauxIDun = theDLLitePlugin.storeQuotedConstantTerm("000");
-		ID newauxIDbin = theDLLitePlugin.storeQuotedConstantTerm("111");
-
-		// create a copy of interpretation for input
-		Interpretation::Ptr flpCheckInput;
-		flpCheckInput.reset(new Interpretation(*modelCandidate));
-
-		//for all external atoms specify that the new ABox needs to be used, and add this ABox as facts w.r.t input atoms
-		for (unsigned eaIndex=0; eaIndex<factory.innerEatoms.size();eaIndex++) {
-
-			const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
-
-			// determine whether the external atom has a concept query or a role query
-
-			ID cQID = ID_FAIL;
-			ID rQID = ID_FAIL;
-
-			ID cdlID = reg->storeConstantTerm("cDL");
-			ID rdlID = reg->storeConstantTerm("rDL");
-
-			if (eatom.predicate==cdlID) {
-				// query is a concept
-				cQID = eatom.inputs[5];
-			}
-
-			else if (eatom.predicate==rdlID) {
-				//query is a role
-				rQID = eatom.inputs[5];
-			}
-
-			else assert(false);
-
-			// create an atom that specifies that the new ontology should be used for the external atom
-			OrdinaryAtom usenewab(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
-			usenewab.tuple.push_back(eatom.inputs[1]);
-			ID usenewabID = reg->storeOrdinaryAtom(usenewab);
-
-			// add the fact to the input interpretation that specifies the usage of the new ABox for the given external atom
-			DBGLOG(DBG,"RMG: FLP: atom that specifies that the new ABox is used: "<<RawPrinter::toString(reg,usenewabID));
-			flpCheckInput->setFact(usenewabID.address);
-
-			// add abox assertions to the input predicates
-			DBGLOG(DBG,"RMG: FLP: go through the new ABox");
-
-			newa = newab.begin();
-			newa_end = newab.end();
-
-			while (newa<newa_end) {
-				ID idadd = ID(*newa);
-
-				DBGLOG(DBG,"RMG: FLP: current ABox fact: "<<RawPrinter::toString(reg,idadd));
-
-				OrdinaryAtom addat=reg->ogatoms.getByID(idadd);
-
-				int size = addat.tuple.size();
-				DBGLOG(DBG,"RMG: FLP: size of the atom is "<<size);
-
-				OrdinaryAtom abfact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
-
-				if (size==3) {
-					//create a concept
-					DBGLOG(DBG,"RMG: FLP: tuple size is 3, concept assertion");
-					abfact.tuple.push_back(eatom.inputs[1]);
-					abfact.tuple.push_back(addat.tuple[1]);
-					abfact.tuple.push_back(addat.tuple[2]);
-
-					ID abfactID = reg->storeOrdinaryAtom(abfact);
-					DBGLOG(DBG,"RMG: FLP: created atom is: "<<RawPrinter::toString(reg,abfactID));
-
-					flpCheckInput->setFact(abfactID.address);
-
-				}
-				else if (size==4) {
-					//create a role
-					DBGLOG(DBG,"RMG: FLP: tuple size is 4, role assertion");
-
-					abfact.tuple.push_back(eatom.inputs[3]);
-					abfact.tuple.push_back(addat.tuple[1]);
-					abfact.tuple.push_back(addat.tuple[2]);
-					abfact.tuple.push_back(addat.tuple[3]);
-
-					ID abfactID = reg->storeOrdinaryAtom(abfact);
-					DBGLOG(DBG,"RMG: FLP: created atom is: "<<RawPrinter::toString(reg,abfactID));
-					flpCheckInput->setFact(abfactID.address);
-					DBGLOG(DBG,"RMG: FLP: added fact to interpretation");
-				}
-				else assert(false&&"ABox assertion is neither unary nor binary");
-
-				newa++;
-			}
-
-			DBGLOG(DBG,"RMG: FLP: interpretation for input is created "<<*flpCheckInput);
-
-		}
-
 		// FLP: ensure minimality of the compatible set wrt. the reduct (if necessary)
 		if (annotatedGroundProgram.hasHeadCycles() == 0 && annotatedGroundProgram.hasECycles() == 0 && factory.ctx.config.getOption("FLPDecisionCriterionHead") && factory.ctx.config.getOption("FLPDecisionCriterionE")) {
 			DBGLOG(DBG, "RMG: No head- or e-cycles --> No FLP/UFS check is needed");
 			return true;
 
 		} else {
+			DBGLOG(DBG,"RMG: FLP check is started");
+
+			// create auxiliary ontology predicates
+			ID newauxIDun = theDLLitePlugin.storeQuotedConstantTerm("000");
+			ID newauxIDbin = theDLLitePlugin.storeQuotedConstantTerm("111");
+
+			// create a copy of interpretation for input
+			Interpretation::Ptr flpCheckInput;
+			flpCheckInput.reset(new Interpretation(*modelCandidate));
+
+			//for all external atoms specify that the new ABox needs to be used, and add this ABox as facts w.r.t input atoms
+			for (unsigned eaIndex=0; eaIndex<factory.innerEatoms.size();eaIndex++) {
+
+				const ExternalAtom& eatom = reg->eatoms.getByID(factory.innerEatoms[eaIndex]);
+
+				// determine whether the external atom has a concept query or a role query
+
+				ID cQID = ID_FAIL;
+				ID rQID = ID_FAIL;
+
+				ID cdlID = reg->storeConstantTerm("cDL");
+				ID rdlID = reg->storeConstantTerm("rDL");
+
+				if (eatom.predicate==cdlID) {
+					// query is a concept
+					cQID = eatom.inputs[5];
+				}
+
+				else if (eatom.predicate==rdlID) {
+					//query is a role
+					rQID = eatom.inputs[5];
+				}
+
+				else assert(false);
+
+				// create an atom that specifies that the new ontology should be used for the external atom
+				OrdinaryAtom usenewab(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+				usenewab.tuple.push_back(eatom.inputs[1]);
+				ID usenewabID = reg->storeOrdinaryAtom(usenewab);
+
+				// add the fact to the input interpretation that specifies the usage of the new ABox for the given external atom
+				DBGLOG(DBG,"RMG: FLP: atom that specifies that the new ABox is used: "<<RawPrinter::toString(reg,usenewabID));
+				flpCheckInput->setFact(usenewabID.address);
+
+				// add abox assertions to the input predicates
+				DBGLOG(DBG,"RMG: FLP: go through the new ABox");
+
+				newa = newab.begin();
+				newa_end = newab.end();
+
+				while (newa<newa_end) {
+					ID idadd = ID(*newa);
+
+					DBGLOG(DBG,"RMG: FLP: current ABox fact: "<<RawPrinter::toString(reg,idadd));
+
+					OrdinaryAtom addat=reg->ogatoms.getByID(idadd);
+
+					int size = addat.tuple.size();
+					DBGLOG(DBG,"RMG: FLP: size of the atom is "<<size);
+
+					OrdinaryAtom abfact(ID::MAINKIND_ATOM | ID::SUBKIND_ATOM_ORDINARYG);
+
+					if (size==3) {
+						//create a concept
+						DBGLOG(DBG,"RMG: FLP: tuple size is 3, concept assertion");
+						abfact.tuple.push_back(eatom.inputs[1]);
+						abfact.tuple.push_back(addat.tuple[1]);
+						abfact.tuple.push_back(addat.tuple[2]);
+
+						ID abfactID = reg->storeOrdinaryAtom(abfact);
+						DBGLOG(DBG,"RMG: FLP: created atom is: "<<RawPrinter::toString(reg,abfactID));
+
+						flpCheckInput->setFact(abfactID.address);
+
+					}
+					else if (size==4) {
+						//create a role
+						DBGLOG(DBG,"RMG: FLP: tuple size is 4, role assertion");
+
+						abfact.tuple.push_back(eatom.inputs[3]);
+						abfact.tuple.push_back(addat.tuple[1]);
+						abfact.tuple.push_back(addat.tuple[2]);
+						abfact.tuple.push_back(addat.tuple[3]);
+
+						ID abfactID = reg->storeOrdinaryAtom(abfact);
+						DBGLOG(DBG,"RMG: FLP: created atom is: "<<RawPrinter::toString(reg,abfactID));
+						flpCheckInput->setFact(abfactID.address);
+						DBGLOG(DBG,"RMG: FLP: added fact to interpretation");
+					}
+					else assert(false&&"ABox assertion is neither unary nor binary");
+
+					newa++;
+				}
+
+				DBGLOG(DBG,"RMG: FLP: interpretation for input is created "<<*flpCheckInput);
+
+			}
+
 			DBGLOG(DBG, "RMG: Head- or e-cycles --> FLP/UFS check necessary");
 
 			// FLP check based on unfounded sets

@@ -4,6 +4,14 @@ if [[ $# -lt 4 ]]; then
 fi
 
 
+
+if [ -d "instances" ]; then
+        rm -f -r instances/*
+else
+        mkdir -p instances
+fi
+
+
 for (( prop=$1; prop <= $2; prop+=$3 ))
 do
 	for (( inst=0; inst < $4; inst++ ))
@@ -22,7 +30,7 @@ do
 		cat program.hex | sed "s/OWLONTOLOGY/\"inst_size_${propf}_inst_${in}.owl\"/g" >> "instances/inst_size_${propf}_inst_${in}.hex"
 		
 
-		cat program.dlp >> "instances/inst_size_${propf}_inst_${in}.dlp"
-		rm instances/*.dl
+		#cat program.dlp >> "instances/inst_size_${propf}_inst_${in}.dlp"
+		#rm instances/*.dl
 	done
 done
