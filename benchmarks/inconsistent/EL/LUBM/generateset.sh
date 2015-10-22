@@ -15,10 +15,11 @@ fi
 
 # create a directory for storing benchmark instances
 
+
 if [ -d "instances" ]; then
-	rm instances/*.*
+        rm -f -r instances/*
 else
-	mkdir -p instances
+        mkdir -p instances
 fi
 
 

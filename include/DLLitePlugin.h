@@ -120,7 +120,7 @@ else return ontologyNamespace + "#" + str;
 
 inline std::string removeNamespaceFromString(std::string str) const{
 if (!(str.substr(0, ontologyNamespace.length()) == ontologyNamespace || (str[0] == '-' && str.substr(1, ontologyNamespace.length()) == ontologyNamespace))){
-DBGLOG(WARNING, "Constant \"" + str + "\" appears to be a constant of the ontology, but does not contain its namespace.");
+//DBGLOG(WARNING, "Constant \"" + str + "\" appears to be a constant of the ontology, but does not contain its namespace.");
 return str;
 }
 if (str[0] == '-') return '-' + str.substr(ontologyNamespace.length() + 1 + 1); // +1 because of '-', +1 because of '#'
@@ -227,7 +227,7 @@ if (str[0] == '\"'){
 DBGLOG(WARNING, "Stored string " + str + ", which seems to contain duplicate quotation marks");
 }
 if (str.substr(0, 7).compare("http://") == 0 || str.substr(0, 8).compare("https://") == 0){
-DBGLOG(WARNING, "Stored string " + str + ", which seems to contain an absolute path including namespace; this should not happen");
+//DBGLOG(WARNING, "Stored string " + str + ", which seems to contain an absolute path including namespace; this should not happen");
 }
 #endif
 return reg->storeConstantTerm("\"" + str + "\"");
