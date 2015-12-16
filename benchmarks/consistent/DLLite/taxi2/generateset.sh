@@ -17,9 +17,6 @@ for (( inst=0; inst < $6; inst++ ))
 do
 	in=`printf "%03d" ${inst}`
 
-	# create ontology instances
-	cp ontology_small.owl instances/inst_size_${propf}_inst_${in}.owl
-
 	# instantiate the program
 	./generate_ontology.sh $1 $2 $3 $4 $5 > "instances/taxi_drv_${1}_cust_${2}_reg_${3}_go_${4}_perc_${5}_inst_${in}.owl"
 
