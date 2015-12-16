@@ -13,9 +13,8 @@ if [[ $all -eq 1 ]]; then
 	$bmscripts/runinsts.sh "instances/*.hex" "$mydir/run.sh" "$mydir" "$to" "" "" "$req"
 else
 	# run single instance
-	confstr=";-n=1;--eaevalheuristics=periodic --claspdefernprop=0;--eaevalheuristics=periodic --claspdefernprop=0 -n=1;--eaevalheuristics=always --claspdefernprop=0;--eaevalheuristics=always --claspdefernprop=0 -n=1;--ngminimization=onconflictopt;--ngminimization=onconflictopt -n=1"
+	confstr=";--eaevalheuristics=periodic --claspdefernprop=0;--eaevalheuristics=always --claspdefernprop=0;--ngminimization=always;--ngminimization=onconflictopt;"
 
 	$bmscripts/runconfigs.sh "dlvhex2 INST CONF" "$confstr" "$instance" "$to"
-
 fi
 

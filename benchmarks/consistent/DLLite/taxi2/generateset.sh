@@ -6,6 +6,7 @@
 # $4: number of regions driver goes to
 # $5: percentage of ecustomers
 # $6: number of instances
+# $7: instance number
 
 
 if [[ $# -lt 6 ]]; then
@@ -18,7 +19,7 @@ do
 	in=`printf "%03d" ${inst}`
 
 	# instantiate the program
-	./generate_ontology.sh $1 $2 $3 $4 $5 > "instances/taxi_drv_${1}_cust_${2}_reg_${3}_go_${4}_perc_${5}_inst_${in}.owl"
+	./generate_ontology.sh $1 $2 $3 $4 $5 > "instances/taxi_${7}_drv_${1}_cust_${2}_reg_${3}_go_${4}_perc_${5}_inst_${in}.owl"
 
-	cat program.hex | sed "s/OWLONTOLOGY/\"instances\/taxi_drv_${1}_cust_${2}_reg_${3}_go_${4}_perc_${5}_inst_${in}.owl\"/g" > "instances/taxi_drv_${1}_cust_${2}_reg_${3}_go_${4}_perc_${5}_inst_${in}.hex"
+	cat program.hex | sed "s/OWLONTOLOGY/\"instances\/taxi_${7}_drv_${1}_cust_${2}_reg_${3}_go_${4}_perc_${5}_inst_${in}.owl\"/g" > "instances/taxi_${7}_drv_${1}_cust_${2}_reg_${3}_go_${4}_perc_${5}_inst_${in}.hex"
 done
