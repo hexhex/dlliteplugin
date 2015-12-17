@@ -21,5 +21,5 @@ do
 	# instantiate the program
 	./generate_ontology.sh $1 $2 $3 $4 $5 > "instances/taxi_${7}_drv_${1}_cust_${2}_reg_${3}_go_${4}_perc_${5}_inst_${in}.owl"
 
-	cat program.hex | sed "s/OWLONTOLOGY/\"instances\/taxi_${7}_drv_${1}_cust_${2}_reg_${3}_go_${4}_perc_${5}_inst_${in}.owl\"/g" > "instances/taxi_${7}_drv_${1}_cust_${2}_reg_${3}_go_${4}_perc_${5}_inst_${in}.hex"
+	cat program.hex | sed "s/OWLONTOLOGY/\"instances\/taxi_${7}_drv_${1}_cust_${2}_reg_${3}_go_${4}_perc_${5}_inst_${in}.owl\"/g" | sed "s/EDRIVER/\"${2}\"/g" > "instances/taxi_${7}_drv_${1}_cust_${2}_reg_${3}_go_${4}_perc_${5}_inst_${in}.hex"
 done

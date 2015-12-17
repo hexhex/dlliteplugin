@@ -17,12 +17,9 @@ cat ontology_header.owl
 for (( i=1; i <= $1; i++ ))
 do
 	edrv=$(( 32768 / 2 ))
-	if [[ $RANDOM -le $edrv ]]
-	then
-		echo "    <owl:Thing rdf:about=\"#d$i\"><rdf:type rdf:resource=\"#Driver\"/></owl:Thing>"
-	else
-		echo "    <owl:Thing rdf:about=\"#d$i\"><rdf:type rdf:resource=\"#EDriver\"/></owl:Thing>"
-	fi
+
+	echo "    <owl:Thing rdf:about=\"#d$i\"><rdf:type rdf:resource=\"#Driver\"/></owl:Thing>"
+
 	for (( m=1; m <= $4; m++ ))
 	do
 		goes=$(( ($RANDOM%($3))+1 ))
