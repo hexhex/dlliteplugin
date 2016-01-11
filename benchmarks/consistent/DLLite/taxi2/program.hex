@@ -5,7 +5,7 @@ driver(X) :- &cDLp[OWLONTOLOGY,a,b,c,d,"Driver"](X).
 region(X) :- &cDLp[OWLONTOLOGY,a,b,c,d,"Region"](X).
 
 
-drives(X,Y) :- driver(X), customer(Y), &rDLp[OWLONTOLOGY,cp,cm,rp,rm,"goesTo"](X,A), &rDLp[OWLONTOLOGY,a,b,c,d,"needsTo"](Y,A), not n_drives(X,Y).
+drives(X,Y) :- driver(X), customer(Y), &rDLp[OWLONTOLOGY,a,b,c,d,"goesTo"](X,A), &rDLp[OWLONTOLOGY,a,b,c,d,"needsTo"](Y,A), not n_drives(X,Y).
 
 n_drives(X,Y) :- driver(X), customer(Y), not drives(X,Y).
 
