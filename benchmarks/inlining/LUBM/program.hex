@@ -1,0 +1,20 @@
+% By default, a research assistant is a student.
+
+resas(X) :- &cDL[OWLONTOLOGY, a, b, c, d, "ResearchAssistant"](X).
+student(X) :- resas(X), not neg_student(X).
+
+% Single out the non-students under default assumption.
+
+pcstud("Student", X) :- student(X).
+neg_student(X) :- resas(X), &cDL[OWLONTOLOGY, pcstud, b, c, d, "-Student"](X).
+
+% Assign every research assistant to a postdoc, who is supposed to help the former in case research problems emerge
+% Collect the assignments into "helps" predicate where the first parameter is a postdoc and the second is a research assistant 
+
+ helps(Z1,Z2):- resas(Z1), &cDL[OWLONTOLOGY,a,b, c, d, "PostDoc"](Z2), not omit(Z1,Z2).
+
+% Omit helps(a,b) if b is a postdoc (which might happen since research assistants might be visiting postdocs even though by default they are students)  
+
+ omit(Z1,Z2):- &cDL[OWLONTOLOGY,a, b, c, d,"PostDoc"](Z1), &cDL[OWLONTOLOGY,a, b, c, d,"PostDoc"](Z2).
+
+
