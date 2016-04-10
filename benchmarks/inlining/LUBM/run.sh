@@ -28,7 +28,7 @@ else
 	# configuration from variable "confstr".
 	# ============================================================
 
-	confstr=";--supportsets;--extinlining"
+	confstr="--extlearn=iobehavior,neg;--supportsets;--extinlining"
 
 	$bmscripts/runconfigs.sh "dlvhex2 --plugindir=../../../../src --heuristics=monolithic --silent INST CONF" "$confstr" "$instance" "$to" "ansctimeoutputbuilder.sh"
 fi
