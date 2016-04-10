@@ -30,5 +30,5 @@ else
 
 	confstr=";--supportsets;--extinlining"
 
-	$bmscripts/runconfigs.sh "dlvhex2 --plugindir=../../../src --liberalsafety --heuristics=monolithic --silent INST CONF" "$confstr" "$instance" "$to" "ansctimeoutputbuilder.sh"
+	$bmscripts/runconfigs.sh "dlvhex2 --plugindir=../../../../src --liberalsafety --heuristics=monolithic --silent INST CONF" "$confstr" "$instance" "$to" "ansctimeoutputbuilder.sh"
 fi
