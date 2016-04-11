@@ -7,28 +7,14 @@ if [[ $runheader == "" ]] || [ $(cat $runheader | grep "run_header.sh Version 1.
 fi
 source $runheader
 
-# HERE THE BENCHMARK-SPECIFIC PART STARTS
+# run instances
 if [[ $all -eq 1 ]]; then
-	# ============================================================
-	# Replace "instances/*.hex" in (1) by the loop condition
-	# to be used for iterating over the instances
-	# ============================================================
-
 	# run all instances using the benchmark script run insts
-	$bmscripts/runinsts.sh "*.hex" "$mydir/run.sh" "$mydir/instances" "$to" ""
-	
-	#$bmscripts/runinsts.sh "instances/*.hex" "$mydir/run.sh" "$mydir" "$to"	# (1)
+	$bmscripts/runinsts.sh "instances/*.hex" "$mydir/run.sh" "$mydir" "$to" "" "" "$req"
 else
-	# ============================================================
-	# Define the variable "confstr" in (2) as a semicolon-
-	# separated list of configurations to compare.
-	# In (3) replace "dlvhex2 --plugindir=../../src INST CONF"
-	# by an appropriate call of dlvhex, where INST will be
-	# substituted by the instance file and CONF by the current
-	# configuration from variable "confstr".
-	# ============================================================
+	# run single instance
+	confstr=";--eaevalheuristics=periodic --claspdefernprop=0;--eaevalheuristics=always --claspdefernprop=0;--ngminimization=always;--ngminimization=onconflictopt;"
 
-	confstr="--extlearn=iobehavior,neg;--supportsets;--extinlining"
-
-	$bmscripts/runconfigs.sh "dlvhex2 --plugindir=../../../../src --liberalsafety --heuristics=monolithic --silent INST CONF" "$confstr" "$instance" "$to" "ansctimeoutputbuilder.sh"
+	$bmscripts/runconfigs.sh "dlvhex2 INST CONF" "$confstr" "$instance" "$to"
 fi
+

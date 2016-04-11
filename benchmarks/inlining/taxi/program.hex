@@ -1,0 +1,23 @@
+customer(X) :- &cDL[OWLONTOLOGY,a,b,c,d,"Customer"](X).
+
+driver(X) :- &cDL[OWLONTOLOGY,a,b,c,d,"Driver"](X).
+
+region(X) :- &cDL[OWLONTOLOGY,a,b,c,d,"Region"](X).
+
+
+drives(X,Y) :- driver(X), customer(Y), &rDLp[OWLONTOLOGY,a,b,c,d,"goesTo"](X,A), &rDLp[OWLONTOLOGY,a,b,c,d,"needsTo"](Y,A), not n_drives(X,Y).
+
+n_drives(X,Y) :- driver(X), customer(Y), not drives(X,Y).
+
+:- drives(X,Y), drives(X1,Y), X != X1.
+
+driven(Y) :- drives(_,Y).
+:- not driven(Y), customer(Y).
+
+:- #count{X : &cDL[OWLONTOLOGY,cp,cm,rp,rm,"EDriver"](X)} > EDRIVER, driver(X).
+
+rp("drivesECustomer",X,Y) :- drives(X,Y), &cDL[OWLONTOLOGY,cp,cm,rp,rm,"ECustomer"](Y).
+
+
+
+
