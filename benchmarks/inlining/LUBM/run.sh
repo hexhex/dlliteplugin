@@ -15,7 +15,7 @@ if [[ $all -eq 1 ]]; then
 	# ============================================================
 
 	# run all instances using the benchmark script run insts
-	$bmscripts/runinsts.sh "*.hex" "$mydir/run.sh" "$mydir/instances" "$to" ""
+	$bmscripts/runinsts.sh "instances/*.hex" "$mydir/run.sh" "$mydir/instances" "$to" ""
 	
 	#$bmscripts/runinsts.sh "instances/*.hex" "$mydir/run.sh" "$mydir" "$to"	# (1)
 else
@@ -30,5 +30,5 @@ else
 
 	confstr="--extlearn=iobehavior,neg;--supportsets;--extinlining"
 
-	$bmscripts/runconfigs.sh "dlvhex2 --plugindir=../../../../src --heuristics=monolithic --silent INST CONF" "$confstr" "$instance" "$to" "ansctimeoutputbuilder.sh"
+	$bmscripts/runconfigs.sh "dlvhex2 --plugindir=../../../src --heuristics=monolithic --silent INST CONF" "$confstr" "$instance" "$to" "ansctimeoutputbuilder.sh"
 fi
