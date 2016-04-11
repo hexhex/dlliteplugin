@@ -17,7 +17,7 @@ do
 			./generate.sh $nodecount > "instances/inst_size_${ac}_roleprop_${rp}_inst_${in}.owl"
 
 			# instantiate the program
-			cat program.hex | sed "s/OWLONTOLOGY/\"instances/inst_size_${ac}_roleprop_${rp}_inst_${in}.owl\"/g" > "instances/inst_size_${ac}_roleprop_${rp}_inst_${in}.hex"
+			cat program.hex | sed "s/OWLONTOLOGY/\"instances\/inst_size_${ac}_roleprop_${rp}_inst_${in}.owl\"/g" > "instances/inst_size_${ac}_roleprop_${rp}_inst_${in}.hex"
 			cat program.dlp > "instances/inst_size_${ac}_roleprop_${rp}_inst_${in}.dlp"
 		done
 	done
