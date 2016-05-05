@@ -28,7 +28,7 @@ else
 	# configuration from variable "confstr".
 	# ============================================================
 
-	confstr="--extlearn=iobehavior,neg;--supportsets;--extinlining;--extlearn=iobehavior,neg -n=1;--supportsets;--extinlining -n=1"
+	confstr=";--supportsets;--extinlining;-n=1;--supportsets;--extinlining -n=1"
 
-	$bmscripts/runconfigs.sh "dlvhex2 --plugindir=../../../src --heuristics=monolithic --silent INST CONF" "$confstr" "$instance" "$to"
+	$bmscripts/runconfigs.sh "dlvhex2 --plugindir=../../../src --heuristics=monolithic --silent --extlearn=iobehavior,neg --claspconfig=none INST CONF" "$confstr" "$instance" "$to"
 fi
