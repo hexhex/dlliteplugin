@@ -75,7 +75,7 @@ fi
 if [ ! -f $OWLCPPMAINDIR/FaCTpp-src-v$FACTPPV.tar.gz ]
 then
 	echo "Downloading FaCT++ source version $FACTPPV"
-	wget -O $OWLCPPMAINDIR/FaCTpp-src-v$FACTPPV.tar.gz http://factplusplus.googlecode.com/files/FaCTpp-src-v$FACTPPV.tgz
+	wget -O $OWLCPPMAINDIR/FaCTpp-src-v$FACTPPV.tar.gz https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/factplusplus/FaCTpp-src-v$FACTPPV.tgz
 	if [ $? -gt 0 ]
 	then
 		echo "Error while downloading FaCT++; aborting"

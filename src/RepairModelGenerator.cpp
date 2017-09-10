@@ -272,7 +272,7 @@ namespace dllite {
 		DBGLOG(DBG, "RMG: elaborating the liberal safety option");
 
 		if (factory.ctx.config.getOption("LiberalSafety")) {
-			InterpretationConstPtr domPredicatesExtension = computeExtensionOfDomainPredicates(factory.ci, factory.ctx, postprocInput, factory.deidb, factory.deidbInnerEatoms);
+			InterpretationConstPtr domPredicatesExtension = computeExtensionOfDomainPredicates(factory.ctx, postprocInput, factory.deidb, factory.deidbInnerEatoms);
 			DBGLOG(DBG, "RMG: add domain predicate extensions");
 			postprocInput->add(*domPredicatesExtension);
 		}
